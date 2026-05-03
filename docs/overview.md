@@ -1,31 +1,30 @@
 # Arbiter Overview
 
-Source: Arbiter Notion main page, fetched on 2026-05-03.
+This document is the source of truth for Arbiter's current design.
 
 ## Overview
 
 Arbiter is a compiler-assisted object placement system for tiered memory environments.
 
-The system identifies memory objects that may suffer from coherence and contention overhead, then places selected objects on an alternative memory node such as CXL memory or a remote NUMA node.
+The system identifies memory objects that may suffer from coherence and contention overhead, and places selected objects on an alternative memory node such as CXL memory or a remote NUMA node.
 
 The first target is allocation-time placement based on static compiler analysis. Arbiter does not move objects after the program starts running.
 
 ## Motivation
 
-In NUMA systems, placing data close to the CPU is usually beneficial. This assumption can break down for write-heavy shared objects.
+### Problem
 
-When multiple cores or sockets repeatedly write to the same object, that object can cause:
+In NUMA systems, placing data close to the CPU is usually beneficial. However, this assumption can break down for write-heavy shared objects.
 
-- cache-line ownership transfers
-- invalidations
-- HITM events
-- interconnect traffic
+When multiple cores or sockets repeatedly write to the same object, the object can cause cache-line ownership transfers, invalidations, HITM events, and interconnect traffic. In this case, the main cost may come from coherence and contention rather than raw memory latency.
 
-In that case, the main cost may come from coherence and contention rather than raw memory latency.
+Arbiter explores whether such objects can benefit from being placed on a different memory tier.
 
-Arbiter tests the hypothesis that some write-heavy shared objects may perform better when placed on a less contended memory node, even if that node has higher access latency.
+### Hypothesis
 
-This should not be assumed to hold for all workloads or all objects.
+Some write-heavy shared objects may perform better when placed on a less contended memory node, even if that node has higher access latency.
+
+This is the main hypothesis to test. It should not be assumed to hold for all workloads or all objects.
 
 ## Compiler Design
 
@@ -56,11 +55,29 @@ normal allocation
   -> NUMA/CXL-aware allocation
 ```
 
-`arbiter.alloc` is backend-independent. It can be lowered to a NUMA allocator first, then later to a CXL-backed allocator if real CXL memory is available.
+`arbiter.alloc` is backend-independent. It can be lowered to a NUMA allocator in the current setup, and later to a CXL-backed allocator if real CXL memory is available.
 
 The compiler does not generate special CXL load/store instructions. CXL memory and NUMA memory are accessed through normal CPU load/store instructions after the object has been allocated on the target node.
 
-## Input IR Strategy
+### Input Definition
+
+Arbiter's core compiler takes MLIR as input:
+
+```text
+arbiter-opt input.mlir -> transformed.mlir
+```
+
+The first target input is memref-level MLIR, because allocation objects, stores, loops, and parallel regions are still visible enough for static analysis.
+
+C/C++ source is handled by a driver wrapper:
+
+```text
+arbiter-cc input.cpp -o output
+```
+
+The preferred C/C++ frontend is `cgeist`. A Clang/LLVM-dialect fallback may be used for end-to-end executable smoke tests, but memref-level MLIR remains the main analysis input.
+
+### Input IR Strategy
 
 Candidate selection should run at the highest MLIR level that still exposes allocation objects and structured memory accesses.
 
@@ -83,11 +100,11 @@ llvm.call @malloc
   -> arbiter_alloc(...)
 ```
 
-This should be treated as a later fallback path. The initial implementation should first validate the end-to-end flow with memref-level MLIR.
+This should be treated as a fallback path. The initial implementation should first validate the analysis and rewrite flow with memref-level MLIR, while using the LLVM fallback only for end-to-end executable smoke tests.
 
-## Example Transformation
+### Example Transformation
 
-The first prototype changes allocation operations only. Memory accesses remain ordinary `memref.load` and `memref.store` operations, then later become normal CPU load/store instructions.
+The first prototype changes allocation operations only. Memory accesses remain ordinary `memref.load` / `memref.store` operations and later become normal CPU load/store instructions.
 
 Original MLIR:
 
@@ -123,6 +140,6 @@ After lowering to LLVM dialect, schematically:
        : (i64, i64, i32) -> !llvm.ptr
 ```
 
-In an actual memref lowering path, `arbiter_alloc` returns the underlying buffer pointer, and the lowering must still construct or update the memref descriptor used by later `memref.load` and `memref.store` lowering.
+In an actual memref lowering path, `arbiter_alloc` returns the underlying buffer pointer, and the lowering must still construct or update the memref descriptor used by later `memref.load` / `memref.store` lowering.
 
 At machine level, later memory accesses are still normal load/store instructions. The placement effect comes from the pointer returned by `arbiter_alloc`.
