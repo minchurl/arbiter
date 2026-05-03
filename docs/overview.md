@@ -1,0 +1,128 @@
+# Arbiter Overview
+
+Source: Arbiter Notion main page, fetched on 2026-05-03.
+
+## Overview
+
+Arbiter is a compiler-assisted object placement system for tiered memory environments.
+
+The system identifies memory objects that may suffer from coherence and contention overhead, then places selected objects on an alternative memory node such as CXL memory or a remote NUMA node.
+
+The first target is allocation-time placement based on static compiler analysis. Arbiter does not move objects after the program starts running.
+
+## Motivation
+
+In NUMA systems, placing data close to the CPU is usually beneficial. This assumption can break down for write-heavy shared objects.
+
+When multiple cores or sockets repeatedly write to the same object, that object can cause:
+
+- cache-line ownership transfers
+- invalidations
+- HITM events
+- interconnect traffic
+
+In that case, the main cost may come from coherence and contention rather than raw memory latency.
+
+Arbiter tests the hypothesis that some write-heavy shared objects may perform better when placed on a less contended memory node, even if that node has higher access latency.
+
+This should not be assumed to hold for all workloads or all objects.
+
+## Compiler Design
+
+Arbiter separates object selection from allocation rewriting.
+
+### Candidate Selection
+
+Candidate selection decides which allocation-like objects should be placed on the target memory node. This decision is made statically during compilation.
+
+The first version marks all eligible allocations. Later versions can use more selective static policies:
+
+- manually annotated objects
+- static write-intensity analysis
+- static sharing or escape analysis
+- parallel-region-aware analysis
+- static object scoring based on write intensity and sharing likelihood
+
+All versions should produce the same output: a marked allocation or an object-level placement decision.
+
+### Allocation Rewriting
+
+Allocation rewriting consumes the selection result and rewrites selected allocation sites into `arbiter.alloc`.
+
+```text
+normal allocation
+  -> arbiter.alloc
+  -> arbiter_alloc(...)
+  -> NUMA/CXL-aware allocation
+```
+
+`arbiter.alloc` is backend-independent. It can be lowered to a NUMA allocator first, then later to a CXL-backed allocator if real CXL memory is available.
+
+The compiler does not generate special CXL load/store instructions. CXL memory and NUMA memory are accessed through normal CPU load/store instructions after the object has been allocated on the target node.
+
+## Input IR Strategy
+
+Candidate selection should run at the highest MLIR level that still exposes allocation objects and structured memory accesses.
+
+The first prototype assumes memref-level allocation objects:
+
+```text
+memref.alloc
+  -> arbiter.candidate
+  -> arbiter.alloc
+  -> arbiter_alloc(...)
+```
+
+This level is useful because object identity and memory accesses are explicit. It also makes it easier to reason about stores inside loops, parallel regions, and other structured control-flow constructs.
+
+For broader C/C++ support, not every allocation is guaranteed to appear as `memref.alloc`. Some allocations may remain as malloc-like calls in LLVM dialect:
+
+```text
+llvm.call @malloc
+  -> candidate marking
+  -> arbiter_alloc(...)
+```
+
+This should be treated as a later fallback path. The initial implementation should first validate the end-to-end flow with memref-level MLIR.
+
+## Example Transformation
+
+The first prototype changes allocation operations only. Memory accesses remain ordinary `memref.load` and `memref.store` operations, then later become normal CPU load/store instructions.
+
+Original MLIR:
+
+```mlir
+%N = arith.constant 1024 : index
+%A = memref.alloc(%N) : memref<?xi32>
+memref.store %v, %A[%i] : memref<?xi32>
+```
+
+After static candidate selection:
+
+```mlir
+%N = arith.constant 1024 : index
+%A = memref.alloc(%N) {arbiter.candidate} : memref<?xi32>
+memref.store %v, %A[%i] : memref<?xi32>
+```
+
+After allocation rewriting:
+
+```mlir
+%N = arith.constant 1024 : index
+%A = arbiter.alloc(%N) {target = "remote"} : memref<?xi32>
+memref.store %v, %A[%i] : memref<?xi32>
+```
+
+After lowering to LLVM dialect, schematically:
+
+```mlir
+%size = ...  // N * sizeof(i32)
+%align = llvm.mlir.constant(64 : i64) : i64
+%policy = llvm.mlir.constant(1 : i32) : i32
+%raw = llvm.call @arbiter_alloc(%size, %align, %policy)
+       : (i64, i64, i32) -> !llvm.ptr
+```
+
+In an actual memref lowering path, `arbiter_alloc` returns the underlying buffer pointer, and the lowering must still construct or update the memref descriptor used by later `memref.load` and `memref.store` lowering.
+
+At machine level, later memory accesses are still normal load/store instructions. The placement effect comes from the pointer returned by `arbiter_alloc`.
