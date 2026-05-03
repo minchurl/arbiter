@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+BUILD_DIR="${ARBITER_BUILD_DIR:-${ROOT_DIR}/build-ninja}"
+ARBITER_OPT="${ARBITER_OPT:-${BUILD_DIR}/bin/arbiter-opt}"
+FILECHECK="${FILECHECK:-FileCheck}"
+
+if [[ ! -x "${ARBITER_OPT}" ]]; then
+  echo "smoke: arbiter-opt not found at ${ARBITER_OPT}" >&2
+  echo "smoke: build first, or set ARBITER_OPT=/path/to/arbiter-opt" >&2
+  exit 1
+fi
+
+if ! command -v "${FILECHECK}" >/dev/null 2>&1; then
+  echo "smoke: FileCheck not found" >&2
+  echo "smoke: set FILECHECK=/path/to/FileCheck if it is outside PATH" >&2
+  exit 1
+fi
+
+run_filecheck() {
+  local name="$1"
+  local input="$2"
+  shift 2
+
+  printf "smoke: %s\n" "${name}"
+  "${ARBITER_OPT}" "$@" "${input}" | "${FILECHECK}" "${input}"
+}
+
+run_filecheck \
+  "mark candidates" \
+  "${ROOT_DIR}/tests/Transforms/mark-candidates.mlir" \
+  --arbiter-mark-candidates
+
+run_filecheck \
+  "rewrite allocations" \
+  "${ROOT_DIR}/tests/Transforms/rewrite-allocations.mlir" \
+  --arbiter-mark-candidates \
+  --arbiter-rewrite-allocations
+
+printf "smoke: ok\n"

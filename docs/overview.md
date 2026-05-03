@@ -46,13 +46,16 @@ All versions should produce the same output: a marked allocation or an object-le
 
 ### Allocation Rewriting
 
-Allocation rewriting consumes the selection result and rewrites selected allocation sites into `arbiter.alloc`.
+Allocation rewriting consumes the selection result and rewrites selected allocation/deallocation sites into Arbiter dialect operations.
 
 ```text
-normal allocation
+memref.alloc
   -> arbiter.alloc
   -> arbiter_alloc(...)
-  -> NUMA/CXL-aware allocation
+
+memref.dealloc
+  -> arbiter.dealloc
+  -> arbiter_dealloc(...)
 ```
 
 `arbiter.alloc` is backend-independent. It can be lowered to a NUMA allocator in the current setup, and later to a CXL-backed allocator if real CXL memory is available.
@@ -69,13 +72,7 @@ arbiter-opt input.mlir -> transformed.mlir
 
 The first target input is memref-level MLIR, because allocation objects, stores, loops, and parallel regions are still visible enough for static analysis.
 
-C/C++ source is handled by a driver wrapper:
-
-```text
-arbiter-cc input.cpp -o output
-```
-
-The preferred C/C++ frontend is `cgeist`. A Clang/LLVM-dialect fallback may be used for end-to-end executable smoke tests, but memref-level MLIR remains the main analysis input.
+C/C++ support should enter through a frontend that emits suitable MLIR, preferably `cgeist`. Arbiter does not treat LLVM-dialect malloc rewriting as the core input path.
 
 ### Input IR Strategy
 
@@ -88,23 +85,19 @@ memref.alloc
   -> arbiter.candidate
   -> arbiter.alloc
   -> arbiter_alloc(...)
+
+memref.dealloc
+  -> arbiter.dealloc
+  -> arbiter_dealloc(...)
 ```
 
 This level is useful because object identity and memory accesses are explicit. It also makes it easier to reason about stores inside loops, parallel regions, and other structured control-flow constructs.
 
-For broader C/C++ support, not every allocation is guaranteed to appear as `memref.alloc`. Some allocations may remain as malloc-like calls in LLVM dialect:
-
-```text
-llvm.call @malloc
-  -> candidate marking
-  -> arbiter_alloc(...)
-```
-
-This should be treated as a fallback path. The initial implementation should first validate the analysis and rewrite flow with memref-level MLIR, while using the LLVM fallback only for end-to-end executable smoke tests.
+For broader C/C++ support, the frontend should preserve allocation objects at a level where Arbiter can analyze and rewrite them. If a frontend lowers everything to LLVM-dialect malloc calls before Arbiter runs, the core analysis input is already too low-level for the first design.
 
 ### Example Transformation
 
-The first prototype changes allocation operations only. Memory accesses remain ordinary `memref.load` / `memref.store` operations and later become normal CPU load/store instructions.
+The first prototype changes allocation and deallocation operations only. Memory accesses remain ordinary `memref.load` / `memref.store` operations and later become normal CPU load/store instructions.
 
 Original MLIR:
 
@@ -128,6 +121,7 @@ After allocation rewriting:
 %N = arith.constant 1024 : index
 %A = arbiter.alloc(%N) {target = "remote"} : memref<?xi32>
 memref.store %v, %A[%i] : memref<?xi32>
+arbiter.dealloc %A {target = "remote"} : memref<?xi32>
 ```
 
 After lowering to LLVM dialect, schematically:
@@ -138,6 +132,8 @@ After lowering to LLVM dialect, schematically:
 %policy = llvm.mlir.constant(1 : i32) : i32
 %raw = llvm.call @arbiter_alloc(%size, %align, %policy)
        : (i64, i64, i32) -> !llvm.ptr
+llvm.call @arbiter_dealloc(%raw, %size, %policy)
+       : (!llvm.ptr, i64, i32) -> ()
 ```
 
 In an actual memref lowering path, `arbiter_alloc` returns the underlying buffer pointer, and the lowering must still construct or update the memref descriptor used by later `memref.load` / `memref.store` lowering.

@@ -1,0 +1,10 @@
+build/
+build-*/
+cmake-build-*/
+*.o
+*.a
+*.dylib
+*.so
+*.ll
+*.bc
+*.mlir.tmp
