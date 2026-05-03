@@ -2,8 +2,8 @@
 
 #include "arbiter/Dialect/Arbiter/IR/ArbiterOps.h"
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
-#include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Builders.h"
+#include "mlir/IR/BuiltinOps.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassRegistry.h"
 
@@ -16,7 +16,9 @@ class RewriteDeallocationsPass
 public:
   MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(RewriteDeallocationsPass)
 
-  StringRef getArgument() const final { return "arbiter-rewrite-deallocations"; }
+  StringRef getArgument() const final {
+    return "arbiter-rewrite-deallocations";
+  }
   StringRef getDescription() const final {
     return "Rewrite matching memref.dealloc operations into arbiter.dealloc";
   }
@@ -39,12 +41,7 @@ private:
       return;
 
     OpBuilder builder(dealloc);
-    StringAttr target = alloc->getAttrOfType<StringAttr>("target");
-    if (!target)
-      target = builder.getStringAttr("remote");
-
-    builder.create<arbiter::DeallocOp>(dealloc.getLoc(), dealloc.getMemref(),
-                                       target);
+    builder.create<arbiter::DeallocOp>(dealloc.getLoc(), dealloc.getMemref());
     dealloc.erase();
   }
 };
