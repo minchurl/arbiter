@@ -19,7 +19,7 @@ cat <<EOF
 Suggested build:
   cmake -S "${ROOT_DIR}" -B "${ROOT_DIR}/build-ninja" -G Ninja \\
     -DMLIR_DIR="\$(llvm-config --cmakedir | sed 's#/llvm\$#/mlir#')"
-  cmake --build "${ROOT_DIR}/build-ninja" --target arbiter-opt
+  cmake --build "${ROOT_DIR}/build-ninja" --target arbiter-opt arbiter-runtime-smoke
 
 Then try:
   "${ROOT_DIR}/scripts/smoke.sh"

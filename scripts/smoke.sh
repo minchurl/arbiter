@@ -4,11 +4,18 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${ARBITER_BUILD_DIR:-${ROOT_DIR}/build-ninja}"
 ARBITER_OPT="${ARBITER_OPT:-${BUILD_DIR}/bin/arbiter-opt}"
+RUNTIME_SMOKE="${RUNTIME_SMOKE:-${BUILD_DIR}/bin/arbiter-runtime-smoke}"
 FILECHECK="${FILECHECK:-FileCheck}"
 
 if [[ ! -x "${ARBITER_OPT}" ]]; then
   echo "smoke: arbiter-opt not found at ${ARBITER_OPT}" >&2
   echo "smoke: build first, or set ARBITER_OPT=/path/to/arbiter-opt" >&2
+  exit 1
+fi
+
+if [[ ! -x "${RUNTIME_SMOKE}" ]]; then
+  echo "smoke: arbiter-runtime-smoke not found at ${RUNTIME_SMOKE}" >&2
+  echo "smoke: build first, or set RUNTIME_SMOKE=/path/to/arbiter-runtime-smoke" >&2
   exit 1
 fi
 
@@ -37,5 +44,8 @@ run_filecheck \
   "${ROOT_DIR}/tests/Transforms/rewrite-allocations.mlir" \
   --arbiter-mark-candidates \
   --arbiter-rewrite-allocations
+
+printf "smoke: runtime fallback\n"
+"${RUNTIME_SMOKE}"
 
 printf "smoke: ok\n"

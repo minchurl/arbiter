@@ -58,9 +58,14 @@ memref.dealloc
   -> arbiter_dealloc(...)
 ```
 
-`arbiter.alloc` is backend-independent. It can be lowered to a NUMA allocator in the current setup, and later to a CXL-backed allocator if real CXL memory is available.
+`arbiter.alloc` is backend-independent. It can be lowered to a node-backed allocator in the current setup, and later to a CXL-backed allocator if real CXL memory is available.
 
 The compiler does not generate special CXL load/store instructions. CXL memory and NUMA memory are accessed through normal CPU load/store instructions after the object has been allocated on the target node.
+
+At runtime, the `cxl` placement target is implemented by allocating selected
+objects from a configured target memory node. This keeps the compiler-facing
+target label separate from the concrete machine setup: on NUMA-only servers, a
+remote NUMA node can serve as the target node for CXL-like experiments.
 
 ### Input Definition
 
@@ -119,9 +124,9 @@ After allocation rewriting:
 
 ```mlir
 %N = arith.constant 1024 : index
-%A = arbiter.alloc(%N) {target = "remote"} : memref<?xi32>
+%A = arbiter.alloc(%N) {target = "cxl"} : memref<?xi32>
 memref.store %v, %A[%i] : memref<?xi32>
-arbiter.dealloc %A {target = "remote"} : memref<?xi32>
+arbiter.dealloc %A {target = "cxl"} : memref<?xi32>
 ```
 
 After lowering to LLVM dialect, schematically:
@@ -129,11 +134,10 @@ After lowering to LLVM dialect, schematically:
 ```mlir
 %size = ...  // N * sizeof(i32)
 %align = llvm.mlir.constant(64 : i64) : i64
-%policy = llvm.mlir.constant(1 : i32) : i32
-%raw = llvm.call @arbiter_alloc(%size, %align, %policy)
-       : (i64, i64, i32) -> !llvm.ptr
-llvm.call @arbiter_dealloc(%raw, %size, %policy)
-       : (!llvm.ptr, i64, i32) -> ()
+%raw = llvm.call @arbiter_alloc(%size, %align)
+       : (i64, i64) -> !llvm.ptr
+llvm.call @arbiter_dealloc(%raw)
+       : (!llvm.ptr) -> ()
 ```
 
 In an actual memref lowering path, `arbiter_alloc` returns the underlying buffer pointer, and the lowering must still construct or update the memref descriptor used by later `memref.load` / `memref.store` lowering.
