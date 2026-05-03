@@ -3,6 +3,7 @@
 
 #include "mlir/Dialect/Arith/IR/Arith.h"
 #include "mlir/Dialect/Func/IR/FuncOps.h"
+#include "mlir/Dialect/LLVMIR/LLVMDialect.h"
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
 #include "mlir/Dialect/SCF/IR/SCF.h"
 #include "mlir/IR/AsmState.h"
@@ -18,9 +19,9 @@
 
 using namespace mlir;
 
-static llvm::cl::opt<std::string>
-    inputFilename(llvm::cl::Positional, llvm::cl::desc("<input mlir>"),
-                  llvm::cl::init("-"));
+static llvm::cl::opt<std::string> inputFilename(llvm::cl::Positional,
+                                                llvm::cl::desc("<input mlir>"),
+                                                llvm::cl::init("-"));
 
 static llvm::cl::opt<std::string>
     outputFilename("o", llvm::cl::desc("Output filename"),
@@ -35,13 +36,18 @@ static llvm::cl::opt<bool> rewriteAllocations(
     llvm::cl::desc("Rewrite marked memref.alloc/dealloc operations to Arbiter "
                    "dialect operations"));
 
+static llvm::cl::opt<bool>
+    lowerToRuntime("arbiter-lower-to-runtime",
+                   llvm::cl::desc("Lower Arbiter dialect allocation operations "
+                                  "to LLVM runtime calls"));
+
 int main(int argc, char **argv) {
   llvm::InitLLVM y(argc, argv);
   llvm::cl::ParseCommandLineOptions(argc, argv, "Arbiter optimizer driver\n");
 
   DialectRegistry registry;
-  registry.insert<arith::ArithDialect, func::FuncDialect, memref::MemRefDialect,
-                  scf::SCFDialect>();
+  registry.insert<arith::ArithDialect, func::FuncDialect, LLVM::LLVMDialect,
+                  memref::MemRefDialect, scf::SCFDialect>();
   arbiter::registerArbiterDialect(registry);
 
   MLIRContext context(registry);
@@ -61,6 +67,8 @@ int main(int argc, char **argv) {
     pm.addPass(arbiter::createRewriteAllocationsPass());
     pm.addPass(arbiter::createRewriteDeallocationsPass());
   }
+  if (lowerToRuntime)
+    pm.addPass(arbiter::createLowerToRuntimePass());
 
   if (failed(pm.run(*module)))
     return 1;

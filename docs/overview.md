@@ -62,10 +62,9 @@ memref.dealloc
 
 The compiler does not generate special CXL load/store instructions. CXL memory and NUMA memory are accessed through normal CPU load/store instructions after the object has been allocated on the target node.
 
-At runtime, the `cxl` placement target is implemented by allocating selected
-objects from a configured target memory node. This keeps the compiler-facing
-target label separate from the concrete machine setup: on NUMA-only servers, a
-remote NUMA node can serve as the target node for CXL-like experiments.
+At runtime, selected objects are allocated from a configured target memory node.
+On NUMA-only servers, a remote NUMA node can serve as the target node for
+CXL-like experiments.
 
 ### Input Definition
 
@@ -124,9 +123,9 @@ After allocation rewriting:
 
 ```mlir
 %N = arith.constant 1024 : index
-%A = arbiter.alloc(%N) {target = "cxl"} : memref<?xi32>
+%A = arbiter.alloc(%N) : memref<?xi32>
 memref.store %v, %A[%i] : memref<?xi32>
-arbiter.dealloc %A {target = "cxl"} : memref<?xi32>
+arbiter.dealloc %A : memref<?xi32>
 ```
 
 After lowering to LLVM dialect, schematically:

@@ -8,6 +8,7 @@ target_link_libraries(arbiter-opt
   MLIRArithDialect
   MLIRFuncDialect
   MLIRIR
+  MLIRLLVMDialect
   MLIRMemRefDialect
   MLIRParser
   MLIRPass

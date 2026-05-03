@@ -2,8 +2,8 @@
 
 #include "arbiter/Dialect/Arbiter/IR/ArbiterOps.h"
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
-#include "mlir/IR/BuiltinOps.h"
 #include "mlir/IR/Builders.h"
+#include "mlir/IR/BuiltinOps.h"
 #include "mlir/Pass/Pass.h"
 #include "mlir/Pass/PassRegistry.h"
 
@@ -35,14 +35,10 @@ public:
 private:
   void rewriteAlloc(memref::AllocOp alloc) {
     OpBuilder builder(alloc);
-    StringAttr target = alloc->getAttrOfType<StringAttr>("arbiter.target");
-    if (!target)
-      target = builder.getStringAttr("remote");
-
     IntegerAttr alignment = alloc->getAttrOfType<IntegerAttr>("alignment");
     auto arbiterAlloc = builder.create<arbiter::AllocOp>(
         alloc.getLoc(), alloc.getType(), alloc.getDynamicSizes(),
-        alloc.getSymbolOperands(), target, alignment);
+        alloc.getSymbolOperands(), alignment);
     alloc.getResult().replaceAllUsesWith(arbiterAlloc.getResult());
     alloc.erase();
   }

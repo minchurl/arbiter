@@ -7,17 +7,15 @@ include "mlir/IR/CommonTypeConstraints.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 
 def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
-  let summary = "allocation with an Arbiter placement target";
+  let summary = "allocation selected for Arbiter runtime placement";
   let description = [{
     `arbiter.alloc` is the backend-independent allocation operation produced
-    after candidate selection. It keeps the original memref type and carries
-    placement metadata that later lowerings can translate into runtime calls
-    such as `arbiter_alloc`.
+    after candidate selection. It keeps the original memref type so later
+    lowerings can translate it into runtime calls such as `arbiter_alloc`.
   }];
 
   let arguments = (ins Variadic<Index>:$dynamicSizes,
                        Variadic<Index>:$symbolOperands,
-                       OptionalAttr<StrAttr>:$target,
                        ConfinedAttr<OptionalAttr<I64Attr>,
                                     [IntMinValue<0>]>:$alignment);
   let results = (outs Res<AnyMemRef, "",
@@ -27,7 +25,6 @@ def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
     OpBuilder<(ins "MemRefType":$memrefType,
                   "ValueRange":$dynamicSizes,
                   "ValueRange":$symbolOperands,
-                  CArg<"StringAttr", "{}">:$target,
                   CArg<"IntegerAttr", "{}">:$alignment), [{
       $_state.types.push_back(memrefType);
       $_state.addOperands(dynamicSizes);
@@ -36,8 +33,6 @@ def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
           $_builder.getDenseI32ArrayAttr({
               static_cast<int32_t>(dynamicSizes.size()),
               static_cast<int32_t>(symbolOperands.size())}));
-      if (target)
-        $_state.addAttribute(getTargetAttrName($_state.name), target);
       if (alignment)
         $_state.addAttribute(getAlignmentAttrName($_state.name), alignment);
     }]>
@@ -56,17 +51,15 @@ def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
 }
 
 def Arbiter_DeallocOp : Arbiter_Op<"dealloc"> {
-  let summary = "deallocation with an Arbiter placement target";
+  let summary = "deallocation of an Arbiter runtime allocation";
   let description = [{
     `arbiter.dealloc` releases a memref previously produced by `arbiter.alloc`.
-    Keeping the deallocation operation in the Arbiter dialect preserves the placement
-    target until lowering can emit the matching runtime deallocation call, such
-    as `arbiter_dealloc`.
+    Keeping the deallocation operation in the Arbiter dialect lets lowering emit
+    the matching runtime deallocation call, such as `arbiter_dealloc`.
   }];
 
   let arguments = (ins Arg<AnyRankedOrUnrankedMemRef, "",
-                           [MemFreeAt<0, FullEffect>]>:$memref,
-                       OptionalAttr<StrAttr>:$target);
+                           [MemFreeAt<0, FullEffect>]>:$memref);
 
   let assemblyFormat = "$memref attr-dict `:` type($memref)";
 }
