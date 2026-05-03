@@ -23,7 +23,7 @@ public:
   void runOnOperation() final {
     MLIRContext *context = &getContext();
     UnitAttr candidate = UnitAttr::get(context);
-    StringAttr target = StringAttr::get(context, "remote");
+    StringAttr target = StringAttr::get(context, "cxl");
 
     getOperation().walk([&](memref::AllocOp alloc) {
       alloc->setAttr("arbiter.candidate", candidate);

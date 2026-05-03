@@ -48,7 +48,7 @@ Then configure and build with Ninja:
 cmake -S . -B build-ninja -G Ninja \
   -DMLIR_DIR="$(llvm-config --cmakedir | sed 's#/llvm$#/mlir#')"
 
-cmake --build build-ninja --target arbiter-opt
+cmake --build build-ninja --target arbiter-opt arbiter-runtime-smoke
 ```
 
 Try the rewrite pipeline:
@@ -70,6 +70,9 @@ numactl --membind='!x' \
   env ARBITER_TARGET_NODE=x \
   ./program
 ```
+
+If `ARBITER_TARGET_NODE` is unset or node allocation is unavailable, the runtime
+falls back to host allocation for local smoke tests.
 
 ## Docs
 

@@ -7,7 +7,7 @@ include "mlir/IR/CommonTypeConstraints.td"
 include "mlir/Interfaces/SideEffectInterfaces.td"
 
 def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
-  let summary = "allocation with an Arbiter placement policy";
+  let summary = "allocation with an Arbiter placement target";
   let description = [{
     `arbiter.alloc` is the backend-independent allocation operation produced
     after candidate selection. It keeps the original memref type and carries
@@ -56,11 +56,11 @@ def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
 }
 
 def Arbiter_DeallocOp : Arbiter_Op<"dealloc"> {
-  let summary = "deallocation with an Arbiter placement policy";
+  let summary = "deallocation with an Arbiter placement target";
   let description = [{
     `arbiter.dealloc` releases a memref previously produced by `arbiter.alloc`.
     Keeping the deallocation operation in the Arbiter dialect preserves the placement
-    policy until lowering can emit the matching runtime deallocation call, such
+    target until lowering can emit the matching runtime deallocation call, such
     as `arbiter_dealloc`.
   }];
 
