@@ -62,6 +62,12 @@ memref.dealloc
 
 The compiler does not generate special CXL load/store instructions. CXL memory and NUMA memory are accessed through normal CPU load/store instructions after the object has been allocated on the target node.
 
+At runtime, placement labels such as `remote` and `cxl` are implemented by
+allocating selected objects from a configured target memory node. This keeps the
+compiler-facing policy labels separate from the concrete machine setup: on
+NUMA-only servers, CXL-like experiments can use a remote NUMA node as the target
+node.
+
 ### Input Definition
 
 Arbiter's core compiler takes MLIR as input:

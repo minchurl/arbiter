@@ -57,6 +57,20 @@ Try the rewrite pipeline:
 ./scripts/smoke.sh
 ```
 
+## Runtime Placement
+
+Arbiter-selected allocations are placed on the memory node configured by
+`ARBITER_TARGET_NODE`.
+
+When memory node `x` is reserved for Arbiter-selected allocations, keep ordinary
+process allocations off that node and configure Arbiter to use it as the target:
+
+```sh
+numactl --membind='!x' \
+  env ARBITER_TARGET_NODE=x \
+  ./program
+```
+
 ## Docs
 
 - [Overview](docs/overview.md)
