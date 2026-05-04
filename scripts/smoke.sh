@@ -5,7 +5,18 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${ARBITER_BUILD_DIR:-${ROOT_DIR}/build-ninja}"
 ARBITER_OPT="${ARBITER_OPT:-${BUILD_DIR}/bin/arbiter-opt}"
 RUNTIME_SMOKE="${RUNTIME_SMOKE:-${BUILD_DIR}/bin/arbiter-runtime-smoke}"
-FILECHECK="${FILECHECK:-FileCheck}"
+LLVM_VERSION="${LLVM_VERSION:-18}"
+LLVM_PREFIX="${LLVM_PREFIX:-/usr/lib/llvm-${LLVM_VERSION}}"
+
+if [[ -n "${FILECHECK:-}" ]]; then
+  FILECHECK_TOOL="${FILECHECK}"
+elif [[ -x "${LLVM_PREFIX}/bin/FileCheck" ]]; then
+  FILECHECK_TOOL="${LLVM_PREFIX}/bin/FileCheck"
+elif command -v "FileCheck-${LLVM_VERSION}" >/dev/null 2>&1; then
+  FILECHECK_TOOL="FileCheck-${LLVM_VERSION}"
+else
+  FILECHECK_TOOL="FileCheck"
+fi
 
 if [[ ! -x "${ARBITER_OPT}" ]]; then
   echo "smoke: arbiter-opt not found at ${ARBITER_OPT}" >&2
@@ -19,7 +30,7 @@ if [[ ! -x "${RUNTIME_SMOKE}" ]]; then
   exit 1
 fi
 
-if ! command -v "${FILECHECK}" >/dev/null 2>&1; then
+if ! command -v "${FILECHECK_TOOL}" >/dev/null 2>&1; then
   echo "smoke: FileCheck not found" >&2
   echo "smoke: set FILECHECK=/path/to/FileCheck if it is outside PATH" >&2
   exit 1
@@ -31,7 +42,7 @@ run_filecheck() {
   shift 2
 
   printf "smoke: %s\n" "${name}"
-  "${ARBITER_OPT}" "$@" "${input}" | "${FILECHECK}" "${input}"
+  "${ARBITER_OPT}" "$@" "${input}" | "${FILECHECK_TOOL}" "${input}"
 }
 
 run_filecheck \

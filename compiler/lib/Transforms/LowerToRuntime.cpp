@@ -24,20 +24,15 @@ constexpr uint64_t kDefaultAlignment = 64;
 constexpr llvm::StringLiteral kAllocFnName = "arbiter_alloc";
 constexpr llvm::StringLiteral kDeallocFnName = "arbiter_dealloc";
 
-FailureOr<LLVM::LLVMFuncOp> lookupOrCreateArbiterAllocFn(OpBuilder &builder,
-                                                         Operation *module,
-                                                         Type i64Type,
-                                                         Type ptrType) {
-  return LLVM::lookupOrCreateFn(builder, module, kAllocFnName,
-                                {i64Type, i64Type}, ptrType);
+LLVM::LLVMFuncOp lookupOrCreateArbiterAllocFn(ModuleOp module, Type i64Type,
+                                              Type ptrType) {
+  return LLVM::lookupOrCreateFn(module, kAllocFnName, {i64Type, i64Type},
+                                ptrType);
 }
 
-FailureOr<LLVM::LLVMFuncOp> lookupOrCreateArbiterDeallocFn(OpBuilder &builder,
-                                                           Operation *module,
-                                                           Type ptrType,
-                                                           Type voidType) {
-  return LLVM::lookupOrCreateFn(builder, module, kDeallocFnName, {ptrType},
-                                voidType);
+LLVM::LLVMFuncOp lookupOrCreateArbiterDeallocFn(ModuleOp module, Type ptrType,
+                                                Type voidType) {
+  return LLVM::lookupOrCreateFn(module, kDeallocFnName, {ptrType}, voidType);
 }
 
 class AllocOpLowering : public ConvertOpToLLVMPattern<arbiter::AllocOp> {
@@ -66,12 +61,9 @@ public:
       return op.emitError("expected parent module");
 
     Type i64Type = rewriter.getI64Type();
-    Type ptrType = getPtrType();
-    FailureOr<LLVM::LLVMFuncOp> allocFn = lookupOrCreateArbiterAllocFn(
-        rewriter, module.getOperation(), i64Type, ptrType);
-    if (failed(allocFn))
-      return op.emitError(
-          "failed to create or reuse arbiter_alloc declaration");
+    Type ptrType = getVoidPtrType();
+    LLVM::LLVMFuncOp allocFn =
+        lookupOrCreateArbiterAllocFn(module, i64Type, ptrType);
 
     SmallVector<Value> sizes;
     SmallVector<Value> strides;
@@ -85,7 +77,7 @@ public:
         loc, i64Type, static_cast<int64_t>(alignment));
 
     auto call = rewriter.create<LLVM::CallOp>(
-        loc, *allocFn, ValueRange{sizeBytes, alignmentValue});
+        loc, allocFn, ValueRange{sizeBytes, alignmentValue});
     Value runtimePtr = call.getResult();
 
     MemRefDescriptor descriptor = createMemRefDescriptor(
@@ -116,17 +108,14 @@ public:
     if (!module)
       return op.emitError("expected parent module");
 
-    Type ptrType = getPtrType();
+    Type ptrType = getVoidPtrType();
     Type voidType = getVoidType();
-    FailureOr<LLVM::LLVMFuncOp> deallocFn = lookupOrCreateArbiterDeallocFn(
-        rewriter, module.getOperation(), ptrType, voidType);
-    if (failed(deallocFn))
-      return op.emitError(
-          "failed to create or reuse arbiter_dealloc declaration");
+    LLVM::LLVMFuncOp deallocFn =
+        lookupOrCreateArbiterDeallocFn(module, ptrType, voidType);
 
     MemRefDescriptor descriptor(adaptor.getMemref());
     Value allocatedPtr = descriptor.allocatedPtr(rewriter, op.getLoc());
-    rewriter.create<LLVM::CallOp>(op.getLoc(), *deallocFn,
+    rewriter.create<LLVM::CallOp>(op.getLoc(), deallocFn,
                                   ValueRange{allocatedPtr});
     rewriter.eraseOp(op);
     return success();
@@ -151,13 +140,11 @@ public:
     LowerToLLVMOptions options(context);
     LLVMTypeConverter typeConverter(context, options);
     RewritePatternSet patterns(context);
-    SymbolTableCollection symbolTables;
 
     patterns.add<AllocOpLowering, DeallocOpLowering>(typeConverter);
     arith::populateArithToLLVMConversionPatterns(typeConverter, patterns);
     populateFuncToLLVMConversionPatterns(typeConverter, patterns);
-    populateFinalizeMemRefToLLVMConversionPatterns(typeConverter, patterns,
-                                                   &symbolTables);
+    populateFinalizeMemRefToLLVMConversionPatterns(typeConverter, patterns);
 
     LLVMConversionTarget target(*context);
     target.addLegalOp<ModuleOp>();
