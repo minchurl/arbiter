@@ -8,6 +8,7 @@ target_include_directories(arbiter_runtime
 )
 
 find_path(NUMA_INCLUDE_DIR numa.h)
+find_path(NUMAIF_INCLUDE_DIR numaif.h)
 find_library(NUMA_LIBRARY numa)
 
 if(NUMA_INCLUDE_DIR AND NUMA_LIBRARY)
@@ -30,3 +31,29 @@ target_link_libraries(arbiter-runtime-smoke
 set_target_properties(arbiter-runtime-smoke PROPERTIES
   RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
 )
+
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
+   NUMAIF_INCLUDE_DIR AND NUMA_LIBRARY)
+  add_executable(arbiter-numa-placement
+    ../tests/Runtime/arbiter-numa-placement.cpp
+  )
+
+  target_include_directories(arbiter-numa-placement
+    PRIVATE
+    ${NUMA_INCLUDE_DIR}
+    ${NUMAIF_INCLUDE_DIR}
+  )
+
+  target_link_libraries(arbiter-numa-placement
+    PRIVATE
+    arbiter_runtime
+  )
+
+  set_target_properties(arbiter-numa-placement PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
+  )
+else()
+  message(STATUS
+    "Skipping arbiter-numa-placement: Linux libnuma development files not found"
+  )
+endif()
