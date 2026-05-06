@@ -1,4 +1,4 @@
-// RUN: arbiter-opt --arbiter-mark-candidates --arbiter-rewrite-allocations --arbiter-lower-to-runtime %s | FileCheck %s --implicit-check-not=cxl
+// RUN: arbiter-opt --arbiter-select-objects --arbiter-rewrite-allocations --arbiter-lower-to-runtime %s | FileCheck %s --implicit-check-not=cxl
 
 module {
   func.func @lower(%n: index) {

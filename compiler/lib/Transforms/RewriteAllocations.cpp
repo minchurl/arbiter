@@ -18,13 +18,13 @@ public:
 
   StringRef getArgument() const final { return "arbiter-rewrite-allocations"; }
   StringRef getDescription() const final {
-    return "Rewrite marked memref.alloc operations into arbiter.alloc";
+    return "Rewrite selected memref.alloc operations into arbiter.alloc";
   }
 
   void runOnOperation() final {
     SmallVector<memref::AllocOp> allocs;
     getOperation().walk([&](memref::AllocOp alloc) {
-      if (alloc->hasAttr("arbiter.candidate"))
+      if (alloc->hasAttr("arbiter.select"))
         allocs.push_back(alloc);
     });
 

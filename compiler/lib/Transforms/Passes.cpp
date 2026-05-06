@@ -5,14 +5,14 @@
 using namespace mlir;
 
 namespace mlir::arbiter {
-void registerMarkCandidatesPass();
+void registerSelectObjectsPass();
 void registerRewriteAllocationsPass();
 void registerRewriteDeallocationsPass();
 void registerLowerToRuntimePass();
 } // namespace mlir::arbiter
 
 void mlir::arbiter::registerArbiterPasses() {
-  registerMarkCandidatesPass();
+  registerSelectObjectsPass();
   registerRewriteAllocationsPass();
   registerRewriteDeallocationsPass();
   registerLowerToRuntimePass();
