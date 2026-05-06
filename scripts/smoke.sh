@@ -46,14 +46,14 @@ run_filecheck() {
 }
 
 run_filecheck \
-  "mark candidates" \
-  "${ROOT_DIR}/tests/Transforms/mark-candidates.mlir" \
-  --arbiter-mark-candidates
+  "select allocations" \
+  "${ROOT_DIR}/tests/Transforms/select-allocations.mlir" \
+  --arbiter-select-allocations
 
 run_filecheck \
   "rewrite allocations" \
   "${ROOT_DIR}/tests/Transforms/rewrite-allocations.mlir" \
-  --arbiter-mark-candidates \
+  --arbiter-select-allocations \
   --arbiter-rewrite-allocations
 
 printf "smoke: runtime fallback\n"

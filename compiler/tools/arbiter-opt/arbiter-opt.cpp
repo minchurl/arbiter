@@ -28,13 +28,14 @@ static llvm::cl::opt<std::string>
                    llvm::cl::value_desc("filename"), llvm::cl::init("-"));
 
 static llvm::cl::opt<bool>
-    markCandidates("arbiter-mark-candidates",
-                   llvm::cl::desc("Mark allocation candidates"));
+    selectAllocations("arbiter-select-allocations",
+                      llvm::cl::desc("Select allocation sites for Arbiter "
+                                     "placement"));
 
 static llvm::cl::opt<bool> rewriteAllocations(
     "arbiter-rewrite-allocations",
-    llvm::cl::desc("Rewrite marked memref.alloc/dealloc operations to Arbiter "
-                   "dialect operations"));
+    llvm::cl::desc("Rewrite selected memref.alloc/dealloc operations to "
+                   "Arbiter dialect operations"));
 
 static llvm::cl::opt<bool>
     lowerToRuntime("arbiter-lower-to-runtime",
@@ -61,8 +62,8 @@ int main(int argc, char **argv) {
     return 1;
 
   PassManager pm(&context);
-  if (markCandidates)
-    pm.addPass(arbiter::createMarkCandidatesPass());
+  if (selectAllocations)
+    pm.addPass(arbiter::createSelectAllocationsPass());
   if (rewriteAllocations) {
     pm.addPass(arbiter::createRewriteAllocationsPass());
     pm.addPass(arbiter::createRewriteDeallocationsPass());

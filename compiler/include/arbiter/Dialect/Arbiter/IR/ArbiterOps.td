@@ -10,7 +10,7 @@ def Arbiter_AllocOp : Arbiter_Op<"alloc", [AttrSizedOperandSegments]> {
   let summary = "allocation selected for Arbiter runtime placement";
   let description = [{
     `arbiter.alloc` is the backend-independent allocation operation produced
-    after candidate selection. It keeps the original memref type so later
+    after allocation selection. It keeps the original memref type so later
     lowerings can translate it into runtime calls such as `arbiter_alloc`.
   }];
 

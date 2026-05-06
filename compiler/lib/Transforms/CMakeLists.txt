@@ -1,5 +1,5 @@
 add_mlir_library(ArbiterTransforms
-  MarkCandidates.cpp
+  SelectAllocations.cpp
   RewriteAllocations.cpp
   RewriteDeallocations.cpp
   LowerToRuntime.cpp
