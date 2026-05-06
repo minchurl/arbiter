@@ -1,6 +1,7 @@
 #include "arbiter/Transforms/Passes.h"
 
 #include "mlir/Dialect/MemRef/IR/MemRef.h"
+#include "mlir/Dialect/SCF/IR/SCF.h"
 #include "mlir/IR/Builders.h"
 #include "mlir/IR/BuiltinOps.h"
 #include "mlir/Pass/Pass.h"
@@ -9,6 +10,18 @@
 using namespace mlir;
 
 namespace {
+
+bool isInsideParallel(Operation *op) {
+  return op->getParentOfType<scf::ParallelOp>() != nullptr;
+}
+
+bool shouldSelectObject(memref::AllocOp alloc) {
+  for (Operation *user : alloc.getResult().getUsers()) {
+    if (isa<memref::StoreOp>(user) && isInsideParallel(user))
+      return true;
+  }
+  return false;
+}
 
 class SelectObjectsPass
     : public PassWrapper<SelectObjectsPass, OperationPass<ModuleOp>> {
@@ -25,7 +38,8 @@ public:
     UnitAttr selected = UnitAttr::get(context);
 
     getOperation().walk([&](memref::AllocOp alloc) {
-      alloc->setAttr("arbiter.select", selected);
+      if (shouldSelectObject(alloc))
+        alloc->setAttr("arbiter.select", selected);
     });
   }
 };

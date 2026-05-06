@@ -4,7 +4,7 @@ module {
   func.func @lower(%n: index) {
     %value = arith.constant 7 : i32
     %c0 = arith.constant 0 : index
-    %a = memref.alloc(%n) : memref<?xi32>
+    %a = memref.alloc(%n) {arbiter.select} : memref<?xi32>
     memref.store %value, %a[%c0] : memref<?xi32>
     memref.dealloc %a : memref<?xi32>
     return

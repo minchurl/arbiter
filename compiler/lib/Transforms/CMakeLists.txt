@@ -15,6 +15,7 @@ add_mlir_library(ArbiterTransforms
   MLIRMemRefToLLVM
   MLIRMemRefDialect
   MLIRPass
+  MLIRSCFDialect
   MLIRSupport
   MLIRTransformUtils
 )
