@@ -1,4 +1,4 @@
-// RUN: arbiter-opt --arbiter-select-allocations --arbiter-rewrite-allocations %s | FileCheck %s
+// RUN: arbiter-opt --arbiter-select-objects --arbiter-rewrite-allocations %s | FileCheck %s
 
 module {
   func.func @rewrite(%n: index) {

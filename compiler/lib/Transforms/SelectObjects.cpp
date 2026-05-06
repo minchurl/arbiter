@@ -10,14 +10,14 @@ using namespace mlir;
 
 namespace {
 
-class SelectAllocationsPass
-    : public PassWrapper<SelectAllocationsPass, OperationPass<ModuleOp>> {
+class SelectObjectsPass
+    : public PassWrapper<SelectObjectsPass, OperationPass<ModuleOp>> {
 public:
-  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(SelectAllocationsPass)
+  MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(SelectObjectsPass)
 
-  StringRef getArgument() const final { return "arbiter-select-allocations"; }
+  StringRef getArgument() const final { return "arbiter-select-objects"; }
   StringRef getDescription() const final {
-    return "Select allocation sites for Arbiter placement";
+    return "Select memory objects for Arbiter placement";
   }
 
   void runOnOperation() final {
@@ -33,11 +33,11 @@ public:
 } // namespace
 
 namespace mlir::arbiter {
-void registerSelectAllocationsPass() {
-  static PassRegistration<SelectAllocationsPass> pass;
+void registerSelectObjectsPass() {
+  static PassRegistration<SelectObjectsPass> pass;
 }
 } // namespace mlir::arbiter
 
-std::unique_ptr<Pass> mlir::arbiter::createSelectAllocationsPass() {
-  return std::make_unique<SelectAllocationsPass>();
+std::unique_ptr<Pass> mlir::arbiter::createSelectObjectsPass() {
+  return std::make_unique<SelectObjectsPass>();
 }

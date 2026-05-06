@@ -28,9 +28,9 @@ static llvm::cl::opt<std::string>
                    llvm::cl::value_desc("filename"), llvm::cl::init("-"));
 
 static llvm::cl::opt<bool>
-    selectAllocations("arbiter-select-allocations",
-                      llvm::cl::desc("Select allocation sites for Arbiter "
-                                     "placement"));
+    selectObjects("arbiter-select-objects",
+                  llvm::cl::desc("Select memory objects for Arbiter "
+                                 "placement"));
 
 static llvm::cl::opt<bool> rewriteAllocations(
     "arbiter-rewrite-allocations",
@@ -62,8 +62,8 @@ int main(int argc, char **argv) {
     return 1;
 
   PassManager pm(&context);
-  if (selectAllocations)
-    pm.addPass(arbiter::createSelectAllocationsPass());
+  if (selectObjects)
+    pm.addPass(arbiter::createSelectObjectsPass());
   if (rewriteAllocations) {
     pm.addPass(arbiter::createRewriteAllocationsPass());
     pm.addPass(arbiter::createRewriteDeallocationsPass());

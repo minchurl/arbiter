@@ -1,4 +1,4 @@
-// RUN: arbiter-opt --arbiter-select-allocations %s | FileCheck %s
+// RUN: arbiter-opt --arbiter-select-objects %s | FileCheck %s
 
 module {
   func.func @select(%n: index) {

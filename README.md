@@ -72,10 +72,10 @@ ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
 
 ## Runtime Placement
 
-Arbiter-selected allocations are placed on the memory node configured by
+Arbiter-selected objects are placed on the memory node configured by
 `ARBITER_TARGET_NODE`.
 
-When memory node `x` is reserved for Arbiter-selected allocations, keep ordinary
+When memory node `x` is reserved for Arbiter-selected objects, keep ordinary
 process allocations off that node and configure Arbiter to use it as the target:
 
 ```sh

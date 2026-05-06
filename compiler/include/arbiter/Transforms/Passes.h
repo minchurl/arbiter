@@ -7,7 +7,7 @@
 
 namespace mlir::arbiter {
 
-std::unique_ptr<Pass> createSelectAllocationsPass();
+std::unique_ptr<Pass> createSelectObjectsPass();
 std::unique_ptr<Pass> createRewriteAllocationsPass();
 std::unique_ptr<Pass> createRewriteDeallocationsPass();
 std::unique_ptr<Pass> createLowerToRuntimePass();

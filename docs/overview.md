@@ -30,11 +30,11 @@ This is the main hypothesis to test. It should not be assumed to hold for all wo
 
 Arbiter separates object selection from allocation rewriting.
 
-### Allocation Selection
+### Object Selection
 
-Allocation selection decides which allocation-like objects should be placed on the target memory node. This decision is made statically during compilation.
+Object selection decides which allocation-backed memory objects should be placed on the target memory node. This decision is made statically during compilation.
 
-The first version marks all eligible allocations. Later versions can use more selective static policies:
+The first version selects all eligible allocation-backed objects. Later versions can use more selective static policies:
 
 - manually annotated objects
 - static write-intensity analysis
@@ -42,7 +42,7 @@ The first version marks all eligible allocations. Later versions can use more se
 - parallel-region-aware analysis
 - static object scoring based on write intensity and sharing likelihood
 
-All versions should produce the same output: a selected allocation or an object-level placement decision.
+All versions should produce the same output: a selected object or an object-level placement decision.
 
 ### Allocation Rewriting
 
@@ -80,7 +80,7 @@ C/C++ support should enter through a frontend that emits suitable MLIR, preferab
 
 ### Input IR Strategy
 
-Allocation selection should run at the highest MLIR level that still exposes allocation objects and structured memory accesses.
+Object selection should run at the highest MLIR level that still exposes allocation objects and structured memory accesses.
 
 The first prototype assumes memref-level allocation objects:
 
@@ -111,7 +111,7 @@ Original MLIR:
 memref.store %v, %A[%i] : memref<?xi32>
 ```
 
-After static allocation selection:
+After static object selection:
 
 ```mlir
 %N = arith.constant 1024 : index
