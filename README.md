@@ -1,8 +1,8 @@
 # Arbiter
 
-Arbiter is a compiler-assisted object placement system for tiered memory environments.
+Arbiter is a compiler-assisted placement system for coherence-sensitive memory objects in tiered memory environments.
 
-It identifies allocation objects that may suffer from coherence and contention overhead, then places selected objects on an alternative memory node such as remote NUMA memory or CXL memory.
+It identifies allocation-backed objects whose performance may be dominated by cache-coherence activity rather than raw memory access latency, then places selected objects on an alternative memory node such as remote NUMA memory or CXL memory.
 
 The first target is static, allocation-time placement. Arbiter does not move objects after the program starts running.
 
