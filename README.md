@@ -28,13 +28,21 @@ Useful for local checks:
 
 - `FileCheck`
 - `mlir-opt`
+- `mlir-translate`
 
-`cgeist` can be used as a C/C++ frontend when source-level inputs need to be
-translated into MLIR. A typical compiler path is:
+`cgeist` is required for the GUPS benchmark pipeline because that benchmark
+starts from C++ source and uses `cgeist` as the C/C++ to MLIR frontend. A
+typical compiler path is:
 
 ```text
-memref-level MLIR -> arbiter-opt -> transformed MLIR
+C++ source -> cgeist -> memref-level MLIR -> arbiter-opt -> transformed MLIR
 ```
+
+For remote NUMA or CXL-like benchmark runs, use a Linux machine with:
+
+- `numactl`
+- libnuma runtime and development headers, such as `libnuma-dev`
+- visible memory nodes under `/sys/devices/system/node`
 
 ## Build
 
@@ -70,6 +78,13 @@ Try the rewrite pipeline:
 ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
 ```
 
+If `cgeist` is available, build the GUPS benchmark through the MLIR/Arbiter
+pipeline:
+
+```sh
+cmake --build build-llvm18 --target gups-pipeline
+```
+
 ## Runtime Placement
 
 Arbiter-selected objects are placed on the memory node configured by
@@ -98,6 +113,17 @@ numactl --cpunodebind=0 --membind=0 \
   build-llvm18/bin/arbiter-numa-placement
 ```
 
+## Benchmarks
+
+Arbiter benchmarks are integrated as benchmark-specific pipelines. Each
+pipeline should expose the allocation under test to the compiler, build a
+baseline binary, and build an Arbiter binary that routes selected allocations
+through `arbiter_alloc`.
+
+The first benchmark pipeline is GUPS under `benchmarks/gups`. See
+`docs/benchmarks.md` for benchmark status, build commands, and run examples.
+
 ## Docs
 
 - [Overview](docs/overview.md)
+- [Benchmarks](docs/benchmarks.md)

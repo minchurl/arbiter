@@ -33,3 +33,4 @@ add_definitions(${LLVM_DEFINITIONS})
 
 add_subdirectory(runtime)
 add_subdirectory(compiler)
+add_subdirectory(benchmarks)
