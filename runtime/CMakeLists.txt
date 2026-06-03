@@ -1,5 +1,7 @@
 add_library(arbiter_runtime STATIC
   src/arbiter_runtime.cpp
+  src/arbiter_runtime_site.cpp
+  src/arbiter_side_table.cpp
 )
 
 target_include_directories(arbiter_runtime

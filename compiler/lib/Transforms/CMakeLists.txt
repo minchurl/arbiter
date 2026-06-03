@@ -1,3 +1,5 @@
+# MLIR Arbiter passes retained for the memref precision/reference path.
+# These are not used by the LLVM-only benchmark workflow.
 add_mlir_library(ArbiterTransforms
   SelectObjects.cpp
   RewriteAllocations.cpp
