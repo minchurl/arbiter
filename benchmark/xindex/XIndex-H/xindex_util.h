@@ -40,12 +40,12 @@ typedef Result result_t;
 typedef BGInfo bg_info_t;
 typedef IndexConfig index_config_t;
 
-struct RCUStatus {
+struct alignas(CACHELINE_SIZE) RCUStatus {
   std::atomic<int64_t> status;
   std::atomic<bool> waiting;
 };
 enum class Result { ok, failed, retry };
-struct BGInfo {
+struct alignas(CACHELINE_SIZE) BGInfo {
   size_t bg_i;  // for calculation responsible range
   size_t bg_n;  // for calculation responsible range
   volatile void *root_ptr;

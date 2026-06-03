@@ -16,8 +16,9 @@ struct SideTableShard {
 };
 
 std::array<SideTableShard, kShardCount> &getShards() {
-  static std::array<SideTableShard, kShardCount> shards;
-  return shards;
+  // Keep the table alive for C++ static destructors rewritten to delete helpers.
+  static auto *shards = new std::array<SideTableShard, kShardCount>();
+  return *shards;
 }
 
 SideTableShard &getShard(void *ptr) {

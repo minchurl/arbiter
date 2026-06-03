@@ -20,6 +20,8 @@
 #include "mkl.h"
 #include "mkl_lapacke.h"
 
+#include <array>
+
 #if !defined(XINDEX_MODEL_H)
 #define XINDEX_MODEL_H
 
