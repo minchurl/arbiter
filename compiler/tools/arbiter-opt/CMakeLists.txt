@@ -1,3 +1,4 @@
+# MLIR opt tool retained for the memref precision/reference path.
 add_llvm_executable(arbiter-opt arbiter-opt.cpp)
 llvm_update_compile_flags(arbiter-opt)
 

@@ -1,0 +1,9 @@
+Intel mkl installation procedure given by this gitlab's README.md does not work anymore since it is expired.
+
+Refer the following link to install lastest version of intel mkl.
+https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl-download.html?operatingsystem=linux&distributions=aptpackagemanager
+
+If you install intel mkl, there is still no include directory needed for cmake. To solve this problem, it is necessary to install intel-oneapi-mkl-devel package by following command.
+$ apt install intel-oneapi-mkl-devel
+Same issue on following link.
+https://community.intel.com/t5/Intel-oneAPI-Math-Kernel-Library/Missing-intel-oneapi-mkl-include-files/m-p/1516120#M34980
