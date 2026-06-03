@@ -8,9 +8,9 @@ LLVM IR, an Arbiter LLVM pass plugin reports and rewrites selected allocation
 sites, and the runtime places selected objects on a configured target memory
 node such as remote NUMA memory or CXL-like memory.
 
-The earlier MLIR/memref path is retained as a precision/reference path, but it
-is not used by the current LLVM-only benchmark workflow. See
-[MLIR MemRef Path](docs/mlir-memref-path.md).
+The earlier MLIR/memref path is retained as a legacy precision/reference path,
+but it is not used by the current LLVM-only benchmark workflow. See
+[MLIR Legacy Path](docs/mlir-legacy.md).
 
 ## Current Pipeline
 
@@ -34,21 +34,22 @@ and munmap sites to side-table-aware runtime calls.
 
 ## Build
 
-Arbiter builds against LLVM/MLIR 18.
+Arbiter builds against LLVM 18 by default. The legacy MLIR path is optional.
 
 Required:
 
 - CMake 3.20 or newer
 - Ninja
 - C++17 compiler, such as `clang++`
-- LLVM/MLIR 18 development packages
+- LLVM 18 development packages
 - `opt`, `llvm-link`, and `FileCheck` for LLVM pass checks
 - `libnuma-dev` on Linux for target-node placement
+- MLIR 18 development packages only when building `mlir-legacy`
 
 On Ubuntu 24.04:
 
 ```sh
-sudo apt install cmake ninja-build clang-18 llvm-18-dev mlir-18-tools libnuma-dev
+sudo apt install cmake ninja-build clang-18 llvm-18-dev libnuma-dev
 ```
 
 Configure and build:
@@ -56,8 +57,7 @@ Configure and build:
 ```sh
 cmake -S . -B build-llvm18 -G Ninja \
   -DCMAKE_C_COMPILER=/usr/lib/llvm-18/bin/clang \
-  -DCMAKE_CXX_COMPILER=/usr/lib/llvm-18/bin/clang++ \
-  -DMLIR_DIR=/usr/lib/llvm-18/lib/cmake/mlir
+  -DCMAKE_CXX_COMPILER=/usr/lib/llvm-18/bin/clang++
 
 cmake --build build-llvm18 --target \
   ArbiterLLVMPlugin \
@@ -131,12 +131,20 @@ The first supported benchmarks are:
 - XIndex/YCSB: primary index structures are C++ heap objects, so C++ allocation
   ABI rewriting is required.
 
-## MLIR Reference Path
+## MLIR Legacy Path
 
-The MLIR tool remains available for memref-level experiments:
+The MLIR tool remains available for memref-level experiments when explicitly
+enabled:
 
 ```sh
-ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
+cmake -S . -B build-llvm18-mlir -G Ninja \
+  -DCMAKE_C_COMPILER=/usr/lib/llvm-18/bin/clang \
+  -DCMAKE_CXX_COMPILER=/usr/lib/llvm-18/bin/clang++ \
+  -DARBITER_ENABLE_MLIR_LEGACY=ON \
+  -DMLIR_DIR=/usr/lib/llvm-18/lib/cmake/mlir
+
+cmake --build build-llvm18-mlir --target arbiter-opt arbiter_runtime_mlir_legacy
+ARBITER_BUILD_DIR=build-llvm18-mlir ./scripts/smoke-mlir-legacy.sh
 ```
 
 This path is useful for precise object-boundary analysis, but it is not the
@@ -147,4 +155,4 @@ main benchmark path.
 - [Overview](docs/overview.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
-- [MLIR MemRef Path](docs/mlir-memref-path.md)
+- [MLIR Legacy Path](docs/mlir-legacy.md)
