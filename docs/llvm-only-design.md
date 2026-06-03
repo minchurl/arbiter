@@ -105,7 +105,8 @@ void arbiter_cxx_delete_array_maybe(void *ptr);
 int arbiter_munmap_maybe(void *ptr, uint64_t size);
 ```
 
-The existing MLIR runtime ABI remains available:
+The legacy MLIR runtime ABI remains available only when
+`ARBITER_ENABLE_MLIR_LEGACY=ON` builds `arbiter_runtime_mlir_legacy`:
 
 ```c
 void *arbiter_alloc(uint64_t size, uint64_t align);

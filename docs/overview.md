@@ -54,9 +54,9 @@ C/C++ benchmark
 The LLVM path is the primary benchmark path because it can cover large C/C++
 codebases without requiring a source-to-memref frontend.
 
-The earlier MLIR/memref path is retained as a precision/reference path. It is
-documented separately in [MLIR MemRef Path](mlir-memref-path.md) and is not used
-by the current LLVM-only benchmark workflow.
+The earlier MLIR/memref path is retained as a legacy precision/reference path.
+It is documented separately in [MLIR Legacy Path](mlir-legacy.md) and is not
+used by the current LLVM-only benchmark workflow.
 
 ## Compiler Design
 

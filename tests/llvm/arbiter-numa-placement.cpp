@@ -1,4 +1,4 @@
-#include "arbiter_runtime.h"
+#include "arbiter_runtime_site.h"
 
 #include <numa.h>
 #include <numaif.h>
@@ -74,7 +74,7 @@ int findMajorityNode(const std::map<int, uint64_t> &counts) {
 
 void printCounts(const std::map<int, uint64_t> &counts, uint64_t pageCount,
                  uint64_t sizeBytes, int majorityNode) {
-  std::printf("arbiter_alloc:");
+  std::printf("arbiter_alloc_site:");
   for (const auto &entry : counts)
     std::printf(" node%d=%llu pages", entry.first,
                 static_cast<unsigned long long>(entry.second));
@@ -85,7 +85,7 @@ void printCounts(const std::map<int, uint64_t> &counts, uint64_t pageCount,
   for (const auto &entry : counts)
     countedPages += entry.second;
   if (countedPages != pageCount)
-    std::printf("arbiter_alloc: queried %llu/%llu pages\n",
+    std::printf("arbiter_alloc_site: queried %llu/%llu pages\n",
                 static_cast<unsigned long long>(countedPages),
                 static_cast<unsigned long long>(pageCount));
 }
@@ -122,7 +122,7 @@ int main() {
   if (!parseIntEnv("ARBITER_EXPECT_NODE", expectedNode, hasExpectedNode))
     return 1;
 
-  void *allocation = arbiter_alloc(sizeBytes, kDefaultAlignment);
+  void *allocation = arbiter_alloc_site(sizeBytes, kDefaultAlignment, 1, 0);
   if (!allocation) {
     std::fprintf(stderr, "arbiter-numa-placement: allocation failed\n");
     return 1;
@@ -142,7 +142,7 @@ int main() {
                  status.data(), /*flags=*/0) != 0) {
     std::fprintf(stderr, "arbiter-numa-placement: move_pages failed: %s\n",
                  std::strerror(errno));
-    arbiter_dealloc(allocation);
+    arbiter_free_maybe(allocation);
     return 1;
   }
 
@@ -155,7 +155,7 @@ int main() {
   int majorityNode = findMajorityNode(counts);
   printCounts(counts, pageCount, sizeBytes, majorityNode);
 
-  arbiter_dealloc(allocation);
+  arbiter_free_maybe(allocation);
 
   if (hasExpectedNode && majorityNode != expectedNode) {
     std::fprintf(stderr,

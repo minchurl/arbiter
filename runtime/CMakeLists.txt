@@ -1,5 +1,4 @@
 add_library(arbiter_runtime STATIC
-  src/arbiter_runtime.cpp
   src/arbiter_runtime_site.cpp
   src/arbiter_side_table.cpp
 )
@@ -22,7 +21,7 @@ else()
 endif()
 
 add_executable(arbiter-runtime-smoke
-  ../tests/Runtime/arbiter-runtime-smoke.cpp
+  ../tests/llvm/arbiter-runtime-smoke.cpp
 )
 
 target_link_libraries(arbiter-runtime-smoke
@@ -37,7 +36,7 @@ set_target_properties(arbiter-runtime-smoke PROPERTIES
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
    NUMAIF_INCLUDE_DIR AND NUMA_LIBRARY)
   add_executable(arbiter-numa-placement
-    ../tests/Runtime/arbiter-numa-placement.cpp
+    ../tests/llvm/arbiter-numa-placement.cpp
   )
 
   target_include_directories(arbiter-numa-placement
@@ -58,4 +57,8 @@ else()
   message(STATUS
     "Skipping arbiter-numa-placement: Linux libnuma development files not found"
   )
+endif()
+
+if(ARBITER_ENABLE_MLIR_LEGACY)
+  add_subdirectory(mlir-legacy)
 endif()

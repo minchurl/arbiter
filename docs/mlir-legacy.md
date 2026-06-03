@@ -1,7 +1,7 @@
-# MLIR MemRef Path
+# MLIR Legacy Path
 
-This document describes Arbiter's retained MLIR precision/reference path.
-It is not used by the current LLVM-only benchmark workflow.
+This document describes Arbiter's retained MLIR precision/reference path. It is
+legacy code and is not used by the current LLVM-only benchmark workflow.
 
 ## Overview
 
