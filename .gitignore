@@ -9,4 +9,12 @@ cmake-build-*/
 *.bc
 *.mlir.tmp
 .DS_Store
-benchmark/
+benchmark/**/build/
+benchmark/**/target/
+benchmark/**/.git
+benchmark/**/CMakeCache.txt
+benchmark/**/CMakeFiles/
+benchmark/**/cmake_install.cmake
+benchmark/**/*_log.txt
+benchmark/gups/gups
+benchmark/xindex/YCSB/xindex_dat/*.dat
