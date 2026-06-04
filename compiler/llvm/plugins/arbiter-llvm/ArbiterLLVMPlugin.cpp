@@ -17,6 +17,14 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::AllRewriteExperimentPass());
     return true;
   }
+  if (name == "arbiter-report-pattern-sites") {
+    manager.addPass(arbiter::llvm::PatternReportPass());
+    return true;
+  }
+  if (name == "arbiter-experiment-pattern-rewrite") {
+    manager.addPass(arbiter::llvm::PatternRewriteExperimentPass());
+    return true;
+  }
   return false;
 }
 

@@ -17,6 +17,21 @@ cl::opt<unsigned> ArbiterDefaultAlignment(
     cl::desc("Default alignment passed to Arbiter heap allocation calls"),
     cl::init(64));
 
+cl::opt<std::string> ArbiterPatternReportPath(
+    "arbiter-pattern-report-path",
+    cl::desc("Path for Arbiter LLVM pattern reports; '-' means stdout"),
+    cl::init("-"));
+
+cl::opt<unsigned> ArbiterPatternMinScore(
+    "arbiter-pattern-min-score",
+    cl::desc("Minimum pattern score required for pattern rewrite selection"),
+    cl::init(7));
+
+cl::opt<std::string> ArbiterPatternFocus(
+    "arbiter-pattern-focus",
+    cl::desc("Pattern heuristic focus; v1 supports xindex-ycsb"),
+    cl::init("xindex-ycsb"));
+
 PreservedAnalyses AllRewriteExperimentPass::run(
     Module &module, ModuleAnalysisManager &manager) {
   (void)manager;

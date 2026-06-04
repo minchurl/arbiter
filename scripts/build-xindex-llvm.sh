@@ -10,6 +10,7 @@ RUNTIME_LIB="${ARBITER_RUNTIME_LIB:-${BUILD_DIR}/runtime/libarbiter_runtime.a}"
 MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-/opt/intel/oneapi/mkl/2025.3/include}"
 MKL_LINK_DIR="${MKL_LINK_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
 XINDEX_EXTRA_LIBS="${XINDEX_EXTRA_LIBS:--ljemalloc -lmkl_rt -lpthread}"
+XINDEX_EXPERIMENT="${ARBITER_XINDEX_EXPERIMENT:-all}"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -61,9 +62,28 @@ fi
   -disable-output \
   "${OUT_DIR}/ycsb_bench.bc"
 
+case "${XINDEX_EXPERIMENT}" in
+  all)
+    REWRITE_PASS="arbiter-experiment-all-rewrite"
+    ;;
+  pattern)
+    "${OPT}" \
+      -load-pass-plugin "${PLUGIN}" \
+      -passes=arbiter-report-pattern-sites \
+      -arbiter-pattern-report-path="${OUT_DIR}/ycsb_bench.pattern-sites.csv" \
+      -disable-output \
+      "${OUT_DIR}/ycsb_bench.bc"
+    REWRITE_PASS="arbiter-experiment-pattern-rewrite"
+    ;;
+  *)
+    echo "unknown ARBITER_XINDEX_EXPERIMENT=${XINDEX_EXPERIMENT}; expected all or pattern" >&2
+    exit 1
+    ;;
+esac
+
 "${OPT}" \
   -load-pass-plugin "${PLUGIN}" \
-  -passes=arbiter-experiment-all-rewrite \
+  -passes="${REWRITE_PASS}" \
   "${OUT_DIR}/ycsb_bench.bc" \
   -o "${OUT_DIR}/ycsb_bench.arbiter.bc"
 
@@ -80,3 +100,6 @@ fi
 
 echo "wrote ${OUT_DIR}/ycsb_bench-arbiter"
 echo "wrote ${OUT_DIR}/ycsb_bench.sites.csv"
+if [[ "${XINDEX_EXPERIMENT}" == "pattern" ]]; then
+  echo "wrote ${OUT_DIR}/ycsb_bench.pattern-sites.csv"
+fi

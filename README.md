@@ -155,4 +155,5 @@ main benchmark path.
 - [Overview](docs/overview.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
+- [XIndex/YCSB Pattern Placement](docs/xindex-ycsb-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)
