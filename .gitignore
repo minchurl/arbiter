@@ -6,6 +6,8 @@ cmake-build-*/
 *.dylib
 *.so
 *.ll
+!tests/llvm/shared-mutable-report.ll
+!tests/llvm/shared-mutable-rewrite.ll
 *.bc
 *.mlir.tmp
 .DS_Store

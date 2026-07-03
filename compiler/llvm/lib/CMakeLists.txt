@@ -5,6 +5,7 @@ add_llvm_library(ArbiterLLVM
   ReportAllocationSites.cpp
   RewriteHeapAllocations.cpp
   RewriteMMapAllocations.cpp
+  SharedMutablePlacement.cpp
 
   LINK_COMPONENTS
   Core

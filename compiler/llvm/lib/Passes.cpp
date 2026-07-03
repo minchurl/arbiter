@@ -17,6 +17,16 @@ cl::opt<unsigned> ArbiterDefaultAlignment(
     cl::desc("Default alignment passed to Arbiter heap allocation calls"),
     cl::init(64));
 
+cl::opt<std::string> ArbiterSharedMutableReportPath(
+    "arbiter-shared-mutable-report-path",
+    cl::desc("Path for Arbiter LLVM shared-mutable reports; '-' means stdout"),
+    cl::init("-"));
+
+cl::opt<unsigned> ArbiterSharedMutableMinScore(
+    "arbiter-shared-mutable-min-score",
+    cl::desc("Minimum score required for shared-mutable rewrite selection"),
+    cl::init(6));
+
 PreservedAnalyses AllRewriteExperimentPass::run(
     Module &module, ModuleAnalysisManager &manager) {
   (void)manager;

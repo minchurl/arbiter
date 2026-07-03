@@ -155,4 +155,5 @@ main benchmark path.
 - [Overview](docs/overview.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
+- [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)

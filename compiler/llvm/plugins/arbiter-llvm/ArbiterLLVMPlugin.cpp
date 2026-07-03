@@ -17,6 +17,14 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::AllRewriteExperimentPass());
     return true;
   }
+  if (name == "arbiter-report-shared-mutable-sites") {
+    manager.addPass(arbiter::llvm::SharedMutableReportPass());
+    return true;
+  }
+  if (name == "arbiter-experiment-shared-mutable-rewrite") {
+    manager.addPass(arbiter::llvm::SharedMutableRewriteExperimentPass());
+    return true;
+  }
   return false;
 }
 
