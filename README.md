@@ -204,6 +204,26 @@ The first supported benchmarks are:
 - XIndex/YCSB: primary index structures are C++ heap objects, so C++ allocation
   ABI rewriting is required.
 
+## Generic Placement Experiment
+
+After `./scripts/setup-benchmarks.sh`, run the generic placement experiment from
+the repository root in a separate tmux session:
+
+```sh
+tmux new-session -d -s arbiter-generic-exp -c "$(pwd)" \
+  'mkdir -p build/arbiter-bench/generic-placement-experiment && REPEATS=3 ./scripts/run-generic-placement-experiment.sh 2>&1 | tee build/arbiter-bench/generic-placement-experiment/driver.log'
+tmux attach -t arbiter-generic-exp
+```
+
+Results are written under:
+
+```text
+build/arbiter-bench/generic-placement-experiment
+```
+
+The main files are `runs.csv`, `summary.csv`, and `summary.md`. See
+[Generic Placement Experiment](docs/generic-placement-experiment.md).
+
 ## MLIR Legacy Path
 
 The MLIR tool remains available for memref-level experiments when explicitly
@@ -229,5 +249,6 @@ main benchmark path.
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
 - [Benchmark Data](docs/benchmark-data.md)
+- [Generic Placement Experiment](docs/generic-placement-experiment.md)
 - [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)
