@@ -20,3 +20,4 @@ benchmark/**/cmake_install.cmake
 benchmark/**/*_log.txt
 benchmark/gups/gups
 benchmark/xindex/YCSB/xindex_dat/*.dat
+benchmark/xindex/YCSB/xindex_dat/*.tmp

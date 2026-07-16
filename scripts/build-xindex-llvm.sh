@@ -11,6 +11,7 @@ MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-/opt/intel/oneapi/mkl/2025.3/include}"
 MKL_LINK_DIR="${MKL_LINK_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
 XINDEX_EXTRA_LIBS="${XINDEX_EXTRA_LIBS:--ljemalloc -lmkl_rt -lpthread}"
 XINDEX_EXPERIMENT="${ARBITER_XINDEX_EXPERIMENT:-all}"
+BUILD_NATIVE="${ARBITER_BUILD_XINDEX_NATIVE:-1}"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -40,7 +41,7 @@ if [[ -d "${MKL_INCLUDE_DIR}" ]]; then
   include_args+=("-I${MKL_INCLUDE_DIR}")
 fi
 
-"${CLANGXX}" \
+compile_args=(
   -std=c++14 \
   -O3 \
   -gline-tables-only \
@@ -50,7 +51,26 @@ fi
   -faligned-new \
   -march=native \
   -mtune=native \
-  "${include_args[@]}" \
+  "${include_args[@]}"
+)
+
+link_args=()
+if [[ -d "${MKL_LINK_DIR}" ]]; then
+  link_args+=("-L${MKL_LINK_DIR}" "-Wl,-rpath,${MKL_LINK_DIR}")
+fi
+
+if [[ "${BUILD_NATIVE}" != "0" ]]; then
+  "${CLANGXX}" \
+    "${compile_args[@]}" \
+    "${SRC}" \
+    "${link_args[@]}" \
+    ${XINDEX_EXTRA_LIBS} \
+    ${RUNTIME_LINK_LIBS} \
+    -o "${OUT_DIR}/ycsb_bench-native"
+fi
+
+"${CLANGXX}" \
+  "${compile_args[@]}" \
   -emit-llvm \
   -c "${SRC}" \
   -o "${OUT_DIR}/ycsb_bench.bc"
@@ -87,11 +107,6 @@ esac
   "${OUT_DIR}/ycsb_bench.bc" \
   -o "${OUT_DIR}/ycsb_bench.arbiter.bc"
 
-link_args=()
-if [[ -d "${MKL_LINK_DIR}" ]]; then
-  link_args+=("-L${MKL_LINK_DIR}")
-fi
-
 "${CLANGXX}" -O3 "${OUT_DIR}/ycsb_bench.arbiter.bc" "${RUNTIME_LIB}" \
   "${link_args[@]}" \
   ${XINDEX_EXTRA_LIBS} \
@@ -99,6 +114,9 @@ fi
   -o "${OUT_DIR}/ycsb_bench-arbiter"
 
 echo "wrote ${OUT_DIR}/ycsb_bench-arbiter"
+if [[ "${BUILD_NATIVE}" != "0" ]]; then
+  echo "wrote ${OUT_DIR}/ycsb_bench-native"
+fi
 echo "wrote ${OUT_DIR}/ycsb_bench.sites.csv"
 if [[ "${XINDEX_EXPERIMENT}" == "shared-mutable" ]]; then
   echo "wrote ${OUT_DIR}/ycsb_bench.shared-mutable-sites.csv"

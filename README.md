@@ -105,6 +105,27 @@ runtime falls back to host allocation for local checks.
 
 ## Benchmark Workflow
 
+Import the full XIndex/YCSB traces from the Niagara workload checkout:
+
+```sh
+./scripts/import-niagara-workloads.sh --mode copy
+```
+
+For GitHub-friendly storage of the large traces, install Git LFS and package
+the imported data into compressed chunks:
+
+```sh
+git lfs install
+./scripts/package-xindex-ycsb-data.sh
+```
+
+Fresh clones can restore the raw `.dat` files with:
+
+```sh
+git lfs pull
+./scripts/restore-xindex-ycsb-data.sh
+```
+
 Collect allocation and mmap sites:
 
 ```sh
@@ -155,5 +176,6 @@ main benchmark path.
 - [Overview](docs/overview.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
+- [Benchmark Data](docs/benchmark-data.md)
 - [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)

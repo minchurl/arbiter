@@ -58,6 +58,9 @@ should not assume hardcoded operation or key counts.
 ## Scripts
 
 ```text
+scripts/import-niagara-workloads.sh
+scripts/package-xindex-ycsb-data.sh
+scripts/restore-xindex-ycsb-data.sh
 scripts/collect-allocation-sites.sh
 scripts/build-gups-llvm.sh
 scripts/build-xindex-llvm.sh
@@ -67,3 +70,9 @@ scripts/run-xindex-arbiter.sh
 
 The build scripts generate LLVM bitcode, run the Arbiter LLVM plugin, and link
 instrumented benchmark binaries.
+
+The import script copies the full XIndex/YCSB traces from
+`~/niagara_workloads/YCSB/xindex_dat`. The raw `.dat` files stay ignored by git.
+For GitHub distribution, package them into compressed chunks under
+`benchmark/xindex/YCSB/xindex_dat/github-parts` and restore them with
+`scripts/restore-xindex-ycsb-data.sh` after clone.
