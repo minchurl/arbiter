@@ -44,12 +44,46 @@ Required:
 - LLVM 18 development packages
 - `opt`, `llvm-link`, and `FileCheck` for LLVM pass checks
 - `libnuma-dev` on Linux for target-node placement
+- `git-lfs` and `zstd` for the packaged XIndex/YCSB traces
+- `jemalloc` and Intel MKL for XIndex
 - MLIR 18 development packages only when building `mlir-legacy`
 
 On Ubuntu 24.04:
 
 ```sh
-sudo apt install cmake ninja-build clang-18 llvm-18-dev libnuma-dev
+sudo apt install cmake ninja-build make gcc clang-18 llvm-18-dev \
+  libnuma-dev git-lfs zstd libjemalloc-dev
+```
+
+Install Intel MKL separately, or set `MKL_INCLUDE_DIR`, `MKL_LINK_DIR`, and
+`MKL_RUNTIME_DIR` when building/running XIndex.
+
+## Fresh Clone Benchmark Setup
+
+For a fresh clone of the benchmark branch, use the one-shot setup:
+
+```sh
+git clone --branch experiment/generic-shared-mutable-placement \
+  git@github.com:minchurl/arbiter.git
+cd arbiter
+./scripts/setup-benchmarks.sh
+```
+
+This script:
+
+- pulls Git LFS chunks for the packaged XIndex/YCSB traces
+- restores the full raw `.dat` files under `benchmark/xindex/YCSB/xindex_dat`
+- configures and builds the Arbiter LLVM plugin/runtime in `build-llvm18`
+- builds GUPS native and Arbiter variants
+- builds XIndex native and Arbiter variants
+- creates short XIndex/YCSB smoke traces from the full data
+- runs short native/local smoke checks for both GUPS and XIndex/YCSB
+
+The setup restores about 46GB of raw XIndex/YCSB trace data, so make sure the
+machine has enough disk space. To skip the smoke checks:
+
+```sh
+./scripts/setup-benchmarks.sh --no-smoke
 ```
 
 Configure and build:
@@ -105,7 +139,14 @@ runtime falls back to host allocation for local checks.
 
 ## Benchmark Workflow
 
-Import the full XIndex/YCSB traces from the Niagara workload checkout:
+The recommended fresh-clone path is:
+
+```sh
+./scripts/setup-benchmarks.sh
+```
+
+If you already have a local Niagara workload checkout, import the full
+XIndex/YCSB traces from it:
 
 ```sh
 ./scripts/import-niagara-workloads.sh --mode copy
@@ -126,6 +167,12 @@ git lfs pull
 ./scripts/restore-xindex-ycsb-data.sh
 ```
 
+Create short smoke traces from the full data:
+
+```sh
+./scripts/prepare-xindex-ycsb-smoke-data.sh
+```
+
 Collect allocation and mmap sites:
 
 ```sh
@@ -142,8 +189,13 @@ Build benchmark variants:
 Run native, instrumented-local, and instrumented-remote configurations:
 
 ```sh
-./scripts/run-gups-arbiter.sh
-./scripts/run-xindex-arbiter.sh
+./scripts/run-gups-arbiter.sh native
+./scripts/run-gups-arbiter.sh local
+ARBITER_TARGET_NODE=<node> ./scripts/run-gups-arbiter.sh remote
+
+./scripts/run-xindex-arbiter.sh native
+./scripts/run-xindex-arbiter.sh local
+ARBITER_TARGET_NODE=<node> ./scripts/run-xindex-arbiter.sh remote
 ```
 
 The first supported benchmarks are:

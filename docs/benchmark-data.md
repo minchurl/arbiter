@@ -61,6 +61,16 @@ git lfs pull
 ./scripts/restore-xindex-ycsb-data.sh
 ```
 
+The full fresh-clone benchmark setup wraps this restore step:
+
+```sh
+./scripts/setup-benchmarks.sh
+```
+
+That script also builds the Arbiter runtime/plugin, builds GUPS and XIndex
+benchmark binaries, creates short XIndex/YCSB smoke traces, and runs short
+native/local smoke checks.
+
 If Git LFS is not available, the same chunk directory can be uploaded as GitHub
 release assets and restored after downloading the parts into `github-parts`.
 

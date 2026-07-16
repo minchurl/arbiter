@@ -5,6 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BUILD_DIR="${ARBITER_BUILD_DIR:-${ROOT_DIR}/build-llvm18}"
 OUT_DIR="${ARBITER_BENCH_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/gups}"
 CLANG="${CLANG:-clang}"
+CLANGXX="${CLANGXX:-clang++}"
 LLVM_LINK="${LLVM_LINK:-llvm-link}"
 OPT="${OPT:-opt}"
 RUNTIME_LIB="${ARBITER_RUNTIME_LIB:-${BUILD_DIR}/runtime/libarbiter_runtime.a}"
@@ -63,7 +64,7 @@ mkdir -p "${OUT_DIR}"
   "${OUT_DIR}/${TARGET}.linked.bc" \
   -o "${OUT_DIR}/${TARGET}.arbiter.bc"
 
-"${CLANG}" -O3 "${OUT_DIR}/${TARGET}.arbiter.bc" "${RUNTIME_LIB}" \
+"${CLANGXX}" -O3 "${OUT_DIR}/${TARGET}.arbiter.bc" "${RUNTIME_LIB}" \
   -lm -lpthread ${RUNTIME_LINK_LIBS} \
   -o "${OUT_DIR}/${TARGET}-arbiter"
 

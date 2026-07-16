@@ -60,7 +60,9 @@ should not assume hardcoded operation or key counts.
 ```text
 scripts/import-niagara-workloads.sh
 scripts/package-xindex-ycsb-data.sh
+scripts/prepare-xindex-ycsb-smoke-data.sh
 scripts/restore-xindex-ycsb-data.sh
+scripts/setup-benchmarks.sh
 scripts/collect-allocation-sites.sh
 scripts/build-gups-llvm.sh
 scripts/build-xindex-llvm.sh
