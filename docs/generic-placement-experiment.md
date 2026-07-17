@@ -80,7 +80,8 @@ build/arbiter-bench/generic-placement-experiment/logs/
 Use `summary.md` for a quick read, `summary.csv` for tables/plots, and the logs
 for debugging failed or anomalous runs.
 
-Durable result snapshots and interpretation are recorded in
-[Generic Placement Experiment Results](generic-placement-results.md). Generated
-files under `build/` are not tracked by git, so update that document after
-notable runs.
+Durable result snapshots and interpretation are recorded under
+[Experiment Results](experiments/README.md), especially
+[Generic Placement Experiment Results](experiments/generic-placement-results.md).
+Generated files under `build/` are not tracked by git, so update that ledger
+after notable runs.

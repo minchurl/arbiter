@@ -96,7 +96,7 @@ False positives are expected, so the report is part of the experiment rather
 than just debug output.
 
 Current experiment results are tracked in
-[Generic Placement Experiment Results](generic-placement-results.md). The first
-scaled XIndex/YCSB-A runs are a negative result for this heuristic: the
-heuristic is stable and reproducible, but it does not currently outperform
+[Generic Placement Experiment Results](experiments/generic-placement-results.md).
+The first scaled XIndex/YCSB-A runs are a negative result for this heuristic:
+the heuristic is stable and reproducible, but it does not currently outperform
 naive all-site placement.

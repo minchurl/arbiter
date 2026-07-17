@@ -274,6 +274,6 @@ main benchmark path.
 - [Benchmark Plan](docs/benchmark-plan.md)
 - [Benchmark Data](docs/benchmark-data.md)
 - [Generic Placement Experiment](docs/generic-placement-experiment.md)
-- [Generic Placement Experiment Results](docs/generic-placement-results.md)
+- [Experiment Results](docs/experiments/README.md)
 - [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)
