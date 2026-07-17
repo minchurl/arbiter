@@ -47,6 +47,23 @@ struct LockTouchConfig {
 std::atomic<uint64_t> gHookCalls{0};
 std::atomic<uint64_t> gSampledCalls{0};
 
+struct LockTouchThreadStats {
+  uint64_t hookCalls = 0;
+  uint64_t sampledCalls = 0;
+  bool flushed = false;
+
+  void flush() {
+    if (flushed)
+      return;
+
+    gHookCalls.fetch_add(hookCalls, std::memory_order_relaxed);
+    gSampledCalls.fetch_add(sampledCalls, std::memory_order_relaxed);
+    flushed = true;
+  }
+
+  ~LockTouchThreadStats() { flush(); }
+};
+
 bool parseTargetNode(int32_t &node) {
   const char *value = std::getenv("ARBITER_TARGET_NODE");
   if (!value || value[0] == '\0')
@@ -170,8 +187,14 @@ const LockTouchConfig &getConfig() {
   return config;
 }
 
+LockTouchThreadStats &getThreadStats() {
+  thread_local LockTouchThreadStats stats;
+  return stats;
+}
+
 void printStatsAtExit() {
   const LockTouchConfig &config = getConfig();
+  getThreadStats().flush();
   LockPageStats pageStats = lockPageSnapshotStats();
   std::fprintf(stderr,
                "arbiter-lock-touch-stats: mode=%s target_node=%d "
@@ -256,7 +279,7 @@ void lockTouchSlow(void *addr, uint32_t siteId,
 extern "C" void arbiter_lock_touch(void *addr, uint32_t site_id) {
   const LockTouchConfig &config = getConfig();
   if (config.statsEnabled)
-    gHookCalls.fetch_add(1, std::memory_order_relaxed);
+    ++getThreadStats().hookCalls;
 
   if (!addr || config.mode == LockTouchMode::Off)
     return;
@@ -265,7 +288,7 @@ extern "C" void arbiter_lock_touch(void *addr, uint32_t site_id) {
     return;
 
   if (config.statsEnabled)
-    gSampledCalls.fetch_add(1, std::memory_order_relaxed);
+    ++getThreadStats().sampledCalls;
 
   lockTouchSlow(addr, site_id, config);
 }
