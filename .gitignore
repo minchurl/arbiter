@@ -6,6 +6,8 @@ cmake-build-*/
 *.dylib
 *.so
 *.ll
+!tests/llvm/shared-mutable-report.ll
+!tests/llvm/shared-mutable-rewrite.ll
 *.bc
 *.mlir.tmp
 .DS_Store
@@ -18,3 +20,4 @@ benchmark/**/cmake_install.cmake
 benchmark/**/*_log.txt
 benchmark/gups/gups
 benchmark/xindex/YCSB/xindex_dat/*.dat
+benchmark/xindex/YCSB/xindex_dat/*.tmp

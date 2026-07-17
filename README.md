@@ -44,12 +44,46 @@ Required:
 - LLVM 18 development packages
 - `opt`, `llvm-link`, and `FileCheck` for LLVM pass checks
 - `libnuma-dev` on Linux for target-node placement
+- `git-lfs` and `zstd` for the packaged XIndex/YCSB traces
+- `jemalloc` and Intel MKL for XIndex
 - MLIR 18 development packages only when building `mlir-legacy`
 
 On Ubuntu 24.04:
 
 ```sh
-sudo apt install cmake ninja-build clang-18 llvm-18-dev libnuma-dev
+sudo apt install cmake ninja-build make gcc clang-18 llvm-18-dev \
+  libnuma-dev git-lfs zstd libjemalloc-dev
+```
+
+Install Intel MKL separately, or set `MKL_INCLUDE_DIR`, `MKL_LINK_DIR`, and
+`MKL_RUNTIME_DIR` when building/running XIndex.
+
+## Fresh Clone Benchmark Setup
+
+For a fresh clone of the benchmark branch, use the one-shot setup:
+
+```sh
+git clone --branch experiment/generic-shared-mutable-placement \
+  git@github.com:minchurl/arbiter.git
+cd arbiter
+./scripts/setup-benchmarks.sh
+```
+
+This script:
+
+- pulls Git LFS chunks for the packaged XIndex/YCSB traces
+- restores the full raw `.dat` files under `benchmark/xindex/YCSB/xindex_dat`
+- configures and builds the Arbiter LLVM plugin/runtime in `build-llvm18`
+- builds GUPS native and Arbiter variants
+- builds XIndex native and Arbiter variants
+- creates short XIndex/YCSB smoke traces from the full data
+- runs short native/local smoke checks for both GUPS and XIndex/YCSB
+
+The setup restores about 46GB of raw XIndex/YCSB trace data, so make sure the
+machine has enough disk space. To skip the smoke checks:
+
+```sh
+./scripts/setup-benchmarks.sh --no-smoke
 ```
 
 Configure and build:
@@ -105,6 +139,40 @@ runtime falls back to host allocation for local checks.
 
 ## Benchmark Workflow
 
+The recommended fresh-clone path is:
+
+```sh
+./scripts/setup-benchmarks.sh
+```
+
+If you already have a local Niagara workload checkout, import the full
+XIndex/YCSB traces from it:
+
+```sh
+./scripts/import-niagara-workloads.sh --mode copy
+```
+
+For GitHub-friendly storage of the large traces, install Git LFS and package
+the imported data into compressed chunks:
+
+```sh
+git lfs install
+./scripts/package-xindex-ycsb-data.sh
+```
+
+Fresh clones can restore the raw `.dat` files with:
+
+```sh
+git lfs pull
+./scripts/restore-xindex-ycsb-data.sh
+```
+
+Create short smoke traces from the full data:
+
+```sh
+./scripts/prepare-xindex-ycsb-smoke-data.sh
+```
+
 Collect allocation and mmap sites:
 
 ```sh
@@ -121,8 +189,13 @@ Build benchmark variants:
 Run native, instrumented-local, and instrumented-remote configurations:
 
 ```sh
-./scripts/run-gups-arbiter.sh
-./scripts/run-xindex-arbiter.sh
+./scripts/run-gups-arbiter.sh native
+./scripts/run-gups-arbiter.sh local
+ARBITER_TARGET_NODE=<node> ./scripts/run-gups-arbiter.sh remote
+
+./scripts/run-xindex-arbiter.sh native
+./scripts/run-xindex-arbiter.sh local
+ARBITER_TARGET_NODE=<node> ./scripts/run-xindex-arbiter.sh remote
 ```
 
 The first supported benchmarks are:
@@ -130,6 +203,50 @@ The first supported benchmarks are:
 - GUPS: primary data region is anonymous `mmap`, so mmap rewriting is required.
 - XIndex/YCSB: primary index structures are C++ heap objects, so C++ allocation
   ABI rewriting is required.
+
+## Generic Placement Experiment
+
+After `./scripts/setup-benchmarks.sh`, run the generic placement experiment from
+the repository root in a separate tmux session:
+
+```sh
+tmux new-session -d -s arbiter-generic-exp -c "$(pwd)" \
+  'mkdir -p build/arbiter-bench/generic-placement-experiment && REPEATS=3 ./scripts/run-generic-placement-experiment.sh 2>&1 | tee build/arbiter-bench/generic-placement-experiment/driver.log'
+tmux attach -t arbiter-generic-exp
+```
+
+Results are written under:
+
+```text
+build/arbiter-bench/generic-placement-experiment
+```
+
+The main files are `runs.csv`, `summary.csv`, and `summary.md`. See
+[Generic Placement Experiment](docs/generic-placement-experiment.md).
+
+For the first XIndex/YCSB remote-placement run, prefer the protected scaled
+experiment. It creates smaller canonical trace files from the full data and runs
+inside a user systemd memory scope so an OOM does not take unrelated services
+with it:
+
+```sh
+tmux new-session -d -s arbiter-scale-exp -c "$(pwd)" \
+  './scripts/run-protected-scaled-xindex-experiment.sh 2>&1 | tee build/arbiter-bench/generic-placement-scale-100000-400000/driver.log'
+tmux attach -t arbiter-scale-exp
+```
+
+Useful scaling knobs:
+
+```sh
+XINDEX_SCALE_LOAD_RECORDS=1000000 \
+XINDEX_SCALE_TX_OPS=4000000 \
+MEMORY_MAX=96G \
+REPEATS=3 \
+./scripts/run-protected-scaled-xindex-experiment.sh
+```
+
+The protected scaled run writes `runs.csv`, `summary.csv`, `summary.md`, and
+`report.md` under `build/arbiter-bench/generic-placement-scale-<load>-<tx>`.
 
 ## MLIR Legacy Path
 
@@ -155,4 +272,8 @@ main benchmark path.
 - [Overview](docs/overview.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
+- [Benchmark Data](docs/benchmark-data.md)
+- [Generic Placement Experiment](docs/generic-placement-experiment.md)
+- [Experiment Results](docs/experiments/README.md)
+- [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)

@@ -1,0 +1,2 @@
+benchmark/xindex/YCSB/xindex_dat/github-parts/*.zst.part-* filter=lfs diff=lfs merge=lfs -text
+benchmark/xindex/YCSB/xindex_dat/github-parts/MANIFEST.sha256 text eol=lf

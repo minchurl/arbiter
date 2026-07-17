@@ -12,15 +12,30 @@ read -r -a ARGS <<< "${ARGS_STRING}"
 
 case "${MODE}" in
   native)
+    if [[ ! -x "${NATIVE_BIN}" ]]; then
+      echo "missing native GUPS binary: ${NATIVE_BIN}" >&2
+      echo "try: make -C ${ROOT_DIR}/benchmark/gups gups" >&2
+      exit 1
+    fi
     exec "${NATIVE_BIN}" "${ARGS[@]}"
     ;;
   local)
     unset ARBITER_TARGET_NODE
+    if [[ ! -x "${ARBITER_BIN}" ]]; then
+      echo "missing Arbiter GUPS binary: ${ARBITER_BIN}" >&2
+      echo "try: ./scripts/build-gups-llvm.sh" >&2
+      exit 1
+    fi
     exec "${ARBITER_BIN}" "${ARGS[@]}"
     ;;
   remote)
     if [[ -z "${ARBITER_TARGET_NODE:-}" ]]; then
       echo "ARBITER_TARGET_NODE must be set for remote mode" >&2
+      exit 1
+    fi
+    if [[ ! -x "${ARBITER_BIN}" ]]; then
+      echo "missing Arbiter GUPS binary: ${ARBITER_BIN}" >&2
+      echo "try: ./scripts/build-gups-llvm.sh" >&2
       exit 1
     fi
     exec "${ARBITER_BIN}" "${ARGS[@]}"
