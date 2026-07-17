@@ -70,6 +70,7 @@ Environment variables:
 ARBITER_LOCK_TOUCH_MODE=auto|off|touch|migrate
 ARBITER_LOCK_TOUCH_SAMPLE_PERIOD=<n>   default: 1024
 ARBITER_LOCK_TOUCH_THRESHOLD=<n>       default: 64 sampled touches
+ARBITER_LOCK_TOUCH_STATS=0|1           default: 0
 ARBITER_TARGET_NODE=<node>
 ```
 
@@ -85,6 +86,17 @@ tracks sampled touches in a sharded table, and attempts one `move_pages` call
 with `MPOL_MF_MOVE` after the threshold. If `numaif.h`/`move_pages` support is
 not available at build time, migration is disabled and touch counting still
 builds.
+
+When `ARBITER_LOCK_TOUCH_STATS=1`, the runtime emits one stderr line at process
+exit:
+
+```text
+arbiter-lock-touch-stats: mode=migrate target_node=1 ... migration_attempts=...
+```
+
+The main fields are `hook_calls`, `sampled_calls`, `pages`,
+`sampled_touches`, `migration_attempts`, `migration_successes`, and
+`max_sampled_touches`.
 
 ## XIndex Usage
 

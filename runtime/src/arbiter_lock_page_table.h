@@ -5,9 +5,18 @@
 
 namespace arbiter::runtime {
 
+struct LockPageStats {
+  uint64_t pages = 0;
+  uint64_t sampledTouches = 0;
+  uint64_t migrationAttempts = 0;
+  uint64_t migrationSuccesses = 0;
+  uint64_t maxSampledTouches = 0;
+};
+
 bool lockPageRecordSample(void *page, uint32_t siteId, uint64_t threshold,
                           bool migrationEnabled);
 void lockPageMarkMigrated(void *page);
+LockPageStats lockPageSnapshotStats();
 
 } // namespace arbiter::runtime
 

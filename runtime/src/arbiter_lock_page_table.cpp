@@ -66,4 +66,26 @@ void lockPageMarkMigrated(void *page) {
     it->second.migrated = true;
 }
 
+LockPageStats lockPageSnapshotStats() {
+  LockPageStats stats{};
+
+  for (LockPageShard &shard : getShards()) {
+    std::lock_guard<std::mutex> lock(shard.mutex);
+    stats.pages += shard.entries.size();
+
+    for (const auto &entry : shard.entries) {
+      const LockPageEntry &page = entry.second;
+      stats.sampledTouches += page.sampledTouches;
+      if (page.migrationAttempted)
+        ++stats.migrationAttempts;
+      if (page.migrated)
+        ++stats.migrationSuccesses;
+      if (page.sampledTouches > stats.maxSampledTouches)
+        stats.maxSampledTouches = page.sampledTouches;
+    }
+  }
+
+  return stats;
+}
+
 } // namespace arbiter::runtime

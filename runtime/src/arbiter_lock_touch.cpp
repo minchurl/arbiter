@@ -2,8 +2,10 @@
 
 #include "arbiter_lock_page_table.h"
 
+#include <atomic>
 #include <cerrno>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <limits>
@@ -17,6 +19,8 @@ namespace {
 
 using arbiter::runtime::lockPageMarkMigrated;
 using arbiter::runtime::lockPageRecordSample;
+using arbiter::runtime::lockPageSnapshotStats;
+using arbiter::runtime::LockPageStats;
 
 constexpr int32_t kNoTargetNode = -1;
 constexpr uint64_t kDefaultSamplePeriod = 1024;
@@ -33,11 +37,15 @@ struct LockTouchConfig {
   bool hasTargetNode;
   int32_t targetNode;
   LockTouchMode mode;
+  bool statsEnabled;
   uint64_t samplePeriod;
   uint64_t sampleMask;
   bool useMask;
   uint64_t threshold;
 };
+
+std::atomic<uint64_t> gHookCalls{0};
+std::atomic<uint64_t> gSampledCalls{0};
 
 bool parseTargetNode(int32_t &node) {
   const char *value = std::getenv("ARBITER_TARGET_NODE");
@@ -68,6 +76,15 @@ bool parseUnsignedEnv(const char *name, uint64_t &value) {
 
   value = static_cast<uint64_t>(parsed);
   return true;
+}
+
+bool parseBoolEnv(const char *name) {
+  const char *raw = std::getenv(name);
+  if (!raw || raw[0] == '\0')
+    return false;
+
+  return std::strcmp(raw, "0") != 0 && std::strcmp(raw, "false") != 0 &&
+         std::strcmp(raw, "off") != 0;
 }
 
 bool isPowerOfTwo(uint64_t value) {
@@ -102,10 +119,23 @@ LockTouchMode parseMode(bool hasTargetNode) {
   return defaultMode(hasTargetNode);
 }
 
+const char *modeName(LockTouchMode mode) {
+  switch (mode) {
+  case LockTouchMode::Off:
+    return "off";
+  case LockTouchMode::Touch:
+    return "touch";
+  case LockTouchMode::Migrate:
+    return "migrate";
+  }
+  return "unknown";
+}
+
 LockTouchConfig loadConfig() {
   LockTouchConfig config{false,
                          kNoTargetNode,
                          LockTouchMode::Touch,
+                         false,
                          kDefaultSamplePeriod,
                          kDefaultSamplePeriod - 1,
                          true,
@@ -113,6 +143,7 @@ LockTouchConfig loadConfig() {
 
   config.hasTargetNode = parseTargetNode(config.targetNode);
   config.mode = parseMode(config.hasTargetNode);
+  config.statsEnabled = parseBoolEnv("ARBITER_LOCK_TOUCH_STATS");
 
   uint64_t samplePeriod = 0;
   if (parseUnsignedEnv("ARBITER_LOCK_TOUCH_SAMPLE_PERIOD", samplePeriod))
@@ -127,9 +158,38 @@ LockTouchConfig loadConfig() {
   return config;
 }
 
+void printStatsAtExit();
+
 const LockTouchConfig &getConfig() {
-  static const LockTouchConfig config = loadConfig();
+  static const LockTouchConfig config = [] {
+    LockTouchConfig loaded = loadConfig();
+    if (loaded.statsEnabled)
+      std::atexit(printStatsAtExit);
+    return loaded;
+  }();
   return config;
+}
+
+void printStatsAtExit() {
+  const LockTouchConfig &config = getConfig();
+  LockPageStats pageStats = lockPageSnapshotStats();
+  std::fprintf(stderr,
+               "arbiter-lock-touch-stats: mode=%s target_node=%d "
+               "has_target_node=%u sample_period=%llu threshold=%llu "
+               "hook_calls=%llu sampled_calls=%llu pages=%llu "
+               "sampled_touches=%llu migration_attempts=%llu "
+               "migration_successes=%llu max_sampled_touches=%llu\n",
+               modeName(config.mode), static_cast<int>(config.targetNode),
+               config.hasTargetNode ? 1u : 0u,
+               static_cast<unsigned long long>(config.samplePeriod),
+               static_cast<unsigned long long>(config.threshold),
+               static_cast<unsigned long long>(gHookCalls.load()),
+               static_cast<unsigned long long>(gSampledCalls.load()),
+               static_cast<unsigned long long>(pageStats.pages),
+               static_cast<unsigned long long>(pageStats.sampledTouches),
+               static_cast<unsigned long long>(pageStats.migrationAttempts),
+               static_cast<unsigned long long>(pageStats.migrationSuccesses),
+               static_cast<unsigned long long>(pageStats.maxSampledTouches));
 }
 
 uint64_t getPageSize() {
@@ -195,11 +255,17 @@ void lockTouchSlow(void *addr, uint32_t siteId,
 
 extern "C" void arbiter_lock_touch(void *addr, uint32_t site_id) {
   const LockTouchConfig &config = getConfig();
+  if (config.statsEnabled)
+    gHookCalls.fetch_add(1, std::memory_order_relaxed);
+
   if (!addr || config.mode == LockTouchMode::Off)
     return;
 
   if (!shouldSample(config))
     return;
+
+  if (config.statsEnabled)
+    gSampledCalls.fetch_add(1, std::memory_order_relaxed);
 
   lockTouchSlow(addr, site_id, config);
 }
