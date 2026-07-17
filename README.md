@@ -224,6 +224,30 @@ build/arbiter-bench/generic-placement-experiment
 The main files are `runs.csv`, `summary.csv`, and `summary.md`. See
 [Generic Placement Experiment](docs/generic-placement-experiment.md).
 
+For the first XIndex/YCSB remote-placement run, prefer the protected scaled
+experiment. It creates smaller canonical trace files from the full data and runs
+inside a user systemd memory scope so an OOM does not take unrelated services
+with it:
+
+```sh
+tmux new-session -d -s arbiter-scale-exp -c "$(pwd)" \
+  './scripts/run-protected-scaled-xindex-experiment.sh 2>&1 | tee build/arbiter-bench/generic-placement-scale-100000-400000/driver.log'
+tmux attach -t arbiter-scale-exp
+```
+
+Useful scaling knobs:
+
+```sh
+XINDEX_SCALE_LOAD_RECORDS=1000000 \
+XINDEX_SCALE_TX_OPS=4000000 \
+MEMORY_MAX=96G \
+REPEATS=3 \
+./scripts/run-protected-scaled-xindex-experiment.sh
+```
+
+The protected scaled run writes `runs.csv`, `summary.csv`, `summary.md`, and
+`report.md` under `build/arbiter-bench/generic-placement-scale-<load>-<tx>`.
+
 ## MLIR Legacy Path
 
 The MLIR tool remains available for memref-level experiments when explicitly

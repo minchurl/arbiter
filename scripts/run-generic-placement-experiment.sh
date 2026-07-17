@@ -10,6 +10,9 @@ TARGET_NODE="${ARBITER_TARGET_NODE:-1}"
 RUN_GUPS="${RUN_GUPS:-1}"
 RUN_XINDEX="${RUN_XINDEX:-1}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-1}"
+RERUN_FAILED="${RERUN_FAILED:-0}"
+GUPS_CONFIGS="${GUPS_CONFIGS:-native all-local all-remote}"
+XINDEX_CONFIGS="${XINDEX_CONFIGS:-native all-local generic-local all-remote generic-remote}"
 XINDEX_WORKLOADS="${XINDEX_WORKLOADS:-a b}"
 XINDEX_FG="${XINDEX_FG:-22}"
 XINDEX_ITERATION="${XINDEX_ITERATION:-20}"
@@ -38,6 +41,9 @@ Useful environment:
   RUN_GUPS          default: 1
   RUN_XINDEX        default: 1
   BUILD_BENCHMARKS  default: 1
+  RERUN_FAILED      default: 0
+  GUPS_CONFIGS      default: "native all-local all-remote"
+  XINDEX_CONFIGS    default: "native all-local generic-local all-remote generic-remote"
   XINDEX_WORKLOADS  default: "a b"
   XINDEX_FG         default: 22
   XINDEX_ITERATION  default: 20
@@ -66,13 +72,23 @@ already_recorded() {
   local config="$3"
   local repeat="$4"
 
-  awk -F, \
-    -v benchmark="${benchmark}" \
-    -v workload="${workload}" \
-    -v config="${config}" \
-    -v repeat="${repeat}" \
-    'NR > 1 && $1 == benchmark && $2 == workload && $3 == config && $4 == repeat && $18 == "ok" {found = 1} END {exit !found}' \
-    "${CSV}"
+  if [[ "${RERUN_FAILED}" == "1" ]]; then
+    awk -F, \
+      -v benchmark="${benchmark}" \
+      -v workload="${workload}" \
+      -v config="${config}" \
+      -v repeat="${repeat}" \
+      'NR > 1 && $1 == benchmark && $2 == workload && $3 == config && $4 == repeat && $18 == "ok" {found = 1} END {exit !found}' \
+      "${CSV}"
+  else
+    awk -F, \
+      -v benchmark="${benchmark}" \
+      -v workload="${workload}" \
+      -v config="${config}" \
+      -v repeat="${repeat}" \
+      'NR > 1 && $1 == benchmark && $2 == workload && $3 == config && $4 == repeat && $18 != "" {found = 1} END {exit !found}' \
+      "${CSV}"
+  fi
 }
 
 append_csv() {
@@ -256,20 +272,52 @@ build_benchmarks
 
 if [[ "${RUN_GUPS}" == "1" ]]; then
   for repeat in $(seq 1 "${REPEATS}"); do
-    run_gups_one "native" "${repeat}" "native" "${ROOT_DIR}/benchmark/gups/${GUPS_TARGET}"
-    run_gups_one "all-local" "${repeat}" "local" "${GUPS_BUILD_DIR}/${GUPS_TARGET}-arbiter"
-    run_gups_one "all-remote" "${repeat}" "remote" "${GUPS_BUILD_DIR}/${GUPS_TARGET}-arbiter"
+    for config in ${GUPS_CONFIGS}; do
+      case "${config}" in
+        native)
+          run_gups_one "native" "${repeat}" "native" "${ROOT_DIR}/benchmark/gups/${GUPS_TARGET}"
+          ;;
+        all-local)
+          run_gups_one "all-local" "${repeat}" "local" "${GUPS_BUILD_DIR}/${GUPS_TARGET}-arbiter"
+          ;;
+        all-remote)
+          run_gups_one "all-remote" "${repeat}" "remote" "${GUPS_BUILD_DIR}/${GUPS_TARGET}-arbiter"
+          ;;
+        *)
+          echo "unknown GUPS config: ${config}" >&2
+          exit 1
+          ;;
+      esac
+    done
   done
 fi
 
 if [[ "${RUN_XINDEX}" == "1" ]]; then
   for workload in ${XINDEX_WORKLOADS}; do
     for repeat in $(seq 1 "${REPEATS}"); do
-      run_xindex_one "${workload}" "native" "${repeat}" "native" "${XINDEX_ALL_DIR}/ycsb_bench-native"
-      run_xindex_one "${workload}" "all-local" "${repeat}" "local" "${XINDEX_ALL_DIR}/ycsb_bench-arbiter"
-      run_xindex_one "${workload}" "generic-local" "${repeat}" "local" "${XINDEX_GENERIC_DIR}/ycsb_bench-arbiter"
-      run_xindex_one "${workload}" "all-remote" "${repeat}" "remote" "${XINDEX_ALL_DIR}/ycsb_bench-arbiter"
-      run_xindex_one "${workload}" "generic-remote" "${repeat}" "remote" "${XINDEX_GENERIC_DIR}/ycsb_bench-arbiter"
+      for config in ${XINDEX_CONFIGS}; do
+        case "${config}" in
+          native)
+            run_xindex_one "${workload}" "native" "${repeat}" "native" "${XINDEX_ALL_DIR}/ycsb_bench-native"
+            ;;
+          all-local)
+            run_xindex_one "${workload}" "all-local" "${repeat}" "local" "${XINDEX_ALL_DIR}/ycsb_bench-arbiter"
+            ;;
+          generic-local)
+            run_xindex_one "${workload}" "generic-local" "${repeat}" "local" "${XINDEX_GENERIC_DIR}/ycsb_bench-arbiter"
+            ;;
+          all-remote)
+            run_xindex_one "${workload}" "all-remote" "${repeat}" "remote" "${XINDEX_ALL_DIR}/ycsb_bench-arbiter"
+            ;;
+          generic-remote)
+            run_xindex_one "${workload}" "generic-remote" "${repeat}" "remote" "${XINDEX_GENERIC_DIR}/ycsb_bench-arbiter"
+            ;;
+          *)
+            echo "unknown XIndex config: ${config}" >&2
+            exit 1
+            ;;
+        esac
+      done
     done
   done
 fi
