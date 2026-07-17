@@ -25,6 +25,14 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::SharedMutableRewriteExperimentPass());
     return true;
   }
+  if (name == "arbiter-report-lock-touch-sites") {
+    manager.addPass(arbiter::llvm::LockTouchReportPass());
+    return true;
+  }
+  if (name == "arbiter-experiment-lock-touch-instrument") {
+    manager.addPass(arbiter::llvm::LockTouchInstrumentPass());
+    return true;
+  }
   return false;
 }
 

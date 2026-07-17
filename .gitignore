@@ -8,6 +8,8 @@ cmake-build-*/
 *.ll
 !tests/llvm/shared-mutable-report.ll
 !tests/llvm/shared-mutable-rewrite.ll
+!tests/llvm/lock-touch-report.ll
+!tests/llvm/lock-touch-instrument.ll
 *.bc
 *.mlir.tmp
 .DS_Store

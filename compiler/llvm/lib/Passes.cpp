@@ -27,6 +27,11 @@ cl::opt<unsigned> ArbiterSharedMutableMinScore(
     cl::desc("Minimum score required for shared-mutable rewrite selection"),
     cl::init(6));
 
+cl::opt<std::string> ArbiterLockTouchReportPath(
+    "arbiter-lock-touch-report-path",
+    cl::desc("Path for Arbiter LLVM lock-touch reports; '-' means stdout"),
+    cl::init("-"));
+
 PreservedAnalyses AllRewriteExperimentPass::run(
     Module &module, ModuleAnalysisManager &manager) {
   (void)manager;

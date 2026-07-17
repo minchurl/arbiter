@@ -83,6 +83,23 @@ The benchmark pass is intentionally all-select for the first LLVM-only
 experiment. More advanced static scoring and narrower experiment passes are
 future work.
 
+A separate LLVM-only lock-touch experiment instruments synchronization target
+addresses instead of allocation sites:
+
+```text
+arbiter-report-lock-touch-sites
+  -> emits pthread lock, atomic, and lock/cmpxchg inline-asm targets
+  -> does not modify IR
+
+arbiter-experiment-lock-touch-instrument
+  -> inserts arbiter_lock_touch(addr, site_id) before recognized targets
+  -> leaves the original lock or atomic operation responsible for correctness
+```
+
+The runtime samples these touches, counts them by containing page, and can
+migrate hot lock pages to `ARBITER_TARGET_NODE`. See
+[Lock-Touch Page Migration](lock-touch-page-migration.md).
+
 ## Runtime Placement
 
 The LLVM path lowers experiment-selected sites to site-aware runtime calls:
