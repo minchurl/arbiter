@@ -165,13 +165,12 @@ REPORT="${RESULT_DIR}/report.md"
   echo
   echo "## Relative Results"
   echo
-  if [[ -f "${RESULT_DIR}/runs.csv" ]]; then
+  if [[ -f "${RESULT_DIR}/summary.csv" ]]; then
     awk -F, '
       NR == 1 { next }
-      $18 != "ok" { next }
       {
-        time[$3] = $13 + 0
-        thr[$3] = $14 + 0
+        time[$3] = $6 + 0
+        thr[$3] = $9 + 0
         order[++n] = $3
       }
       END {
@@ -182,8 +181,20 @@ REPORT="${RESULT_DIR}/report.md"
 
         print "| Config | Time / Native | Throughput / Native |"
         print "|---|---:|---:|"
+        split("native all-local generic-local all-remote generic-remote", preferred, " ")
+        for (i = 1; i <= 5; i++) {
+          config = preferred[i]
+          if (!(config in time)) {
+            continue
+          }
+          printed[config] = 1
+          printf "| %s | %.3fx | %.3fx |\n", config, time[config] / time["native"], thr[config] / thr["native"]
+        }
         for (i = 1; i <= n; i++) {
           config = order[i]
+          if (printed[config]) {
+            continue
+          }
           printf "| %s | %.3fx | %.3fx |\n", config, time[config] / time["native"], thr[config] / thr["native"]
         }
 
@@ -194,9 +205,9 @@ REPORT="${RESULT_DIR}/report.md"
           printf "- Heuristic remote throughput vs naive remote: %.3fx\n", thr["generic-remote"] / thr["all-remote"]
         }
       }
-    ' "${RESULT_DIR}/runs.csv"
+    ' "${RESULT_DIR}/summary.csv"
   else
-    echo "Runs CSV was not generated."
+    echo "Summary CSV was not generated."
   fi
   echo
   echo "## Notes"
