@@ -1,4 +1,6 @@
 add_library(arbiter_runtime STATIC
+  src/arbiter_lock_page_table.cpp
+  src/arbiter_lock_touch.cpp
   src/arbiter_runtime_site.cpp
   src/arbiter_side_table.cpp
 )
@@ -20,6 +22,14 @@ else()
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA=0)
 endif()
 
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMAIF_INCLUDE_DIR AND NUMA_LIBRARY)
+  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_MOVE_PAGES=1)
+  target_include_directories(arbiter_runtime PRIVATE ${NUMAIF_INCLUDE_DIR})
+  target_link_libraries(arbiter_runtime PUBLIC ${NUMA_LIBRARY})
+else()
+  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_MOVE_PAGES=0)
+endif()
+
 add_executable(arbiter-runtime-smoke
   ../tests/llvm/arbiter-runtime-smoke.cpp
 )
@@ -39,7 +49,17 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
     ../tests/llvm/arbiter-numa-placement.cpp
   )
 
+  add_executable(arbiter-lock-touch-migration
+    ../tests/llvm/arbiter-lock-touch-migration.cpp
+  )
+
   target_include_directories(arbiter-numa-placement
+    PRIVATE
+    ${NUMA_INCLUDE_DIR}
+    ${NUMAIF_INCLUDE_DIR}
+  )
+
+  target_include_directories(arbiter-lock-touch-migration
     PRIVATE
     ${NUMA_INCLUDE_DIR}
     ${NUMAIF_INCLUDE_DIR}
@@ -50,12 +70,21 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
     arbiter_runtime
   )
 
+  target_link_libraries(arbiter-lock-touch-migration
+    PRIVATE
+    arbiter_runtime
+  )
+
   set_target_properties(arbiter-numa-placement PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
+  )
+
+  set_target_properties(arbiter-lock-touch-migration PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
   )
 else()
   message(STATUS
-    "Skipping arbiter-numa-placement: Linux libnuma development files not found"
+    "Skipping NUMA runtime smoke targets: Linux libnuma development files not found"
   )
 endif()
 

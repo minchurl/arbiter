@@ -276,4 +276,5 @@ main benchmark path.
 - [Generic Placement Experiment](docs/generic-placement-experiment.md)
 - [Experiment Results](docs/experiments/README.md)
 - [Shared-Mutable Pattern Placement](docs/shared-mutable-pattern-placement.md)
+- [Lock-Touch Page Migration](docs/lock-touch-page-migration.md)
 - [MLIR Legacy Path](docs/mlir-legacy.md)

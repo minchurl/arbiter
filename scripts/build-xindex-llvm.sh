@@ -12,6 +12,7 @@ MKL_LINK_DIR="${MKL_LINK_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
 XINDEX_EXTRA_LIBS="${XINDEX_EXTRA_LIBS:--ljemalloc -lmkl_rt -lpthread}"
 XINDEX_EXPERIMENT="${ARBITER_XINDEX_EXPERIMENT:-all}"
 BUILD_NATIVE="${ARBITER_BUILD_XINDEX_NATIVE:-1}"
+EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/${XINDEX_EXPERIMENT}.sh"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -82,24 +83,34 @@ fi
   -disable-output \
   "${OUT_DIR}/ycsb_bench.bc"
 
-case "${XINDEX_EXPERIMENT}" in
-  all)
-    REWRITE_PASS="arbiter-experiment-all-rewrite"
-    ;;
-  shared-mutable)
-    "${OPT}" \
-      -load-pass-plugin "${PLUGIN}" \
-      -passes=arbiter-report-shared-mutable-sites \
-      -arbiter-shared-mutable-report-path="${OUT_DIR}/ycsb_bench.shared-mutable-sites.csv" \
-      -disable-output \
-      "${OUT_DIR}/ycsb_bench.bc"
-    REWRITE_PASS="arbiter-experiment-shared-mutable-rewrite"
-    ;;
-  *)
-    echo "unknown ARBITER_XINDEX_EXPERIMENT=${XINDEX_EXPERIMENT}; expected all or shared-mutable" >&2
-    exit 1
-    ;;
-esac
+if [[ ! -f "${EXPERIMENT_CONFIG}" ]]; then
+  echo "unknown ARBITER_XINDEX_EXPERIMENT=${XINDEX_EXPERIMENT}" >&2
+  echo "expected one of:" >&2
+  for config in "${ROOT_DIR}/scripts/xindex-experiments/"*.sh; do
+    [[ -e "${config}" ]] || continue
+    name="$(basename "${config}")"
+    echo "  ${name%.sh}" >&2
+  done
+  exit 1
+fi
+
+REWRITE_PASS=""
+EXPERIMENT_REPORTS=()
+
+# shellcheck source=/dev/null
+source "${EXPERIMENT_CONFIG}"
+
+if ! declare -F configure_xindex_experiment >/dev/null; then
+  echo "invalid XIndex experiment config: ${EXPERIMENT_CONFIG}" >&2
+  exit 1
+fi
+
+configure_xindex_experiment
+
+if [[ -z "${REWRITE_PASS}" ]]; then
+  echo "XIndex experiment ${XINDEX_EXPERIMENT} did not set REWRITE_PASS" >&2
+  exit 1
+fi
 
 "${OPT}" \
   -load-pass-plugin "${PLUGIN}" \
@@ -118,6 +129,6 @@ if [[ "${BUILD_NATIVE}" != "0" ]]; then
   echo "wrote ${OUT_DIR}/ycsb_bench-native"
 fi
 echo "wrote ${OUT_DIR}/ycsb_bench.sites.csv"
-if [[ "${XINDEX_EXPERIMENT}" == "shared-mutable" ]]; then
-  echo "wrote ${OUT_DIR}/ycsb_bench.shared-mutable-sites.csv"
-fi
+for report in "${EXPERIMENT_REPORTS[@]}"; do
+  echo "wrote ${OUT_DIR}/${report}"
+done
