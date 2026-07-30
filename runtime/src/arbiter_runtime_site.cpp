@@ -22,6 +22,10 @@ using arbiter::runtime::SideTableEntry;
 using arbiter::runtime::SideTableKind;
 
 constexpr int32_t kNoTargetNode = -1;
+constexpr uint32_t kPlacementTargetEnabled = 1u << 0;
+constexpr unsigned kPlacementTargetNodeShift = 8;
+constexpr uint32_t kPlacementTargetNodeMask =
+    0xffu << kPlacementTargetNodeShift;
 
 struct RuntimeConfig {
   bool hasTargetNode;
@@ -100,20 +104,27 @@ void *allocateNuma(uint64_t size, int32_t node) {
 #endif
 }
 
-BackendAllocation tryAllocateOnTargetNode(uint64_t size) {
-  const RuntimeConfig &config = getRuntimeConfig();
-  if (!config.hasTargetNode)
-    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
+BackendAllocation tryAllocateOnTargetNode(uint64_t size, uint32_t flags) {
+  int32_t targetNode = kNoTargetNode;
+  if ((flags & kPlacementTargetEnabled) != 0) {
+    targetNode = static_cast<int32_t>(
+        (flags & kPlacementTargetNodeMask) >> kPlacementTargetNodeShift);
+  } else {
+    const RuntimeConfig &config = getRuntimeConfig();
+    if (!config.hasTargetNode)
+      return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
+    targetNode = config.targetNode;
+  }
 
-  void *ptr = allocateNuma(size, config.targetNode);
+  void *ptr = allocateNuma(size, targetNode);
   if (!ptr)
     return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
 
-  return {ptr, SideTableBackend::Numa, config.targetNode};
+  return {ptr, SideTableBackend::Numa, targetNode};
 }
 
-BackendAllocation allocateHeap(uint64_t size) {
-  BackendAllocation allocation = tryAllocateOnTargetNode(size);
+BackendAllocation allocateHeap(uint64_t size, uint32_t flags) {
+  BackendAllocation allocation = tryAllocateOnTargetNode(size, flags);
   if (allocation.ptr)
     return allocation;
 
@@ -188,7 +199,7 @@ extern "C" void *arbiter_alloc_site(uint64_t size, uint64_t align,
   if (!fitsSizeT(size))
     return nullptr;
 
-  BackendAllocation allocation = allocateHeap(size);
+  BackendAllocation allocation = allocateHeap(size, flags);
   if (!allocation.ptr)
     return nullptr;
 
@@ -222,7 +233,7 @@ extern "C" void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
   if (size == 0 || !fitsSizeT(size))
     return MAP_FAILED;
 
-  BackendAllocation target = tryAllocateOnTargetNode(size);
+  BackendAllocation target = tryAllocateOnTargetNode(size, flags);
   if (target.ptr) {
     std::memset(target.ptr, 0, static_cast<size_t>(size));
     SideTableEntry entry =

@@ -95,6 +95,7 @@ if [[ ! -f "${EXPERIMENT_CONFIG}" ]]; then
 fi
 
 REWRITE_PASS=""
+REWRITE_ARGS=()
 EXPERIMENT_REPORTS=()
 
 # shellcheck source=/dev/null
@@ -115,6 +116,7 @@ fi
 "${OPT}" \
   -load-pass-plugin "${PLUGIN}" \
   -passes="${REWRITE_PASS}" \
+  "${REWRITE_ARGS[@]}" \
   "${OUT_DIR}/ycsb_bench.bc" \
   -o "${OUT_DIR}/ycsb_bench.arbiter.bc"
 
@@ -130,5 +132,9 @@ if [[ "${BUILD_NATIVE}" != "0" ]]; then
 fi
 echo "wrote ${OUT_DIR}/ycsb_bench.sites.csv"
 for report in "${EXPERIMENT_REPORTS[@]}"; do
-  echo "wrote ${OUT_DIR}/${report}"
+  if [[ "${report}" = /* ]]; then
+    echo "wrote ${report}"
+  else
+    echo "wrote ${OUT_DIR}/${report}"
+  fi
 done

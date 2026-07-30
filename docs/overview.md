@@ -2,19 +2,35 @@
 
 This document is the source of truth for Arbiter's current design.
 
-## Overview
+## Current Direction
 
 Arbiter is a compiler-assisted placement system for coherence-sensitive memory
 objects in tiered memory environments.
 
-The current implementation direction is LLVM-only for benchmark execution.
-Arbiter compiles C/C++ benchmarks to LLVM IR, reports candidate allocation and
-mapping sites, rewrites explicitly selected sites to Arbiter runtime calls, and
-places selected objects on a configured target memory node such as remote NUMA
-memory or CXL-like memory.
+The current implementation direction is the LLVM-only hot-set experiment.
+Arbiter scores allocation sites at compile time, chooses a small set of seeds,
+follows bounded seed-relative access paths, and rewrites attached allocations
+whose read/write affinity passes the configured threshold.
 
-The first target is allocation-time placement. Arbiter does not move objects
-after the program starts running.
+The current target is allocation-time placement on remote NUMA or CXL-like
+memory. Despite the experiment name, Arbiter does not move already-allocated
+objects during the measured run.
+
+The detailed policy, config reference, and experiment methodology live in
+[Access-Affinity Hot Set Placement](hotset-migration.md).
+
+## Document Map
+
+- [Access-Affinity Hot Set Placement](hotset-migration.md): current heuristic,
+  config, and experiment contract.
+- [Shared-Mutable Pattern Placement](shared-mutable-pattern-placement.md):
+  earlier point-based heuristic retained as an independent baseline.
+- [LLVM-Only Design](llvm-only-design.md): generic allocation-site reporting,
+  rewriting, and runtime ownership model.
+- [Experiment Results](experiments/README.md): durable result ledgers.
+- [Lock-Touch Page Migration](lock-touch-page-migration.md): runtime-hook
+  comparison path, not the current direction.
+- [MLIR Legacy Path](mlir-legacy.md): legacy precision/reference path.
 
 ## Motivation
 
@@ -40,65 +56,56 @@ memory controllers, and how much it interferes with other hot data. The
 expected benefit exists only when the reduction in coherence-related pressure
 is larger than the added latency penalty of the target memory tier.
 
-## Current Architecture
+## Architecture
 
 ```text
-C/C++ benchmark
+C/C++ benchmark + build-time hot-set config
   -> clang/clang++ LLVM IR
-  -> Arbiter LLVM pass plugin
-  -> LLVM IR with selected runtime calls
+  -> Arbiter site and hot-set reports
+  -> hot-set rewrite pass
+  -> LLVM IR with selected arbiter_*_site calls and baked placement flags
   -> native binary linked with Arbiter runtime
-  -> run with ARBITER_TARGET_NODE
+  -> allocation-time placement under the selected flag policy
 ```
 
-The LLVM path is the primary benchmark path because it can cover large C/C++
-codebases without requiring a source-to-memref frontend.
+Existing experiments continue to emit `flags=0` and use the existing
+`ARBITER_TARGET_NODE` runtime policy. Hot-set target runs encode an enable bit
+and node ID in that same flags operand and do not depend on the environment
+variable.
 
-The earlier MLIR/memref path is retained as a legacy precision/reference path.
-It is documented separately in [MLIR Legacy Path](mlir-legacy.md) and is not
-used by the current LLVM-only benchmark workflow.
+## Compiler Passes
 
-## Compiler Design
-
-The current LLVM compiler path keeps reporting separate from the benchmark
-experiment pass.
+Reporting and rewriting are separate so every experiment can inspect its
+decision before producing a binary.
 
 ```text
 arbiter-report-sites
   -> emits allocation and mmap candidates
   -> does not modify IR
 
-arbiter-experiment-all-rewrite
-  -> selects every supported heap allocation and anonymous mmap site
-  -> rewrites them to site-aware runtime calls
-  -> rewrites free/delete/munmap calls to side-table-aware maybe helpers
-```
-
-Experiment passes carry selection results in an in-memory `RewritePlan`. They
-do not tag IR. The plan records selected allocation/mmap sites separately from
-broad deallocation coverage, so Arbiter does not need to solve malloc/free
-pairing before rewriting `free`, C++ delete, or `munmap` call sites.
-
-The benchmark pass is intentionally all-select for the first LLVM-only
-experiment. More advanced static scoring and narrower experiment passes are
-future work.
-
-A separate LLVM-only lock-touch experiment instruments synchronization target
-addresses instead of allocation sites:
-
-```text
-arbiter-report-lock-touch-sites
-  -> emits pthread lock, atomic, and lock/cmpxchg inline-asm targets
+arbiter-report-hotset-sites
+  -> scores every supported allocation site
+  -> reports seed/member/rejected roles and placement
   -> does not modify IR
 
-arbiter-experiment-lock-touch-instrument
-  -> inserts arbiter_lock_touch(addr, site_id) before recognized targets
-  -> leaves the original lock or atomic operation responsible for correctness
+arbiter-experiment-hotset-rewrite
+  -> repeats the deterministic hot-set selection
+  -> rewrites the selected hot set with encoded placement flags
 ```
 
-The runtime samples these touches, counts them by containing page, and can
-migrate hot lock pages to `ARBITER_TARGET_NODE`. See
-[Lock-Touch Page Migration](lock-touch-page-migration.md).
+`arbiter-experiment-all-rewrite` remains the broad all-site baseline.
+`arbiter-report-shared-mutable-sites` and
+`arbiter-experiment-shared-mutable-rewrite` remain the earlier point-based
+baseline. The hot-set scorer is implemented independently, so changes to its
+weights and expansion policy cannot change shared-mutable behavior.
+
+All allocation experiments reuse the existing generic site collector,
+`RewritePlan`, and heap/mmap rewriters. The hot-set pass does not change those
+selection components; after generic rewriting it replaces the placement flags
+operand only on its selected calls.
+
+The lock-touch report and instrumentation passes are retained as a historical
+runtime-hook comparison. They are not part of the current hot-set workflow.
 
 ## Runtime Placement
 
@@ -120,6 +127,11 @@ void arbiter_cxx_delete_array_maybe(void *ptr);
 int arbiter_munmap_maybe(void *ptr, uint64_t size);
 ```
 
+The ABI remains unchanged. `flags=0` retains the existing runtime policy.
+Hot-set target placement sets bit 0 and stores the target node in bits 8-15.
+The runtime uses the encoded node when bit 0 is set and otherwise consults
+`ARBITER_TARGET_NODE`.
+
 The runtime uses an internal sharded side table to track only selected
 Arbiter-managed pointers. This lets deallocation call sites be rewritten
 conservatively:
@@ -135,45 +147,48 @@ arbiter_free_maybe(ptr):
 The same design is used for C++ delete fallbacks and for `munmap` through
 `arbiter_munmap_maybe`. The LLVM site-aware ABI does not call the header-based
 MLIR `arbiter_alloc` ABI; the side table is the ownership record for this path.
-Heap-site alignment is not enforced in the first LLVM path; the `align`
+Heap-site alignment is not enforced in the current LLVM path; the `align`
 argument is reserved for future aligned allocation support.
 
 ## Benchmark Scope
 
-The first benchmarks are GUPS and XIndex/YCSB.
+The current benchmarks are GUPS and XIndex/YCSB.
 
 GUPS allocates its primary data region with anonymous `mmap`, so a malloc-only
-LLVM pass is insufficient. The first experiment rewrites all supported
-anonymous mmap and heap sites.
+baseline is insufficient. The generic all-site experiment covers its anonymous
+mmap and heap sites.
 
 XIndex allocates important index structures through C++ allocation paths such
 as `new`, `new[]`, and `std::malloc`. Arbiter must support C++ allocation and
-deallocation ABI forms while avoiding placement-new rewrites.
-
-Future narrower XIndex experiments should avoid moving YCSB trace/input
-buffers when isolating the placement effect of XIndex's own data structures.
+deallocation ABI forms while avoiding placement-new rewrites. The hot-set
+experiment narrows placement to scored seeds and attached read/write-coupled
+members, so YCSB trace/input buffers do not move merely because they share a
+function, callee, or source file with XIndex structures.
 
 ## Measurement Model
 
-Every benchmark should be measured in three configurations:
+The minimum hot-set comparison is:
 
 ```text
-native baseline
-instrumented with local fallback
-instrumented with ARBITER_TARGET_NODE set
+native
+shared-mutable-local
+hotset-single
+hotset-use-local
+hotset-use-target
 ```
 
-The local fallback run isolates compiler/runtime overhead from the placement
-effect.
+The local runs isolate compiler/runtime overhead from placement. Seed-only and
+access-affinity runs isolate the value of placing attached read/write-coupled
+allocations. Every result should retain the hot-set CSV and resolved
+`hotset-effective.opt-args` manifest. Target comparisons must report
+`HITM/op`, total and foreground throughput, and p99 latency together.
 
-## Future Analysis
+## Next Analysis
 
-After the all-select baseline is stable, Arbiter can add static site scoring
-and narrower experiment passes:
-
-- parallel escape analysis
-- write-intensity analysis
-- loop hotness estimation
-- atomic, RMW, fence, and lock-pattern detection
-- GEP offset and cache-line bucket analysis
-- profile-guided allocation-site ranking
+- bounded MemorySSA plus AliasAnalysis for memory-mediated member paths
+- profile-derived dynamic allocation-size and live-byte estimates
+- profile-guided allocation-site co-access after pointers escape
+- loop hotness and write-intensity signals
+- indirect-call-aware worker reachability
+- per-seed target nodes
+- automated staged config sweeps tied to throughput, latency, and HITM/C2C data

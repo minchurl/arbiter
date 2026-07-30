@@ -3,10 +3,9 @@
 Arbiter is a compiler-assisted placement system for coherence-sensitive
 memory objects in tiered memory environments.
 
-The current benchmark workflow is LLVM-only: C/C++ benchmarks are lowered to
-LLVM IR, an Arbiter LLVM pass plugin reports and rewrites selected allocation
-sites, and the runtime places selected objects on a configured target memory
-node such as remote NUMA memory or CXL-like memory.
+The current benchmark workflow is LLVM-only. The hot-set experiment scores
+allocation sites, follows bounded seed-relative access paths, and applies a
+configurable read/write-affinity boundary before baking placement into IR.
 
 The earlier MLIR/memref path is retained as a legacy precision/reference path,
 but it is not used by the current LLVM-only benchmark workflow. See
@@ -15,22 +14,26 @@ but it is not used by the current LLVM-only benchmark workflow. See
 ## Current Pipeline
 
 ```text
-C/C++ benchmark
+C/C++ benchmark + hot-set config
   -> clang/clang++ LLVM IR
-  -> opt -load-pass-plugin ArbiterLLVMPlugin
+  -> arbiter-report-hotset-sites
+  -> arbiter-experiment-hotset-rewrite
+  -> selected calls with build-time placement flags
   -> linked binary with Arbiter runtime
-  -> run with ARBITER_TARGET_NODE
 ```
 
-The benchmark workflow uses one experiment pass:
+The current pass pair is:
 
 ```text
-report-sites -> experiment-all-rewrite
+arbiter-report-hotset-sites -> arbiter-experiment-hotset-rewrite
 ```
 
-`report-sites` does not modify IR. `experiment-all-rewrite` rewrites every
-supported heap and anonymous mmap site, then rewrites the matching free/delete
-and munmap sites to side-table-aware runtime calls.
+The report records seed, member, and rejected decisions without changing IR.
+The rewrite pass repeats the deterministic selection and rewrites only the
+selected hot set. The all-site, shared-mutable, and lock-touch experiments
+remain available as independent baselines. See
+[Access-Affinity Hot Set Placement](docs/hotset-migration.md) for the policy and
+config reference.
 
 ## Build
 
@@ -63,7 +66,7 @@ Install Intel MKL separately, or set `MKL_INCLUDE_DIR`, `MKL_LINK_DIR`, and
 For a fresh clone of the benchmark branch, use the one-shot setup:
 
 ```sh
-git clone --branch experiment/generic-shared-mutable-placement \
+git clone --branch experiment/hotset-migration \
   git@github.com:minchurl/arbiter.git
 cd arbiter
 ./scripts/setup-benchmarks.sh
@@ -109,6 +112,12 @@ arbiter_calloc_site(count, elem_size, align, site_id, flags);
 arbiter_mmap_site(size, prot, mmap_flags, site_id, flags);
 ```
 
+The existing ABI is unchanged. Hot-set target builds set bit 0 to enable
+compile-time target placement and store the node ID in bits 8-15. `flags=0`
+keeps the existing `ARBITER_TARGET_NODE` runtime policy used by generic
+experiments and hot-set local builds. Unset `ARBITER_TARGET_NODE` for a
+hot-set local baseline.
+
 The runtime tracks selected allocations in an internal side table so rewritten
 deallocation calls can safely handle both Arbiter-managed and ordinary
 allocations:
@@ -123,10 +132,19 @@ arbiter_munmap_maybe(ptr, size);
 The LLVM site-aware runtime does not call the header-based MLIR
 `arbiter_alloc` ABI. It allocates from the selected backend directly and uses
 the side table as the source of truth for `*_maybe` deallocation.
-Heap-site alignment is not enforced in this first LLVM path; the `align`
+Heap-site alignment is not enforced in the current LLVM path; the `align`
 argument is reserved for future aligned allocation support.
 
-Set the target memory node with `ARBITER_TARGET_NODE`.
+Hot-set placement is configured at build time:
+
+```sh
+ARBITER_XINDEX_EXPERIMENT=hotset \
+ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
+./scripts/build-xindex-llvm.sh
+```
+
+Generic experiments can still set the target memory node at runtime with
+`ARBITER_TARGET_NODE`.
 
 ```sh
 numactl --membind='!x' \
@@ -179,14 +197,16 @@ Collect allocation and mmap sites:
 ./scripts/collect-allocation-sites.sh path/to/input.bc
 ```
 
-Build benchmark variants:
+Build the generic GUPS variant and the configured XIndex hot-set variant:
 
 ```sh
 ./scripts/build-gups-llvm.sh
+ARBITER_XINDEX_EXPERIMENT=hotset \
+ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
 ./scripts/build-xindex-llvm.sh
 ```
 
-Run native, instrumented-local, and instrumented-remote configurations:
+The following run-script modes remain the generic placement baseline:
 
 ```sh
 ./scripts/run-gups-arbiter.sh native
@@ -270,6 +290,7 @@ main benchmark path.
 ## Docs
 
 - [Overview](docs/overview.md)
+- [Access-Affinity Hot Set Placement](docs/hotset-migration.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
 - [Benchmark Data](docs/benchmark-data.md)

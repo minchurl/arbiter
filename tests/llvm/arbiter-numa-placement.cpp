@@ -122,7 +122,19 @@ int main() {
   if (!parseIntEnv("ARBITER_EXPECT_NODE", expectedNode, hasExpectedNode))
     return 1;
 
-  void *allocation = arbiter_alloc_site(sizeBytes, kDefaultAlignment, 1, 0);
+  uint64_t placementFlags = 0;
+  if (!parseUnsignedEnv("ARBITER_PLACEMENT_FLAGS", placementFlags))
+    return 1;
+  if (placementFlags > std::numeric_limits<uint32_t>::max()) {
+    std::fprintf(stderr,
+                 "arbiter-numa-placement: ARBITER_PLACEMENT_FLAGS is too "
+                 "large\n");
+    return 1;
+  }
+
+  void *allocation =
+      arbiter_alloc_site(sizeBytes, kDefaultAlignment, 1,
+                         static_cast<uint32_t>(placementFlags));
   if (!allocation) {
     std::fprintf(stderr, "arbiter-numa-placement: allocation failed\n");
     return 1;

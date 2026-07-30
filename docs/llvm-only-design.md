@@ -117,10 +117,12 @@ The LLVM site-aware ABI does not call this header-based MLIR ABI. It allocates
 from the selected backend directly and treats the side table as the ownership
 record for `*_maybe` deallocation.
 
-For the first LLVM implementation, heap-site allocation uses the simplest
-backend call available: `malloc` for local fallback or `numa_alloc_onnode` when
-`ARBITER_TARGET_NODE` is set. The `align` ABI argument is currently reserved
-and is not enforced.
+The site-aware ABI is unchanged. Heap-site allocation uses `malloc` for local
+fallback or `numa_alloc_onnode` when placement selects a target. Existing
+experiments pass `flags=0`, which retains the `ARBITER_TARGET_NODE` runtime
+policy. Hot-set target builds set bit 0 and encode the target node in bits
+8-15; hot-set local builds also use `flags=0`. The `align` ABI argument is
+currently reserved and is not enforced.
 
 ## Side Table
 

@@ -1,4 +1,5 @@
 #include "arbiter/LLVM/Passes.h"
+#include "arbiter/LLVM/HotSet/Passes.h"
 
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
@@ -23,6 +24,14 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
   }
   if (name == "arbiter-experiment-shared-mutable-rewrite") {
     manager.addPass(arbiter::llvm::SharedMutableRewriteExperimentPass());
+    return true;
+  }
+  if (name == "arbiter-report-hotset-sites") {
+    manager.addPass(arbiter::llvm::hotset::ReportPass());
+    return true;
+  }
+  if (name == "arbiter-experiment-hotset-rewrite") {
+    manager.addPass(arbiter::llvm::hotset::RewriteExperimentPass());
     return true;
   }
   if (name == "arbiter-report-lock-touch-sites") {
