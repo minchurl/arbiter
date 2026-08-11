@@ -1,15 +1,21 @@
 # Read/Write-Coupled Access-Affinity Hot Set Placement
 
-The hot-set experiment makes two independent compile-time decisions:
+The hot-set experiment has two deliberately separate compile-time stages:
 
-1. `HITMRiskScoring` ranks heap allocation sites and chooses a small set of
-   coherence-sensitive seeds.
-2. `UseBasedHotSet` follows bounded seed-relative access paths and selects only
-   attached allocations with sufficient read/write affinity.
+1. **HITM-risk seed selection:** `HITMRiskScoring` ranks heap allocation sites
+   and freezes a small set of coherence-sensitive seed roots. Only
+   `ARBITER_HITM_*` parameters affect this stage.
+2. **Hot-set member selection:** `UseBasedHotSet` starts from those fixed roots,
+   follows bounded seed-relative access paths, and adds attached allocations
+   according to `ARBITER_HOTSET_*` parameters.
 
-The selected sites keep the existing Arbiter runtime ABI. Target placement is
-baked into the existing `flags` operand, while `flags=0` preserves the earlier
-runtime-configured behavior.
+Stage 2 never drops, replaces, or reorders Stage 1 roots. Total hot-set caps
+include the roots; a cap that cannot contain all of them is a config error. One
+config file supplies both parameter groups, and one effective-arguments
+manifest records the complete resolved policy.
+
+The selected sites keep the existing Arbiter runtime ABI. Placement uses the
+single runtime `ARBITER_TARGET_NODE` setting; unset means local allocation.
 
 Despite the historical "migration" name, this is allocation-time placement.
 It does not move pages after allocation.
@@ -34,12 +40,13 @@ deterministic rather than becoming a general alias analysis.
 The lock-touch page-migration experiment remains a historical comparison. It
 adds synchronization-address hooks to runtime hot paths. Hot-set placement
 instead makes allocation-object decisions during compilation, so a config
-sweep requires rebuilding but adds no policy lookup to the measured hot path.
+sweep requires rebuilding but adds no per-allocation hot-set membership lookup
+to the measured hot path.
 
-## Independent Seed Scoring
+## Stage 1: HITM-Risk Seed Selection
 
-Seed selection is unchanged. The hot-set implementation has an independent
-copy of the shared-mutable-style point heuristic under
+The hot-set implementation has an independent copy of the
+shared-mutable-style point heuristic under
 `compiler/llvm/lib/hotset/HITMRiskScoring.*`; changing it cannot change the
 existing shared-mutable pass.
 
@@ -49,40 +56,39 @@ operations, occur in pthread worker code, or are large/dynamically sized.
 Actual HITM/C2C data is an experiment result.
 
 Automatic seeds must pass the configured escape/sync gates and
-`ARBITER_HOTSET_MIN_SCORE`. They are ordered by score descending and site ID
-ascending, then limited by `ARBITER_HOTSET_SEED_LIMIT`.
+`ARBITER_HITM_MIN_SCORE`. They are ordered by score descending and site ID
+ascending, then limited by `ARBITER_HITM_SEED_LIMIT`.
 
-`ARBITER_HOTSET_SEED_SITE_IDS` replaces automatic selection with explicit
-sites. Explicit seeds must exist, must be heap allocations, and must fit the
-global site and estimated-byte budgets.
+`ARBITER_HITM_SEED_SITE_IDS` replaces automatic selection with explicit sites.
+Explicit seeds must exist and must be heap allocations. Stage 1 freezes the
+result without consulting hot-set affinity, traversal, or budget parameters.
 
 Seed score controls:
 
 | Config | Signal | Default |
 | --- | --- | ---: |
-| `ARBITER_HOTSET_WEIGHT_ESCAPE_RETURN` | allocation escapes through return | 3 |
-| `ARBITER_HOTSET_WEIGHT_ESCAPE_STORE` | allocation-derived pointer is stored | 3 |
-| `ARBITER_HOTSET_WEIGHT_ESCAPE_CALL` | pointer is passed to a non-ignored call | 2 |
-| `ARBITER_HOTSET_WEIGHT_SYNC_ATOMIC` | atomic RMW or cmpxchg in the same function | 3 |
-| `ARBITER_HOTSET_WEIGHT_SYNC_STORE` | atomic or volatile store in the same function | 2 |
-| `ARBITER_HOTSET_WEIGHT_SYNC_INLINE_ASM` | lock/cmpxchg inline assembly in the same function | 2 |
-| `ARBITER_HOTSET_WEIGHT_SYNC_FILE` | sync mutation in the same debug file | 1 |
-| `ARBITER_HOTSET_WEIGHT_WORKER_ENTRY` | allocation in a pthread worker entry | 3 |
-| `ARBITER_HOTSET_WEIGHT_WORKER_REACHABLE` | allocation reachable from a pthread worker | 2 |
-| `ARBITER_HOTSET_WEIGHT_SIZE` | configured large or dynamic allocation | 1 |
+| `ARBITER_HITM_WEIGHT_ESCAPE_RETURN` | allocation escapes through return | 3 |
+| `ARBITER_HITM_WEIGHT_ESCAPE_STORE` | allocation-derived pointer is stored | 3 |
+| `ARBITER_HITM_WEIGHT_ESCAPE_CALL` | pointer is passed to a non-ignored call | 2 |
+| `ARBITER_HITM_WEIGHT_SYNC_ATOMIC` | atomic RMW or cmpxchg in the same function | 3 |
+| `ARBITER_HITM_WEIGHT_SYNC_STORE` | atomic or volatile store in the same function | 2 |
+| `ARBITER_HITM_WEIGHT_SYNC_INLINE_ASM` | lock/cmpxchg inline assembly in the same function | 2 |
+| `ARBITER_HITM_WEIGHT_SYNC_FILE` | sync mutation in the same debug file | 1 |
+| `ARBITER_HITM_WEIGHT_WORKER_ENTRY` | allocation in a pthread worker entry | 3 |
+| `ARBITER_HITM_WEIGHT_WORKER_REACHABLE` | allocation reachable from a pthread worker | 2 |
+| `ARBITER_HITM_WEIGHT_SIZE` | configured large or dynamic allocation | 1 |
 
 Seed gates and size controls:
 
 | Config | Default | Effect |
 | --- | ---: | --- |
-| `ARBITER_HOTSET_MIN_SCORE` | 6 | minimum automatic-seed score |
-| `ARBITER_HOTSET_SEED_LIMIT` | 3 | maximum automatic seeds after score ordering |
-| `ARBITER_HOTSET_SEED_SITE_IDS` | empty | comma-separated explicit heap seed IDs |
-| `ARBITER_HOTSET_REQUIRE_ESCAPE` | 1 | require an escape signal |
-| `ARBITER_HOTSET_REQUIRE_SYNC` | 1 | require a sync or mutable signal |
-| `ARBITER_HOTSET_LARGE_ALLOCATION_THRESHOLD` | 4096 | bytes required for the size score; 0 disables it |
-| `ARBITER_HOTSET_INCLUDE_DYNAMIC_SIZE` | 1 | award the size score to dynamic allocations |
-| `ARBITER_HOTSET_DYNAMIC_SIZE_ESTIMATE` | 4096 | bytes charged to a dynamic site for static budgeting |
+| `ARBITER_HITM_MIN_SCORE` | 6 | minimum automatic-seed score |
+| `ARBITER_HITM_SEED_LIMIT` | 3 | maximum automatic seeds after score ordering |
+| `ARBITER_HITM_SEED_SITE_IDS` | empty | comma-separated explicit heap seed IDs |
+| `ARBITER_HITM_REQUIRE_ESCAPE` | 1 | require an escape signal |
+| `ARBITER_HITM_REQUIRE_SYNC` | 1 | require a sync or mutable signal |
+| `ARBITER_HITM_LARGE_ALLOCATION_THRESHOLD` | 4096 | bytes required for the size score; 0 disables it |
+| `ARBITER_HITM_INCLUDE_DYNAMIC_SIZE` | 1 | award the size score to dynamic allocations |
 
 Each signal contributes its configured weight at most once per static site.
 For example, a 4096-byte allocation that escapes through both a store and a
@@ -97,9 +103,9 @@ size          1
 total         9
 ```
 
-With `MIN_SCORE=6`, `REQUIRE_ESCAPE=1`, and `REQUIRE_SYNC=1`, that site is an
-automatic-seed candidate. Repeating ten stores or atomics does not multiply
-the corresponding signal.
+With `ARBITER_HITM_MIN_SCORE=6`, `ARBITER_HITM_REQUIRE_ESCAPE=1`, and
+`ARBITER_HITM_REQUIRE_SYNC=1`, that site is an automatic-seed candidate.
+Repeating ten stores or atomics does not multiply the corresponding signal.
 
 The three same-function synchronization signals can contribute independently.
 The file-level sync weight is a fallback used only when the allocation's own
@@ -108,17 +114,17 @@ weight instead of also receiving the worker-reachable weight.
 
 The gates and weights are independent. Setting a weight to zero removes its
 score contribution, but the underlying signal can still satisfy
-`REQUIRE_ESCAPE` or `REQUIRE_SYNC`. Explicit seed IDs bypass the score,
-minimum, gates, and `SEED_LIMIT`; they still must be heap sites and fit
-`MAX_SITES` and `MAX_ESTIMATED_BYTES`. Explicit IDs are reordered
-deterministically by score descending and site ID ascending, not by the order
-written in the config.
+`ARBITER_HITM_REQUIRE_ESCAPE` or `ARBITER_HITM_REQUIRE_SYNC`. Explicit seed IDs
+bypass the score, minimum, gates, and `ARBITER_HITM_SEED_LIMIT`. They are
+reordered deterministically by score descending and site ID ascending, not by
+the order written in the config.
 
-`INCLUDE_DYNAMIC_SIZE` controls only whether a dynamic allocation receives the
-size point. `DYNAMIC_SIZE_ESTIMATE` is still the number of bytes charged to a
-selected dynamic site by the static byte budget.
+`ARBITER_HITM_INCLUDE_DYNAMIC_SIZE` controls only whether a dynamic allocation
+receives the size point. `ARBITER_HOTSET_DYNAMIC_SIZE_ESTIMATE` belongs to
+Stage 2 and controls only how many bytes a selected dynamic site is charged by
+the static hot-set budget. It cannot affect which roots Stage 1 selects.
 
-## Access-Affinity Expansion
+## Stage 2: Hot-Set Member Selection
 
 `ARBITER_HOTSET_EXPANSION` has two values:
 
@@ -140,6 +146,9 @@ GEP paths are normalized with the module `DataLayout`: constant byte offsets
 and dynamic-index strides form the path key. Each pointer load adds one path
 level. The analysis does not follow indirect calls, pointer/integer round
 trips, callee returns, or general points-to relationships.
+
+Each seed trace is capped at 4096 unique `(value, path, call-depth)` states to
+bound loop-carried path walks.
 
 For each attached candidate, only its strongest observed evidence is retained:
 
@@ -167,17 +176,23 @@ resolved by:
 3. seed group ascending.
 
 Access depth is the call depth plus pointer-load depth of the strongest
-evidence. Within each seed group, members are ordered by affinity descending,
-access depth ascending, and site ID ascending. Selection then applies:
+evidence. After ownership is resolved, all members are ordered globally by
+affinity descending, access depth ascending, seed group ascending, and site ID
+ascending. The global affinity-first order keeps lower affinity thresholds
+from displacing members already selected by a higher threshold. Selection then
+applies:
 
 1. `ARBITER_HOTSET_MEMBER_MIN_AFFINITY`,
 2. `ARBITER_HOTSET_MAX_MEMBERS_PER_SEED`,
 3. `ARBITER_HOTSET_MAX_SITES`, and
 4. `ARBITER_HOTSET_MAX_ESTIMATED_BYTES`.
 
-A member that exceeds the byte budget is skipped so a later, smaller member
-can still fit. Anonymous mmap can be a member only with
-`ARBITER_HOTSET_INCLUDE_MMAP=1`; mmap is never a seed.
+Before member selection, Stage 2 verifies that the site cap and any nonzero byte
+cap can contain all frozen roots. An insufficient cap is a config error; roots
+are never truncated to make the config fit. Roots consume the budgets first,
+then members use the remaining capacity. A member that exceeds the byte budget
+is skipped so a later, smaller member can still fit. Anonymous mmap can be a
+member only with `ARBITER_HOTSET_INCLUDE_MMAP=1`; mmap is never a seed.
 
 Member boundary controls:
 
@@ -188,26 +203,28 @@ Member boundary controls:
 | `ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH` | 1 | direct-call traversal depth, 0-4 |
 | `ARBITER_HOTSET_MEMBER_MAX_LOAD_DEPTH` | 2 | pointer-load traversal depth, 0-4 |
 | `ARBITER_HOTSET_MAX_MEMBERS_PER_SEED` | 4 | member cap per seed; 0 is unlimited |
-| `ARBITER_HOTSET_MAX_SITES` | 16 | total seed and member cap |
-| `ARBITER_HOTSET_MAX_ESTIMATED_BYTES` | 0 | static byte budget; 0 is unlimited |
+| `ARBITER_HOTSET_MAX_SITES` | 16 | total root and member cap; too small for roots is an error |
+| `ARBITER_HOTSET_MAX_ESTIMATED_BYTES` | 0 | total static byte budget; 0 is unlimited; too small for roots is an error |
+| `ARBITER_HOTSET_DYNAMIC_SIZE_ESTIMATE` | 4096 | bytes charged to each dynamic selected site |
 | `ARBITER_HOTSET_INCLUDE_MMAP` | 0 | allow anonymous mmap members |
 
 The threshold values intentionally skip 2:
 
-- `MIN_AFFINITY=5` selects only write-coupled candidates.
-- `MIN_AFFINITY=3` selects read- and write-coupled candidates.
-- `MIN_AFFINITY=1` selects attach, pointer-only, read, and write candidates.
+- `ARBITER_HOTSET_MEMBER_MIN_AFFINITY=5` selects only write-coupled candidates.
+- `ARBITER_HOTSET_MEMBER_MIN_AFFINITY=3` selects read- and write-coupled candidates.
+- `ARBITER_HOTSET_MEMBER_MIN_AFFINITY=1` selects attach, pointer-only, read, and write candidates.
 
 Thus affinity-2 pointer evidence is visible in the CSV but is selected only by
 the broad affinity-1 experiment.
 
-Depth zero has a concrete meaning. `MAX_LOAD_DEPTH=0` does not follow a pointer
-load from an attachment slot, so a directly attached candidate remains
-affinity 1. `MAX_CALL_DEPTH=0` does not enter a direct callee body; the call
-boundary is classified from argument/function memory attributes, or as
-pointer-only when no useful attribute exists. Increasing a depth can discover
-new candidates or strengthen existing evidence, and can therefore also change
-cross-seed assignment and cap outcomes.
+Depth zero has a concrete meaning.
+`ARBITER_HOTSET_MEMBER_MAX_LOAD_DEPTH=0` does not follow a pointer load from an
+attachment slot, so a directly attached candidate remains affinity 1.
+`ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH=0` does not enter a direct callee body;
+the call boundary is classified from argument/function memory attributes, or
+as pointer-only when no useful attribute exists. Increasing a depth can
+discover new candidates or strengthen existing evidence, and can therefore
+also change cross-seed assignment and cap outcomes.
 
 ## Why Read-Coupled Members
 
@@ -227,8 +244,6 @@ entry->update();
 unlock(meta->lock);
 ```
 
-In this example:
-
 - `meta->lock` is the contention anchor.
 - `name` and `schema` are read-coupled members.
 - `entry` is a write-coupled member.
@@ -245,7 +260,7 @@ Read-coupled placement is useful only when it adds latency on the relevant
 operation path. If the data remains cache-resident, remote backing-memory
 latency may have little effect.
 
-## Build-Time Config
+## One Build-Time Config
 
 Build XIndex with a checked-in or generated config:
 
@@ -255,8 +270,9 @@ ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
 ./scripts/build-xindex-llvm.sh
 ```
 
-The script sources the config, validates removed keys, and translates every
-resolved value into an explicit `opt` argument. It writes:
+The same sourced config contains `ARBITER_HITM_*` Stage 1 controls and
+`ARBITER_HOTSET_*` Stage 2 controls. The script translates every resolved value
+into an explicit `opt` argument and writes:
 
 ```text
 ycsb_bench.hotset-sites.csv
@@ -264,71 +280,17 @@ ycsb_bench.hotset-effective.opt-args
 ```
 
 Keep both files with each benchmark result. The manifest records the complete
-effective policy, including defaults, so a run does not depend on ambient
-shell state. Removed `ARBITER_HOTSET_EXPAND_SCOPE` and
-`ARBITER_HOTSET_MEMBER_MIN_SCORE` keys fail with a migration error instead of
-being ignored.
+effective policy for both stages, including defaults.
 
-Placement controls:
+The same rewritten binary can be used for both placement modes:
 
-| Config | Default | Effect |
-| --- | ---: | --- |
-| `ARBITER_HOTSET_PLACEMENT` | `local` | emit zero flags or encode a target node |
-| `ARBITER_HOTSET_TARGET_NODE` | 0 | target node 0-255 |
-| `ARBITER_HOTSET_REPORT_PATH` | build directory | CSV output path |
+```sh
+./scripts/run-xindex-arbiter.sh local
+ARBITER_TARGET_NODE=1 ./scripts/run-xindex-arbiter.sh remote
+```
 
-The runtime ABI and generic rewriters are unchanged. Existing hot-set flags
-encode:
-
-- bit 0: compile-time target placement enabled,
-- bits 8-15: target node ID.
-
-Target node 1 therefore produces `257`; target node 3 produces `769`.
-`ARBITER_HOTSET_PLACEMENT=local` emits `flags=0`, so local baselines must run
-with `ARBITER_TARGET_NODE` unset.
-
-## How Parameters Compose
-
-The pass applies parameter groups in this order:
-
-1. score every supported allocation site,
-2. choose automatic or explicit heap seeds,
-3. discover seed-relative attachments and their strongest affinity,
-4. assign shared candidates to one seed group,
-5. apply affinity, member, site, and byte limits, and
-6. encode the selected placement in rewritten calls.
-
-This ordering is important:
-
-- score weights and seed gates never rank members,
-- member affinity never changes seed selection,
-- `MAX_MEMBERS_PER_SEED` is applied after affinity/depth ordering,
-- `MAX_SITES` includes both seeds and members,
-- selected seeds consume the byte budget before members, and
-- a member that does not fit the byte budget is skipped rather than ending the
-  scan.
-
-Common tuning goals map to parameters as follows:
-
-| Goal | Parameter change |
-| --- | --- |
-| select fewer, stronger seeds | raise `MIN_SCORE` or lower `SEED_LIMIT` |
-| reproduce one known seed set | set `SEED_SITE_IDS` |
-| isolate write-coupled members | set `MEMBER_MIN_AFFINITY=5` |
-| add active read members | set `MEMBER_MIN_AFFINITY=3` |
-| audit every statically attached member | set `MEMBER_MIN_AFFINITY=1` |
-| follow deeper helper calls | raise `MEMBER_MAX_CALL_DEPTH` |
-| follow nested pointer containers | raise `MEMBER_MAX_LOAD_DEPTH` |
-| reduce analysis breadth/false positives | lower call/load depth |
-| bound static hot-set cardinality | lower member and total site caps |
-| bound estimated placement volume | set `MAX_ESTIMATED_BYTES` |
-| compare seed-only placement | set `EXPANSION=none` |
-
-Depth increases are not guaranteed to produce a strict superset because
-stronger evidence can reassign a candidate to another seed group before caps
-are applied. In contrast, with the same seeds and other limits, the affinity
-ordering keeps every site in `set(5)` in `set(3)`, and every site in `set(3)`
-in `set(1)`.
+The runtime ABI's final `uint32_t` slot remains reserved and is emitted as
+zero.
 
 ## Config Recipes
 
@@ -336,14 +298,14 @@ Config files are sourced by the build script. Omitted variables use the
 defaults recorded in the effective opt-args manifest, so a recipe may contain
 only the values it intends to vary.
 
-### Read-Coupled Target Baseline
+### Read-Coupled Baseline
 
 This is the default experiment shape: up to three seeds, read and write
-members, bounded one direct call and two pointer loads, placed on node 1.
+members, bounded one direct call and two pointer loads.
 
 ```sh
-ARBITER_HOTSET_MIN_SCORE=6
-ARBITER_HOTSET_SEED_LIMIT=3
+ARBITER_HITM_MIN_SCORE=6
+ARBITER_HITM_SEED_LIMIT=3
 ARBITER_HOTSET_EXPANSION=use
 
 ARBITER_HOTSET_MEMBER_MIN_AFFINITY=3
@@ -351,19 +313,16 @@ ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH=1
 ARBITER_HOTSET_MEMBER_MAX_LOAD_DEPTH=2
 ARBITER_HOTSET_MAX_MEMBERS_PER_SEED=4
 ARBITER_HOTSET_MAX_SITES=16
-
-ARBITER_HOTSET_PLACEMENT=target
-ARBITER_HOTSET_TARGET_NODE=1
 ```
 
-### Tight Write-Only Target
+### Tight Write-Only Hot Set
 
 Use this to test whether write-coupled members alone provide the effect while
 keeping the hot set small. The example permits at most three seeds and two
 members per seed, subject to a nine-site and 64 MiB static budget.
 
 ```sh
-ARBITER_HOTSET_SEED_LIMIT=3
+ARBITER_HITM_SEED_LIMIT=3
 ARBITER_HOTSET_EXPANSION=use
 ARBITER_HOTSET_MEMBER_MIN_AFFINITY=5
 ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH=1
@@ -372,8 +331,6 @@ ARBITER_HOTSET_MAX_MEMBERS_PER_SEED=2
 ARBITER_HOTSET_MAX_SITES=9
 ARBITER_HOTSET_MAX_ESTIMATED_BYTES=67108864
 ARBITER_HOTSET_INCLUDE_MMAP=0
-ARBITER_HOTSET_PLACEMENT=target
-ARBITER_HOTSET_TARGET_NODE=1
 ```
 
 ### Broad Ownership Audit
@@ -383,7 +340,7 @@ which members should be remote. The explicit IDs make the seed boundary stable
 for one exact build. Unlimited member and byte values are written as zero.
 
 ```sh
-ARBITER_HOTSET_SEED_SITE_IDS=69,97,99
+ARBITER_HITM_SEED_SITE_IDS=69,97,99
 ARBITER_HOTSET_EXPANSION=use
 ARBITER_HOTSET_MEMBER_MIN_AFFINITY=1
 ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH=3
@@ -392,7 +349,6 @@ ARBITER_HOTSET_MAX_MEMBERS_PER_SEED=0
 ARBITER_HOTSET_MAX_SITES=64
 ARBITER_HOTSET_MAX_ESTIMATED_BYTES=0
 ARBITER_HOTSET_INCLUDE_MMAP=1
-ARBITER_HOTSET_PLACEMENT=local
 ```
 
 This recipe is intentionally broad and is best used to inspect the CSV before
@@ -405,40 +361,33 @@ This example favors atomic-adjacent sites, removes the size contribution, and
 keeps only the highest-scoring automatic seed:
 
 ```sh
-ARBITER_HOTSET_MIN_SCORE=9
-ARBITER_HOTSET_SEED_LIMIT=1
-ARBITER_HOTSET_REQUIRE_ESCAPE=1
-ARBITER_HOTSET_REQUIRE_SYNC=1
-ARBITER_HOTSET_WEIGHT_SYNC_ATOMIC=5
-ARBITER_HOTSET_WEIGHT_SIZE=0
+ARBITER_HITM_MIN_SCORE=9
+ARBITER_HITM_SEED_LIMIT=1
+ARBITER_HITM_REQUIRE_ESCAPE=1
+ARBITER_HITM_REQUIRE_SYNC=1
+ARBITER_HITM_WEIGHT_SYNC_ATOMIC=5
+ARBITER_HITM_WEIGHT_SIZE=0
 ARBITER_HOTSET_EXPANSION=none
-ARBITER_HOTSET_PLACEMENT=local
 ```
 
 Always compare the generated CSV before and after changing score weights.
-Changing a weight can alter both which seeds pass `MIN_SCORE` and their top-k
-order.
+Changing a weight can alter both which roots pass `ARBITER_HITM_MIN_SCORE` and
+their top-k order.
 
-## Report
+## Unified Decision Report
 
 The `arbiter-report-hotset-sites` pass emits:
 
 ```text
-site_id,kind,function,file,line,callee,size_expr,estimated_bytes,score,role,group_id,selected,flags,target_node,reasons,member_affinity,member_access_kind,member_access_depth
+site_id,kind,function,file,line,callee,size_expr,estimated_bytes,score,role,group_id,selected,reasons,member_affinity,member_access_kind,member_access_depth
 ```
 
-Roles are `seed`, `member`, or `rejected`. Selected member reasons include the
-strongest evidence and seed group:
+Roles are `seed`, `member`, or `rejected`. Member evidence is reported directly
+through `group_id`, `member_affinity`, `member_access_kind`, and
+`member_access_depth`. Common rejection reasons include:
 
 ```text
-hotset-member:access-affinity:kind=read:score=3:seed-group=N
-hotset-member:access-affinity:kind=write:score=5:seed-group=N
-```
-
-Common rejection reasons include:
-
-```text
-hotset-rejected:below-member-affinity:score=N
+hotset-rejected:below-member-affinity
 hotset-rejected:outside-access-closure
 hotset-rejected:per-seed-member-limit
 hotset-rejected:max-sites
@@ -477,9 +426,9 @@ Every comparison should record:
 - foreground throughput, and
 - p99 tail latency.
 
-Compare `MEMBER_MIN_AFFINITY=5`, `3`, and `1` under the same workload. Affinity
-5 isolates write-coupled placement, affinity 3 adds read-coupled members, and
-affinity 1 adds ownership-only members.
+Compare `ARBITER_HOTSET_MEMBER_MIN_AFFINITY=5`, `3`, and `1` under the same
+workload. Affinity 5 isolates write-coupled placement, affinity 3 adds
+read-coupled members, and affinity 1 adds ownership-only members.
 
 If `HITM/op` is unchanged while throughput and `HITM/s` fall together, treat
 the result as slowdown, not optimization. Cache-resident readonly members may
@@ -496,14 +445,15 @@ hotset-use-local
 hotset-use-target
 ```
 
-`hotset-single` uses `ARBITER_HOTSET_EXPANSION=none`. Local runs isolate
-compiler/runtime overhead and must unset `ARBITER_TARGET_NODE`.
+`hotset-single` uses `ARBITER_HOTSET_EXPANSION=none`. Local runs unset
+`ARBITER_TARGET_NODE`; target runs set it to the machine's CXL NUMA node.
 
-The useful search space includes seed weights and gates, explicit or top-k
-seeds, affinity threshold, call/load depths, member/site/byte caps, dynamic
-size assumptions, mmap inclusion, placement node, workload, thread counts,
-foreground thread counts, and repeats. Sweep one family at a time and retain
-the config, CSV, effective argument manifest, binary identity, and metrics.
+The useful search space includes HITM-risk weights and gates, explicit or top-k
+roots, affinity threshold, call/load depths, member/site/byte caps, dynamic
+size assumptions, mmap inclusion, runtime target node, workload, thread counts,
+foreground thread counts, and repeats. Sweep one stage's parameter family at a
+time and retain the config, CSV, effective argument manifest, binary identity,
+and metrics.
 
 ## Limits and Next Direction
 
@@ -517,12 +467,13 @@ propagation, pointer/integer round trips, and general points-to analysis. Once
 a pointer escapes outside the bounded seed-relative path, later runtime access
 cannot be recovered reliably.
 
-### Future MemorySSA-Backed Analysis
+### Future MemorySSA Hot-Set Backend
 
-The next static-analysis step should use LLVM
-[`MemorySSA`](https://llvm.org/docs/MemorySSA.html) together with
-`AliasAnalysis`. The current tracer follows SSA values directly, but it stops
-when a seed-relative address is stored into memory and recovered later.
+MemorySSA is a possible Stage 2 backend, not part of HITM-risk seed selection.
+LLVM [`MemorySSA`](https://llvm.org/docs/MemorySSA.html) together with
+`AliasAnalysis` can extend member discovery when a seed-relative address is
+stored into memory and recovered later. The frozen Stage 1 roots remain the
+same whichever Stage 2 backend is used.
 
 For example, consider this simplified LLVM IR:
 
@@ -546,46 +497,15 @@ The current bounded SSA tracer sees the first attachment, but it does not
 follow `%slot` through the store to `%slot.box`. The member therefore remains
 affinity 1 even though the later operation is write-coupled.
 
-A bounded MemorySSA extension could recover the relation:
+A bounded extension could ask MemorySSA which store reaches the load from
+`%slot.box`, use AliasAnalysis to require a same-function `MustAlias`, recover
+the stored `%slot` value, and then resume the existing affinity classifier.
+The direct SSA tracer should remain the default path; MemorySSA is only a
+bounded fallback for such unresolved spill/reload cases.
 
-1. Treat the store to `%slot.box` as a `MemoryDef`.
-2. Ask the MemorySSA walker for the clobbering definition of the load from
-   `%slot.box`.
-3. Use alias analysis and value propagation to recover that
-   `%recovered.slot` represents the original seed-relative `%slot`.
-4. Relate the load from `%recovered.slot` to the member attachment store.
-5. Reuse the existing downstream classifier, raising the member to affinity 5
-   because `%recovered.member` is written.
-
-`MemoryPhi` nodes can similarly expose branch-merged memory definitions. If
-two possible attachment stores reach one member load, the analysis must either
-retain both as conservative candidates or reject the ambiguous relation. That
-choice should be explicit in the report rather than hidden in a score.
-
-The KISS implementation path is:
-
-1. keep `HITMRiskScoring`, seed selection, affinity levels, and caps unchanged,
-2. run the current direct SSA analysis first,
-3. invoke MemorySSA only for unresolved memory-mediated paths,
-4. start with same-function `MustAlias` relations,
-5. reuse the existing `pointer/read/write` evidence classifier, and
-6. bound every MemorySSA walk and report its provenance.
-
-Possible future config keys, not implemented today, are:
-
-| Future config | Purpose |
-| --- | --- |
-| `ARBITER_HOTSET_MEMBER_ANALYSIS=ssa|memoryssa` | compare the current boundary with MemorySSA expansion |
-| `ARBITER_HOTSET_MEMORYSSA_ALIAS=must|may` | choose strict or conservative alias acceptance |
-| `ARBITER_HOTSET_MEMORYSSA_MAX_WALK` | bound clobber-chain traversal |
-| `ARBITER_HOTSET_MEMORYSSA_MAX_DEFS_PER_LOAD` | cap ambiguous reaching definitions |
-
-MemorySSA does not replace alias analysis: it versions memory operations, while
-AA decides which locations may refer to the same memory. It is also a
-per-function analysis, so indirect calls, uninlined cross-function pointer
-flows, and callee return propagation still require summaries or a separate
-interprocedural layer. Finally, MemorySSA describes static reaching
-definitions, not runtime temporal co-access or access frequency.
+MemorySSA versions memory operations but does not replace AliasAnalysis, prove
+runtime co-access, or provide access frequency. Indirect calls and
+interprocedural pointer flows still need separate handling.
 
 Profile-guided allocation-site co-access is the next precision step if the
 static boundary is insufficient. Runtime profiling can rank co-access, while
@@ -599,11 +519,10 @@ CSV, effective argument manifest, and exact build input.
 
 Hot-set code lives under `compiler/llvm/lib/hotset/`:
 
-- `HITMRiskScoring`: seed score and automatic-seed gate,
-- `UseBasedHotSet`: seed selection and bounded access-affinity discovery,
-- `HotSetPasses`: report/rewrite plumbing and placement-flag baking,
+- `HITMRiskScoring`: Stage 1 seed scoring, gates, ordering, and root selection,
+- `UseBasedHotSet`: Stage 2 bounded access-affinity member discovery,
+- `HotSetPasses`: report and rewrite plumbing,
 - `HotSetOptions`: compile-time policy options.
 
 The generic `RewritePlan`, heap/mmap rewriters, shared-mutable pass, runtime
-ABI, and placement-flag layout are not changed by the access-affinity
-revision.
+ABI, and `ARBITER_TARGET_NODE` policy are shared with other LLVM experiments.

@@ -5,7 +5,8 @@ memory objects in tiered memory environments.
 
 The current benchmark workflow is LLVM-only. The hot-set experiment scores
 allocation sites, follows bounded seed-relative access paths, and applies a
-configurable read/write-affinity boundary before baking placement into IR.
+configurable read/write-affinity boundary before rewriting selected calls to
+the Arbiter runtime ABI.
 
 The earlier MLIR/memref path is retained as a legacy precision/reference path,
 but it is not used by the current LLVM-only benchmark workflow. See
@@ -18,7 +19,7 @@ C/C++ benchmark + hot-set config
   -> clang/clang++ LLVM IR
   -> arbiter-report-hotset-sites
   -> arbiter-experiment-hotset-rewrite
-  -> selected calls with build-time placement flags
+  -> selected calls rewritten to the Arbiter runtime ABI
   -> linked binary with Arbiter runtime
 ```
 
@@ -107,16 +108,15 @@ cmake --build build-llvm18 --target \
 Selected LLVM allocation sites lower to runtime calls such as:
 
 ```c
-arbiter_alloc_site(size, align, site_id, flags);
-arbiter_calloc_site(count, elem_size, align, site_id, flags);
-arbiter_mmap_site(size, prot, mmap_flags, site_id, flags);
+arbiter_alloc_site(size, align, site_id, reserved);
+arbiter_calloc_site(count, elem_size, align, site_id, reserved);
+arbiter_mmap_site(size, prot, mmap_flags, site_id, reserved);
 ```
 
-The existing ABI is unchanged. Hot-set target builds set bit 0 to enable
-compile-time target placement and store the node ID in bits 8-15. `flags=0`
-keeps the existing `ARBITER_TARGET_NODE` runtime policy used by generic
-experiments and hot-set local builds. Unset `ARBITER_TARGET_NODE` for a
-hot-set local baseline.
+The existing ABI is unchanged; its final `uint32_t` slot is reserved and
+rewriters pass zero. The runtime uses `ARBITER_TARGET_NODE` as the single
+target-node setting. Leave it unset for a local baseline and set it for a
+remote run; both runs use the same rewritten binary.
 
 The runtime tracks selected allocations in an internal side table so rewritten
 deallocation calls can safely handle both Arbiter-managed and ordinary
@@ -135,7 +135,7 @@ the side table as the source of truth for `*_maybe` deallocation.
 Heap-site alignment is not enforced in the current LLVM path; the `align`
 argument is reserved for future aligned allocation support.
 
-Hot-set placement is configured at build time:
+Hot-set selection is configured at build time:
 
 ```sh
 ARBITER_XINDEX_EXPERIMENT=hotset \
@@ -143,8 +143,8 @@ ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
 ./scripts/build-xindex-llvm.sh
 ```
 
-Generic experiments can still set the target memory node at runtime with
-`ARBITER_TARGET_NODE`.
+The target memory node is configured at runtime with `ARBITER_TARGET_NODE` for
+hot-set and generic experiments alike.
 
 ```sh
 numactl --membind='!x' \

@@ -21,7 +21,6 @@ struct SideTableEntry {
   SideTableBackend backend;
   uint64_t size;
   uint32_t siteId;
-  uint32_t flags;
   int32_t node;
 };
 

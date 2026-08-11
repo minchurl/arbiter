@@ -1,21 +1,26 @@
 #include "HITMRiskScoring.h"
 
+#include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/SmallPtrSet.h"
 #include "llvm/ADT/SmallString.h"
 #include "llvm/ADT/SmallVector.h"
 #include "llvm/ADT/StringRef.h"
+#include "llvm/ADT/Twine.h"
 #include "llvm/IR/DebugInfoMetadata.h"
 #include "llvm/IR/InlineAsm.h"
 #include "llvm/IR/InstIterator.h"
 #include "llvm/IR/IntrinsicInst.h"
 #include "llvm/IR/Module.h"
 #include "llvm/IR/Operator.h"
+#include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/Path.h"
 #include "llvm/Support/raw_ostream.h"
 
+#include <algorithm>
 #include <limits>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <utility>
 #include <vector>
@@ -119,7 +124,8 @@ bool isSyncMutation(const Instruction &instruction) {
 }
 
 bool isTransparentPointerTransform(const User *user) {
-  if (isa<PHINode>(user) || isa<SelectInst>(user))
+  if (isa<PHINode>(user) || isa<SelectInst>(user) ||
+      isa<FreezeInst>(user))
     return true;
 
   const auto *operation = dyn_cast<Operator>(user);
@@ -455,8 +461,7 @@ HITMRiskScore scoreSite(const AllocationSite &site,
                         const ScoringContext &context,
                         const HITMRiskPolicy &policy) {
   ScoreDecision decision;
-  SizeInfo size =
-      estimateAllocationSize(site, policy.dynamicSizeEstimate);
+  SizeInfo size = estimateAllocationSize(site, 0);
 
   if (!isHeapAllocation(site.kind) && !isMMapAllocation(site.kind)) {
     decision.reasons.push_back("not-supported-allocation");
@@ -509,6 +514,87 @@ bool qualifiesAsHITMRiskSeed(const AllocationSite &site,
          (!requireEscape || score.hasEscape) &&
          (!requireSync || score.hasSyncOrMutable) &&
          score.value >= minScore;
+}
+
+HITMSeedSelection selectHITMSeeds(Module &module,
+                                  ArrayRef<AllocationSite> sites,
+                                  const HITMSeedPolicy &policy) {
+  auto failConfig = [](const Twine &message) -> void {
+    report_fatal_error(Twine("arbiter hotset config: ") + message, false);
+  };
+
+  HITMSeedSelection selection;
+  selection.records.reserve(sites.size());
+  HITMRiskScorer scorer(module, policy.scoring);
+
+  std::unordered_map<uint32_t, size_t> recordBySiteId;
+  recordBySiteId.reserve(sites.size());
+  for (const AllocationSite &site : sites) {
+    HITMSeedDecision record;
+    record.site = &site;
+    record.score = scorer.score(site);
+    recordBySiteId.emplace(site.id, selection.records.size());
+    selection.records.push_back(std::move(record));
+  }
+
+  SmallVector<StringRef, 16> parts;
+  StringRef(policy.explicitSiteIds).split(parts, ',', -1, false);
+  std::vector<uint32_t> explicitIds;
+  std::unordered_set<uint32_t> seen;
+  for (StringRef part : parts) {
+    part = part.trim();
+    if (part.empty())
+      continue;
+
+    uint32_t id = 0;
+    if (part.getAsInteger(10, id))
+      failConfig(Twine("invalid HITM seed site id '") + part + "'");
+    if (seen.insert(id).second)
+      explicitIds.push_back(id);
+  }
+
+  std::vector<HITMSeedDecision *> candidates;
+  if (!explicitIds.empty()) {
+    for (uint32_t id : explicitIds) {
+      auto recordIt = recordBySiteId.find(id);
+      if (recordIt == recordBySiteId.end())
+        failConfig(Twine("explicit HITM seed site ") + Twine(id) +
+                   " does not exist");
+
+      HITMSeedDecision &record = selection.records[recordIt->second];
+      if (!isHeapAllocation(record.site->kind))
+        failConfig(Twine("explicit HITM seed site ") + Twine(id) +
+                   " is not a heap allocation");
+      candidates.push_back(&record);
+    }
+  } else {
+    for (HITMSeedDecision &record : selection.records) {
+      if (qualifiesAsHITMRiskSeed(*record.site, record.score,
+                                  policy.minScore, policy.requireEscape,
+                                  policy.requireSync)) {
+        candidates.push_back(&record);
+      }
+    }
+  }
+
+  std::sort(candidates.begin(), candidates.end(),
+            [](const HITMSeedDecision *left,
+               const HITMSeedDecision *right) {
+              if (left->score.value != right->score.value)
+                return left->score.value > right->score.value;
+              return left->site->id < right->site->id;
+            });
+
+  uint32_t groupId = 1;
+  for (size_t index = 0; index < candidates.size(); ++index) {
+    HITMSeedDecision &record = *candidates[index];
+    if (explicitIds.empty() && index >= policy.seedLimit)
+      continue;
+
+    record.selected = true;
+    record.groupId = groupId++;
+  }
+  return selection;
 }
 
 } // namespace arbiter::llvm::hotset

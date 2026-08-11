@@ -3,9 +3,12 @@
 
 #include "arbiter/LLVM/AllocationSite.h"
 
+#include "llvm/ADT/ArrayRef.h"
+
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace llvm {
 class Module;
@@ -26,7 +29,6 @@ struct HITMRiskPolicy {
   uint32_t weightSize = 1;
   uint64_t largeAllocationThreshold = 4096;
   bool includeDynamicSize = true;
-  uint64_t dynamicSizeEstimate = 4096;
 };
 
 struct HITMRiskScore {
@@ -36,6 +38,26 @@ struct HITMRiskScore {
   bool hasDynamicSize = false;
   uint64_t estimatedBytes = 0;
   std::string reasons;
+};
+
+struct HITMSeedPolicy {
+  HITMRiskPolicy scoring;
+  uint64_t minScore = 6;
+  uint32_t seedLimit = 3;
+  std::string explicitSiteIds;
+  bool requireEscape = true;
+  bool requireSync = true;
+};
+
+struct HITMSeedDecision {
+  const AllocationSite *site = nullptr;
+  HITMRiskScore score;
+  bool selected = false;
+  uint32_t groupId = 0;
+};
+
+struct HITMSeedSelection {
+  std::vector<HITMSeedDecision> records;
 };
 
 class HITMRiskScorer {
@@ -58,6 +80,10 @@ private:
 bool qualifiesAsHITMRiskSeed(const AllocationSite &site,
                              const HITMRiskScore &score, uint64_t minScore,
                              bool requireEscape, bool requireSync);
+
+HITMSeedSelection selectHITMSeeds(
+    ::llvm::Module &module, ::llvm::ArrayRef<AllocationSite> sites,
+    const HITMSeedPolicy &policy);
 
 } // namespace arbiter::llvm::hotset
 

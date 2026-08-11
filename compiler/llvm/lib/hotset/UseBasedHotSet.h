@@ -22,6 +22,18 @@ enum class HotSetRole : uint8_t {
   Member,
 };
 
+struct HotSetPolicy {
+  std::string expansion = "use";
+  uint32_t maxSites = 16;
+  bool includeMMap = false;
+  uint64_t dynamicSizeEstimate = 4096;
+  uint64_t maxEstimatedBytes = 0;
+  uint32_t maxMembersPerSeed = 4;
+  uint32_t memberMinAffinity = 3;
+  uint32_t memberMaxCallDepth = 1;
+  uint32_t memberMaxLoadDepth = 2;
+};
+
 struct HotSetSiteDecision {
   const AllocationSite *site = nullptr;
   HITMRiskScore score;
@@ -40,7 +52,8 @@ struct HotSetSelection {
 const char *hotSetRoleName(HotSetRole role);
 
 HotSetSelection discoverUseBasedHotSet(
-    ::llvm::Module &module, ::llvm::ArrayRef<AllocationSite> sites);
+    ::llvm::Module &module, const HITMSeedSelection &hitmSeeds,
+    const HotSetPolicy &policy);
 
 } // namespace arbiter::llvm::hotset
 

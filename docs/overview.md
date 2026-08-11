@@ -7,10 +7,17 @@ This document is the source of truth for Arbiter's current design.
 Arbiter is a compiler-assisted placement system for coherence-sensitive memory
 objects in tiered memory environments.
 
-The current implementation direction is the LLVM-only hot-set experiment.
-Arbiter scores allocation sites at compile time, chooses a small set of seeds,
-follows bounded seed-relative access paths, and rewrites attached allocations
-whose read/write affinity passes the configured threshold.
+The current implementation direction is the LLVM-only hot-set experiment. Its
+compile-time policy has two deliberately separate stages:
+
+1. HITM-risk selection scores allocation sites and freezes a small set of seed
+   roots using only `ARBITER_HITM_*` controls.
+2. Hot-set selection follows bounded paths from those roots and adds attached
+   allocations whose read/write affinity passes the `ARBITER_HOTSET_*` policy.
+
+Stage 2 never drops, replaces, or reorders the Stage 1 roots. If a hot-set site
+or byte cap cannot contain every selected root, the config is invalid rather
+than silently changing the seed set.
 
 The current target is allocation-time placement on remote NUMA or CXL-like
 memory. Despite the experiment name, Arbiter does not move already-allocated
@@ -59,24 +66,25 @@ is larger than the added latency penalty of the target memory tier.
 ## Architecture
 
 ```text
-C/C++ benchmark + build-time hot-set config
+C/C++ benchmark + one build-time experiment config
   -> clang/clang++ LLVM IR
+  -> Stage 1 HITM-risk seed selection
+  -> Stage 2 access-affinity hot-set selection
   -> Arbiter site and hot-set reports
   -> hot-set rewrite pass
-  -> LLVM IR with selected arbiter_*_site calls and baked placement flags
+  -> LLVM IR with selected arbiter_*_site calls
   -> native binary linked with Arbiter runtime
-  -> allocation-time placement under the selected flag policy
+  -> allocation-time placement from ARBITER_TARGET_NODE
 ```
 
-Existing experiments continue to emit `flags=0` and use the existing
-`ARBITER_TARGET_NODE` runtime policy. Hot-set target runs encode an enable bit
-and node ID in that same flags operand and do not depend on the environment
-variable.
+All LLVM allocation experiments use the same `ARBITER_TARGET_NODE` runtime
+policy. Unset means local allocation; a node ID enables target placement.
 
 ## Compiler Passes
 
 Reporting and rewriting are separate so every experiment can inspect its
-decision before producing a binary.
+decision before producing a binary. Both stages import parameters from the same
+config and are recorded in one effective-arguments manifest.
 
 ```text
 arbiter-report-sites
@@ -84,13 +92,14 @@ arbiter-report-sites
   -> does not modify IR
 
 arbiter-report-hotset-sites
-  -> scores every supported allocation site
-  -> reports seed/member/rejected roles and placement
+  -> Stage 1 scores sites and freezes HITM-risk seed roots
+  -> Stage 2 discovers and selects hot-set members
+  -> reports seed/member/rejected roles
   -> does not modify IR
 
 arbiter-experiment-hotset-rewrite
   -> repeats the deterministic hot-set selection
-  -> rewrites the selected hot set with encoded placement flags
+  -> rewrites the selected hot set
 ```
 
 `arbiter-experiment-all-rewrite` remains the broad all-site baseline.
@@ -100,12 +109,8 @@ baseline. The hot-set scorer is implemented independently, so changes to its
 weights and expansion policy cannot change shared-mutable behavior.
 
 All allocation experiments reuse the existing generic site collector,
-`RewritePlan`, and heap/mmap rewriters. The hot-set pass does not change those
-selection components; after generic rewriting it replaces the placement flags
-operand only on its selected calls.
-
-The lock-touch report and instrumentation passes are retained as a historical
-runtime-hook comparison. They are not part of the current hot-set workflow.
+`RewritePlan`, and heap/mmap rewriters. The hot-set pass only supplies the
+selected IDs.
 
 ## Runtime Placement
 
@@ -113,13 +118,13 @@ The LLVM path lowers experiment-selected sites to site-aware runtime calls:
 
 ```c
 void *arbiter_alloc_site(uint64_t size, uint64_t align,
-                         uint32_t site_id, uint32_t flags);
+                         uint32_t site_id, uint32_t reserved);
 
 void *arbiter_calloc_site(uint64_t count, uint64_t elem_size,
-                          uint64_t align, uint32_t site_id, uint32_t flags);
+                          uint64_t align, uint32_t site_id, uint32_t reserved);
 
 void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
-                        uint32_t site_id, uint32_t flags);
+                        uint32_t site_id, uint32_t reserved);
 
 void arbiter_free_maybe(void *ptr);
 void arbiter_cxx_delete_maybe(void *ptr);
@@ -127,10 +132,8 @@ void arbiter_cxx_delete_array_maybe(void *ptr);
 int arbiter_munmap_maybe(void *ptr, uint64_t size);
 ```
 
-The ABI remains unchanged. `flags=0` retains the existing runtime policy.
-Hot-set target placement sets bit 0 and stores the target node in bits 8-15.
-The runtime uses the encoded node when bit 0 is set and otherwise consults
-`ARBITER_TARGET_NODE`.
+The ABI remains unchanged; its final `uint32_t` slot is reserved and emitted as
+zero. The runtime consults `ARBITER_TARGET_NODE` for the single target node.
 
 The runtime uses an internal sharded side table to track only selected
 Arbiter-managed pointers. This lets deallocation call sites be rewritten
@@ -185,10 +188,10 @@ allocations. Every result should retain the hot-set CSV and resolved
 
 ## Next Analysis
 
-- bounded MemorySSA plus AliasAnalysis for memory-mediated member paths
+- optional bounded MemorySSA plus AliasAnalysis as a Stage 2 backend for
+  memory-mediated member paths
 - profile-derived dynamic allocation-size and live-byte estimates
 - profile-guided allocation-site co-access after pointers escape
 - loop hotness and write-intensity signals
 - indirect-call-aware worker reachability
-- per-seed target nodes
 - automated staged config sweeps tied to throughput, latency, and HITM/C2C data

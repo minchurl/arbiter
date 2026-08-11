@@ -1,7 +1,5 @@
 #include "UseBasedHotSet.h"
 
-#include "HotSetOptions.h"
-
 #include "llvm/ADT/APInt.h"
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/Hashing.h"
@@ -40,7 +38,9 @@ enum class MemberAccessKind : uint8_t {
   Write = 5,
 };
 
-struct Seed {
+constexpr size_t kMaxTraceStatesPerHITMSeed = 4096;
+
+struct HITMSeed {
   size_t recordIndex = 0;
   uint32_t groupId = 0;
 };
@@ -64,66 +64,27 @@ void appendReason(HotSetSiteDecision &record, StringRef reason) {
   record.reason += reason.str();
 }
 
-std::vector<uint32_t> parseExplicitSeedIds(StringRef text) {
-  SmallVector<StringRef, 16> parts;
-  text.split(parts, ',', -1, false);
-
-  std::vector<uint32_t> ids;
-  std::unordered_set<uint32_t> seen;
-  for (StringRef part : parts) {
-    part = part.trim();
-    if (part.empty())
-      continue;
-
-    uint32_t id = 0;
-    if (part.getAsInteger(10, id))
-      failConfig(Twine("invalid seed site id '") + part + "'");
-    if (seen.insert(id).second)
-      ids.push_back(id);
-  }
-
-  std::sort(ids.begin(), ids.end());
-  return ids;
-}
-
-void validateDiscoveryOptions() {
-  StringRef expansion = Expansion.getValue();
+void validateDiscoveryOptions(const HotSetPolicy &policy) {
+  StringRef expansion = policy.expansion;
   if (expansion != "none" && expansion != "use") {
     failConfig(Twine("invalid expansion '") + expansion +
                "'; expected none or use");
   }
 
-  unsigned affinity = MemberMinAffinity;
+  unsigned affinity = policy.memberMinAffinity;
   if (affinity != 1 && affinity != 3 && affinity != 5) {
     failConfig(Twine("invalid member-min-affinity ") + Twine(affinity) +
                "; expected 1, 3, or 5");
   }
-  if (MemberMaxCallDepth > 4)
+  if (policy.memberMaxCallDepth > 4)
     failConfig("member-max-call-depth must be between 0 and 4");
-  if (MemberMaxLoadDepth > 4)
+  if (policy.memberMaxLoadDepth > 4)
     failConfig("member-max-load-depth must be between 0 and 4");
 }
 
-HITMRiskPolicy scoringPolicyFromOptions() {
-  HITMRiskPolicy policy;
-  policy.weightEscapeReturn = WeightEscapeReturn;
-  policy.weightEscapeStore = WeightEscapeStore;
-  policy.weightEscapeCall = WeightEscapeCall;
-  policy.weightSyncAtomic = WeightSyncAtomic;
-  policy.weightSyncStore = WeightSyncStore;
-  policy.weightSyncInlineAsm = WeightSyncInlineAsm;
-  policy.weightSyncFile = WeightSyncFile;
-  policy.weightWorkerEntry = WeightWorkerEntry;
-  policy.weightWorkerReachable = WeightWorkerReachable;
-  policy.weightSize = WeightSize;
-  policy.largeAllocationThreshold = LargeAllocationThreshold;
-  policy.includeDynamicSize = IncludeDynamicSize;
-  policy.dynamicSizeEstimate = DynamicSizeEstimate;
-  return policy;
-}
-
-bool exceedsByteBudget(uint64_t selectedBytes, uint64_t nextBytes) {
-  uint64_t limit = MaxEstimatedBytes;
+bool exceedsByteBudget(uint64_t selectedBytes, uint64_t nextBytes,
+                       const HotSetPolicy &policy) {
+  uint64_t limit = policy.maxEstimatedBytes;
   if (limit == 0)
     return false;
   return nextBytes > limit || selectedBytes > limit - nextBytes;
@@ -160,85 +121,6 @@ const char *accessKindName(MemberAccessKind kind) {
     return "";
   }
   return "";
-}
-
-bool seedOrder(const HotSetSiteDecision *left,
-               const HotSetSiteDecision *right) {
-  if (left->score.value != right->score.value)
-    return left->score.value > right->score.value;
-  return left->site->id < right->site->id;
-}
-
-std::vector<Seed>
-chooseSeeds(std::vector<HotSetSiteDecision> &records,
-            const std::unordered_map<uint32_t, size_t> &recordBySiteId,
-            ArrayRef<uint32_t> explicitSeedIds,
-            std::unordered_set<uint32_t> &automaticCandidates,
-            std::unordered_set<uint32_t> &seedBudgetRejected,
-            uint64_t &selectedEstimatedBytes) {
-  std::vector<HotSetSiteDecision *> candidates;
-
-  if (!explicitSeedIds.empty()) {
-    if (explicitSeedIds.size() > MaxSites) {
-      failConfig(Twine("explicit seed count ") +
-                 Twine(explicitSeedIds.size()) +
-                 " exceeds max-sites " + Twine(MaxSites));
-    }
-
-    for (uint32_t id : explicitSeedIds) {
-      auto recordIt = recordBySiteId.find(id);
-      if (recordIt == recordBySiteId.end())
-        failConfig(Twine("explicit seed site ") + Twine(id) +
-                   " does not exist");
-
-      HotSetSiteDecision &record = records[recordIt->second];
-      if (!isHeapAllocation(record.site->kind)) {
-        failConfig(Twine("explicit seed site ") + Twine(id) +
-                   " is not a heap allocation");
-      }
-      candidates.push_back(&record);
-    }
-  } else {
-    for (HotSetSiteDecision &record : records) {
-      if (!qualifiesAsHITMRiskSeed(*record.site, record.score, MinScore,
-                                   RequireEscape, RequireSync))
-        continue;
-      automaticCandidates.insert(record.site->id);
-      candidates.push_back(&record);
-    }
-  }
-
-  std::sort(candidates.begin(), candidates.end(), seedOrder);
-
-  std::vector<Seed> seeds;
-  seeds.reserve(candidates.size());
-  uint32_t groupId = 1;
-  for (HotSetSiteDecision *record : candidates) {
-    if (explicitSeedIds.empty() &&
-        (seeds.size() >= SeedLimit || seeds.size() >= MaxSites))
-      break;
-
-    if (exceedsByteBudget(selectedEstimatedBytes,
-                          record->score.estimatedBytes)) {
-      if (!explicitSeedIds.empty()) {
-        failConfig(Twine("explicit seeds exceed max-estimated-bytes ") +
-                   Twine(MaxEstimatedBytes.getValue()));
-      }
-      seedBudgetRejected.insert(record->site->id);
-      continue;
-    }
-
-    record->role = HotSetRole::Seed;
-    record->groupId = groupId;
-    appendReason(*record, explicitSeedIds.empty()
-                              ? "hotset-seed:score-top-k"
-                              : "hotset-seed:explicit");
-    seeds.push_back(
-        {static_cast<size_t>(record - records.data()), groupId++});
-    addEstimatedBytes(selectedEstimatedBytes,
-                      record->score.estimatedBytes);
-  }
-  return seeds;
 }
 
 struct OffsetLevel {
@@ -494,9 +376,10 @@ bool isBetterMemberCandidate(const MemberCandidate &candidate,
 }
 
 std::vector<MemberCandidate> discoverSeedMemberCandidates(
-    Module &module, const Seed &seed,
+    Module &module, const HITMSeed &seed,
     ArrayRef<HotSetSiteDecision> records,
-    const std::unordered_map<const Value *, size_t> &allocationByValue) {
+    const std::unordered_map<const Value *, size_t> &allocationByValue,
+    const HotSetPolicy &policy) {
   const HotSetSiteDecision &seedRecord = records[seed.recordIndex];
   if (!seedRecord.site->call)
     return {};
@@ -518,8 +401,11 @@ std::vector<MemberCandidate> discoverSeedMemberCandidates(
       return;
     std::string pathText = accessPathKey(path);
     TraceStateKey key{value, pathText, callDepth};
-    if (!visited.insert(std::move(key)).second)
+    if (visited.find(key) != visited.end())
       return;
+    if (visited.size() >= kMaxTraceStatesPerHITMSeed)
+      return;
+    visited.insert(std::move(key));
     worklist.push_back({value, std::move(path), callDepth});
   };
 
@@ -563,7 +449,7 @@ std::vector<MemberCandidate> discoverSeedMemberCandidates(
 
         if (load->getType()->isPointerTy()) {
           unsigned nextLoadDepth = loadDepth + 1;
-          if (nextLoadDepth > MemberMaxLoadDepth)
+          if (nextLoadDepth > policy.memberMaxLoadDepth)
             continue;
           unsigned accessDepth = state.callDepth + nextLoadDepth;
           recordObservation(observations, accessPathKey(state.path),
@@ -626,7 +512,7 @@ std::vector<MemberCandidate> discoverSeedMemberCandidates(
           continue;
 
         if (const Function *callee = getDirectDefinedCallee(*call);
-            callee && state.callDepth < MemberMaxCallDepth &&
+            callee && state.callDepth < policy.memberMaxCallDepth &&
             argumentIndex < callee->arg_size()) {
           enqueue(callee->getArg(argumentIndex), state.path,
                   state.callDepth + 1);
@@ -678,8 +564,9 @@ std::vector<MemberCandidate> discoverSeedMemberCandidates(
 }
 
 std::vector<MemberCandidate>
-discoverMemberCandidates(Module &module, ArrayRef<Seed> seeds,
-                         ArrayRef<HotSetSiteDecision> records) {
+discoverMemberCandidates(Module &module, ArrayRef<HITMSeed> seeds,
+                         ArrayRef<HotSetSiteDecision> records,
+                         const HotSetPolicy &policy) {
   std::unordered_map<const Value *, size_t> allocationByValue;
   for (size_t recordIndex = 0; recordIndex < records.size(); ++recordIndex) {
     const HotSetSiteDecision &record = records[recordIndex];
@@ -688,10 +575,10 @@ discoverMemberCandidates(Module &module, ArrayRef<Seed> seeds,
   }
 
   std::unordered_map<size_t, MemberCandidate> bestByRecord;
-  for (const Seed &seed : seeds) {
+  for (const HITMSeed &seed : seeds) {
     for (const MemberCandidate &candidate :
          discoverSeedMemberCandidates(module, seed, records,
-                                      allocationByValue)) {
+                                      allocationByValue, policy)) {
       auto [candidateIt, inserted] =
           bestByRecord.emplace(candidate.recordIndex, candidate);
       if (!inserted &&
@@ -710,8 +597,6 @@ discoverMemberCandidates(Module &module, ArrayRef<Seed> seeds,
   std::sort(candidates.begin(), candidates.end(),
             [&](const MemberCandidate &left,
                 const MemberCandidate &right) {
-              if (left.groupId != right.groupId)
-                return left.groupId < right.groupId;
               unsigned leftAffinity =
                   affinityForAccess(left.accessKind);
               unsigned rightAffinity =
@@ -720,18 +605,21 @@ discoverMemberCandidates(Module &module, ArrayRef<Seed> seeds,
                 return leftAffinity > rightAffinity;
               if (left.accessDepth != right.accessDepth)
                 return left.accessDepth < right.accessDepth;
+              if (left.groupId != right.groupId)
+                return left.groupId < right.groupId;
               return records[left.recordIndex].site->id <
                      records[right.recordIndex].site->id;
             });
   return candidates;
 }
 
-StringRef memberRejectionReason(const HotSetSiteDecision &record) {
+StringRef memberRejectionReason(const HotSetSiteDecision &record,
+                                const HotSetPolicy &policy) {
   if (isHeapAllocation(record.site->kind))
     return StringRef();
 
   if (isMMapAllocation(record.site->kind)) {
-    if (!IncludeMMap)
+    if (!policy.includeMMap)
       return "hotset-rejected:mmap-disabled";
     if (!record.site->call || !isAnonymousMMap(*record.site->call))
       return "hotset-rejected:mmap-not-anonymous";
@@ -742,37 +630,50 @@ StringRef memberRejectionReason(const HotSetSiteDecision &record) {
 }
 
 HotSetSelection buildSelection(Module &module,
-                               ArrayRef<AllocationSite> sites) {
-  validateDiscoveryOptions();
+                               const HITMSeedSelection &hitmSeeds,
+                               const HotSetPolicy &policy) {
+  validateDiscoveryOptions(policy);
 
   HotSetSelection selection;
-  selection.records.reserve(sites.size());
-  HITMRiskScorer scorer(module, scoringPolicyFromOptions());
-
-  std::unordered_map<uint32_t, size_t> recordBySiteId;
-  recordBySiteId.reserve(sites.size());
-  for (const AllocationSite &site : sites) {
+  selection.records.reserve(hitmSeeds.records.size());
+  std::vector<HITMSeed> seeds;
+  for (const HITMSeedDecision &hitmRecord : hitmSeeds.records) {
     HotSetSiteDecision record;
-    record.site = &site;
-    record.score = scorer.score(site);
-    record.reason = record.score.reasons;
-    recordBySiteId.emplace(site.id, selection.records.size());
+    record.site = hitmRecord.site;
+    record.score = hitmRecord.score;
+    // Dynamic byte estimates belong to the final hot-set budget and must not
+    // influence which HITM seeds Stage 1 selects.
+    if (record.score.hasDynamicSize)
+      record.score.estimatedBytes = policy.dynamicSizeEstimate;
+    record.reason = hitmRecord.score.reasons;
+    if (hitmRecord.selected) {
+      record.role = HotSetRole::Seed;
+      record.groupId = hitmRecord.groupId;
+      seeds.push_back({selection.records.size(), hitmRecord.groupId});
+    }
     selection.records.push_back(std::move(record));
   }
 
-  std::vector<uint32_t> explicitSeedIds =
-      parseExplicitSeedIds(SeedSiteIds.getValue());
-  std::unordered_set<uint32_t> automaticCandidates;
-  std::unordered_set<uint32_t> seedBudgetRejected;
+  if (seeds.size() > policy.maxSites) {
+    failConfig(Twine("selected HITM seeds exceed hotset max-sites ") +
+               Twine(policy.maxSites));
+  }
+
   uint64_t selectedEstimatedBytes = 0;
-  std::vector<Seed> seeds =
-      chooseSeeds(selection.records, recordBySiteId, explicitSeedIds,
-                  automaticCandidates, seedBudgetRejected,
-                  selectedEstimatedBytes);
+  for (const HITMSeed &seed : seeds) {
+    const HotSetSiteDecision &record = selection.records[seed.recordIndex];
+    if (exceedsByteBudget(selectedEstimatedBytes,
+                          record.score.estimatedBytes, policy)) {
+      failConfig(
+          Twine("selected HITM seeds exceed hotset max-estimated-bytes ") +
+          Twine(policy.maxEstimatedBytes));
+    }
+    addEstimatedBytes(selectedEstimatedBytes, record.score.estimatedBytes);
+  }
 
   size_t selectedCount = seeds.size();
 
-  if (Expansion.getValue() == "none") {
+  if (policy.expansion == "none") {
     for (HotSetSiteDecision &record : selection.records) {
       if (record.role == HotSetRole::Seed)
         continue;
@@ -780,17 +681,13 @@ HotSetSelection buildSelection(Module &module,
         appendReason(record, "hotset-rejected:unsupported-kind");
         continue;
       }
-      if (seedBudgetRejected.count(record.site->id) != 0)
-        appendReason(record, "hotset-rejected:byte-budget");
-      else if (automaticCandidates.count(record.site->id) != 0)
-        appendReason(record, "hotset-rejected:seed-limit");
       appendReason(record, "hotset-rejected:expansion-none");
     }
     return selection;
   }
 
   std::vector<MemberCandidate> memberCandidates =
-      discoverMemberCandidates(module, seeds, selection.records);
+      discoverMemberCandidates(module, seeds, selection.records, policy);
   std::unordered_set<size_t> candidateRecords;
   for (const MemberCandidate &candidate : memberCandidates) {
     candidateRecords.insert(candidate.recordIndex);
@@ -815,54 +712,42 @@ HotSetSelection buildSelection(Module &module,
     if (candidateRecords.count(recordIndex) != 0)
       continue;
 
-    if (seedBudgetRejected.count(record.site->id) != 0)
-      appendReason(record, "hotset-rejected:byte-budget");
-    else if (automaticCandidates.count(record.site->id) != 0)
-      appendReason(record, "hotset-rejected:seed-limit");
     appendReason(record, "hotset-rejected:outside-access-closure");
   }
 
   std::unordered_map<uint32_t, unsigned> memberCountByGroup;
   for (const MemberCandidate &candidate : memberCandidates) {
     HotSetSiteDecision &record = selection.records[candidate.recordIndex];
-    StringRef rejection = memberRejectionReason(record);
+    StringRef rejection = memberRejectionReason(record, policy);
     if (!rejection.empty()) {
       appendReason(record, rejection);
       continue;
     }
 
-    if (record.memberAffinity < MemberMinAffinity) {
-      appendReason(record,
-                   std::string("hotset-rejected:below-member-affinity:score=") +
-                       std::to_string(record.memberAffinity));
+    if (record.memberAffinity < policy.memberMinAffinity) {
+      appendReason(record, "hotset-rejected:below-member-affinity");
       continue;
     }
 
     unsigned &groupMemberCount = memberCountByGroup[candidate.groupId];
-    if (MaxMembersPerSeed != 0 &&
-        groupMemberCount >= MaxMembersPerSeed) {
+    if (policy.maxMembersPerSeed != 0 &&
+        groupMemberCount >= policy.maxMembersPerSeed) {
       appendReason(record, "hotset-rejected:per-seed-member-limit");
       continue;
     }
 
-    if (selectedCount >= MaxSites) {
+    if (selectedCount >= policy.maxSites) {
       appendReason(record, "hotset-rejected:max-sites");
       continue;
     }
 
     if (exceedsByteBudget(selectedEstimatedBytes,
-                          record.score.estimatedBytes)) {
+                          record.score.estimatedBytes, policy)) {
       appendReason(record, "hotset-rejected:byte-budget");
       continue;
     }
 
     record.role = HotSetRole::Member;
-    appendReason(record,
-                 std::string("hotset-member:access-affinity:kind=") +
-                     record.memberAccessKind + ":score=" +
-                     std::to_string(record.memberAffinity) +
-                     ":seed-group=" +
-                     std::to_string(candidate.groupId));
     ++selectedCount;
     ++groupMemberCount;
     addEstimatedBytes(selectedEstimatedBytes,
@@ -887,8 +772,9 @@ const char *hotSetRoleName(HotSetRole role) {
 }
 
 HotSetSelection discoverUseBasedHotSet(Module &module,
-                                       ArrayRef<AllocationSite> sites) {
-  return buildSelection(module, sites);
+                                       const HITMSeedSelection &hitmSeeds,
+                                       const HotSetPolicy &policy) {
+  return buildSelection(module, hitmSeeds, policy);
 }
 
 } // namespace arbiter::llvm::hotset

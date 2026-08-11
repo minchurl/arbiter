@@ -8,16 +8,12 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/StringRef.h"
 #include "llvm/ADT/Twine.h"
-#include "llvm/IR/Constants.h"
-#include "llvm/IR/InstIterator.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/ErrorHandling.h"
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/raw_ostream.h"
 
-#include <cstdint>
 #include <memory>
-#include <unordered_map>
 #include <vector>
 
 using namespace llvm;
@@ -25,35 +21,44 @@ using namespace llvm;
 namespace arbiter::llvm::hotset {
 namespace {
 
-constexpr uint32_t kPlacementTargetEnabled = 1u << 0;
-constexpr unsigned kPlacementTargetNodeShift = 8;
-constexpr uint32_t kPlacementTargetNodeMask =
-    0xffu << kPlacementTargetNodeShift;
+HITMSeedPolicy hitmSeedPolicyFromOptions() {
+  HITMSeedPolicy policy;
+  policy.minScore = HITMMinScore;
+  policy.seedLimit = HITMSeedLimit;
+  policy.explicitSiteIds = HITMSeedSiteIds;
+  policy.requireEscape = HITMRequireEscape;
+  policy.requireSync = HITMRequireSync;
+  policy.scoring.weightEscapeReturn = HITMWeightEscapeReturn;
+  policy.scoring.weightEscapeStore = HITMWeightEscapeStore;
+  policy.scoring.weightEscapeCall = HITMWeightEscapeCall;
+  policy.scoring.weightSyncAtomic = HITMWeightSyncAtomic;
+  policy.scoring.weightSyncStore = HITMWeightSyncStore;
+  policy.scoring.weightSyncInlineAsm = HITMWeightSyncInlineAsm;
+  policy.scoring.weightSyncFile = HITMWeightSyncFile;
+  policy.scoring.weightWorkerEntry = HITMWeightWorkerEntry;
+  policy.scoring.weightWorkerReachable = HITMWeightWorkerReachable;
+  policy.scoring.weightSize = HITMWeightSize;
+  policy.scoring.largeAllocationThreshold = HITMLargeAllocationThreshold;
+  policy.scoring.includeDynamicSize = HITMIncludeDynamicSize;
+  return policy;
+}
 
-struct PlacementConfig {
-  uint32_t flags = 0;
-  int32_t targetNode = -1;
-};
+HotSetPolicy hotSetPolicyFromOptions() {
+  HotSetPolicy policy;
+  policy.expansion = Expansion;
+  policy.maxSites = MaxSites;
+  policy.includeMMap = IncludeMMap;
+  policy.dynamicSizeEstimate = DynamicSizeEstimate;
+  policy.maxEstimatedBytes = MaxEstimatedBytes;
+  policy.maxMembersPerSeed = MaxMembersPerSeed;
+  policy.memberMinAffinity = MemberMinAffinity;
+  policy.memberMaxCallDepth = MemberMaxCallDepth;
+  policy.memberMaxLoadDepth = MemberMaxLoadDepth;
+  return policy;
+}
 
 [[noreturn]] void failConfig(const Twine &message) {
   report_fatal_error(Twine("arbiter hotset config: ") + message, false);
-}
-
-PlacementConfig placementFromOptions() {
-  StringRef placement = Placement.getValue();
-  if (placement == "local")
-    return {};
-  if (placement != "target") {
-    failConfig(Twine("invalid placement '") + placement +
-               "'; expected local or target");
-  }
-  if (TargetNode > 0xffu)
-    failConfig("target node must fit in flags bits 8-15");
-
-  return {kPlacementTargetEnabled |
-              ((TargetNode.getValue() << kPlacementTargetNodeShift) &
-               kPlacementTargetNodeMask),
-          static_cast<int32_t>(TargetNode.getValue())};
 }
 
 void writeCsvValue(raw_ostream &stream, StringRef value) {
@@ -82,12 +87,10 @@ std::unique_ptr<raw_fd_ostream> openFile(StringRef path,
   return std::make_unique<raw_fd_ostream>(path, error, sys::fs::OF_Text);
 }
 
-void emitReport(raw_ostream &stream,
-                ArrayRef<HotSetSiteDecision> records,
-                const PlacementConfig &placement) {
+void emitReport(raw_ostream &stream, ArrayRef<HotSetSiteDecision> records) {
   stream << "site_id,kind,function,file,line,callee,size_expr,"
-            "estimated_bytes,score,role,group_id,selected,flags,target_node,"
-            "reasons,member_affinity,member_access_kind,"
+            "estimated_bytes,score,role,group_id,selected,reasons,"
+            "member_affinity,member_access_kind,"
             "member_access_depth\n";
   for (const HotSetSiteDecision &record : records) {
     const AllocationSite &site = *record.site;
@@ -106,9 +109,7 @@ void emitReport(raw_ostream &stream,
     writeCsvValue(stream, hotSetRoleName(record.role));
     bool selected = record.role != HotSetRole::Rejected;
     stream << ',' << record.groupId << ','
-           << (selected ? "yes" : "no") << ','
-           << (selected ? placement.flags : 0) << ','
-           << (selected ? placement.targetNode : -1) << ',';
+           << (selected ? "yes" : "no") << ',';
     writeCsvValue(stream, record.reason);
     stream << ',' << record.memberAffinity << ',';
     writeCsvValue(stream, record.memberAccessKind);
@@ -133,82 +134,14 @@ RewritePlan buildRewritePlan(const HotSetSelection &selection) {
   return plan;
 }
 
-bool getRuntimeSiteOperands(const CallBase &call, unsigned &siteIdOperand,
-                            unsigned &flagsOperand) {
-  const auto *callee =
-      dyn_cast<Function>(call.getCalledOperand()->stripPointerCasts());
-  if (!callee)
-    return false;
-
-  StringRef name = callee->getName();
-  if (name == "arbiter_alloc_site") {
-    siteIdOperand = 2;
-    flagsOperand = 3;
-  } else if (name == "arbiter_calloc_site" ||
-             name == "arbiter_mmap_site") {
-    siteIdOperand = 3;
-    flagsOperand = 4;
-  } else {
-    return false;
-  }
-
-  return call.arg_size() > flagsOperand;
-}
-
-// Generic rewrites emit flags=0; hotset updates only selected site calls.
-bool bakePlacementFlags(Module &module, const HotSetSelection &selection,
-                        uint32_t placementFlags) {
-  std::unordered_map<uint32_t, uint32_t> flagsBySiteId;
-  for (const HotSetSiteDecision &record : selection.records) {
-    if (record.role != HotSetRole::Rejected)
-      flagsBySiteId.emplace(record.site->id, placementFlags);
-  }
-  if (flagsBySiteId.empty())
-    return false;
-
-  bool changed = false;
-  for (Function &function : module) {
-    for (Instruction &instruction : instructions(function)) {
-      auto *call = dyn_cast<CallBase>(&instruction);
-      if (!call)
-        continue;
-
-      unsigned siteIdOperand = 0;
-      unsigned flagsOperand = 0;
-      if (!getRuntimeSiteOperands(*call, siteIdOperand, flagsOperand))
-        continue;
-
-      const auto *siteId =
-          dyn_cast<ConstantInt>(call->getArgOperand(siteIdOperand));
-      if (!siteId)
-        continue;
-
-      auto flagsIt =
-          flagsBySiteId.find(static_cast<uint32_t>(siteId->getZExtValue()));
-      if (flagsIt == flagsBySiteId.end())
-        continue;
-
-      Value *currentFlags = call->getArgOperand(flagsOperand);
-      const auto *constantFlags = dyn_cast<ConstantInt>(currentFlags);
-      if (constantFlags && constantFlags->getZExtValue() == flagsIt->second)
-        continue;
-
-      call->setArgOperand(
-          flagsOperand,
-          ConstantInt::get(cast<IntegerType>(currentFlags->getType()),
-                           flagsIt->second));
-      changed = true;
-    }
-  }
-  return changed;
-}
-
 } // namespace
 
 PreservedAnalyses ReportPass::run(Module &module, ModuleAnalysisManager &) {
-  PlacementConfig placement = placementFromOptions();
   std::vector<AllocationSite> sites = collectAllocationSites(module);
-  HotSetSelection selection = discoverUseBasedHotSet(module, sites);
+  HITMSeedSelection hitmSeeds =
+      selectHITMSeeds(module, sites, hitmSeedPolicyFromOptions());
+  HotSetSelection selection =
+      discoverUseBasedHotSet(module, hitmSeeds, hotSetPolicyFromOptions());
 
   std::error_code error;
   std::unique_ptr<raw_fd_ostream> file = openFile(ReportPath, error);
@@ -218,21 +151,22 @@ PreservedAnalyses ReportPass::run(Module &module, ModuleAnalysisManager &) {
   }
 
   raw_ostream &stream = file ? *file : outs();
-  emitReport(stream, selection.records, placement);
+  emitReport(stream, selection.records);
   return PreservedAnalyses::all();
 }
 
 PreservedAnalyses RewriteExperimentPass::run(Module &module,
                                              ModuleAnalysisManager &) {
-  PlacementConfig placement = placementFromOptions();
   std::vector<AllocationSite> sites = collectAllocationSites(module);
-  HotSetSelection selection = discoverUseBasedHotSet(module, sites);
+  HITMSeedSelection hitmSeeds =
+      selectHITMSeeds(module, sites, hitmSeedPolicyFromOptions());
+  HotSetSelection selection =
+      discoverUseBasedHotSet(module, hitmSeeds, hotSetPolicyFromOptions());
   RewritePlan plan = buildRewritePlan(selection);
 
   bool changed = false;
   changed |= applyMMapRewrites(module, sites, plan);
   changed |= applyHeapRewrites(module, sites, plan);
-  changed |= bakePlacementFlags(module, selection, placement.flags);
   return changed ? PreservedAnalyses::none() : PreservedAnalyses::all();
 }
 

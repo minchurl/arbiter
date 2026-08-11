@@ -1,8 +1,8 @@
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-placement=target -arbiter-hotset-target-node=2 -S %s | FileCheck %s --check-prefix=USE
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=4 -arbiter-hotset-expansion=none -S %s | FileCheck %s --check-prefix=NONE
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-max-members-per-seed=2 -S %s | FileCheck %s --check-prefix=MEMBER-CAP
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-max-sites=2 -S %s | FileCheck %s --check-prefix=MAX-SITES
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=4,7 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -S %s | FileCheck %s --check-prefix=OVERLAP
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -S %s | FileCheck %s --check-prefix=USE
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=4 -arbiter-hotset-expansion=none -S %s | FileCheck %s --check-prefix=NONE
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-max-members-per-seed=2 -S %s | FileCheck %s --check-prefix=MEMBER-CAP
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=4 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-max-sites=2 -S %s | FileCheck %s --check-prefix=MAX-SITES
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=4,7 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -S %s | FileCheck %s --check-prefix=OVERLAP
 
 @global_ptr = global ptr null
 @counter = global i32 0
@@ -64,8 +64,8 @@ entry:
 ; USE-LABEL: define ptr @receiver_with_nested
 ; USE: call ptr @malloc(i64 64)
 ; USE-LABEL: define void @seed_function
-; USE: call ptr @arbiter_alloc_site(i64 4096, i64 64, i32 4, i32 513)
-; USE: call ptr @arbiter_alloc_site(i64 32, i64 64, i32 5, i32 513)
+; USE: call ptr @arbiter_alloc_site(i64 4096, i64 64, i32 4, i32 0)
+; USE: call ptr @arbiter_alloc_site(i64 32, i64 64, i32 5, i32 0)
 ; USE: call ptr @malloc(i64 48)
 ; USE-LABEL: define void @second_seed_function
 ; USE: call ptr @malloc(i64 4096)

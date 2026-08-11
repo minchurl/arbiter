@@ -1,10 +1,10 @@
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-hotset-sites -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -disable-output %s | FileCheck %s --check-prefix=REPORT
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=WRITE
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=3 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=READ
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=0 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=CALL-DEPTH-ZERO
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=1 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=LOAD-DEPTH-ONE
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hotset-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=1 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=RANK
-; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-hotset-sites -arbiter-hotset-seed-site-ids=13,14 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -disable-output %s | FileCheck %s --check-prefix=OVERLAP
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-hotset-sites -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -disable-output %s | FileCheck %s --check-prefix=REPORT
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=WRITE
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=3 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=READ
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=0 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=CALL-DEPTH-ZERO
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=5 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=1 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=LOAD-DEPTH-ONE
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-hotset-rewrite -arbiter-hitm-seed-site-ids=2 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=1 -arbiter-hotset-max-sites=32 -S %s | FileCheck %s --check-prefix=RANK
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-hotset-sites -arbiter-hitm-seed-site-ids=13,14 -arbiter-hotset-expansion=use -arbiter-hotset-member-min-affinity=1 -arbiter-hotset-member-max-call-depth=1 -arbiter-hotset-member-max-load-depth=2 -arbiter-hotset-max-members-per-seed=0 -arbiter-hotset-max-sites=32 -disable-output %s | FileCheck %s --check-prefix=OVERLAP
 
 @global_ptr = global ptr null
 @counter = global i32 0
@@ -116,18 +116,18 @@ entry:
   ret void
 }
 
-; REPORT: site_id,kind,function,file,line,callee,size_expr,estimated_bytes,score,role,group_id,selected,flags,target_node,reasons,member_affinity,member_access_kind,member_access_depth
-; REPORT: 1,malloc,receiver_with_temporary,,0,malloc,80,80,2,rejected,0,no,0,-1,"escapes-call;no-sync-mutable;hotset-rejected:outside-access-closure",0,,-1
-; REPORT: 3,malloc,seed_function,,0,malloc,16,16,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=attach:score=1:seed-group=1",1,attach,0
-; REPORT: 4,malloc,seed_function,,0,malloc,24,24,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=pointer:score=2:seed-group=1",2,pointer,1
-; REPORT: 5,malloc,seed_function,,0,malloc,32,32,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=read:score=3:seed-group=1",3,read,1
-; REPORT: 6,malloc,seed_function,,0,malloc,40,40,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=read:score=3:seed-group=1",3,read,1
-; REPORT: 7,malloc,seed_function,,0,malloc,48,48,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=1",5,write,1
-; REPORT: 8,malloc,seed_function,,0,malloc,56,56,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=1",5,write,1
-; REPORT: 9,malloc,seed_function,,0,malloc,64,64,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=1",5,write,1
-; REPORT: 10,malloc,seed_function,,0,malloc,72,72,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=pointer:score=2:seed-group=1",2,pointer,1
-; REPORT: 11,malloc,seed_function,,0,malloc,128,128,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=1",5,write,1
-; REPORT: 12,malloc,seed_function,,0,malloc,96,96,6,member,1,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=1",5,write,3
+; REPORT: site_id,kind,function,file,line,callee,size_expr,estimated_bytes,score,role,group_id,selected,reasons,member_affinity,member_access_kind,member_access_depth
+; REPORT: 1,malloc,receiver_with_temporary,,0,malloc,80,80,2,rejected,0,no,"escapes-call;no-sync-mutable;hotset-rejected:outside-access-closure",0,,-1
+; REPORT: 3,malloc,seed_function,,0,malloc,16,16,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",1,attach,0
+; REPORT: 4,malloc,seed_function,,0,malloc,24,24,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",2,pointer,1
+; REPORT: 5,malloc,seed_function,,0,malloc,32,32,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",3,read,1
+; REPORT: 6,malloc,seed_function,,0,malloc,40,40,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",3,read,1
+; REPORT: 7,malloc,seed_function,,0,malloc,48,48,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,1
+; REPORT: 8,malloc,seed_function,,0,malloc,56,56,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,1
+; REPORT: 9,malloc,seed_function,,0,malloc,64,64,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,1
+; REPORT: 10,malloc,seed_function,,0,malloc,72,72,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",2,pointer,1
+; REPORT: 11,malloc,seed_function,,0,malloc,128,128,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,1
+; REPORT: 12,malloc,seed_function,,0,malloc,96,96,6,member,1,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,3
 
 ; WRITE-LABEL: define void @seed_function
 ; WRITE: call ptr @malloc(i64 16)
@@ -163,4 +163,4 @@ entry:
 ; RANK: call ptr @malloc(i64 16)
 ; RANK: call ptr @arbiter_alloc_site(i64 48, i64 64, i32 7, i32 0)
 
-; OVERLAP: 15,malloc,overlap_seed_function,,0,malloc,32,32,6,member,2,yes,0,-1,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;hotset-member:access-affinity:kind=write:score=5:seed-group=2",5,write,1
+; OVERLAP: 15,malloc,overlap_seed_function,,0,malloc,32,32,6,member,2,yes,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function",5,write,1

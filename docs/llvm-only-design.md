@@ -91,13 +91,13 @@ Not supported in the first implementation:
 
 ```c
 void *arbiter_alloc_site(uint64_t size, uint64_t align,
-                         uint32_t site_id, uint32_t flags);
+                         uint32_t site_id, uint32_t reserved);
 
 void *arbiter_calloc_site(uint64_t count, uint64_t elem_size,
-                          uint64_t align, uint32_t site_id, uint32_t flags);
+                          uint64_t align, uint32_t site_id, uint32_t reserved);
 
 void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
-                        uint32_t site_id, uint32_t flags);
+                        uint32_t site_id, uint32_t reserved);
 
 void arbiter_free_maybe(void *ptr);
 void arbiter_cxx_delete_maybe(void *ptr);
@@ -117,12 +117,10 @@ The LLVM site-aware ABI does not call this header-based MLIR ABI. It allocates
 from the selected backend directly and treats the side table as the ownership
 record for `*_maybe` deallocation.
 
-The site-aware ABI is unchanged. Heap-site allocation uses `malloc` for local
-fallback or `numa_alloc_onnode` when placement selects a target. Existing
-experiments pass `flags=0`, which retains the `ARBITER_TARGET_NODE` runtime
-policy. Hot-set target builds set bit 0 and encode the target node in bits
-8-15; hot-set local builds also use `flags=0`. The `align` ABI argument is
-currently reserved and is not enforced.
+The site-aware ABI is unchanged. Heap-site allocation uses `malloc` when
+`ARBITER_TARGET_NODE` is unset and `numa_alloc_onnode` when it is set. The final
+`uint32_t` ABI argument is reserved and emitted as zero. The `align` argument
+is also currently reserved and is not enforced.
 
 ## Side Table
 
