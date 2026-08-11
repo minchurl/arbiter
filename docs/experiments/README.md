@@ -8,3 +8,4 @@ summary numbers, failure modes, and next questions here.
 ## Ledgers
 
 - [Generic Placement Experiment Results](generic-placement-results.md)
+- [Hot-Set Placement Experiment Results](hotset-results.md)

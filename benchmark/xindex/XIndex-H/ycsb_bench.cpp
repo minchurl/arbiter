@@ -25,11 +25,13 @@
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
+#include <fstream>
 #include <memory>
 #include <random>
 #include <string>
+#include <thread>
 #include <vector>
-#include <fstream>
 
 #include "helper.h"
 #include "xindex_impl.h"
@@ -56,6 +58,7 @@ inline void parse_args(int, char **);
 
 /* For ycsb bench */
 size_t iteration = 1;
+size_t duration_seconds = 0;
 char ycsb_type = 'a';
 size_t operate_cnt = 400000000;
 size_t key_cnt = 100000000;
@@ -87,7 +90,7 @@ size_t runtime = 10;
 size_t fg_n = 1;
 size_t bg_n = 1;
 
-volatile bool running = false;
+std::atomic<bool> running(false);
 std::atomic<size_t> ready_threads(0);
 std::vector<key_type> exist_keys;
 std::vector<key_type> non_exist_keys;
@@ -160,7 +163,7 @@ int main(int argc, char **argv) {
 
   xindex_t *tab_hi;
   prepare_xindex(tab_hi);
-  run_benchmark(tab_hi, runtime);
+  run_benchmark(tab_hi, duration_seconds);
   if (tab_hi != nullptr) delete tab_hi;
 }
 
@@ -383,25 +386,45 @@ void *run_fg(void *param) {
   uint64_t dummy_value = 1234;
   UNUSED(res);
 
-  while (!running)
+  while (!running.load(std::memory_order_acquire))
     ;
 
-  for(int j = 0; j < iteration; j++) {
-    for(size_t i = exist_key_start; i < exist_key_end; i++) {
-      operation_item item = YCSBconfig.operate_queue[i];
-      if (item.op == 0) {  // read
-        res = table->get(item.key, dummy_value, thread_id);
-      } else if (item.op == 1) {  // insert
-        res = table->put(item.key, item.key, thread_id); 
-      } else if (item.op == 2) {  // update
-        res = table->put(item.key, item.key, thread_id); 
-      } else if (item.op == 3) {  // remove
-        res = table->remove(item.key, thread_id); 
-      } else {
-        COUT_THIS("Wrong operator");
-        exit(1);
+  auto execute_operation = [&](size_t i) {
+    operation_item item = YCSBconfig.operate_queue[i];
+    if (item.op == 0) {  // read
+      res = table->get(item.key, dummy_value, thread_id);
+    } else if (item.op == 1) {  // insert
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 2) {  // update
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 3) {  // remove
+      res = table->remove(item.key, thread_id);
+    } else {
+      COUT_THIS("Wrong operator");
+      exit(1);
+    }
+    thread_param.throughput++;
+  };
+
+  if (duration_seconds > 0) {
+    bool stop = false;
+    while (!stop && running.load(std::memory_order_relaxed)) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        // Checking every 256 operations keeps stop latency short without
+        // adding an atomic load to every measured operation.
+        if (((i - exist_key_start) & 255) == 0 &&
+            !running.load(std::memory_order_relaxed)) {
+          stop = true;
+          break;
+        }
+        execute_operation(i);
       }
-      thread_param.throughput++;
+    }
+  } else {
+    for (size_t j = 0; j < iteration; j++) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        execute_operation(i);
+      }
     }
   }
 
@@ -422,7 +445,8 @@ void run_benchmark(tab_t *table, size_t sec) {
     }
   }
 
-  running = false;
+  running.store(false, std::memory_order_relaxed);
+  ready_threads.store(0, std::memory_order_relaxed);
   for (size_t worker_i = 0; worker_i < fg_n; worker_i++) {
     fg_params[worker_i].table = table;
     fg_params[worker_i].thread_id = worker_i;
@@ -458,7 +482,12 @@ void run_benchmark(tab_t *table, size_t sec) {
   double time_s;
   TIMER_DECLARE(1);
   TIMER_BEGIN(1);
-  running = true;
+  running.store(true, std::memory_order_release);
+  if (sec > 0) {
+    COUT_THIS("[ycsb] Duration target(sec): " << sec);
+    std::this_thread::sleep_for(std::chrono::seconds(sec));
+    running.store(false, std::memory_order_release);
+  }
   void *status;
   for (size_t i = 0; i < fg_n; i++) {
     int rc = pthread_join(threads[i], &status);
@@ -495,6 +524,7 @@ inline void parse_args(int argc, char **argv) {
       {"ycsb_type", required_argument, 0, 'n'},
       {"ycsb-load", required_argument, 0, 1000},
       {"ycsb-tx", required_argument, 0, 1001},
+      {"duration", required_argument, 0, 1002},
       {0, 0, 0}};
   std::string ops = "a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:t:";
   int option_index = 0;
@@ -567,6 +597,10 @@ inline void parse_args(int argc, char **argv) {
         break;
       case 1001:
         ycsb_tx_path = optarg;
+        break;
+      case 1002:
+        duration_seconds = strtoul(optarg, NULL, 10);
+        INVARIANT(duration_seconds > 0);
         break;
       default:
         abort();

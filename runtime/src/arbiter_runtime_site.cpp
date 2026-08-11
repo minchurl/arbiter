@@ -1,10 +1,12 @@
 #include "arbiter_runtime_site.h"
 
 #include "arbiter_side_table.h"
+#include "arbiter_slab_arena.h"
 
 #include <cerrno>
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <limits>
@@ -24,8 +26,16 @@ using arbiter::runtime::SideTableKind;
 constexpr int32_t kNoTargetNode = -1;
 
 struct RuntimeConfig {
+  enum class HeapBackend : uint8_t {
+    Direct,
+    Arena,
+  };
+
+  bool valid;
   bool hasTargetNode;
   int32_t targetNode;
+  HeapBackend heapBackend;
+  bool arenaStrict;
 };
 
 struct BackendAllocation {
@@ -61,9 +71,58 @@ bool parseTargetNode(int32_t &node) {
   return true;
 }
 
+bool parseToggle(const char *name, bool defaultValue, bool &result) {
+  const char *value = std::getenv(name);
+  if (!value || value[0] == '\0') {
+    result = defaultValue;
+    return true;
+  }
+  if (std::strcmp(value, "0") == 0) {
+    result = false;
+    return true;
+  }
+  if (std::strcmp(value, "1") == 0) {
+    result = true;
+    return true;
+  }
+
+  std::fprintf(stderr, "arbiter-runtime: %s must be 0 or 1: %s\n", name,
+               value);
+  return false;
+}
+
+bool parseHeapBackend(RuntimeConfig::HeapBackend &backend) {
+  const char *value = std::getenv("ARBITER_HEAP_BACKEND");
+  if (!value || value[0] == '\0' || std::strcmp(value, "direct") == 0) {
+    backend = RuntimeConfig::HeapBackend::Direct;
+    return true;
+  }
+  if (std::strcmp(value, "arena") == 0) {
+    backend = RuntimeConfig::HeapBackend::Arena;
+    return true;
+  }
+
+  std::fprintf(stderr,
+               "arbiter-runtime: ARBITER_HEAP_BACKEND must be direct or "
+               "arena: %s\n",
+               value);
+  return false;
+}
+
 RuntimeConfig loadRuntimeConfig() {
-  RuntimeConfig config{false, kNoTargetNode};
+  RuntimeConfig config{true, false, kNoTargetNode,
+                       RuntimeConfig::HeapBackend::Direct, true};
   config.hasTargetNode = parseTargetNode(config.targetNode);
+  config.valid = parseHeapBackend(config.heapBackend) &&
+                 parseToggle("ARBITER_ARENA_STRICT", true,
+                             config.arenaStrict);
+  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena &&
+      !config.hasTargetNode) {
+    std::fprintf(stderr,
+                 "arbiter-runtime: ARBITER_TARGET_NODE is required when "
+                 "ARBITER_HEAP_BACKEND=arena\n");
+    config.valid = false;
+  }
   return config;
 }
 
@@ -158,6 +217,30 @@ bool releaseIfTracked(void *ptr) {
   return true;
 }
 
+bool releaseHeapAllocation(void *ptr) {
+  const RuntimeConfig &config = getRuntimeConfig();
+  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
+    switch (arbiter::runtime::slabArenaDeallocate(ptr)) {
+    case arbiter::runtime::SlabArenaDeallocation::Released:
+      return true;
+    case arbiter::runtime::SlabArenaDeallocation::Invalid:
+      std::fprintf(stderr,
+                   "arbiter-runtime: invalid or duplicate free inside the "
+                   "slab arena\n");
+      std::abort();
+    case arbiter::runtime::SlabArenaDeallocation::NotOwned:
+      break;
+    }
+
+    // Strict arena mode never falls back to individually tracked heap
+    // allocations. Avoid a mutex/hash lookup for every ordinary free/delete.
+    if (config.arenaStrict)
+      return false;
+  }
+
+  return releaseIfTracked(ptr);
+}
+
 SideTableEntry makeEntry(SideTableKind kind,
                          const BackendAllocation &allocation, uint64_t size,
                          uint32_t siteId) {
@@ -182,11 +265,24 @@ bool trackOrRelease(void *ptr, const SideTableEntry &entry) {
 
 extern "C" void *arbiter_alloc_site(uint64_t size, uint64_t align,
                                     uint32_t site_id, uint32_t reserved) {
-  (void)align;
   (void)reserved;
 
-  if (!fitsSizeT(size))
+  const RuntimeConfig &config = getRuntimeConfig();
+  if (!config.valid || !fitsSizeT(size))
     return nullptr;
+
+  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
+    arbiter::runtime::SlabArenaFailure failure =
+        arbiter::runtime::SlabArenaFailure::None;
+    void *ptr = arbiter::runtime::slabArenaAllocate(
+        size, align, site_id, config.targetNode, failure);
+    if (ptr)
+      return ptr;
+
+    arbiter::runtime::slabArenaRecordFallback(failure);
+    if (config.arenaStrict)
+      return nullptr;
+  }
 
   BackendAllocation allocation = allocateHeap(size);
   if (!allocation.ptr)
@@ -250,7 +346,7 @@ extern "C" void arbiter_free_maybe(void *ptr) {
   if (!ptr)
     return;
 
-  if (releaseIfTracked(ptr))
+  if (releaseHeapAllocation(ptr))
     return;
 
   std::free(ptr);
@@ -260,7 +356,7 @@ extern "C" void arbiter_cxx_delete_maybe(void *ptr) {
   if (!ptr)
     return;
 
-  if (releaseIfTracked(ptr))
+  if (releaseHeapAllocation(ptr))
     return;
 
   ::operator delete(ptr);
@@ -270,7 +366,7 @@ extern "C" void arbiter_cxx_delete_array_maybe(void *ptr) {
   if (!ptr)
     return;
 
-  if (releaseIfTracked(ptr))
+  if (releaseHeapAllocation(ptr))
     return;
 
   ::operator delete[](ptr);

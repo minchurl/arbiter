@@ -36,7 +36,8 @@ Suggested LLVM-only build:
     -DCMAKE_C_COMPILER="${LLVM_PREFIX}/bin/clang" \\
     -DCMAKE_CXX_COMPILER="${LLVM_PREFIX}/bin/clang++"
   cmake --build "${ROOT_DIR}/build-llvm${LLVM_VERSION}" --target \\
-    ArbiterLLVMPlugin arbiter_runtime arbiter-runtime-smoke
+    ArbiterLLVMPlugin arbiter_runtime arbiter-runtime-smoke \\
+    arbiter-slab-arena-smoke
 
 Then try:
   ARBITER_BUILD_DIR="${ROOT_DIR}/build-llvm${LLVM_VERSION}" "${ROOT_DIR}/scripts/smoke.sh"

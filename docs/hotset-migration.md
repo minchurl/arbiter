@@ -14,8 +14,10 @@ include the roots; a cap that cannot contain all of them is a config error. One
 config file supplies both parameter groups, and one effective-arguments
 manifest records the complete resolved policy.
 
-The selected sites keep the existing Arbiter runtime ABI. Placement uses the
-single runtime `ARBITER_TARGET_NODE` setting; unset means local allocation.
+The selected sites keep the existing Arbiter runtime ABI. The direct backend
+uses the single runtime `ARBITER_TARGET_NODE` setting; unset means host
+allocation. The slab/arena backend requires an explicit node for both local
+and target runs.
 
 Despite the historical "migration" name, this is allocation-time placement.
 It does not move pages after allocation.
@@ -289,6 +291,82 @@ The same rewritten binary can be used for both placement modes:
 ARBITER_TARGET_NODE=1 ./scripts/run-xindex-arbiter.sh remote
 ```
 
+For a protected, reproducible native/local/target comparison, use the dedicated
+driver and explicitly name the machine's CXL NUMA node:
+
+```sh
+ARBITER_TARGET_NODE=<cxl-node> \
+./scripts/run-protected-hotset-experiment.sh
+```
+
+The driver defaults to `configs/hotset/xindex-cxl-arena.config`, a small scaled
+workload, and a 60-second time-based measured interval. It records the sourced
+config and its SHA-256, the unified decision CSV, resolved `opt` arguments,
+binary hashes, per-run maximum RSS, arena counters, and local/target summaries.
+The local and target rows use the same rewritten binary and slab allocator;
+the arena is bound to `ARBITER_MEM_NODE` for local and `ARBITER_TARGET_NODE`
+for target.
+
+The arena config pins the score-14 XIndex `put` root (site 99 in the matching
+build) and disables member expansion. The excluded 8-byte member is the first
+`std::vector` backing allocation created by `reserve(1)`, not the B-tree node
+payload. The explicit ID is valid only for the matching build, which is why the
+driver retains the decision CSV and binary hash. The config declares the
+expected seed function and selected counts; the driver stops before execution
+if those checks drift.
+
+### NUMA Slab/Arena Heap Backend
+
+The legacy direct backend calls `numa_alloc_onnode` and records a side-table
+entry for every selected heap object. A 96-byte allocation can therefore
+consume one 4KiB page and one locked hash-table insertion. Page-aligned NUMA
+pointers also exposed a shard-hash defect: the old low-bit hash sent them all
+to shard zero. The direct backend now mixes high address bits, but it remains a
+compatibility/reference path rather than the recommended hot-set allocator.
+
+Set `ARBITER_HEAP_BACKEND=arena` to use the pooled path. The runtime reserves
+one virtual range, binds it to the requested NUMA node with `mbind`, and assigns
+2MiB slabs to `(site ID, object size, requested alignment)` arenas. With the
+default 64-byte slot alignment, site 99's 96-byte object uses a 128-byte slot:
+
+```text
+2MiB slab on node 0 or node 2
+  -> 16,384 fixed 128-byte slots
+  -> each slot holds one 96-byte site-99 object
+```
+
+Allocation normally needs an atomic bump only; a lock is used when installing
+a new slab or recycling freed slots. Deallocation first checks whether the
+pointer falls inside the reserved arena range, computes its slab index, checks
+the local allocation bitmap, and returns the slot to that arena. Ordinary
+heap pointers fall through to their original `free`/`delete`. In strict mode,
+ordinary heap deallocations do not probe the heap side table.
+
+Relevant runtime controls are:
+
+| Environment | Driver default | Meaning |
+|---|---:|---|
+| `ARBITER_HEAP_BACKEND` | `arena` | `direct` or `arena` |
+| `ARBITER_ARENA_SLAB_BYTES` | 2097152 | bytes assigned per slab |
+| `ARBITER_ARENA_RESERVE_BYTES` | 4294967296 | virtual reservation and hard arena capacity |
+| `ARBITER_ARENA_SLOT_ALIGNMENT` | 64 | minimum object alignment and slot rounding |
+| `ARBITER_ARENA_STRICT` | 1 | fail instead of using per-object direct fallback |
+| `ARBITER_ARENA_REPORT` | 1 | emit per-site and summary allocation counters |
+
+The reservation uses `MAP_NORESERVE`; untouched pages do not count toward RSS.
+Assigned slab bytes are capacity, not exact physical residency. At exit,
+`mincore` identifies resident pages and `move_pages` reports their actual NUMA
+nodes in `arbiter-arena-residency`. The protected driver rejects missing
+reports, placement-query errors, node-majority mismatches, and nonzero fallback
+counts. Currently each selected site must retain one allocation size and
+requested alignment during a process. Dynamic-size sites should remain on the
+direct backend until size-class support is added.
+
+`--duration N` makes each foreground worker cycle its assigned trace until N
+seconds elapse. The stop flag is checked every 256 operations. The protected
+driver exposes this as `XINDEX_DURATION_SECONDS`, defaults it to 60, and uses
+`XINDEX_ITERATION` only when the duration is set to zero.
+
 The runtime ABI's final `uint32_t` slot remains reserved and is emitted as
 zero.
 
@@ -445,8 +523,10 @@ hotset-use-local
 hotset-use-target
 ```
 
-`hotset-single` uses `ARBITER_HOTSET_EXPANSION=none`. Local runs unset
-`ARBITER_TARGET_NODE`; target runs set it to the machine's CXL NUMA node.
+`hotset-single` uses `ARBITER_HOTSET_EXPANSION=none`. Direct-backend local runs
+unset `ARBITER_TARGET_NODE`; arena-backend local runs bind the arena explicitly
+to the baseline memory node. Target runs bind it to the machine's CXL NUMA
+node.
 
 The useful search space includes HITM-risk weights and gates, explicit or top-k
 roots, affinity threshold, call/load depths, member/site/byte caps, dynamic
