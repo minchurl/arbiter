@@ -1,8 +1,9 @@
 # Hot-Set Placement Experiment Results
 
 This ledger records protected XIndex/YCSB hot-set comparisons. Generated files
-under `build/` remain local; retain the input config, decision CSV, effective
-arguments, and binary hashes with every durable result.
+under `build/` normally remain local; retain the input config, decision CSV,
+effective arguments, and binary hashes with every durable result. Bounded raw
+text needed to reproduce an analysis may be retained under `artifacts/`.
 
 ## 2026-08-12: 1M/4M CXL Safety and Tendency Pilot
 
@@ -290,3 +291,7 @@ primary result is the seven round-level CXL/local steady-state deltas after
 discarding the first 60 seconds. The 60-minute CXL row is analyzed separately
 for throughput drift and final memory growth; it is not pooled as an eighth
 paired observation. The driver does not invoke `drop_caches`.
+
+The completed run's manifest, aggregate CSVs, 22 row logs and resource logs,
+compiler reports, and 375 throughput samples are preserved in the
+[Git-tracked raw artifact archive](artifacts/hotset-auto-overnight-20260814-012754/README.md).

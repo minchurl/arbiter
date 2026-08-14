@@ -1,0 +1,556 @@
+[main round=01 position=1] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native
+Running scope as unit: run-re5e44d1f748847a5bb902b787da07489.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.065 throughput=1.26094e+07 max_rss_kb=12372656
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-01-native-native/hotset-effective.opt-args
+[main round=01 position=2] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local
+Running scope as unit: run-r9afc2b697d73475eb35edb8a66fdeb12.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.051 throughput=1.32918e+07 max_rss_kb=12384424
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-02-auto-k1-local/hotset-effective.opt-args
+[main round=01 position=3] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl
+Running scope as unit: run-ra558616c14454385a5f05689e329e08c.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.07 throughput=1.48937e+07 max_rss_kb=12685436
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-01/row-03-auto-k1-cxl/hotset-effective.opt-args
+[main round=02 position=1] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local
+Running scope as unit: run-rac5993170e83493db9993c043e8163f3.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.064 throughput=1.32104e+07 max_rss_kb=12577236
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-01-auto-k1-local/hotset-effective.opt-args
+[main round=02 position=2] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl
+Running scope as unit: run-r68f251dfa1284c378b2d585279e5d2a5.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.069 throughput=1.45862e+07 max_rss_kb=12728824
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-02-auto-k1-cxl/hotset-effective.opt-args
+[main round=02 position=3] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native
+Running scope as unit: run-rb6f6bafea3d042eab745d30cf213b1d6.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.065 throughput=1.29572e+07 max_rss_kb=12398284
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-02/row-03-native-native/hotset-effective.opt-args
+[main round=03 position=1] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl
+Running scope as unit: run-r0df98696678b4c31885601896b35f20d.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.064 throughput=1.51711e+07 max_rss_kb=12504044
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-01-auto-k1-cxl/hotset-effective.opt-args
+[main round=03 position=2] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native
+Running scope as unit: run-r3fdb52f7255b4ccd9d8364fded5b4d91.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.066 throughput=1.27653e+07 max_rss_kb=12416280
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-02-native-native/hotset-effective.opt-args
+[main round=03 position=3] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local
+Running scope as unit: run-r257bb2c14507479f83bfcef2c0c72d3c.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.068 throughput=1.28151e+07 max_rss_kb=12637100
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-03/row-03-auto-k1-local/hotset-effective.opt-args
+[main round=04 position=1] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native
+Running scope as unit: run-rde7a98a2dab8436192e1fa6da874b259.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.067 throughput=1.28274e+07 max_rss_kb=12363816
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-01-native-native/hotset-effective.opt-args
+[main round=04 position=2] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl
+Running scope as unit: run-r22bf861fa3454058a435c7ea09463ec2.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.067 throughput=1.53061e+07 max_rss_kb=12643648
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-02-auto-k1-cxl/hotset-effective.opt-args
+[main round=04 position=3] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local
+Running scope as unit: run-rddb387bec12a4f56bd24495525c32894.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.066 throughput=1.27811e+07 max_rss_kb=12653744
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-04/row-03-auto-k1-local/hotset-effective.opt-args
+[main round=05 position=1] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl
+Running scope as unit: run-r44b7162d10aa4cdd9f2bfae0d9fd6b75.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.065 throughput=1.34764e+07 max_rss_kb=12568532
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-01-auto-k1-cxl/hotset-effective.opt-args
+[main round=05 position=2] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local
+Running scope as unit: run-r20a19b1536a443298fd7adb41685ee21.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.065 throughput=1.33219e+07 max_rss_kb=12576892
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-02-auto-k1-local/hotset-effective.opt-args
+[main round=05 position=3] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native
+Running scope as unit: run-r94611d6555994f708ed85fcf3a7136ef.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.062 throughput=1.31776e+07 max_rss_kb=12272380
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-05/row-03-native-native/hotset-effective.opt-args
+[main round=06 position=1] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local
+Running scope as unit: run-r22b915bd119741ee87c81b02cccc56ca.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.065 throughput=1.30476e+07 max_rss_kb=12573328
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-01-auto-k1-local/hotset-effective.opt-args
+[main round=06 position=2] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native
+Running scope as unit: run-re34f7abab7b64ff0a73c66c3b1f82091.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.069 throughput=1.22499e+07 max_rss_kb=12460656
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-02-native-native/hotset-effective.opt-args
+[main round=06 position=3] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl
+Running scope as unit: run-rf06ceb4276e04bc3b4ef38448e92c369.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.063 throughput=1.47341e+07 max_rss_kb=12644792
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-06/row-03-auto-k1-cxl/hotset-effective.opt-args
+[soak round=after-06 position=1] auto-k1-cxl, duration=3600s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=3600
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl
+Running scope as unit: run-r853d92d0f37a40bb964de578e1d0a8fd.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=3600.05 throughput=1.3468e+07 max_rss_kb=12353096
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/soak/round-after-06/row-01-auto-k1-cxl/hotset-effective.opt-args
+[main round=07 position=1] native-native, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native
+Running scope as unit: run-r188a806bf66c44219053fd339d91de48.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=900.067 throughput=1.2625e+07 max_rss_kb=12449528
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-01-native-native/hotset-effective.opt-args
+[main round=07 position=2] auto-k1-local, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local
+Running scope as unit: run-r15f88ebfb87c46cc9ca65c5c95609d80.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=900.065 throughput=1.30104e+07 max_rss_kb=12523868
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-02-auto-k1-local/hotset-effective.opt-args
+[main round=07 position=3] auto-k1-cxl, duration=900s
+Starting protected hot-set scope:
+  MemoryMax=40G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/xindex-cxl-arena-auto-k1-s13.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=4294967296
+  duration_seconds=900
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl
+Running scope as unit: run-rfa020bb4bd0442249d577a047e0f239b.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=900.065 throughput=1.49759e+07 max_rss_kb=12683448
+[cooldown] 5 seconds
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/main/round-07/row-03-auto-k1-cxl/hotset-effective.opt-args
+Automatic hot-set overnight experiment complete.
+  main:    7 balanced native/local/CXL rounds
+  soak:    3600s auto-k1 CXL after round 6
+  runs:    /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/runs.csv
+  samples: /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754/throughput-samples.csv
+  result:  /home/shin/arbiter/build/arbiter-bench/hotset-auto-overnight-20260814-012754

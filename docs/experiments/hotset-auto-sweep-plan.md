@@ -4,6 +4,9 @@ Status: screening, 180-second confirmation, and overnight confirmation were
 executed on 2026-08-14. The overnight interpretation remains to be added to
 the durable results ledger.
 
+The complete text artifacts for the overnight run are archived at
+[`artifacts/hotset-auto-overnight-20260814-012754/`](artifacts/hotset-auto-overnight-20260814-012754/README.md).
+
 This document freezes the methodology for the next XIndex/YCSB experiment so
 that short-term tuning and overnight confirmation use the same terminology,
 controls, and promotion rules. The experiment removes the site-99 pin from the

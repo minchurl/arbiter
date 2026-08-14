@@ -1,0 +1,2 @@
+benchmark,workload,config,metric,repeats,avg_time_sec,avg_throughput,avg_max_rss_kb
+xindex,a,hotset-use-target,op/s,1,900.065,13476400,12568532

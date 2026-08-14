@@ -1,0 +1,695 @@
+fg_n: 31
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+exist_keys.size() : 20000000, item_num : 20000000
+load number : 20000000
+  read: 40002069
+insert: 0
+update: 39997931
+remove: 0
+operation count: 80000000
+exist_keys.size(): 20000000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.336688, mean error: 24.0016
+table: 0x7dbfdd034000
+training done
+[ycsb] Worker1 Ready.
+[ycsb] Worker2 Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker4 Ready.
+[ycsb] Worker[ycsb] Worker8 Ready.
+[ycsb] Worker[ycsb] Worker12 Ready.[ycsb] Worker11
+ Ready.
+[ycsb] Worker13 Ready.
+53[ycsb] Worker Ready.
+[ycsb] Worker18 Ready.[ycsb] Worker[ycsb] Worker[ycsb] Worker17 Ready.
+
+7[ycsb] Worker[ycsb] Worker[ycsb] Worker2021 Ready. Ready.14
+[ycsb] Worker29 Ready.
+[ycsb] Worker[ycsb] Worker24 Ready.
+ Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker27 Ready.
+6[ycsb] Worker Ready.30
+
+1923 Ready.
+9 Ready.
+[ycsb] Worker25[ycsb] Worker Ready.
+ Ready.
+[ycsb] Worker22 Ready.
+ Ready.
+ Ready.
+1615 Ready.
+0 Ready.10[ycsb] Worker Ready.
+ Ready.
+26 Ready.
+ Ready.
+28
+ Ready.
+[ycsb] prepare data ...
+[ycsb] Duration target(sec): 900
+[ycsb] Throughput sample interval(sec): 60
+hash resize group cnt: 0
+hash resize group cnt: 100
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=60.0012 interval_sec=60.0012 interval_ops=1041765279 interval_ops_per_sec=1.73624e+07 cumulative_ops=1041765279 cumulative_ops_per_sec=1.73624e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=120.001 interval_sec=59.9999 interval_ops=780434062 interval_ops_per_sec=1.30073e+07 cumulative_ops=1822199341 cumulative_ops_per_sec=1.51849e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=180.001 interval_sec=60 interval_ops=779841149 interval_ops_per_sec=1.29974e+07 cumulative_ops=2602040490 cumulative_ops_per_sec=1.44557e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=240.001 interval_sec=60.0001 interval_ops=779703512 interval_ops_per_sec=1.2995e+07 cumulative_ops=3381744002 cumulative_ops_per_sec=1.40905e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=300.001 interval_sec=60.0001 interval_ops=780419982 interval_ops_per_sec=1.3007e+07 cumulative_ops=4162163984 cumulative_ops_per_sec=1.38738e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=360.001 interval_sec=59.9999 interval_ops=780948167 interval_ops_per_sec=1.30158e+07 cumulative_ops=4943112151 cumulative_ops_per_sec=1.37308e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=420.001 interval_sec=59.9998 interval_ops=779998936 interval_ops_per_sec=1.3e+07 cumulative_ops=5723111087 cumulative_ops_per_sec=1.36264e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=480.001 interval_sec=60 interval_ops=779413208 interval_ops_per_sec=1.29902e+07 cumulative_ops=6502524295 cumulative_ops_per_sec=1.35469e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=540.001 interval_sec=60 interval_ops=780268066 interval_ops_per_sec=1.30045e+07 cumulative_ops=7282792361 cumulative_ops_per_sec=1.34866e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=600.001 interval_sec=60.0001 interval_ops=780351704 interval_ops_per_sec=1.30058e+07 cumulative_ops=8063144065 cumulative_ops_per_sec=1.34385e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=660.001 interval_sec=59.9997 interval_ops=779454862 interval_ops_per_sec=1.2991e+07 cumulative_ops=8842598927 cumulative_ops_per_sec=1.33979e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=720.001 interval_sec=60.0003 interval_ops=780103185 interval_ops_per_sec=1.30017e+07 cumulative_ops=9622702112 cumulative_ops_per_sec=1.33648e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=780.001 interval_sec=59.9997 interval_ops=780564553 interval_ops_per_sec=1.30095e+07 cumulative_ops=10403266665 cumulative_ops_per_sec=1.33375e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=840.001 interval_sec=60.0007 interval_ops=780415431 interval_ops_per_sec=1.30068e+07 cumulative_ops=11183682096 cumulative_ops_per_sec=1.33139e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=900.051 interval_sec=60.0497 interval_ops=779625358 interval_ops_per_sec=1.2983e+07 cumulative_ops=11963307454 cumulative_ops_per_sec=1.32918e+07 final=1
+[ycsb] Time(sec) : 900.051
+[ycsb] Throughput(op/s): 1.32918e+07
+hash resize group cnt: 0
+arbiter-arena-site site=97 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=8356124 frees=0 live=8356124 peak_live=8356124 requested_bytes_total=802187904 slot_bytes_total=1069583872 assigned_slabs=511 assigned_bytes=1071644672
+arbiter-arena-summary node=0 reserve_bytes=4294967296 slab_bytes=2097152 slot_alignment=64 assigned_slabs=511 assigned_bytes=1071644672 allocations=8356124 frees=0 live=8356124 peak_live=8356124 requested_bytes_total=802187904 slot_bytes_total=1069583872 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=261129 resident_bytes=1069584384 majority_node=0 query_error_pages=0 mincore_error_slabs=0 node0_pages=261129

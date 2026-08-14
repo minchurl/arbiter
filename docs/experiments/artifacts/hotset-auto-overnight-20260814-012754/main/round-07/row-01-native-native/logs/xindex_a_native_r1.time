@@ -1,0 +1,23 @@
+	Command being timed: "numactl --cpunodebind=0 --membind=0 env YCSB_TYPE=a XINDEX_FG=31 XINDEX_ITERATION=3 XINDEX_DURATION_SECONDS=900 XINDEX_THROUGHPUT_SAMPLE_SECONDS=60 YCSB_LOAD_PATH=/home/shin/arbiter/build/arbiter-bench/xindex/ycsb_scale_20000000_80000000/xindex_load_ycsb_a.dat YCSB_TX_PATH=/home/shin/arbiter/build/arbiter-bench/xindex/ycsb_scale_20000000_80000000/xindex_transaction_ycsb_a.dat LD_LIBRARY_PATH= XINDEX_BG=1 NATIVE_XINDEX_BIN=/home/shin/arbiter/build/arbiter-bench/xindex-hotset-auto-k1-s13/ycsb_bench-native /home/shin/arbiter/scripts/run-xindex-arbiter.sh native"
+	User time (seconds): 28834.82
+	System time (seconds): 9.19
+	Percent of CPU this job got: 3160%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 15:12.57
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 12449528
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 5018279
+	Voluntary context switches: 1250
+	Involuntary context switches: 175526
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 768
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
