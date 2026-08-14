@@ -23,8 +23,10 @@ USE_SYSTEMD_SCOPE="${USE_SYSTEMD_SCOPE:-1}"
 
 REPEATS="${REPEATS:-1}"
 XINDEX_FG="${XINDEX_FG:-8}"
+XINDEX_BG="${XINDEX_BG:-1}"
 XINDEX_ITERATION="${XINDEX_ITERATION:-3}"
 XINDEX_DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-60}"
+XINDEX_THROUGHPUT_SAMPLE_SECONDS="${XINDEX_THROUGHPUT_SAMPLE_SECONDS:-0}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
 MEM_NODE="${ARBITER_MEM_NODE:-0}"
 TARGET_NODE="${ARBITER_TARGET_NODE:-}"
@@ -32,6 +34,11 @@ RUN_NATIVE="${RUN_NATIVE:-1}"
 RUN_LOCAL="${RUN_LOCAL:-1}"
 RUN_TARGET="${RUN_TARGET:-1}"
 BUILD_BENCHMARKS="${BUILD_BENCHMARKS:-1}"
+PREPARE_SCALE_DATA="${PREPARE_SCALE_DATA:-1}"
+FAIL_FAST="${FAIL_FAST:-0}"
+ALTERNATE_PLACEMENT_ORDER="${ALTERNATE_PLACEMENT_ORDER:-0}"
+FIRST_PLACEMENT="${FIRST_PLACEMENT:-local}"
+COOLDOWN_SECONDS="${COOLDOWN_SECONDS:-0}"
 HEAP_BACKEND="${ARBITER_HEAP_BACKEND:-arena}"
 ARENA_SLAB_BYTES="${ARBITER_ARENA_SLAB_BYTES:-2097152}"
 ARENA_RESERVE_BYTES="${ARBITER_ARENA_RESERVE_BYTES:-4294967296}"
@@ -53,6 +60,7 @@ Defaults:
   workloads:          a
   repeats:            1
   foreground threads: 8
+  background threads: 1
   duration:           60 seconds per measured run
   iterations:         3 (used only when duration is 0)
   MemoryMax:          16G
@@ -70,13 +78,22 @@ Useful environment:
   YCSB_TYPES                workload list, such as "a" or "a b"
   REPEATS                   default: 1
   XINDEX_FG                 default: 8
+  XINDEX_BG                 default: 1
   XINDEX_ITERATION          default: 3
   XINDEX_DURATION_SECONDS   default: 60; set 0 for iteration mode
+  XINDEX_THROUGHPUT_SAMPLE_SECONDS
+                           default: 0; 10 for short, 60 for long runs
   ARBITER_CPU_NODE          default: 0
   ARBITER_MEM_NODE          default: 0
   MEMORY_MAX               default: 16G
   MEMORY_SWAP_MAX          default: 0
   BUILD_BENCHMARKS         default: 1
+  PREPARE_SCALE_DATA       default: 1; set 0 only for validated existing traces
+  FAIL_FAST               default: 0; stop after the first failed run
+  FIRST_PLACEMENT         local or target; default: local
+  COOLDOWN_SECONDS        default: 0; pause after every measured row
+  ALTERNATE_PLACEMENT_ORDER
+                           default: 0; alternate local/target order by repeat
   ARBITER_HEAP_BACKEND     direct or arena; default: arena
   ARBITER_ARENA_SLAB_BYTES default: 2097152 (2 MiB)
   ARBITER_ARENA_RESERVE_BYTES
@@ -128,8 +145,11 @@ require_positive_integer XINDEX_SCALE_LOAD_RECORDS "${LOAD_RECORDS}"
 require_positive_integer XINDEX_SCALE_TX_OPS "${TX_OPS}"
 require_positive_integer REPEATS "${REPEATS}"
 require_positive_integer XINDEX_FG "${XINDEX_FG}"
+require_nonnegative_integer XINDEX_BG "${XINDEX_BG}"
 require_positive_integer XINDEX_ITERATION "${XINDEX_ITERATION}"
 require_nonnegative_integer XINDEX_DURATION_SECONDS "${XINDEX_DURATION_SECONDS}"
+require_nonnegative_integer XINDEX_THROUGHPUT_SAMPLE_SECONDS "${XINDEX_THROUGHPUT_SAMPLE_SECONDS}"
+require_nonnegative_integer COOLDOWN_SECONDS "${COOLDOWN_SECONDS}"
 require_positive_integer ARBITER_ARENA_SLAB_BYTES "${ARENA_SLAB_BYTES}"
 require_positive_integer ARBITER_ARENA_RESERVE_BYTES "${ARENA_RESERVE_BYTES}"
 require_positive_integer ARBITER_ARENA_SLOT_ALIGNMENT "${ARENA_SLOT_ALIGNMENT}"
@@ -137,8 +157,16 @@ require_toggle RUN_NATIVE "${RUN_NATIVE}"
 require_toggle RUN_LOCAL "${RUN_LOCAL}"
 require_toggle RUN_TARGET "${RUN_TARGET}"
 require_toggle BUILD_BENCHMARKS "${BUILD_BENCHMARKS}"
+require_toggle PREPARE_SCALE_DATA "${PREPARE_SCALE_DATA}"
+require_toggle FAIL_FAST "${FAIL_FAST}"
+require_toggle ALTERNATE_PLACEMENT_ORDER "${ALTERNATE_PLACEMENT_ORDER}"
 require_toggle ARBITER_ARENA_STRICT "${ARENA_STRICT}"
 require_toggle ARBITER_ARENA_REPORT "${ARENA_REPORT}"
+
+if [[ "${FIRST_PLACEMENT}" != "local" && "${FIRST_PLACEMENT}" != "target" ]]; then
+  echo "FIRST_PLACEMENT must be local or target: ${FIRST_PLACEMENT}" >&2
+  exit 1
+fi
 
 if [[ "${HEAP_BACKEND}" != "direct" && "${HEAP_BACKEND}" != "arena" ]]; then
   echo "ARBITER_HEAP_BACKEND must be direct or arena: ${HEAP_BACKEND}" >&2
@@ -231,8 +259,10 @@ EOF
       YCSB_TYPES="${YCSB_TYPES}" \
       REPEATS="${REPEATS}" \
       XINDEX_FG="${XINDEX_FG}" \
+      XINDEX_BG="${XINDEX_BG}" \
       XINDEX_ITERATION="${XINDEX_ITERATION}" \
       XINDEX_DURATION_SECONDS="${XINDEX_DURATION_SECONDS}" \
+      XINDEX_THROUGHPUT_SAMPLE_SECONDS="${XINDEX_THROUGHPUT_SAMPLE_SECONDS}" \
       ARBITER_CPU_NODE="${CPU_NODE}" \
       ARBITER_MEM_NODE="${MEM_NODE}" \
       ARBITER_TARGET_NODE="${TARGET_NODE}" \
@@ -240,6 +270,11 @@ EOF
       RUN_LOCAL="${RUN_LOCAL}" \
       RUN_TARGET="${RUN_TARGET}" \
       BUILD_BENCHMARKS="${BUILD_BENCHMARKS}" \
+      PREPARE_SCALE_DATA="${PREPARE_SCALE_DATA}" \
+      FAIL_FAST="${FAIL_FAST}" \
+      ALTERNATE_PLACEMENT_ORDER="${ALTERNATE_PLACEMENT_ORDER}" \
+      FIRST_PLACEMENT="${FIRST_PLACEMENT}" \
+      COOLDOWN_SECONDS="${COOLDOWN_SECONDS}" \
       ARBITER_HEAP_BACKEND="${HEAP_BACKEND}" \
       ARBITER_ARENA_SLAB_BYTES="${ARENA_SLAB_BYTES}" \
       ARBITER_ARENA_RESERVE_BYTES="${ARENA_RESERVE_BYTES}" \
@@ -272,7 +307,21 @@ export XINDEX_SCALE_LOAD_RECORDS="${LOAD_RECORDS}"
 export XINDEX_SCALE_TX_OPS="${TX_OPS}"
 export XINDEX_SCALE_DATA_DIR
 export YCSB_TYPES
-"${ROOT_DIR}/scripts/prepare-xindex-ycsb-scale-data.sh"
+if [[ "${PREPARE_SCALE_DATA}" == "1" ]]; then
+  "${ROOT_DIR}/scripts/prepare-xindex-ycsb-scale-data.sh"
+else
+  for workload in ${YCSB_TYPES}; do
+    load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_${workload}.dat"
+    tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_${workload}.dat"
+    if [[ "${workload}" != "a" && ! -s "${load_path}" ]]; then
+      load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_a.dat"
+    fi
+    if [[ ! -s "${load_path}" || ! -s "${tx_path}" ]]; then
+      echo "missing validated scaled trace with PREPARE_SCALE_DATA=0: ${load_path} or ${tx_path}" >&2
+      exit 1
+    fi
+  done
+fi
 
 BUILD_CONFIG_COPY="${HOTSET_BUILD_DIR}/hotset-build.config"
 if [[ "${BUILD_BENCHMARKS}" == "1" ]]; then
@@ -331,7 +380,9 @@ sha256sum \
   > "${RESULT_DIR}/binaries.sha256"
 
 RUNS_CSV="${RESULT_DIR}/runs.csv"
-printf 'benchmark,workload,config,repeat,mode,binary,target_node,cpu_node,mem_node,threads,iteration,config_sha256,time_sec,throughput,max_rss_kb,wall_time,swaps,log,time_log,status,heap_backend,allocation_node,arena_slab_bytes,arena_reserve_bytes,arena_slot_alignment,arena_allocations,arena_peak_live,arena_assigned_bytes,arena_fallbacks,duration_seconds,arena_resident_bytes,arena_majority_node,arena_query_error_pages\n' > "${RUNS_CSV}"
+printf 'benchmark,workload,config,repeat,mode,binary,target_node,cpu_node,mem_node,threads,iteration,config_sha256,time_sec,throughput,max_rss_kb,wall_time,swaps,log,time_log,status,heap_backend,allocation_node,arena_slab_bytes,arena_reserve_bytes,arena_slot_alignment,arena_allocations,arena_peak_live,arena_assigned_bytes,arena_fallbacks,duration_seconds,arena_resident_bytes,arena_majority_node,arena_query_error_pages,throughput_sample_seconds\n' > "${RUNS_CSV}"
+SAMPLES_CSV="${RESULT_DIR}/throughput-samples.csv"
+printf 'benchmark,workload,config,repeat,mode,elapsed_sec,interval_sec,interval_ops,interval_ops_per_sec,cumulative_ops,cumulative_ops_per_sec,final,log\n' > "${SAMPLES_CSV}"
 FAILURES=0
 
 run_one() {
@@ -349,9 +400,11 @@ run_one() {
     "XINDEX_FG=${XINDEX_FG}"
     "XINDEX_ITERATION=${XINDEX_ITERATION}"
     "XINDEX_DURATION_SECONDS=${XINDEX_DURATION_SECONDS}"
+    "XINDEX_THROUGHPUT_SAMPLE_SECONDS=${XINDEX_THROUGHPUT_SAMPLE_SECONDS}"
     "YCSB_LOAD_PATH=${load_path}"
     "YCSB_TX_PATH=${tx_path}"
     "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
+    "XINDEX_BG=${XINDEX_BG}"
   )
   local rc time_sec throughput max_rss wall_time swaps status
   local allocator allocation_node arena_allocations arena_peak_live
@@ -446,7 +499,7 @@ run_one() {
     status="arena-residency-node-mismatch:${arena_majority_node}"
   fi
 
-  printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' \
+  printf '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n' \
     xindex "${workload}" "${config}" "${repeat}" "${mode}" "${binary}" \
     "${TARGET_NODE}" "${CPU_NODE}" "${MEM_NODE}" "${XINDEX_FG}" \
     "${XINDEX_ITERATION}" "${CONFIG_SHA256}" "${time_sec}" "${throughput}" \
@@ -456,14 +509,42 @@ run_one() {
     "${arena_allocations}" "${arena_peak_live}" "${arena_assigned_bytes}" \
     "${arena_fallbacks}" "${XINDEX_DURATION_SECONDS}" \
     "${arena_resident_bytes}" "${arena_majority_node}" \
-    "${arena_query_error_pages}" \
+    "${arena_query_error_pages}" "${XINDEX_THROUGHPUT_SAMPLE_SECONDS}" \
     >> "${RUNS_CSV}"
+
+  awk -v benchmark=xindex -v workload="${workload}" -v config="${config}" \
+      -v repeat="${repeat}" -v mode="${mode}" -v log_path="${log}" '
+    /\[ycsb\] Throughput sample / && / elapsed_sec=/ {
+      delete value
+      for (i = 1; i <= NF; ++i) {
+        if ($i ~ /^[a-z_]+=/) {
+          split($i, field, "=")
+          value[field[1]] = field[2]
+        }
+      }
+      printf "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
+             benchmark, workload, config, repeat, mode,
+             value["elapsed_sec"], value["interval_sec"],
+             value["interval_ops"], value["interval_ops_per_sec"],
+             value["cumulative_ops"], value["cumulative_ops_per_sec"],
+             value["final"], log_path
+    }
+  ' "${log}" >> "${SAMPLES_CSV}"
 
   if [[ "${status}" == "ok" ]]; then
     echo "[done] workload=${workload} config=${config} time=${time_sec} throughput=${throughput} max_rss_kb=${max_rss}"
   else
     echo "[fail] workload=${workload} config=${config} status=${status}"
     FAILURES=$((FAILURES + 1))
+    if [[ "${FAIL_FAST}" == "1" ]]; then
+      echo "FAIL_FAST=1: stopping after the first failed run" >&2
+      exit 1
+    fi
+  fi
+
+  if [[ "${COOLDOWN_SECONDS}" -gt 0 ]]; then
+    echo "[cooldown] ${COOLDOWN_SECONDS} seconds"
+    sleep "${COOLDOWN_SECONDS}"
   fi
 }
 
@@ -472,11 +553,27 @@ for workload in ${YCSB_TYPES}; do
     if [[ "${RUN_NATIVE}" == "1" ]]; then
       run_one "${workload}" native "${repeat}" native "${HOTSET_BUILD_DIR}/ycsb_bench-native"
     fi
-    if [[ "${RUN_LOCAL}" == "1" ]]; then
-      run_one "${workload}" hotset-use-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+    target_first=0
+    if [[ "${FIRST_PLACEMENT}" == "target" ]]; then
+      target_first=1
     fi
-    if [[ "${RUN_TARGET}" == "1" ]]; then
-      run_one "${workload}" hotset-use-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+    if [[ "${ALTERNATE_PLACEMENT_ORDER}" == "1" && $((repeat % 2)) -eq 0 ]]; then
+      target_first=$((1 - target_first))
+    fi
+    if [[ "${target_first}" == "1" ]]; then
+      if [[ "${RUN_TARGET}" == "1" ]]; then
+        run_one "${workload}" hotset-use-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+      fi
+      if [[ "${RUN_LOCAL}" == "1" ]]; then
+        run_one "${workload}" hotset-use-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+      fi
+    else
+      if [[ "${RUN_LOCAL}" == "1" ]]; then
+        run_one "${workload}" hotset-use-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+      fi
+      if [[ "${RUN_TARGET}" == "1" ]]; then
+        run_one "${workload}" hotset-use-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+      fi
     fi
   done
 done
@@ -512,8 +609,13 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo "- Workloads: \`${YCSB_TYPES}\`"
   echo "- Repeats: ${REPEATS}"
   echo "- Foreground threads: ${XINDEX_FG}"
+  echo "- Background threads: ${XINDEX_BG}"
   echo "- Iterations: ${XINDEX_ITERATION}"
   echo "- Duration seconds (0 means iteration mode): ${XINDEX_DURATION_SECONDS}"
+  echo "- Throughput sample seconds: ${XINDEX_THROUGHPUT_SAMPLE_SECONDS}"
+  echo "- Alternate local/target order: ${ALTERNATE_PLACEMENT_ORDER}"
+  echo "- First placement: ${FIRST_PLACEMENT}"
+  echo "- Cooldown seconds after each row: ${COOLDOWN_SECONDS}"
   echo "- CPU node: ${CPU_NODE}"
   echo "- Baseline memory node: ${MEM_NODE}"
   echo "- Target memory node: ${TARGET_NODE:-disabled}"
@@ -542,6 +644,7 @@ Results:
   ${RUNS_CSV}
   ${SUMMARY_CSV}
   ${SUMMARY_MD}
+  ${SAMPLES_CSV}
   ${RESULT_DIR}/hotset-input.config
   ${RESULT_DIR}/hotset-sites.csv
   ${RESULT_DIR}/hotset-effective.opt-args

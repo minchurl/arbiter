@@ -10,6 +10,7 @@ if [[ ! -x "${DEFAULT_NATIVE_BIN}" ]]; then
 fi
 NATIVE_BIN="${NATIVE_XINDEX_BIN:-${DEFAULT_NATIVE_BIN}}"
 FG="${XINDEX_FG:-22}"
+BG="${XINDEX_BG:-1}"
 ITERATION="${XINDEX_ITERATION:-20}"
 DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-0}"
 YCSB_TYPE="${YCSB_TYPE:-a}"
@@ -55,6 +56,7 @@ fi
 
 common_args=(
   --fg "${FG}"
+  --bg "${BG}"
   --iteration "${ITERATION}"
   --ycsb_type "${YCSB_TYPE}"
   --ycsb-load "${LOAD_PATH}"

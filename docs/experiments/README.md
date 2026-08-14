@@ -5,7 +5,8 @@ This directory stores durable experiment ledgers. Generated files under
 changes the interpretation of a placement strategy, record the run shape,
 summary numbers, failure modes, and next questions here.
 
-## Ledgers
+## Ledgers and Plans
 
 - [Generic Placement Experiment Results](generic-placement-results.md)
 - [Hot-Set Placement Experiment Results](hotset-results.md)
+- [XIndex Automatic Hot-Set Sweep and Overnight Plan](hotset-auto-sweep-plan.md)
