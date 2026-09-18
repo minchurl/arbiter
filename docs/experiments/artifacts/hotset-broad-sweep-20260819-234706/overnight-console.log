@@ -1,0 +1,1493 @@
+[build] generated 80 deterministic raw configurations
+[build] raw-001 design=auto-k1-fixed
+[build] raw-002 design=auto-k2-fixed
+[build] raw-003 design=auto-k3-fixed
+[build] raw-004 design=auto-k6-fixed
+[build] raw-005 design=broad-default
+[build] raw-006 design=broad-top8
+[build] raw-007 design=broad-top12-noexp
+[build] raw-008 design=permissive-deep
+[build] raw-009 design=strict-fixed
+[build] raw-010 design=dynamic-small-estimate
+[build] raw-011 design=high-affinity
+[build] raw-012 design=deep-expansion
+[build] raw-013 design=random-flat
+[build-fail] raw-013 exit=1; continuing
+[build] raw-014 design=random-default
+[build] raw-015 design=random-hybrid
+[build-fail] raw-015 exit=1; continuing
+[build] raw-016 design=random-worker-heavy
+[build-fail] raw-016 exit=1; continuing
+[build] raw-017 design=random-size-heavy
+[build] raw-018 design=random-escape-heavy
+[build-fail] raw-018 exit=1; continuing
+[build] raw-019 design=random-flat
+[build-fail] raw-019 exit=1; continuing
+[build] raw-020 design=random-size-heavy
+[build] raw-021 design=random-hybrid
+[build-fail] raw-021 exit=1; continuing
+[build] raw-022 design=random-sync-heavy
+[build-fail] raw-022 exit=1; continuing
+[build] raw-023 design=random-sync-heavy
+[build-fail] raw-023 exit=1; continuing
+[build] raw-024 design=random-flat
+[build-fail] raw-024 exit=1; continuing
+[build] raw-025 design=random-escape-heavy
+[build] raw-026 design=random-sync-heavy
+[build] raw-027 design=random-hybrid
+[build-fail] raw-027 exit=1; continuing
+[build] raw-028 design=random-flat
+[build] raw-029 design=random-worker-heavy
+[build-fail] raw-029 exit=1; continuing
+[build] raw-030 design=random-worker-heavy
+[build] raw-031 design=random-size-heavy
+[build] raw-032 design=random-worker-heavy
+[build-fail] raw-032 exit=1; continuing
+[build] raw-033 design=random-size-heavy
+[build] raw-034 design=random-sync-heavy
+[build] raw-035 design=random-sync-heavy
+[build-fail] raw-035 exit=1; continuing
+[build] raw-036 design=random-worker-heavy
+[build-fail] raw-036 exit=1; continuing
+[build] raw-037 design=random-hybrid
+[build-fail] raw-037 exit=1; continuing
+[build] raw-038 design=random-size-heavy
+[build] raw-039 design=random-worker-heavy
+[build] raw-040 design=random-worker-heavy
+[build-fail] raw-040 exit=1; continuing
+[build] raw-041 design=random-escape-heavy
+[build] raw-042 design=random-hybrid
+[build] raw-043 design=random-hybrid
+[build-fail] raw-043 exit=1; continuing
+[build] raw-044 design=random-default
+[build-fail] raw-044 exit=1; continuing
+[build] raw-045 design=random-default
+[build-fail] raw-045 exit=1; continuing
+[build] raw-046 design=random-worker-heavy
+[build-fail] raw-046 exit=1; continuing
+[build] raw-047 design=random-escape-heavy
+[build] raw-048 design=random-escape-heavy
+[build-fail] raw-048 exit=1; continuing
+[build] raw-049 design=random-default
+[build-fail] raw-049 exit=1; continuing
+[build] raw-050 design=random-flat
+[build] raw-051 design=random-flat
+[build-fail] raw-051 exit=1; continuing
+[build] raw-052 design=random-default
+[build-fail] raw-052 exit=1; continuing
+[build] raw-053 design=random-flat
+[build] raw-054 design=random-worker-heavy
+[build-fail] raw-054 exit=1; continuing
+[build] raw-055 design=random-flat
+[build] raw-056 design=random-sync-heavy
+[build-fail] raw-056 exit=1; continuing
+[build] raw-057 design=random-default
+[build] raw-058 design=random-hybrid
+[build-fail] raw-058 exit=1; continuing
+[build] raw-059 design=random-flat
+[build] raw-060 design=random-sync-heavy
+[build-fail] raw-060 exit=1; continuing
+[build] raw-061 design=random-flat
+[build] raw-062 design=random-worker-heavy
+[build] raw-063 design=random-size-heavy
+[build] raw-064 design=random-escape-heavy
+[build] raw-065 design=random-size-heavy
+[build] raw-066 design=random-sync-heavy
+[build] raw-067 design=random-sync-heavy
+[build] raw-068 design=random-hybrid
+[build-fail] raw-068 exit=1; continuing
+[build] raw-069 design=random-default
+[build-fail] raw-069 exit=1; continuing
+[build] raw-070 design=random-worker-heavy
+[build] raw-071 design=random-default
+[build] raw-072 design=random-hybrid
+[build-fail] raw-072 exit=1; continuing
+[build] raw-073 design=random-default
+[build] raw-074 design=random-flat
+[build-fail] raw-074 exit=1; continuing
+[build] raw-075 design=random-hybrid
+[build-fail] raw-075 exit=1; continuing
+[build] raw-076 design=random-sync-heavy
+[build-fail] raw-076 exit=1; continuing
+[build] raw-077 design=random-flat
+[build-fail] raw-077 exit=1; continuing
+[build] raw-078 design=random-escape-heavy
+[build-fail] raw-078 exit=1; continuing
+[build] raw-079 design=random-escape-heavy
+[build] raw-080 design=random-default
+[build] selected 29 static-unique candidates; build failures=36
+[phase] native start anchor
+[row 1] phase=native-start candidate=native replicate=1 mode=native duration=60s timeout=300s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/xindex-hotset-auto-k3-s12/hotset-build.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=60
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native
+Running scope as unit: run-r49b42b292c34455c98ff4a0b15812d3f.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=60.0021 throughput=2.82846e+07 max_rss_kb=32641800
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=native driver_exit=0
+[phase] screen: 29 static-unique candidates
+[row 2] phase=screen candidate=raw-001 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-001.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/002-screen-raw-001-r01-local
+Running scope as unit: run-re7c81c4695524105bfdebe010ec8b7c9.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 3] phase=screen candidate=raw-001 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-001.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/003-screen-raw-001-r01-cxl
+Running scope as unit: run-rf8381cd73c524378a1fd733ea8038293.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 4] phase=screen candidate=raw-002 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-002.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/004-screen-raw-002-r01-cxl
+Running scope as unit: run-r63d5eb4de7214f8da7499c2b69c46744.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 5] phase=screen candidate=raw-002 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-002.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/005-screen-raw-002-r01-local
+Running scope as unit: run-rd45673cba5e942838e82fdf75a0d13a1.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 6] phase=screen candidate=raw-003 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-003.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local
+Running scope as unit: run-r853301108af14a2ab9077266fae14156.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.0033 throughput=2.90979e+07 max_rss_kb=33440260
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/006-screen-raw-003-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 7] phase=screen candidate=raw-003 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-003.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl
+Running scope as unit: run-r5cdc68cd7d3f4642a88e470afe0fff67.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.0038 throughput=4.28734e+07 max_rss_kb=33440252
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/007-screen-raw-003-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 8] phase=screen candidate=raw-004 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-004.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl
+Running scope as unit: run-rb6ff2083c7064a409bd6be23dfec8f28.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.0034 throughput=4.47718e+07 max_rss_kb=33440296
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/008-screen-raw-004-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 9] phase=screen candidate=raw-004 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-004.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local
+Running scope as unit: run-rf293d540db9e4aa7a4c5642447d786e8.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.0038 throughput=2.56773e+07 max_rss_kb=33440284
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/009-screen-raw-004-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 10] phase=screen candidate=raw-005 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-005.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/010-screen-raw-005-r01-local
+Running scope as unit: run-r4da6356dabd14f569b9b8831c3ef4a4f.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 11] phase=screen candidate=raw-005 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-005.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/011-screen-raw-005-r01-cxl
+Running scope as unit: run-r84cd87f9ea3547bd9daaa3a915110d31.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 12] phase=screen candidate=raw-006 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-006.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/012-screen-raw-006-r01-cxl
+Running scope as unit: run-r375af5f4e1884a7a90286a62c461b5c5.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 13] phase=screen candidate=raw-006 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-006.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/013-screen-raw-006-r01-local
+Running scope as unit: run-r193b16f26120487ab7ac0298c391fe5e.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 14] phase=screen candidate=raw-007 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-007.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/014-screen-raw-007-r01-local
+Running scope as unit: run-r94cdac3c3a0d4fa084eba4333f632a8a.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 15] phase=screen candidate=raw-007 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-007.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/015-screen-raw-007-r01-cxl
+Running scope as unit: run-r2b6d15ae83564bcc8d44c29ff9ce95f8.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 16] phase=screen candidate=raw-008 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-008.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/016-screen-raw-008-r01-cxl
+Running scope as unit: run-r0e959d8a42b64fec957f51a03432a99d.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 17] phase=screen candidate=raw-008 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-008.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/017-screen-raw-008-r01-local
+Running scope as unit: run-r41e125cb470f4b7996713f8fd0edf237.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 18] phase=screen candidate=raw-009 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-009.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local
+Running scope as unit: run-re27bc4b3ff46423d946a5b8aa7262ec9.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.004 throughput=2.80572e+07 max_rss_kb=34880064
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/018-screen-raw-009-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68+69 driver_exit=0
+[row 19] phase=screen candidate=raw-009 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-009.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl
+Running scope as unit: run-r013976d287f84e2d8980b9c58c2d599e.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.004 throughput=4.10218e+07 max_rss_kb=34880072
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/019-screen-raw-009-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68+69 driver_exit=0
+[row 20] phase=screen candidate=raw-010 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-010.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/020-screen-raw-010-r01-cxl
+Running scope as unit: run-rfbe215c68bd34362bf6c269aaad64ed2.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 21] phase=screen candidate=raw-010 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-010.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/021-screen-raw-010-r01-local
+Running scope as unit: run-ra8d8e139500247e88c0c8b18e4096495.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 22] phase=screen candidate=raw-012 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-012.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/022-screen-raw-012-r01-local
+Running scope as unit: run-rb5ac8415b2c64ab49e3b33f6575bd9db.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 23] phase=screen candidate=raw-012 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-012.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/023-screen-raw-012-r01-cxl
+Running scope as unit: run-r154556599fd74cf786ec9e8f1e04ae68.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 24] phase=screen candidate=raw-017 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-017.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/024-screen-raw-017-r01-cxl
+Running scope as unit: run-r25d8340bb49a4182ac28f4a252c93982.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 25] phase=screen candidate=raw-017 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-017.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/025-screen-raw-017-r01-local
+Running scope as unit: run-rbc48dcb2663445d3853567e6e9892400.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 26] phase=screen candidate=raw-020 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-020.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/026-screen-raw-020-r01-local
+Running scope as unit: run-r4daa7d0474104770b65f519b33ab3613.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 27] phase=screen candidate=raw-020 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-020.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/027-screen-raw-020-r01-cxl
+Running scope as unit: run-rf4c824e53ccc4da28382b125a1ae6bdd.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 28] phase=screen candidate=raw-025 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-025.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/028-screen-raw-025-r01-cxl
+Running scope as unit: run-rc0838f115c114b30994e7c707e2090be.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 29] phase=screen candidate=raw-025 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-025.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/029-screen-raw-025-r01-local
+Running scope as unit: run-r564a68a999b14536aeeb2d07c07bb5ae.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 30] phase=screen candidate=raw-028 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-028.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/030-screen-raw-028-r01-local
+Running scope as unit: run-rab2da05db8f54e38bceb14bbb676a901.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 31] phase=screen candidate=raw-028 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-028.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/031-screen-raw-028-r01-cxl
+Running scope as unit: run-r4c85cb746eee4469af69e2b7a8be3bd2.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 32] phase=screen candidate=raw-030 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-030.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/032-screen-raw-030-r01-cxl
+Running scope as unit: run-r014c126e60d941abb3fe8edd65c5e768.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 33] phase=screen candidate=raw-030 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-030.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/033-screen-raw-030-r01-local
+Running scope as unit: run-rc4ce5e5ddc6145c0892d52d95ec65ec0.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 34] phase=screen candidate=raw-031 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-031.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/034-screen-raw-031-r01-local
+Running scope as unit: run-rf0ffabfc00db498eb3e57eeae7a2ee43.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 35] phase=screen candidate=raw-031 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-031.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/035-screen-raw-031-r01-cxl
+Running scope as unit: run-r1d0f58996f464d7b976d3d5fe0fa3bc1.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 36] phase=screen candidate=raw-033 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-033.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl
+Running scope as unit: run-rda8b6c258f1e4cd6b155b265d63899ae.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.0037 throughput=3.73118e+07 max_rss_kb=33440300
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/036-screen-raw-033-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 37] phase=screen candidate=raw-033 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-033.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local
+Running scope as unit: run-rc71474a08e414fa3a61572cfcd3e2e80.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.0019 throughput=2.71477e+07 max_rss_kb=33440312
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/037-screen-raw-033-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68 driver_exit=0
+[row 38] phase=screen candidate=raw-038 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-038.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/038-screen-raw-038-r01-local
+Running scope as unit: run-r0e5d93f0f002484cb23e8413a9026b6d.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 39] phase=screen candidate=raw-038 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-038.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/039-screen-raw-038-r01-cxl
+Running scope as unit: run-r80c85f58d709411a93b21eec825d718e.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 40] phase=screen candidate=raw-039 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-039.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/040-screen-raw-039-r01-cxl
+Running scope as unit: run-rbe19788059f145efba1d33e75dfa5af7.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 41] phase=screen candidate=raw-039 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-039.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/041-screen-raw-039-r01-local
+Running scope as unit: run-r54e98aa96ad24f1ba4d3b45e8384c8ac.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 42] phase=screen candidate=raw-042 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-042.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local
+Running scope as unit: run-rb7da2165b3fd41639938a2683a57252d.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.0039 throughput=2.86922e+07 max_rss_kb=30864952
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/042-screen-raw-042-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=71 driver_exit=0
+[row 43] phase=screen candidate=raw-042 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-042.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl
+Running scope as unit: run-r413f514c862f40359d2a7e1190894fc3.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.0034 throughput=4.48608e+07 max_rss_kb=30864908
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/043-screen-raw-042-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=71 driver_exit=0
+[row 44] phase=screen candidate=raw-053 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-053.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/044-screen-raw-053-r01-cxl
+Running scope as unit: run-rbe7ab7068b6047f9bd4c7ccc81bf93c6.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 45] phase=screen candidate=raw-053 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-053.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/045-screen-raw-053-r01-local
+Running scope as unit: run-r4a9ef43475c4472da393ed25801e901a.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 46] phase=screen candidate=raw-055 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-055.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local
+Running scope as unit: run-r33ae28b19e8e4c7389000c79b250178a.scope
+[run] workload=a config=hotset-use-local repeat=1
+[done] workload=a config=hotset-use-local time=15.0018 throughput=2.81626e+07 max_rss_kb=33102856
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/046-screen-raw-055-r01-local/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68+69+71 driver_exit=0
+[row 47] phase=screen candidate=raw-055 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-055.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl
+Running scope as unit: run-rbcf752a335b1415ea5a7da212a6debff.scope
+[run] workload=a config=hotset-use-target repeat=1
+[done] workload=a config=hotset-use-target time=15.0038 throughput=5.80572e+07 max_rss_kb=33102848
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/047-screen-raw-055-r01-cxl/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=68+69+71 driver_exit=0
+[row 48] phase=screen candidate=raw-057 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-057.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/048-screen-raw-057-r01-cxl
+Running scope as unit: run-r568c9c2cfb4543429cdfcede4c36eeb6.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 49] phase=screen candidate=raw-057 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-057.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/049-screen-raw-057-r01-local
+Running scope as unit: run-r9dba6387e73c49efa355352836ee9493.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 50] phase=screen candidate=raw-059 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-059.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/050-screen-raw-059-r01-local
+Running scope as unit: run-rb166a54043c34dc9b480ce5db5b07602.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 51] phase=screen candidate=raw-059 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-059.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/051-screen-raw-059-r01-cxl
+Running scope as unit: run-r78e66c7a30e943f8aad3fd82b978a8fd.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 52] phase=screen candidate=raw-063 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-063.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/052-screen-raw-063-r01-cxl
+Running scope as unit: run-r1b73d8234dcb4f9eb5b96cd4c1bbaa40.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 53] phase=screen candidate=raw-063 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-063.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/053-screen-raw-063-r01-local
+Running scope as unit: run-r789a359772664120a8c915623dcefba4.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 54] phase=screen candidate=raw-064 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-064.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/054-screen-raw-064-r01-local
+Running scope as unit: run-rf103567d136446188aa75f792f2eba5f.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 55] phase=screen candidate=raw-064 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-064.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/055-screen-raw-064-r01-cxl
+Running scope as unit: run-re4286d88d1d24f4ca94967dfd4ddf802.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 56] phase=screen candidate=raw-065 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-065.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/056-screen-raw-065-r01-cxl
+Running scope as unit: run-rf6e0c6c7d82f4c649dda5842183686e8.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 57] phase=screen candidate=raw-065 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-065.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/057-screen-raw-065-r01-local
+Running scope as unit: run-r72785a332fc1443c8301051549a75e52.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 58] phase=screen candidate=raw-066 replicate=1 mode=local duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-066.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/058-screen-raw-066-r01-local
+Running scope as unit: run-r7c8fef7afbaf4158b627adcbd5cc7738.scope
+[run] workload=a config=hotset-use-local repeat=1
+[fail] workload=a config=hotset-use-local status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[row 59] phase=screen candidate=raw-066 replicate=1 mode=cxl duration=15s timeout=255s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/configs/raw-066.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=15
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/059-screen-raw-066-r01-cxl
+Running scope as unit: run-rd884ee147a074502b736f7ecdf49c6e7.scope
+[run] workload=a config=hotset-use-target repeat=1
+[fail] workload=a config=hotset-use-target status=failed:139
+FAIL_FAST=1: stopping after the first failed run
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=none driver_exit=1
+[phase] native middle anchor
+[row 60] phase=native-middle candidate=native replicate=2 mode=native duration=60s timeout=300s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/xindex-hotset-auto-k3-s12/hotset-build.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=60
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native
+Running scope as unit: run-rbf20f1f950b949d893b1d1c1283512d0.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=60.0038 throughput=2.8097e+07 max_rss_kb=32641868
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=native driver_exit=0
+[phase] confirmation: 0 runtime-unique candidates
+[phase] final: 0 candidates
+[phase] native end anchor
+[row 61] phase=native-end candidate=native replicate=3 mode=native duration=60s timeout=300s
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/build/arbiter-bench/xindex-hotset-auto-k3-s12/hotset-build.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=60
+  result=/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native
+Running scope as unit: run-r02fd215b99be4281a5be004ea9ee22d0.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=60.0026 throughput=2.7597e+07 max_rss_kb=32641840
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native/hotset-effective.opt-args
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR - 1 : 0}
+awk: cmd. line:1:                            ^ syntax error
+[row-done] status=row-accounting- throughput=none runtime_sites=native driver_exit=0
+awk: cmd. line:1: END {print NR > 0 ? NR-1 : 0}
+awk: cmd. line:1:                   ^ syntax error
+awk: cmd. line:1: END {print NR > 0 ? NR-1 : 0}
+awk: cmd. line:1:                          ^ syntax error
+
+Broad hot-set sweep finished: complete
+  result:             /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706
+  candidates:         /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/candidates.csv
+  observations:       /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/observations.csv
+  throughput samples: /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/throughput-samples.csv
+  phase 1:            /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/phase1-summary.csv
+  confirmation:       /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/phase2-summary.csv
+  final:              /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/final-summary.csv
+  native anchors:     /home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/native-summary.csv

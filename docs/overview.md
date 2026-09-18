@@ -135,9 +135,9 @@ int arbiter_munmap_maybe(void *ptr, uint64_t size);
 The ABI remains unchanged; its final `uint32_t` slot is reserved and emitted as
 zero. The runtime consults `ARBITER_TARGET_NODE` for the single target node.
 
-The runtime uses an internal sharded side table to track only selected
-Arbiter-managed pointers. This lets deallocation call sites be rewritten
-conservatively:
+The default `direct` heap backend uses an internal sharded side table to track
+only selected Arbiter-managed pointers. This lets deallocation call sites be
+rewritten conservatively:
 
 ```text
 arbiter_free_maybe(ptr):
@@ -149,9 +149,17 @@ arbiter_free_maybe(ptr):
 
 The same design is used for C++ delete fallbacks and for `munmap` through
 `arbiter_munmap_maybe`. The LLVM site-aware ABI does not call the header-based
-MLIR `arbiter_alloc` ABI; the side table is the ownership record for this path.
-Heap-site alignment is not enforced in the current LLVM path; the `align`
-argument is reserved for future aligned allocation support.
+MLIR `arbiter_alloc` ABI; the side table is the ownership record for the direct
+path.
+
+The XIndex hot-set experiments also support an `arena` heap backend. It packs a
+fixed-size allocation site into NUMA-bound slabs and identifies owned pointers
+by a reserved virtual-address range, avoiding both per-object NUMA allocation
+and per-object side-table entries. Arena mode honors the greater of the
+requested alignment and configured slot alignment. Strict mode fails closed if
+a selected site changes size/alignment or exhausts its virtual reserve; this is
+why the full-trace broad sweep rejects nonconstant-size sites before execution.
+The direct heap path still does not enforce its site ABI `align` value.
 
 ## Benchmark Scope
 
