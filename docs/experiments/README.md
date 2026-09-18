@@ -19,6 +19,9 @@ large traces and benchmark binaries must remain outside git.
 - [XIndex Full-Trace Broad Sweep Results](hotset-broad-sweep-results.md): two
   preliminary screen runs, controller failure analysis, short-run tendencies,
   and the bounded claims that can be carried into confirmation.
+- [XIndex/YCSB-A Full-Trace Broad Sweep Korean Report](xindex-ycsba-fulltrace-broad-sweep-report-ko.md):
+  Korean handoff covering benchmark mechanics, complete parameter settings,
+  planned versus actual execution, results, limitations, and next steps.
 
 ## Archived Raw Artifacts
 
