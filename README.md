@@ -3,10 +3,10 @@
 Arbiter is a compiler-assisted placement system for coherence-sensitive
 memory objects in tiered memory environments.
 
-The current benchmark workflow is LLVM-only: C/C++ benchmarks are lowered to
-LLVM IR, an Arbiter LLVM pass plugin reports and rewrites selected allocation
-sites, and the runtime places selected objects on a configured target memory
-node such as remote NUMA memory or CXL-like memory.
+The current benchmark workflow is LLVM-only. The hot-set experiment scores
+allocation sites, follows bounded seed-relative access paths, and applies a
+configurable read/write-affinity boundary before rewriting selected calls to
+the Arbiter runtime ABI.
 
 The earlier MLIR/memref path is retained as a legacy precision/reference path,
 but it is not used by the current LLVM-only benchmark workflow. See
@@ -15,22 +15,26 @@ but it is not used by the current LLVM-only benchmark workflow. See
 ## Current Pipeline
 
 ```text
-C/C++ benchmark
+C/C++ benchmark + hot-set config
   -> clang/clang++ LLVM IR
-  -> opt -load-pass-plugin ArbiterLLVMPlugin
+  -> arbiter-report-hotset-sites
+  -> arbiter-experiment-hotset-rewrite
+  -> selected calls rewritten to the Arbiter runtime ABI
   -> linked binary with Arbiter runtime
-  -> run with ARBITER_TARGET_NODE
 ```
 
-The benchmark workflow uses one experiment pass:
+The current pass pair is:
 
 ```text
-report-sites -> experiment-all-rewrite
+arbiter-report-hotset-sites -> arbiter-experiment-hotset-rewrite
 ```
 
-`report-sites` does not modify IR. `experiment-all-rewrite` rewrites every
-supported heap and anonymous mmap site, then rewrites the matching free/delete
-and munmap sites to side-table-aware runtime calls.
+The report records seed, member, and rejected decisions without changing IR.
+The rewrite pass repeats the deterministic selection and rewrites only the
+selected hot set. The all-site, shared-mutable, and lock-touch experiments
+remain available as independent baselines. See
+[Access-Affinity Hot Set Placement](docs/hotset-migration.md) for the policy and
+config reference.
 
 ## Build
 
@@ -63,7 +67,7 @@ Install Intel MKL separately, or set `MKL_INCLUDE_DIR`, `MKL_LINK_DIR`, and
 For a fresh clone of the benchmark branch, use the one-shot setup:
 
 ```sh
-git clone --branch experiment/generic-shared-mutable-placement \
+git clone --branch experiment/hotset-migration \
   git@github.com:minchurl/arbiter.git
 cd arbiter
 ./scripts/setup-benchmarks.sh
@@ -96,7 +100,8 @@ cmake -S . -B build-llvm18 -G Ninja \
 cmake --build build-llvm18 --target \
   ArbiterLLVMPlugin \
   arbiter_runtime \
-  arbiter-runtime-smoke
+  arbiter-runtime-smoke \
+  arbiter-slab-arena-smoke
 ```
 
 ## Runtime Placement
@@ -104,14 +109,20 @@ cmake --build build-llvm18 --target \
 Selected LLVM allocation sites lower to runtime calls such as:
 
 ```c
-arbiter_alloc_site(size, align, site_id, flags);
-arbiter_calloc_site(count, elem_size, align, site_id, flags);
-arbiter_mmap_site(size, prot, mmap_flags, site_id, flags);
+arbiter_alloc_site(size, align, site_id, reserved);
+arbiter_calloc_site(count, elem_size, align, site_id, reserved);
+arbiter_mmap_site(size, prot, mmap_flags, site_id, reserved);
 ```
 
-The runtime tracks selected allocations in an internal side table so rewritten
-deallocation calls can safely handle both Arbiter-managed and ordinary
-allocations:
+The existing ABI is unchanged; its final `uint32_t` slot is reserved and
+rewriters pass zero. The runtime uses `ARBITER_TARGET_NODE` as the single
+target-node setting. With the direct backend, leave it unset for a host
+baseline and set it for a remote run. Arena comparisons set it explicitly to
+the local or remote node; both rows still use the same rewritten binary.
+
+The default `direct` heap backend tracks selected allocations in an internal
+side table so rewritten deallocation calls can safely handle both
+Arbiter-managed and ordinary allocations:
 
 ```c
 arbiter_free_maybe(ptr);
@@ -120,13 +131,43 @@ arbiter_cxx_delete_array_maybe(ptr);
 arbiter_munmap_maybe(ptr, size);
 ```
 
-The LLVM site-aware runtime does not call the header-based MLIR
-`arbiter_alloc` ABI. It allocates from the selected backend directly and uses
-the side table as the source of truth for `*_maybe` deallocation.
-Heap-site alignment is not enforced in this first LLVM path; the `align`
-argument is reserved for future aligned allocation support.
+The optional `arena` heap backend instead packs a fixed-size site's objects
+into NUMA-bound slabs. A reserved virtual-address range identifies arena
+pointers during `free`/`delete`, so strict arena runs need neither a
+per-object side-table entry nor a per-object `numa_alloc_onnode` call. The
+arena honors the greater of the requested alignment and its configured slot
+alignment.
 
-Set the target memory node with `ARBITER_TARGET_NODE`.
+```sh
+ARBITER_HEAP_BACKEND=arena \
+ARBITER_TARGET_NODE=2 \
+ARBITER_ARENA_SLAB_BYTES=2097152 \
+ARBITER_ARENA_RESERVE_BYTES=4294967296 \
+ARBITER_ARENA_SLOT_ALIGNMENT=64 \
+ARBITER_ARENA_STRICT=1 \
+ARBITER_ARENA_REPORT=1 \
+./program
+```
+
+`ARBITER_TARGET_NODE` is required in arena mode, including a local comparison;
+use node 0 for the local arena and the memory-only CXL node for the target
+arena. `ARBITER_ARENA_RESERVE_BYTES` is an uncommitted virtual reservation and
+a hard arena capacity, not immediate RSS. Strict mode fails instead of falling
+back to the direct side-table path. A selected site must keep one fixed size
+and requested alignment within a run; unsupported or changing shapes fail in
+strict mode and are reported in non-strict mode. With reporting enabled, the
+runtime also queries resident arena pages and their actual NUMA nodes at exit.
+
+Hot-set selection is configured at build time:
+
+```sh
+ARBITER_XINDEX_EXPERIMENT=hotset \
+ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
+./scripts/build-xindex-llvm.sh
+```
+
+The target memory node is configured at runtime with `ARBITER_TARGET_NODE` for
+hot-set and generic experiments alike.
 
 ```sh
 numactl --membind='!x' \
@@ -134,8 +175,10 @@ numactl --membind='!x' \
   ./program
 ```
 
-If `ARBITER_TARGET_NODE` is unset or node allocation is unavailable, the
-runtime falls back to host allocation for local checks.
+With the direct backend, an unset `ARBITER_TARGET_NODE` uses host allocation
+and an unavailable node allocation falls back to it. Strict arena mode instead
+requires a valid explicit node and fails closed on an unavailable or exhausted
+arena.
 
 ## Benchmark Workflow
 
@@ -179,14 +222,35 @@ Collect allocation and mmap sites:
 ./scripts/collect-allocation-sites.sh path/to/input.bc
 ```
 
-Build benchmark variants:
+Build the generic GUPS variant and the configured XIndex hot-set variant:
 
 ```sh
 ./scripts/build-gups-llvm.sh
+ARBITER_XINDEX_EXPERIMENT=hotset \
+ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
 ./scripts/build-xindex-llvm.sh
 ```
 
-Run native, instrumented-local, and instrumented-remote configurations:
+For a protected scaled hot-set comparison, use the dedicated driver. It builds
+one configured binary, runs that same binary with local and target placement,
+and retains the input config, decision CSV, effective `opt` arguments, binary
+hashes, per-run resource usage, and summaries:
+
+```sh
+ARBITER_TARGET_NODE=<cxl-node> \
+./scripts/run-protected-hotset-experiment.sh
+```
+
+The driver defaults to the site-99-only policy in
+`configs/hotset/xindex-cxl-arena.config`, the slab backend, 100,000 load
+records, 400,000 transactions, a 60-second measured interval per row, one
+repeat, a 4GiB arena capacity, a 16GB memory limit, and no swap. The local and
+target rows use the same arena implementation bound to node 0 and the requested
+CXL node respectively. Set `XINDEX_DURATION_SECONDS=0` to use the legacy
+`XINDEX_ITERATION` mode. Increase scale only after inspecting `runs.csv`,
+`summary.md`, `hotset-sites.csv`, and the `arbiter-arena-summary` log line.
+
+The following run-script modes remain the generic placement baseline:
 
 ```sh
 ./scripts/run-gups-arbiter.sh native
@@ -270,6 +334,7 @@ main benchmark path.
 ## Docs
 
 - [Overview](docs/overview.md)
+- [Access-Affinity Hot Set Placement](docs/hotset-migration.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
 - [Benchmark Data](docs/benchmark-data.md)

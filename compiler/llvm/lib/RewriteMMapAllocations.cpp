@@ -55,10 +55,10 @@ bool rewriteMMap(Module &module, const AllocationSite &site) {
   Value *prot = castInteger(builder, call->getArgOperand(2), i32Ty);
   Value *mmapFlags = castInteger(builder, call->getArgOperand(3), i32Ty);
   Value *siteId = constantI32(builder, site.id);
-  Value *flags = constantI32(builder, 0);
+  Value *reserved = constantI32(builder, 0);
 
   CallInst *replacement = builder.CreateCall(
-      getMMapSiteFn(module), {size, prot, mmapFlags, siteId, flags});
+      getMMapSiteFn(module), {size, prot, mmapFlags, siteId, reserved});
   replacement->takeName(call);
   call->replaceAllUsesWith(replacement);
   call->eraseFromParent();

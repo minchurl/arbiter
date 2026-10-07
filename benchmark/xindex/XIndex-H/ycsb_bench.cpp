@@ -25,11 +25,13 @@
 
 #include <algorithm>
 #include <atomic>
+#include <chrono>
+#include <fstream>
 #include <memory>
 #include <random>
 #include <string>
+#include <thread>
 #include <vector>
-#include <fstream>
 
 #include "helper.h"
 #include "xindex_impl.h"
@@ -56,6 +58,7 @@ inline void parse_args(int, char **);
 
 /* For ycsb bench */
 size_t iteration = 1;
+size_t duration_seconds = 0;
 char ycsb_type = 'a';
 size_t operate_cnt = 400000000;
 size_t key_cnt = 100000000;
@@ -86,16 +89,26 @@ size_t table_size = 1000000;
 size_t runtime = 10;
 size_t fg_n = 1;
 size_t bg_n = 1;
+size_t throughput_sample_seconds = 0;
 
-volatile bool running = false;
+constexpr uint64_t kRunControlRunning = 1;
+constexpr unsigned kRunControlEpochShift = 1;
+constexpr size_t kMaxForegroundThreads = 256;
+std::atomic<uint64_t> run_control(0);
 std::atomic<size_t> ready_threads(0);
 std::vector<key_type> exist_keys;
 std::vector<key_type> non_exist_keys;
+
+struct alignas(CACHELINE_SIZE) ThroughputSample {
+  std::atomic<uint64_t> operations;
+  std::atomic<uint64_t> epoch;
+};
 
 struct alignas(CACHELINE_SIZE) FGParam {
   void *table;
   uint64_t throughput;
   uint32_t thread_id;
+  ThroughputSample *sample;
 };
 
 class Key {
@@ -138,6 +151,14 @@ class Key {
 
 int main(int argc, char **argv) {
   parse_args(argc, argv);
+  if (const char *sample_env =
+          std::getenv("XINDEX_THROUGHPUT_SAMPLE_SECONDS")) {
+    char *end = nullptr;
+    throughput_sample_seconds = std::strtoull(sample_env, &end, 10);
+    if (sample_env[0] == '\0' || end == nullptr || *end != '\0') {
+      COUT_N_EXIT("invalid XINDEX_THROUGHPUT_SAMPLE_SECONDS: " << sample_env);
+    }
+  }
   if (ycsb_load_path.empty()) {
     ycsb_load_path = ycsb_type == 'a'
                          ? "YCSB/xindex_dat/xindex_load_ycsb_a.dat"
@@ -160,7 +181,7 @@ int main(int argc, char **argv) {
 
   xindex_t *tab_hi;
   prepare_xindex(tab_hi);
-  run_benchmark(tab_hi, runtime);
+  run_benchmark(tab_hi, duration_seconds);
   if (tab_hi != nullptr) delete tab_hi;
 }
 
@@ -383,25 +404,60 @@ void *run_fg(void *param) {
   uint64_t dummy_value = 1234;
   UNUSED(res);
 
-  while (!running)
-    ;
+  uint64_t control = run_control.load(std::memory_order_acquire);
+  while ((control & kRunControlRunning) == 0) {
+    control = run_control.load(std::memory_order_acquire);
+  }
+  uint64_t observed_sample_epoch = control >> kRunControlEpochShift;
 
-  for(int j = 0; j < iteration; j++) {
-    for(size_t i = exist_key_start; i < exist_key_end; i++) {
-      operation_item item = YCSBconfig.operate_queue[i];
-      if (item.op == 0) {  // read
-        res = table->get(item.key, dummy_value, thread_id);
-      } else if (item.op == 1) {  // insert
-        res = table->put(item.key, item.key, thread_id); 
-      } else if (item.op == 2) {  // update
-        res = table->put(item.key, item.key, thread_id); 
-      } else if (item.op == 3) {  // remove
-        res = table->remove(item.key, thread_id); 
-      } else {
-        COUT_THIS("Wrong operator");
-        exit(1);
+  auto observe_control = [&]() {
+    control = run_control.load(std::memory_order_relaxed);
+    const uint64_t requested_epoch = control >> kRunControlEpochShift;
+    if (requested_epoch != observed_sample_epoch) {
+      thread_param.sample->operations.store(thread_param.throughput,
+                                            std::memory_order_relaxed);
+      thread_param.sample->epoch.store(requested_epoch,
+                                       std::memory_order_release);
+      observed_sample_epoch = requested_epoch;
+    }
+    return (control & kRunControlRunning) != 0;
+  };
+
+  auto execute_operation = [&](size_t i) {
+    operation_item item = YCSBconfig.operate_queue[i];
+    if (item.op == 0) {  // read
+      res = table->get(item.key, dummy_value, thread_id);
+    } else if (item.op == 1) {  // insert
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 2) {  // update
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 3) {  // remove
+      res = table->remove(item.key, thread_id);
+    } else {
+      COUT_THIS("Wrong operator");
+      exit(1);
+    }
+    thread_param.throughput++;
+  };
+
+  if (duration_seconds > 0) {
+    bool stop = false;
+    while (!stop) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        // Checking every 256 operations keeps stop latency short without
+        // adding an atomic load to every measured operation.
+        if (((i - exist_key_start) & 255) == 0 && !observe_control()) {
+          stop = true;
+          break;
+        }
+        execute_operation(i);
       }
-      thread_param.throughput++;
+    }
+  } else {
+    for (size_t j = 0; j < iteration; j++) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        execute_operation(i);
+      }
     }
   }
 
@@ -414,7 +470,9 @@ template <class tab_t>
 void run_benchmark(tab_t *table, size_t sec) {
   pthread_t threads[fg_n];
   fg_param_t fg_params[fg_n];
+  ThroughputSample samples[kMaxForegroundThreads];
 //  pthread_t migrate_thread;
+  INVARIANT(fg_n <= kMaxForegroundThreads);
   // check if parameters are cacheline aligned
   for (size_t i = 0; i < fg_n; i++) {
     if ((uint64_t)(&(fg_params[i])) % CACHELINE_SIZE != 0) {
@@ -422,11 +480,15 @@ void run_benchmark(tab_t *table, size_t sec) {
     }
   }
 
-  running = false;
+  run_control.store(0, std::memory_order_relaxed);
+  ready_threads.store(0, std::memory_order_relaxed);
   for (size_t worker_i = 0; worker_i < fg_n; worker_i++) {
+    samples[worker_i].operations.store(0, std::memory_order_relaxed);
+    samples[worker_i].epoch.store(0, std::memory_order_relaxed);
     fg_params[worker_i].table = table;
     fg_params[worker_i].thread_id = worker_i;
     fg_params[worker_i].throughput = 0;
+    fg_params[worker_i].sample = &samples[worker_i];
     int ret = pthread_create(&threads[worker_i], nullptr, run_fg<tab_t>,
                              (void *)&fg_params[worker_i]);
     if (ret) {
@@ -439,26 +501,75 @@ void run_benchmark(tab_t *table, size_t sec) {
   COUT_THIS("[ycsb] prepare data ...");
   while (ready_threads < fg_n) sleep(1);
 
-  /*
-  running = true;
-  std::vector<size_t> tput_history(fg_n, 0);
-  size_t current_sec = 0;
-  while (current_sec < sec) {
-    sleep(1);
-    uint64_t tput = 0;
-    for (size_t i = 0; i < fg_n; i++) {
-      tput += fg_params[i].throughput - tput_history[i];
-      tput_history[i] = fg_params[i].throughput;
-    }
-    COUT_THIS("[micro] >>> sec " << current_sec << " throughput: " << tput);
-    ++current_sec;
-  }
-  */
-
   double time_s;
   TIMER_DECLARE(1);
   TIMER_BEGIN(1);
-  running = true;
+  const auto benchmark_start = std::chrono::steady_clock::now();
+  uint64_t sample_epoch = 0;
+  uint64_t previous_operations = 0;
+  double previous_elapsed = 0;
+  run_control.store(kRunControlRunning, std::memory_order_release);
+  if (sec > 0) {
+    COUT_THIS("[ycsb] Duration target(sec): " << sec);
+    COUT_THIS("[ycsb] Throughput sample interval(sec): "
+              << throughput_sample_seconds);
+    const auto deadline = benchmark_start + std::chrono::seconds(sec);
+    auto next_sample =
+        benchmark_start + std::chrono::seconds(throughput_sample_seconds);
+
+    while (throughput_sample_seconds > 0 && next_sample < deadline) {
+      std::this_thread::sleep_until(next_sample);
+      ++sample_epoch;
+      run_control.store((sample_epoch << kRunControlEpochShift) |
+                            kRunControlRunning,
+                        std::memory_order_release);
+
+      bool published = false;
+      while (!published) {
+        published = true;
+        for (size_t i = 0; i < fg_n; ++i) {
+          if (samples[i].epoch.load(std::memory_order_acquire) !=
+              sample_epoch) {
+            published = false;
+            break;
+          }
+        }
+        if (!published) {
+          std::this_thread::sleep_for(std::chrono::microseconds(50));
+        }
+      }
+
+      uint64_t cumulative_operations = 0;
+      for (size_t i = 0; i < fg_n; ++i) {
+        cumulative_operations +=
+            samples[i].operations.load(std::memory_order_relaxed);
+      }
+      const double elapsed =
+          std::chrono::duration<double>(std::chrono::steady_clock::now() -
+                                        benchmark_start)
+              .count();
+      const uint64_t interval_operations =
+          cumulative_operations - previous_operations;
+      const double interval_seconds = elapsed - previous_elapsed;
+      COUT_THIS("[ycsb] Throughput sample"
+                << " elapsed_sec=" << elapsed
+                << " interval_sec=" << interval_seconds
+                << " interval_ops=" << interval_operations
+                << " interval_ops_per_sec="
+                << interval_operations / interval_seconds
+                << " cumulative_ops=" << cumulative_operations
+                << " cumulative_ops_per_sec="
+                << cumulative_operations / elapsed << " final=0");
+      previous_operations = cumulative_operations;
+      previous_elapsed = elapsed;
+      next_sample += std::chrono::seconds(throughput_sample_seconds);
+    }
+
+    std::this_thread::sleep_until(deadline);
+    ++sample_epoch;
+    run_control.store(sample_epoch << kRunControlEpochShift,
+                      std::memory_order_release);
+  }
   void *status;
   for (size_t i = 0; i < fg_n; i++) {
     int rc = pthread_join(threads[i], &status);
@@ -472,6 +583,19 @@ void run_benchmark(tab_t *table, size_t sec) {
   size_t throughput = 0;
   for (auto &p : fg_params) {
     throughput += p.throughput;
+  }
+  if (sec > 0 && throughput_sample_seconds > 0) {
+    const uint64_t interval_operations = throughput - previous_operations;
+    const double interval_seconds = time_s - previous_elapsed;
+    COUT_THIS("[ycsb] Throughput sample"
+              << " elapsed_sec=" << time_s
+              << " interval_sec=" << interval_seconds
+              << " interval_ops=" << interval_operations
+              << " interval_ops_per_sec="
+              << interval_operations / interval_seconds
+              << " cumulative_ops=" << throughput
+              << " cumulative_ops_per_sec=" << throughput / time_s
+              << " final=1");
   }
   COUT_THIS("[ycsb] Time(sec) : " << time_s);
   COUT_THIS("[ycsb] Throughput(op/s): " << throughput / time_s);
@@ -495,6 +619,7 @@ inline void parse_args(int argc, char **argv) {
       {"ycsb_type", required_argument, 0, 'n'},
       {"ycsb-load", required_argument, 0, 1000},
       {"ycsb-tx", required_argument, 0, 1001},
+      {"duration", required_argument, 0, 1002},
       {0, 0, 0}};
   std::string ops = "a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:t:";
   int option_index = 0;
@@ -567,6 +692,10 @@ inline void parse_args(int argc, char **argv) {
         break;
       case 1001:
         ycsb_tx_path = optarg;
+        break;
+      case 1002:
+        duration_seconds = strtoul(optarg, NULL, 10);
+        INVARIANT(duration_seconds > 0);
         break;
       default:
         abort();

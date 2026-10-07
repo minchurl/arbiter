@@ -22,8 +22,16 @@ std::array<SideTableShard, kShardCount> &getShards() {
 }
 
 SideTableShard &getShard(void *ptr) {
-  uintptr_t value = reinterpret_cast<uintptr_t>(ptr);
-  return getShards()[(value >> 4) % kShardCount];
+  // Mix high address bits as well as allocator-alignment bits. In particular,
+  // numa_alloc_onnode returns page-aligned pointers, for which the old
+  // `(value >> 4) % 256` expression mapped every entry to shard zero.
+  uint64_t value = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(ptr));
+  value ^= value >> 33;
+  value *= UINT64_C(0xff51afd7ed558ccd);
+  value ^= value >> 33;
+  value *= UINT64_C(0xc4ceb9fe1a85ec53);
+  value ^= value >> 33;
+  return getShards()[value % kShardCount];
 }
 
 } // namespace

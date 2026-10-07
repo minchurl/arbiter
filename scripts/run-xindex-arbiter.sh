@@ -10,7 +10,9 @@ if [[ ! -x "${DEFAULT_NATIVE_BIN}" ]]; then
 fi
 NATIVE_BIN="${NATIVE_XINDEX_BIN:-${DEFAULT_NATIVE_BIN}}"
 FG="${XINDEX_FG:-22}"
+BG="${XINDEX_BG:-1}"
 ITERATION="${XINDEX_ITERATION:-20}"
+DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-0}"
 YCSB_TYPE="${YCSB_TYPE:-a}"
 XINDEX_DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 DEFAULT_LOAD_PATH="${XINDEX_DATA_DIR}/xindex_load_ycsb_${YCSB_TYPE}.dat"
@@ -20,6 +22,7 @@ fi
 LOAD_PATH="${YCSB_LOAD_PATH:-${DEFAULT_LOAD_PATH}}"
 TX_PATH="${YCSB_TX_PATH:-${XINDEX_DATA_DIR}/xindex_transaction_ycsb_${YCSB_TYPE}.dat}"
 MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
+HEAP_BACKEND="${ARBITER_HEAP_BACKEND:-direct}"
 
 if [[ -d "${MKL_RUNTIME_DIR}" ]]; then
   export LD_LIBRARY_PATH="${MKL_RUNTIME_DIR}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
@@ -53,11 +56,16 @@ fi
 
 common_args=(
   --fg "${FG}"
+  --bg "${BG}"
   --iteration "${ITERATION}"
   --ycsb_type "${YCSB_TYPE}"
   --ycsb-load "${LOAD_PATH}"
   --ycsb-tx "${TX_PATH}"
 )
+
+if [[ "${DURATION_SECONDS}" != "0" ]]; then
+  common_args+=(--duration "${DURATION_SECONDS}")
+fi
 
 case "${MODE}" in
   native)
@@ -69,7 +77,15 @@ case "${MODE}" in
     exec "${NATIVE_BIN}" "${common_args[@]}"
     ;;
   local)
-    unset ARBITER_TARGET_NODE
+    if [[ "${HEAP_BACKEND}" == "arena" ]]; then
+      if [[ -z "${ARBITER_LOCAL_NODE:-}" ]]; then
+        echo "ARBITER_LOCAL_NODE must be set for local arena mode" >&2
+        exit 1
+      fi
+      export ARBITER_TARGET_NODE="${ARBITER_LOCAL_NODE}"
+    else
+      unset ARBITER_TARGET_NODE
+    fi
     if [[ ! -x "${ARBITER_BIN}" ]]; then
       echo "missing Arbiter XIndex binary: ${ARBITER_BIN}" >&2
       echo "try: ./scripts/build-xindex-llvm.sh" >&2

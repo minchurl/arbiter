@@ -1,0 +1,5 @@
+phase,replicate,status,throughput,max_rss_kb,swaps,time_sec,wall_time_or_stddev,result_dir
+native-start,1,row-accounting-,,,,,,/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/001-native-start-native-r01-native
+native-middle,2,row-accounting-,,,,,,/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/060-native-middle-native-r02-native
+native-end,3,row-accounting-,,,,,,/home/shin/arbiter/build/arbiter-bench/hotset-broad-sweep-20260819-234706/rows/061-native-end-native-r03-native
+aggregate,,ok,0,,,,0,

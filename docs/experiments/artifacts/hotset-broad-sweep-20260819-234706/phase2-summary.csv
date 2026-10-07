@@ -1,0 +1,1 @@
+candidate,safe,reason,pairs,local_rows,cxl_rows,mean_local_ops,mean_cxl_ops,mean_paired_delta_pct,stddev_paired_delta_pct,cxl_wins,runtime_fingerprint,mean_cxl_resident_bytes,mean_cxl_resident_over_rss_pct,max_rss_kb

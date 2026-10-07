@@ -77,7 +77,7 @@ bool rewriteAllocation(Module &module, const AllocationSite &site) {
   IRBuilder<> builder(call);
   Type *i64Ty = builder.getInt64Ty();
   Value *siteId = constantI32(builder, site.id);
-  Value *flags = constantI32(builder, 0);
+  Value *reserved = constantI32(builder, 0);
 
   if (site.kind == AllocationKind::Calloc) {
     if (call->arg_size() < 2)
@@ -86,7 +86,7 @@ bool rewriteAllocation(Module &module, const AllocationSite &site) {
     Value *elemSize = castInteger(builder, call->getArgOperand(1), i64Ty);
     Value *align = defaultAlignment(builder);
     CallInst *replacement = builder.CreateCall(
-        getCallocSiteFn(module), {count, elemSize, align, siteId, flags});
+        getCallocSiteFn(module), {count, elemSize, align, siteId, reserved});
     replacement->takeName(call);
     call->replaceAllUsesWith(replacement);
     call->eraseFromParent();
@@ -99,7 +99,8 @@ bool rewriteAllocation(Module &module, const AllocationSite &site) {
   Value *size = castInteger(builder, call->getArgOperand(0), i64Ty);
   Value *align = alignmentForCall(builder, *call);
   CallInst *replacement =
-      builder.CreateCall(getAllocSiteFn(module), {size, align, siteId, flags});
+      builder.CreateCall(getAllocSiteFn(module),
+                         {size, align, siteId, reserved});
   replacement->takeName(call);
   call->replaceAllUsesWith(replacement);
   call->eraseFromParent();
