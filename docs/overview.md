@@ -1,193 +1,113 @@
 # Arbiter Overview
 
-This document is the source of truth for Arbiter's current design.
+This is the code-reading map for the active Arbiter implementation.
 
-## Current Direction
-
-Arbiter is a compiler-assisted placement system for coherence-sensitive memory
-objects in tiered memory environments.
-
-The current implementation direction is the LLVM-only hot-set experiment. Its
-compile-time policy scores allocation sites, selects automatic top-k or
-explicit heap seeds, validates their static byte budget, and rewrites exactly
-those seeds.
-
-The current target is allocation-time placement on remote NUMA or CXL-like
-memory. Despite the experiment name, Arbiter does not move already-allocated
-objects during the measured run.
-
-The detailed policy, config reference, and experiment methodology live in
-[HITM-Risk Seed Placement](hotset-migration.md).
-
-## Document Map
-
-- [HITM-Risk Seed Placement](hotset-migration.md): current heuristic,
-  config, and experiment contract.
-- [Shared-Mutable Pattern Placement](shared-mutable-pattern-placement.md):
-  earlier point-based heuristic retained as an independent baseline.
-- [LLVM-Only Design](llvm-only-design.md): generic allocation-site reporting,
-  rewriting, and runtime ownership model.
-- [Experiment Results](experiments/README.md): durable result ledgers.
-- [Lock-Touch Page Migration](lock-touch-page-migration.md): runtime-hook
-  comparison path, not the current direction.
-- [MLIR Legacy Path](mlir-legacy.md): legacy precision/reference path.
-
-## Motivation
-
-In cache-coherent multicore systems, shared writable cache lines can become
-expensive because of coherence activity. NUMA and tiered-memory systems make
-this cost more visible and provide placement targets for Arbiter.
-
-When multiple cores repeatedly access the same cache line and at least one core
-writes, ownership can move between cores, other cached copies can be
-invalidated, and coherence misses or interconnect traffic can increase.
-
-Arbiter therefore focuses on allocation-backed or mapping-backed memory objects
-likely to create significant coherence overhead because they are shared,
-written, and accessed in parallel.
-
-The hypothesis is not that CXL or remote NUMA memory eliminates cache
-coherence. Cacheable CPU loads and stores still participate in the coherence
-protocol regardless of where the backing memory is placed.
-
-Instead, Arbiter tests whether object placement can change where coherence
-traffic is handled, how much pressure it creates on shared interconnects and
-memory controllers, and how much it interferes with other hot data. The
-expected benefit exists only when the reduction in coherence-related pressure
-is larger than the added latency penalty of the target memory tier.
-
-## Architecture
+## System Flow
 
 ```text
-C/C++ benchmark + one build-time experiment config
-  -> clang/clang++ LLVM IR
-  -> HITM-risk seed selection
-  -> selected-byte budget validation
-  -> Arbiter site and seed reports
-  -> hot-set rewrite pass
-  -> LLVM IR with selected arbiter_*_site calls
-  -> native binary linked with Arbiter runtime
-  -> allocation-time placement from ARBITER_TARGET_NODE
+XIndex source
+  -> clang++ emits LLVM bitcode
+  -> AllocationSite assigns deterministic site IDs
+  -> HITMRiskScoring scores and selects heap seeds
+  -> HotSetPasses reports decisions and rewrites selected calls
+  -> arbiter_runtime_site dispatches selected allocations
+  -> arbiter_slab_arena packs fixed-size objects into NUMA-bound slabs
+  -> the same binary runs with its arena on local node 0 or CXL node 2
 ```
 
-All LLVM allocation experiments use the same `ARBITER_TARGET_NODE` runtime
-policy. Unset means local allocation; a node ID enables target placement.
+Only the arena node changes between `hotset-seed-local` and
+`hotset-seed-target`. The binary, selected sites, allocator implementation,
+workload, and worker count remain fixed.
 
-## Compiler Passes
+## Compiler Code
 
-Reporting and rewriting are separate so every experiment can inspect its
-decision before producing a binary. Both stages import parameters from the same
-config and are recorded in one effective-arguments manifest.
+`compiler/llvm/lib/AllocationSite.cpp` discovers supported heap and anonymous
+mapping calls and assigns site IDs. `RewriteHeapAllocations.cpp` and
+`RewriteMMapAllocations.cpp` implement the common rewrite ABI. The generic
+all-site rewrite is retained for infrastructure checks and GUPS.
+
+The XIndex policy is isolated under `compiler/llvm/lib/hotset/`:
+
+- `HITMRiskScoring`: escape/synchronization/worker/size signals, gates,
+  deterministic ordering, top-k selection, and byte-budget validation;
+- `HotSetOptions`: command-line policy parameters;
+- `HotSetPasses`: CSV reporting and selected heap-site rewriting.
+
+The plugin exposes four active pipelines:
 
 ```text
 arbiter-report-sites
-  -> emits allocation and mmap candidates
-  -> does not modify IR
-
+arbiter-experiment-all-rewrite
 arbiter-report-hotset-sites
-  -> scores allocation sites and selects HITM-risk seeds
-  -> reports seed/rejected roles
-  -> does not modify IR
-
 arbiter-experiment-hotset-rewrite
-  -> repeats the deterministic seed selection
-  -> rewrites the selected heap seeds
 ```
 
-`arbiter-experiment-all-rewrite` remains the broad all-site baseline.
-`arbiter-report-shared-mutable-sites` and
-`arbiter-experiment-shared-mutable-rewrite` remain the earlier point-based
-baseline. The hot-set scorer is implemented independently, so changes to its
-weights and gates cannot change shared-mutable behavior.
-
-All allocation experiments reuse the existing generic site collector,
-`RewritePlan`, and heap/mmap rewriters. The hot-set pass only supplies the
-selected IDs.
-
-## Runtime Placement
-
-The LLVM path lowers experiment-selected sites to site-aware runtime calls:
-
-```c
-void *arbiter_alloc_site(uint64_t size, uint64_t align,
-                         uint32_t site_id, uint32_t reserved);
-
-void *arbiter_calloc_site(uint64_t count, uint64_t elem_size,
-                          uint64_t align, uint32_t site_id, uint32_t reserved);
-
-void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
-                        uint32_t site_id, uint32_t reserved);
-
-void arbiter_free_maybe(void *ptr);
-void arbiter_cxx_delete_maybe(void *ptr);
-void arbiter_cxx_delete_array_maybe(void *ptr);
-int arbiter_munmap_maybe(void *ptr, uint64_t size);
-```
-
-The ABI remains unchanged; its final `uint32_t` slot is reserved and emitted as
-zero. The runtime consults `ARBITER_TARGET_NODE` for the single target node.
-
-The default `direct` heap backend uses an internal sharded side table to track
-only selected Arbiter-managed pointers. This lets deallocation call sites be
-rewritten conservatively:
+The hot-set report schema is:
 
 ```text
-arbiter_free_maybe(ptr):
-  if ptr is tracked by Arbiter:
-    remove side-table entry and release with the matching Arbiter backend
-  else:
-    fall back to ordinary free
+site_id,kind,function,file,line,callee,size_expr,estimated_bytes,
+score,role,group_id,selected,reasons
 ```
 
-The same design is used for C++ delete fallbacks and for `munmap` through
-`arbiter_munmap_maybe`. The LLVM site-aware ABI does not call the header-based
-MLIR `arbiter_alloc` ABI; the side table is the ownership record for the direct
-path.
+`role` is `seed` or `rejected`. Report and rewrite independently repeat the
+same deterministic selection.
 
-The XIndex hot-set experiments also support an `arena` heap backend. It packs a
-fixed-size allocation site into NUMA-bound slabs and identifies owned pointers
-by a reserved virtual-address range, avoiding both per-object NUMA allocation
-and per-object side-table entries. Arena mode honors the greater of the
-requested alignment and configured slot alignment. Strict mode fails closed if
-a selected site changes size/alignment or exhausts its virtual reserve; this is
-why the full-trace broad sweep rejects nonconstant-size sites before execution.
-The direct heap path still does not enforce its site ABI `align` value.
+## Runtime Code
 
-## Benchmark Scope
+Selected heap calls lower to the site-aware ABI declared in
+`runtime/include/arbiter_runtime_site.h`. Deallocation sites use `*_maybe`
+functions, so ordinary pointers still fall back to normal `free`/`delete`.
 
-The current benchmarks are GUPS and XIndex/YCSB.
+Two allocation backends remain:
 
-GUPS allocates its primary data region with anonymous `mmap`, so a malloc-only
-baseline is insufficient. The generic all-site experiment covers its anonymous
-mmap and heap sites.
+- `direct`: per-object NUMA allocation plus a sharded ownership side table;
+- `arena`: one reserved virtual range divided into site/size/alignment slabs.
 
-XIndex allocates important index structures through C++ allocation paths such
-as `new`, `new[]`, and `std::malloc`. Arbiter must support C++ allocation and
-deallocation ABI forms while avoiding placement-new rewrites. The hot-set
-experiment narrows placement to scored heap seeds, so unrelated YCSB
-trace/input buffers remain outside the selected set.
+The XIndex experiment uses strict arena mode. Each allocation normally takes
+an atomic bump slot; locking is limited to slab installation and free-list slow
+paths. Arena ownership is recognized by address range, so there is no
+per-object side-table lookup. Strict mode fails instead of silently using the
+direct backend when a site's shape changes or capacity is exhausted.
 
-## Measurement Model
+## Benchmark Code
 
-The minimum hot-set comparison is:
+- `scripts/build-xindex-llvm.sh` builds native and seed-rewritten XIndex;
+- `scripts/run-xindex-arbiter.sh` executes one native/local/remote process;
+- `scripts/run-protected-hotset-experiment.sh` builds, launches fresh
+  processes, enforces memory limits, validates arena placement, and writes CSVs;
+- `scripts/run-xindex-hotset-replay.sh` fixes the validated `raw-046` full-scale
+  conditions and records a machine manifest.
+
+The canonical config is `configs/hotset/candidates/raw-046.config`. Eleven
+other safe measured policies remain for sensitivity studies.
+
+## Measurement Contract
+
+`native` measures the unmodified binary. `hotset-seed-local` and
+`hotset-seed-target` use the same rewritten binary and strict arena, bound to
+the local and CXL nodes respectively. Therefore:
 
 ```text
-native
-shared-mutable-local
-hotset-seed-local
-hotset-seed-target
+rewrite/allocator overhead = seed-local / native
+CXL placement effect       = seed-target / seed-local
+end-to-end effect           = seed-target / native
 ```
 
-The local run isolates compiler/runtime overhead from placement. The target run
-uses the same rewritten binary and allocator but binds selected seed arenas to
-the CXL node. Every result should retain the hot-set CSV and resolved
-`hotset-effective.opt-args` manifest. Target comparisons should report
-`HITM/op`, total and foreground throughput, and p99 latency together.
+Every row is a fresh process, which resets the index, heap, arena, and runtime
+counters. The validated experiment intentionally keeps filesystem page cache
+warm and does not flush CPU caches. System-wide `drop_caches` is not invoked
+automatically because it requires privilege, affects unrelated jobs, and does
+not clear anonymous memory or CPU caches.
 
-## Next Analysis
+## Scope
 
-- profile-derived dynamic allocation-size and live-byte estimates
-- profile-guided seed scoring using allocation counts and hardware counters
-- loop hotness and write-intensity signals
-- indirect-call-aware worker reachability
-- automated staged config sweeps tied to throughput, latency, and HITM/C2C data
+The active repository no longer builds the unused MLIR prototype,
+shared-mutable heuristic, lock-touch migration, or broad search controllers.
+Their parameter configs and measured results remain checked in for reanalysis
+and for adapting the policy space to another benchmark. Removed implementation
+code remains recoverable from git history. This keeps the executable path
+focused on the seed-only result without discarding experimental evidence.
+
+The measured throughput gain does not by itself prove reduced HITM. A causal
+claim still requires correctness checks, HITM/C2C counters, memory-bandwidth
+counters, and latency measurements.

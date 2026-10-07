@@ -9,6 +9,9 @@ large traces and benchmark binaries must remain outside git.
 
 ## Ledgers and Plans
 
+- [Current XIndex hot-set method and retained results](xindex-hotset.md):
+  concise entry point, canonical `raw-046` replay, top-12 policy index, and
+  claim boundaries.
 - [Generic Placement Experiment Results](generic-placement-results.md)
 - [Hot-Set Placement Experiment Results](hotset-results.md)
 - [XIndex Automatic Hot-Set Sweep and Overnight Plan](hotset-auto-sweep-plan.md)
@@ -25,6 +28,9 @@ large traces and benchmark binaries must remain outside git.
 
 ## Archived Raw Artifacts
 
+- [Curated XIndex hot-set evidence](artifacts/xindex-hotset/README.md): top-12
+  confirmation aggregate, five-candidate final stage, `raw-046` observations,
+  and the post-cleanup replay.
 - [2026-08-14 XIndex automatic-k1 overnight run](artifacts/hotset-auto-overnight-20260814-012754/README.md):
   22 row logs, resource measurements, compiler decisions, and 375 throughput
   samples.

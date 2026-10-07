@@ -18,28 +18,12 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::AllRewriteExperimentPass());
     return true;
   }
-  if (name == "arbiter-report-shared-mutable-sites") {
-    manager.addPass(arbiter::llvm::SharedMutableReportPass());
-    return true;
-  }
-  if (name == "arbiter-experiment-shared-mutable-rewrite") {
-    manager.addPass(arbiter::llvm::SharedMutableRewriteExperimentPass());
-    return true;
-  }
   if (name == "arbiter-report-hotset-sites") {
     manager.addPass(arbiter::llvm::hotset::ReportPass());
     return true;
   }
   if (name == "arbiter-experiment-hotset-rewrite") {
     manager.addPass(arbiter::llvm::hotset::RewriteExperimentPass());
-    return true;
-  }
-  if (name == "arbiter-report-lock-touch-sites") {
-    manager.addPass(arbiter::llvm::LockTouchReportPass());
-    return true;
-  }
-  if (name == "arbiter-experiment-lock-touch-instrument") {
-    manager.addPass(arbiter::llvm::LockTouchInstrumentPass());
     return true;
   }
   return false;

@@ -8,10 +8,6 @@ cmake-build-*/
 *.dylib
 *.so
 *.ll
-!tests/llvm/shared-mutable-report.ll
-!tests/llvm/shared-mutable-rewrite.ll
-!tests/llvm/lock-touch-report.ll
-!tests/llvm/lock-touch-instrument.ll
 !tests/llvm/hotset-report.ll
 !tests/llvm/hotset-rewrite.ll
 !tests/llvm/hotset-config.ll

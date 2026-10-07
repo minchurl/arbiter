@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOAD_RECORDS="${XINDEX_SCALE_LOAD_RECORDS:-100000}"
 TX_OPS="${XINDEX_SCALE_TX_OPS:-400000}"
 YCSB_TYPES="${YCSB_TYPES:-${YCSB_TYPE:-a}}"
-HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-configs/hotset/xindex-cxl-arena.config}"
+HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-configs/hotset/candidates/raw-046.config}"
 HOTSET_CONFIG_PATH="${HOTSET_CONFIG}"
 if [[ "${HOTSET_CONFIG_PATH}" != /* ]]; then
   HOTSET_CONFIG_PATH="${ROOT_DIR}/${HOTSET_CONFIG_PATH}"
@@ -54,7 +54,7 @@ Builds one configured XIndex hot-set binary and compares the same binary with
 local allocation and target-node allocation inside a protected memory scope.
 
 Defaults:
-  hot-set config:      configs/hotset/xindex-cxl-arena.config
+  hot-set config:      configs/hotset/candidates/raw-046.config
   load records:       100000
   transaction ops:    400000
   workloads:          a
@@ -319,7 +319,6 @@ fi
 BUILD_CONFIG_COPY="${HOTSET_BUILD_DIR}/hotset-build.config"
 if [[ "${BUILD_BENCHMARKS}" == "1" ]]; then
   ARBITER_BENCH_BUILD_DIR="${HOTSET_BUILD_DIR}" \
-    ARBITER_XINDEX_EXPERIMENT=hotset \
     ARBITER_HOTSET_CONFIG="${HOTSET_CONFIG_PATH}" \
     "${ROOT_DIR}/scripts/build-xindex-llvm.sh"
   cp "${HOTSET_CONFIG_PATH}" "${BUILD_CONFIG_COPY}"

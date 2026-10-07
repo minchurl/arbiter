@@ -10,9 +10,9 @@ RUNTIME_LIB="${ARBITER_RUNTIME_LIB:-${BUILD_DIR}/runtime/libarbiter_runtime.a}"
 MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-/opt/intel/oneapi/mkl/latest/include}"
 MKL_LINK_DIR="${MKL_LINK_DIR:-/opt/intel/oneapi/mkl/latest/lib}"
 XINDEX_EXTRA_LIBS="${XINDEX_EXTRA_LIBS:--ljemalloc -lmkl_rt -lpthread}"
-XINDEX_EXPERIMENT="${ARBITER_XINDEX_EXPERIMENT:-all}"
+HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-${ROOT_DIR}/configs/hotset/candidates/raw-046.config}"
 BUILD_NATIVE="${ARBITER_BUILD_XINDEX_NATIVE:-1}"
-EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/${XINDEX_EXPERIMENT}.sh"
+EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/hotset.sh"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -83,16 +83,14 @@ fi
   -disable-output \
   "${OUT_DIR}/ycsb_bench.bc"
 
-if [[ ! -f "${EXPERIMENT_CONFIG}" ]]; then
-  echo "unknown ARBITER_XINDEX_EXPERIMENT=${XINDEX_EXPERIMENT}" >&2
-  echo "expected one of:" >&2
-  for config in "${ROOT_DIR}/scripts/xindex-experiments/"*.sh; do
-    [[ -e "${config}" ]] || continue
-    name="$(basename "${config}")"
-    echo "  ${name%.sh}" >&2
-  done
+if [[ ! -f "${HOTSET_CONFIG}" && -f "${ROOT_DIR}/${HOTSET_CONFIG}" ]]; then
+  HOTSET_CONFIG="${ROOT_DIR}/${HOTSET_CONFIG}"
+fi
+if [[ ! -f "${HOTSET_CONFIG}" ]]; then
+  echo "missing ARBITER_HOTSET_CONFIG=${HOTSET_CONFIG}" >&2
   exit 1
 fi
+ARBITER_HOTSET_CONFIG="${HOTSET_CONFIG}"
 
 REWRITE_PASS=""
 REWRITE_ARGS=()
@@ -109,7 +107,7 @@ fi
 configure_xindex_experiment
 
 if [[ -z "${REWRITE_PASS}" ]]; then
-  echo "XIndex experiment ${XINDEX_EXPERIMENT} did not set REWRITE_PASS" >&2
+  echo "XIndex hot-set setup did not set REWRITE_PASS" >&2
   exit 1
 fi
 

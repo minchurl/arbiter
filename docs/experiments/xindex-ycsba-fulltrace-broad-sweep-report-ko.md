@@ -628,4 +628,4 @@ weight 기반이라 공격적 후보 중 설명이 쉽다.
 - [V2 observations](artifacts/hotset-broad-sweep-v2-20260822-012131/observations.csv)
 - [V2 throughput samples](artifacts/hotset-broad-sweep-v2-20260822-012131/throughput-samples.csv)
 - [Hot-set compiler/runtime 설계](../hotset-migration.md)
-- [현재 broad sweep driver](../../scripts/run-hotset-broad-sweep-overnight.sh)
+- [보존된 broad sweep v2 controller](artifacts/hotset-broad-sweep-v2-20260822-012131/controller.sh)
