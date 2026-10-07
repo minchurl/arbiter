@@ -1,0 +1,116 @@
+fg_n: 31
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+exist_keys.size() : 100000000, item_num : 100000000
+load number : 100000000
+  read: 199993860
+insert: 0
+update: 200006140
+remove: 0
+operation count: 400000000
+exist_keys.size(): 100000000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.326569, mean error: 39.8777
+table: 0x7ff067a40000
+training done
+[ycsb] Worker0 Ready.
+[ycsb] Worker3 Ready.
+[ycsb] Worker4 Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker85 Ready. Ready.
+[ycsb] Worker[ycsb] Worker1[ycsb] Worker Ready.
+12[ycsb] Worker14 Ready.[ycsb] Worker
+2 Ready.
+[ycsb] Worker[ycsb] Worker21 Ready.
+20 Ready.7[ycsb] Worker6[ycsb] prepare data ...
+
+[ycsb] Worker23
+ Ready.
+[ycsb] Worker[ycsb] Worker24 Ready.
+[ycsb] Worker29 Ready.
+ Ready.[ycsb] Worker[ycsb] Worker
+[ycsb] Worker[ycsb] Worker[ycsb] Worker Ready.16 Ready.
+30[ycsb] Worker17 Ready.
+22[ycsb] Worker11 Ready.
+1328[ycsb] Worker[ycsb] Worker Ready.
+26 Ready.
+ Ready. Ready.
+25 Ready.
+18 Ready.
+27 Ready.
+[ycsb] Worker10[ycsb] Worker[ycsb] Worker15 Ready.
+19 Ready.
+
+ Ready.
+ Ready.
+ Ready.
+
+9 Ready.
+[ycsb] Duration target(sec): 180
+[ycsb] Throughput sample interval(sec): 30
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=30.0003 interval_sec=30.0003 interval_ops=1702876615 interval_ops_per_sec=5.67621e+07 cumulative_ops=1702876615 cumulative_ops_per_sec=5.67621e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=60.0041 interval_sec=30.0038 interval_ops=1714535993 interval_ops_per_sec=5.71439e+07 cumulative_ops=3417412608 cumulative_ops_per_sec=5.6953e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=90.0003 interval_sec=29.9962 interval_ops=1711435464 interval_ops_per_sec=5.70551e+07 cumulative_ops=5128848072 cumulative_ops_per_sec=5.6987e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=120 interval_sec=30 interval_ops=1708675102 interval_ops_per_sec=5.69558e+07 cumulative_ops=6837523174 cumulative_ops_per_sec=5.69792e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=150.004 interval_sec=30.0038 interval_ops=1708415574 interval_ops_per_sec=5.69399e+07 cumulative_ops=8545938748 cumulative_ops_per_sec=5.69714e+07 final=0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+[ycsb] Throughput sample elapsed_sec=180.004 interval_sec=29.9998 interval_ops=1708741743 interval_ops_per_sec=5.69584e+07 cumulative_ops=10254680491 cumulative_ops_per_sec=5.69692e+07 final=1
+[ycsb] Time(sec) : 180.004
+[ycsb] Throughput(op/s): 5.69692e+07
+hash resize group cnt: 0
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_slabs=1612 assigned_bytes=3380609024
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=576 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=15203878272 assigned_slabs=7252 assigned_bytes=15208546304
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=576 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=82368 assigned_slabs=1 assigned_bytes=2097152
+arbiter-arena-summary node=2 reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_slabs=8865 assigned_bytes=18591252480 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=18582574016 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=4537669 resident_bytes=18586292224 majority_node=2 query_error_pages=0 mincore_error_slabs=0 node2_pages=4537669

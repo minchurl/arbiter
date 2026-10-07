@@ -1,0 +1,23 @@
+	Command being timed: "numactl --cpunodebind=0 --membind=0 env YCSB_TYPE=a XINDEX_FG=31 XINDEX_ITERATION=1 XINDEX_DURATION_SECONDS=180 XINDEX_THROUGHPUT_SAMPLE_SECONDS=30 YCSB_LOAD_PATH=/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat YCSB_TX_PATH=/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat LD_LIBRARY_PATH=/home/shin/arbiter/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu:/home/shin/arbiter/.tools/libtinfo5-root/lib/x86_64-linux-gnu XINDEX_BG=1 ARBITER_XINDEX_BIN=/home/shin/arbiter/build/arbiter-bench/xindex-hotset-seed-size-heavy/ycsb_bench-arbiter ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_SLAB_BYTES=2097152 ARBITER_ARENA_RESERVE_BYTES=25769803776 ARBITER_ARENA_SLOT_ALIGNMENT=64 ARBITER_ARENA_STRICT=1 ARBITER_ARENA_REPORT=1 ARBITER_TARGET_NODE=2 /home/shin/arbiter/scripts/run-xindex-arbiter.sh remote"
+	User time (seconds): 5834.55
+	System time (seconds): 24.93
+	Percent of CPU this job got: 2323%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:12.22
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 31662788
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 11446842
+	Voluntary context switches: 251
+	Involuntary context switches: 78132
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 248
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

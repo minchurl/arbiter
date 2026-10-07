@@ -4,9 +4,9 @@ Arbiter is a compiler-assisted placement system for coherence-sensitive
 memory objects in tiered memory environments.
 
 The current benchmark workflow is LLVM-only. The hot-set experiment scores
-allocation sites, follows bounded seed-relative access paths, and applies a
-configurable read/write-affinity boundary before rewriting selected calls to
-the Arbiter runtime ABI.
+heap allocation sites, selects automatic top-k or explicit seeds, validates a
+static byte budget, and rewrites only those selected calls to the Arbiter
+runtime ABI.
 
 The earlier MLIR/memref path is retained as a legacy precision/reference path,
 but it is not used by the current LLVM-only benchmark workflow. See
@@ -29,12 +29,12 @@ The current pass pair is:
 arbiter-report-hotset-sites -> arbiter-experiment-hotset-rewrite
 ```
 
-The report records seed, member, and rejected decisions without changing IR.
-The rewrite pass repeats the deterministic selection and rewrites only the
-selected hot set. The all-site, shared-mutable, and lock-touch experiments
-remain available as independent baselines. See
-[Access-Affinity Hot Set Placement](docs/hotset-migration.md) for the policy and
-config reference.
+The report records seed and rejected decisions without changing IR. The
+rewrite pass repeats the deterministic selection and rewrites only the
+selected seeds. The all-site, shared-mutable, and lock-touch experiments remain
+available as independent baselines. See
+[HITM-Risk Seed Placement](docs/hotset-migration.md) for the policy and config
+reference.
 
 ## Build
 
@@ -67,8 +67,7 @@ Install Intel MKL separately, or set `MKL_INCLUDE_DIR`, `MKL_LINK_DIR`, and
 For a fresh clone of the benchmark branch, use the one-shot setup:
 
 ```sh
-git clone --branch experiment/hotset-migration \
-  git@github.com:minchurl/arbiter.git
+git clone git@github.com:minchurl/arbiter.git
 cd arbiter
 ./scripts/setup-benchmarks.sh
 ```
@@ -241,14 +240,17 @@ ARBITER_TARGET_NODE=<cxl-node> \
 ./scripts/run-protected-hotset-experiment.sh
 ```
 
-The driver defaults to the site-99-only policy in
+The driver defaults to the automatic top-1 policy in
 `configs/hotset/xindex-cxl-arena.config`, the slab backend, 100,000 load
 records, 400,000 transactions, a 60-second measured interval per row, one
 repeat, a 4GiB arena capacity, a 16GB memory limit, and no swap. The local and
 target rows use the same arena implementation bound to node 0 and the requested
-CXL node respectively. Set `XINDEX_DURATION_SECONDS=0` to use the legacy
-`XINDEX_ITERATION` mode. Increase scale only after inspecting `runs.csv`,
-`summary.md`, `hotset-sites.csv`, and the `arbiter-arena-summary` log line.
+CXL node respectively. Use
+`configs/hotset/xindex-cxl-arena-seed-size-heavy.config` to replay the seed-only
+policy derived from full-trace finalist `raw-046`. Set
+`XINDEX_DURATION_SECONDS=0` to use the legacy `XINDEX_ITERATION` mode. Increase
+scale only after inspecting `runs.csv`, `summary.md`, `hotset-sites.csv`, and
+the `arbiter-arena-summary` log line.
 
 The following run-script modes remain the generic placement baseline:
 
@@ -334,7 +336,7 @@ main benchmark path.
 ## Docs
 
 - [Overview](docs/overview.md)
-- [Access-Affinity Hot Set Placement](docs/hotset-migration.md)
+- [HITM-Risk Seed Placement](docs/hotset-migration.md)
 - [LLVM-Only Design](docs/llvm-only-design.md)
 - [Benchmark Plan](docs/benchmark-plan.md)
 - [Benchmark Data](docs/benchmark-data.md)

@@ -1,0 +1,13 @@
+benchmark,workload,config,repeat,mode,elapsed_sec,interval_sec,interval_ops,interval_ops_per_sec,cumulative_ops,cumulative_ops_per_sec,final,log
+xindex,a,hotset-seed-local,1,local,30.0004,30.0004,834616718,2.78202e+07,834616718,2.78202e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-local,1,local,60.0006,30.0002,836035897,2.78677e+07,1670652615,2.78439e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-local,1,local,90.0006,30,834545607,2.78182e+07,2505198222,2.78354e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-local,1,local,120.001,30.0001,836090368,2.78696e+07,3341288590,2.78439e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-local,1,local,150.001,29.9999,842134016,2.80712e+07,4183422606,2.78894e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-local,1,local,180.004,30.0039,835297906,2.78396e+07,5018720512,2.78811e+07,1,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-local_r1.log
+xindex,a,hotset-seed-target,1,remote,30.0003,30.0003,1702876615,5.67621e+07,1702876615,5.67621e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log
+xindex,a,hotset-seed-target,1,remote,60.0041,30.0038,1714535993,5.71439e+07,3417412608,5.6953e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log
+xindex,a,hotset-seed-target,1,remote,90.0003,29.9962,1711435464,5.70551e+07,5128848072,5.6987e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log
+xindex,a,hotset-seed-target,1,remote,120,30,1708675102,5.69558e+07,6837523174,5.69792e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log
+xindex,a,hotset-seed-target,1,remote,150.004,30.0038,1708415574,5.69399e+07,8545938748,5.69714e+07,0,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log
+xindex,a,hotset-seed-target,1,remote,180.004,29.9998,1708741743,5.69584e+07,10254680491,5.69692e+07,1,/home/shin/arbiter/build/arbiter-bench/seed-only-raw046-replay-20261007-235651/logs/xindex_a_hotset-seed-target_r1.log

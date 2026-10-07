@@ -13,9 +13,9 @@ large traces and benchmark binaries must remain outside git.
 - [Hot-Set Placement Experiment Results](hotset-results.md)
 - [XIndex Automatic Hot-Set Sweep and Overnight Plan](hotset-auto-sweep-plan.md)
 - [XIndex Full-Trace Broad Hot-Set Sweep](hotset-broad-sweep-plan.md):
-  deterministic pin-free, fixed-size-only parameter search with broad
-  threshold-based promotion, parser fail-closed behavior, and a 64G protected
-  execution envelope.
+  historical deterministic parameter search and the current seed-only driver,
+  with threshold-based promotion, parser fail-closed behavior, and a 64G
+  protected execution envelope.
 - [XIndex Full-Trace Broad Sweep Results](hotset-broad-sweep-results.md): two
   preliminary screen runs, controller failure analysis, short-run tendencies,
   and the bounded claims that can be carried into confirmation.
@@ -36,3 +36,6 @@ large traces and benchmark binaries must remain outside git.
 - [2026-10-06 completed XIndex adaptive broad sweep](artifacts/hotset-broad-sweep-v2-rerun-20261006-110924/README.md):
   131-row completed screen/confirmation/final run, aggregate measurements,
   finalist configs, safety checks, and homogeneous 180-second results.
+- [2026-10-08 seed-only `raw-046` replay](artifacts/seed-only-raw046-replay-20261007-235651/README.md):
+  post-cleanup full-trace local/CXL regression result, compiler decisions,
+  placement reports, resource measurements, and throughput samples.

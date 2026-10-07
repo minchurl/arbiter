@@ -8,27 +8,20 @@ Arbiter is a compiler-assisted placement system for coherence-sensitive memory
 objects in tiered memory environments.
 
 The current implementation direction is the LLVM-only hot-set experiment. Its
-compile-time policy has two deliberately separate stages:
-
-1. HITM-risk selection scores allocation sites and freezes a small set of seed
-   roots using only `ARBITER_HITM_*` controls.
-2. Hot-set selection follows bounded paths from those roots and adds attached
-   allocations whose read/write affinity passes the `ARBITER_HOTSET_*` policy.
-
-Stage 2 never drops, replaces, or reorders the Stage 1 roots. If a hot-set site
-or byte cap cannot contain every selected root, the config is invalid rather
-than silently changing the seed set.
+compile-time policy scores allocation sites, selects automatic top-k or
+explicit heap seeds, validates their static byte budget, and rewrites exactly
+those seeds.
 
 The current target is allocation-time placement on remote NUMA or CXL-like
 memory. Despite the experiment name, Arbiter does not move already-allocated
 objects during the measured run.
 
 The detailed policy, config reference, and experiment methodology live in
-[Access-Affinity Hot Set Placement](hotset-migration.md).
+[HITM-Risk Seed Placement](hotset-migration.md).
 
 ## Document Map
 
-- [Access-Affinity Hot Set Placement](hotset-migration.md): current heuristic,
+- [HITM-Risk Seed Placement](hotset-migration.md): current heuristic,
   config, and experiment contract.
 - [Shared-Mutable Pattern Placement](shared-mutable-pattern-placement.md):
   earlier point-based heuristic retained as an independent baseline.
@@ -68,9 +61,9 @@ is larger than the added latency penalty of the target memory tier.
 ```text
 C/C++ benchmark + one build-time experiment config
   -> clang/clang++ LLVM IR
-  -> Stage 1 HITM-risk seed selection
-  -> Stage 2 access-affinity hot-set selection
-  -> Arbiter site and hot-set reports
+  -> HITM-risk seed selection
+  -> selected-byte budget validation
+  -> Arbiter site and seed reports
   -> hot-set rewrite pass
   -> LLVM IR with selected arbiter_*_site calls
   -> native binary linked with Arbiter runtime
@@ -92,21 +85,20 @@ arbiter-report-sites
   -> does not modify IR
 
 arbiter-report-hotset-sites
-  -> Stage 1 scores sites and freezes HITM-risk seed roots
-  -> Stage 2 discovers and selects hot-set members
-  -> reports seed/member/rejected roles
+  -> scores allocation sites and selects HITM-risk seeds
+  -> reports seed/rejected roles
   -> does not modify IR
 
 arbiter-experiment-hotset-rewrite
-  -> repeats the deterministic hot-set selection
-  -> rewrites the selected hot set
+  -> repeats the deterministic seed selection
+  -> rewrites the selected heap seeds
 ```
 
 `arbiter-experiment-all-rewrite` remains the broad all-site baseline.
 `arbiter-report-shared-mutable-sites` and
 `arbiter-experiment-shared-mutable-rewrite` remain the earlier point-based
 baseline. The hot-set scorer is implemented independently, so changes to its
-weights and expansion policy cannot change shared-mutable behavior.
+weights and gates cannot change shared-mutable behavior.
 
 All allocation experiments reuse the existing generic site collector,
 `RewritePlan`, and heap/mmap rewriters. The hot-set pass only supplies the
@@ -172,9 +164,8 @@ mmap and heap sites.
 XIndex allocates important index structures through C++ allocation paths such
 as `new`, `new[]`, and `std::malloc`. Arbiter must support C++ allocation and
 deallocation ABI forms while avoiding placement-new rewrites. The hot-set
-experiment narrows placement to scored seeds and attached read/write-coupled
-members, so YCSB trace/input buffers do not move merely because they share a
-function, callee, or source file with XIndex structures.
+experiment narrows placement to scored heap seeds, so unrelated YCSB
+trace/input buffers remain outside the selected set.
 
 ## Measurement Model
 
@@ -183,23 +174,20 @@ The minimum hot-set comparison is:
 ```text
 native
 shared-mutable-local
-hotset-single
-hotset-use-local
-hotset-use-target
+hotset-seed-local
+hotset-seed-target
 ```
 
-The local runs isolate compiler/runtime overhead from placement. Seed-only and
-access-affinity runs isolate the value of placing attached read/write-coupled
-allocations. Every result should retain the hot-set CSV and resolved
-`hotset-effective.opt-args` manifest. Target comparisons must report
+The local run isolates compiler/runtime overhead from placement. The target run
+uses the same rewritten binary and allocator but binds selected seed arenas to
+the CXL node. Every result should retain the hot-set CSV and resolved
+`hotset-effective.opt-args` manifest. Target comparisons should report
 `HITM/op`, total and foreground throughput, and p99 latency together.
 
 ## Next Analysis
 
-- optional bounded MemorySSA plus AliasAnalysis as a Stage 2 backend for
-  memory-mediated member paths
 - profile-derived dynamic allocation-size and live-byte estimates
-- profile-guided allocation-site co-access after pointers escape
+- profile-guided seed scoring using allocation counts and hardware counters
 - loop hotness and write-intensity signals
 - indirect-call-aware worker reachability
 - automated staged config sweeps tied to throughput, latency, and HITM/C2C data
