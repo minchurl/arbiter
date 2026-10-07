@@ -47,6 +47,8 @@ struct HITMSeedPolicy {
   std::string explicitSiteIds;
   bool requireEscape = true;
   bool requireSync = true;
+  uint64_t dynamicSizeEstimate = 4096;
+  uint64_t maxEstimatedBytes = 0;
 };
 
 struct HITMSeedDecision {

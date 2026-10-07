@@ -1,5 +1,9 @@
 # XIndex Automatic Hot-Set Sweep Plan
 
+> Historical plan: this document preserves the 2026-08-14 methodology. The
+> active compiler and configs now select seeds only; member-expansion controls
+> have been removed. See [HITM-Risk Seed Placement](../hotset-migration.md).
+
 Status: screening, 180-second confirmation, and overnight confirmation were
 executed on 2026-08-14. The overnight interpretation remains to be added to
 the durable results ledger.

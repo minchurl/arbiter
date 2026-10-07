@@ -533,6 +533,8 @@ HITMSeedSelection selectHITMSeeds(Module &module,
     HITMSeedDecision record;
     record.site = &site;
     record.score = scorer.score(site);
+    if (record.score.hasDynamicSize)
+      record.score.estimatedBytes = policy.dynamicSizeEstimate;
     recordBySiteId.emplace(site.id, selection.records.size());
     selection.records.push_back(std::move(record));
   }
@@ -593,6 +595,27 @@ HITMSeedSelection selectHITMSeeds(Module &module,
 
     record.selected = true;
     record.groupId = groupId++;
+  }
+
+  uint64_t selectedEstimatedBytes = 0;
+  for (const HITMSeedDecision &record : selection.records) {
+    if (!record.selected)
+      continue;
+
+    uint64_t nextBytes = record.score.estimatedBytes;
+    if (policy.maxEstimatedBytes != 0 &&
+        (nextBytes > policy.maxEstimatedBytes ||
+         selectedEstimatedBytes > policy.maxEstimatedBytes - nextBytes)) {
+      failConfig(Twine("selected HITM seeds exceed hotset max-estimated-bytes ") +
+                 Twine(policy.maxEstimatedBytes));
+    }
+
+    if (selectedEstimatedBytes >
+        std::numeric_limits<uint64_t>::max() - nextBytes) {
+      selectedEstimatedBytes = std::numeric_limits<uint64_t>::max();
+    } else {
+      selectedEstimatedBytes += nextBytes;
+    }
   }
   return selection;
 }

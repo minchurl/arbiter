@@ -1,5 +1,10 @@
 # Hot-Set Placement Experiment Results
 
+> Historical record: these runs predate the seed-only compiler cleanup. Any
+> member-expansion settings below describe the original experiment and are no
+> longer accepted by the active compiler path. The implementation remains in
+> the `experiment/hotset-migration` branch.
+
 This ledger records protected XIndex/YCSB hot-set comparisons. Generated files
 under `build/` normally remain local; retain the input config, decision CSV,
 effective arguments, and binary hashes with every durable result. Bounded raw
@@ -58,8 +63,8 @@ therefore substantially understate runtime CXL footprint.
 
 ### Conservative `put` Pair
 
-`configs/hotset/xindex-cxl-conservative.config` raises the seed threshold,
-pins the score-14 `put` root (site 99 in this matching build), keeps one
+The now-removed `configs/hotset/xindex-cxl-conservative.config` raised the seed
+threshold, pinned the score-14 `put` root (site 99 in this matching build), kept one
 fixed-size write member, rejects the dynamically sized member through a 1KiB
 budget, and selects two sites total.
 

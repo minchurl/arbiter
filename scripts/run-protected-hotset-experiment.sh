@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOAD_RECORDS="${XINDEX_SCALE_LOAD_RECORDS:-100000}"
 TX_OPS="${XINDEX_SCALE_TX_OPS:-400000}"
 YCSB_TYPES="${YCSB_TYPES:-${YCSB_TYPE:-a}}"
-HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-configs/hotset/xindex-cxl-arena.config}"
+HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-configs/hotset/candidates/raw-046.config}"
 HOTSET_CONFIG_PATH="${HOTSET_CONFIG}"
 if [[ "${HOTSET_CONFIG_PATH}" != /* ]]; then
   HOTSET_CONFIG_PATH="${ROOT_DIR}/${HOTSET_CONFIG_PATH}"
@@ -54,7 +54,7 @@ Builds one configured XIndex hot-set binary and compares the same binary with
 local allocation and target-node allocation inside a protected memory scope.
 
 Defaults:
-  hot-set config:      configs/hotset/xindex-cxl-arena.config
+  hot-set config:      configs/hotset/candidates/raw-046.config
   load records:       100000
   transaction ops:    400000
   workloads:          a
@@ -204,13 +204,6 @@ EXPECTED_SEED_COUNT="$(
   source "${HOTSET_CONFIG_PATH}"
   printf '%s' "${ARBITER_HOTSET_EXPECTED_SEED_COUNT:-}"
 )"
-EXPECTED_MEMBER_COUNT="$(
-  ARBITER_HOTSET_EXPECTED_MEMBER_COUNT=
-  # shellcheck source=/dev/null
-  source "${HOTSET_CONFIG_PATH}"
-  printf '%s' "${ARBITER_HOTSET_EXPECTED_MEMBER_COUNT:-}"
-)"
-
 if [[ "${RUN_TARGET}" == "1" ]]; then
   if [[ -z "${TARGET_NODE}" ]]; then
     echo "ARBITER_TARGET_NODE is required when RUN_TARGET=1" >&2
@@ -326,7 +319,6 @@ fi
 BUILD_CONFIG_COPY="${HOTSET_BUILD_DIR}/hotset-build.config"
 if [[ "${BUILD_BENCHMARKS}" == "1" ]]; then
   ARBITER_BENCH_BUILD_DIR="${HOTSET_BUILD_DIR}" \
-    ARBITER_XINDEX_EXPERIMENT=hotset \
     ARBITER_HOTSET_CONFIG="${HOTSET_CONFIG_PATH}" \
     "${ROOT_DIR}/scripts/build-xindex-llvm.sh"
   cp "${HOTSET_CONFIG_PATH}" "${BUILD_CONFIG_COPY}"
@@ -347,15 +339,10 @@ if [[ ! -s "${REPORT_CSV}" || ! -s "${EFFECTIVE_ARGS}" ]]; then
 fi
 
 SELECTED_SEEDS="$(awk -F, 'NR > 1 && $10 == "seed" && $12 == "yes" {count++} END {print count + 0}' "${REPORT_CSV}")"
-SELECTED_MEMBERS="$(awk -F, 'NR > 1 && $10 == "member" && $12 == "yes" {count++} END {print count + 0}' "${REPORT_CSV}")"
 SELECTED_SEED_FUNCTIONS="$(awk -F, 'NR > 1 && $10 == "seed" && $12 == "yes" {print $3}' "${REPORT_CSV}")"
 
 if [[ -n "${EXPECTED_SEED_COUNT}" && "${SELECTED_SEEDS}" != "${EXPECTED_SEED_COUNT}" ]]; then
   echo "hot-set config expected ${EXPECTED_SEED_COUNT} seed(s), selected ${SELECTED_SEEDS}" >&2
-  exit 1
-fi
-if [[ -n "${EXPECTED_MEMBER_COUNT}" && "${SELECTED_MEMBERS}" != "${EXPECTED_MEMBER_COUNT}" ]]; then
-  echo "hot-set config expected ${EXPECTED_MEMBER_COUNT} member(s), selected ${SELECTED_MEMBERS}" >&2
   exit 1
 fi
 if [[ -n "${EXPECTED_SEED_FUNCTION}" && "${SELECTED_SEED_FUNCTIONS}" != "${EXPECTED_SEED_FUNCTION}" ]]; then
@@ -562,17 +549,17 @@ for workload in ${YCSB_TYPES}; do
     fi
     if [[ "${target_first}" == "1" ]]; then
       if [[ "${RUN_TARGET}" == "1" ]]; then
-        run_one "${workload}" hotset-use-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+        run_one "${workload}" hotset-seed-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
       fi
       if [[ "${RUN_LOCAL}" == "1" ]]; then
-        run_one "${workload}" hotset-use-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+        run_one "${workload}" hotset-seed-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
       fi
     else
       if [[ "${RUN_LOCAL}" == "1" ]]; then
-        run_one "${workload}" hotset-use-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+        run_one "${workload}" hotset-seed-local "${repeat}" local "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
       fi
       if [[ "${RUN_TARGET}" == "1" ]]; then
-        run_one "${workload}" hotset-use-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
+        run_one "${workload}" hotset-seed-target "${repeat}" remote "${HOTSET_BUILD_DIR}/ycsb_bench-arbiter"
       fi
     fi
   done
@@ -581,7 +568,7 @@ done
 SUMMARY_CSV="${RESULT_DIR}/summary.csv"
 printf 'benchmark,workload,config,metric,repeats,avg_time_sec,avg_throughput,avg_max_rss_kb\n' > "${SUMMARY_CSV}"
 for workload in ${YCSB_TYPES}; do
-  for config in native hotset-use-local hotset-use-target; do
+  for config in native hotset-seed-local hotset-seed-target; do
     awk -F, -v workload="${workload}" -v config="${config}" '
       NR > 1 && $2 == workload && $3 == config && $20 == "ok" {
         count++
@@ -604,7 +591,7 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo
   echo "- Config: \`${HOTSET_CONFIG_PATH}\`"
   echo "- Config SHA-256: \`${CONFIG_SHA256}\`"
-  echo "- Selected sites: ${SELECTED_SEEDS} seeds, ${SELECTED_MEMBERS} members"
+  echo "- Selected seeds: ${SELECTED_SEEDS}"
   echo "- Scale: ${LOAD_RECORDS} load records, ${TX_OPS} transaction operations"
   echo "- Workloads: \`${YCSB_TYPES}\`"
   echo "- Repeats: ${REPEATS}"

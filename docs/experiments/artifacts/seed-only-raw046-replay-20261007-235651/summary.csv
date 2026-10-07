@@ -1,0 +1,3 @@
+benchmark,workload,config,metric,repeats,avg_time_sec,avg_throughput,avg_max_rss_kb
+xindex,a,hotset-seed-local,op/s,1,180.004,27881100,31662236
+xindex,a,hotset-seed-target,op/s,1,180.004,56969200,31662788

@@ -13,7 +13,7 @@ usage() {
 usage: $0
 
 Creates scaled XIndex/YCSB trace files with the canonical names expected by
-scripts/run-generic-placement-experiment.sh.
+scripts/run-protected-hotset-experiment.sh.
 
 Environment:
   XINDEX_DATA_DIR            full trace dir, default benchmark/xindex/YCSB/xindex_dat

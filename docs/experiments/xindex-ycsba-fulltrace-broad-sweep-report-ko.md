@@ -1,5 +1,10 @@
 # XIndex/YCSB-A Full-Trace Hot-Set Broad Sweep 정리
 
+> 과거 실험 기록: 아래 member expansion 파라미터는 당시 탐색 공간을
+> 설명한다. 현재 compiler 경로에서는 member 확장 로직과 관련 옵션을
+> 제거했고 seed 선택과 placement만 사용한다. 기존 구현은
+> `experiment/hotset-migration` 브랜치에 남아 있다.
+
 - 작성일: 2026-09-18
 - 대상 실행: 2026-08-22 broad sweep v2
 - 상태: 2026-10-06 재실험에서 screening/confirmation/final 완료
@@ -623,4 +628,4 @@ weight 기반이라 공격적 후보 중 설명이 쉽다.
 - [V2 observations](artifacts/hotset-broad-sweep-v2-20260822-012131/observations.csv)
 - [V2 throughput samples](artifacts/hotset-broad-sweep-v2-20260822-012131/throughput-samples.csv)
 - [Hot-set compiler/runtime 설계](../hotset-migration.md)
-- [현재 broad sweep driver](../../scripts/run-hotset-broad-sweep-overnight.sh)
+- [보존된 broad sweep v2 controller](artifacts/hotset-broad-sweep-v2-20260822-012131/controller.sh)

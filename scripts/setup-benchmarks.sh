@@ -138,7 +138,8 @@ if [[ "${BUILD_ARBITER}" == "1" ]]; then
   cmake --build "${BUILD_DIR}" --target \
     ArbiterLLVMPlugin \
     arbiter_runtime \
-    arbiter-runtime-smoke
+    arbiter-runtime-smoke \
+    arbiter-slab-arena-smoke
 fi
 
 if [[ "${BUILD_BENCHMARKS}" == "1" ]]; then

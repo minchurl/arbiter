@@ -1,5 +1,10 @@
 # XIndex Full-Trace Broad Hot-Set Sweep
 
+> Historical plan: the candidate dimensions below describe the completed
+> 2026-10-06 experiment. The active broad-sweep driver now searches seed
+> scoring, gates, top-k, size threshold, and byte budget only. It no longer
+> generates member-expansion policies.
+
 Status: completed successfully on 2026-10-06 after the controller fixes. The
 run reached screening, confirmation, final, and the ending native anchor with
 131 recorded rows and zero controller parse failures. Results and the retained

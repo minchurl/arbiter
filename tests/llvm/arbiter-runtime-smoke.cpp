@@ -1,4 +1,3 @@
-#include "arbiter_lock_touch_runtime.h"
 #include "arbiter_runtime_site.h"
 
 #include <cstdint>
@@ -59,13 +58,6 @@ bool exerciseFreeFallback() {
   return true;
 }
 
-bool exerciseLockTouch() {
-  uint64_t lockLikeWord = 0;
-  for (uint32_t i = 0; i < 2048; ++i)
-    arbiter_lock_touch(&lockLikeWord, 99);
-  return true;
-}
-
 } // namespace
 
 int main() {
@@ -77,7 +69,7 @@ int main() {
       if (!exerciseSiteAllocation(size, alignment))
         return 1;
 
-  if (!exerciseSiteCalloc() || !exerciseFreeFallback() || !exerciseLockTouch())
+  if (!exerciseSiteCalloc() || !exerciseFreeFallback())
     return 1;
 
   return 0;

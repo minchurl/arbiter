@@ -5,12 +5,9 @@ add_llvm_library(ArbiterLLVM
   hotset/HITMRiskScoring.cpp
   hotset/HotSetOptions.cpp
   hotset/HotSetPasses.cpp
-  hotset/UseBasedHotSet.cpp
-  LockTouchInstrumentation.cpp
   ReportAllocationSites.cpp
   RewriteHeapAllocations.cpp
   RewriteMMapAllocations.cpp
-  SharedMutablePlacement.cpp
 
   LINK_COMPONENTS
   Core

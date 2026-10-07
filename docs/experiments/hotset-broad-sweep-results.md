@@ -1,5 +1,10 @@
 # XIndex Full-Trace Broad Hot-Set Sweep Results
 
+> Historical result ledger: archived configs retain the member-expansion fields
+> used by the original search. The active compiler is seed-only. The strongest
+> seed-only finalist, `raw-046`, is reproduced by
+> `configs/hotset/xindex-cxl-arena-seed-size-heavy.config`.
+
 This ledger preserves the evidence from two preliminary full-trace parameter
 sweeps and the completed adaptive rerun. All runs used 100M load records, 400M
 YCSB A transactions, 31 foreground workers, one background worker, CPU/local
@@ -57,6 +62,21 @@ reached +55.86% in the 180-second final stage, and `raw-046` combined sites 68
 and 71 for +103.75%. Site 74 allocated only 143 objects and contributed
 negligible resident volume. Additional site 69 placement increased resident
 memory without improving the absolute CXL throughput beyond the 68+71 policy.
+
+## 2026-10-08: Seed-Only Cleanup Replay
+
+After use-based member expansion was removed, the seed-only implementation was
+rebuilt and replayed with the `raw-046`-equivalent automatic policy. Its eight
+static seeds and active runtime fingerprint `68+71+74` exactly matched the
+archived finalist.
+
+One 180-second full-trace local/CXL pair produced 27.8811M and 56.9692M op/s,
+respectively: **+104.33%** for CXL placement. Relative to the earlier four-pair
+means, local differed by -0.02%, CXL by +0.28%, and the paired delta by +0.58
+percentage points. Both processes used 17.31GiB of arena-resident memory on
+the requested node and completed with zero fallback, swap, placement-query
+error, or OOM. This is a regression confirmation rather than an additional
+statistical claim; the earlier four-pair result remains the confidence basis.
 
 The local finalist means remained close to the 27.844M native-anchor mean, so
 the slab/rewrite path did not create a large local overhead. This strengthens
@@ -167,4 +187,5 @@ single-site result and `raw-046` is the efficient aggressive result.
 - [V1 top-level artifacts](artifacts/hotset-broad-sweep-20260819-234706/README.md)
 - [V2 top-level artifacts](artifacts/hotset-broad-sweep-v2-20260822-012131/README.md)
 - [Completed adaptive rerun aggregates](artifacts/hotset-broad-sweep-v2-rerun-20261006-110924/README.md)
+- [Seed-only `raw-046` replay evidence](artifacts/seed-only-raw046-replay-20261007-235651/README.md)
 - [Next-run plan and commands](hotset-broad-sweep-plan.md)

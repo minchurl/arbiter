@@ -24,20 +24,6 @@ cl::opt<std::string> HITMSeedSiteIds(
              "seeds"),
     cl::init(""));
 
-cl::opt<std::string> Expansion(
-    "arbiter-hotset-expansion",
-    cl::desc("Hot-set expansion policy: none or use"), cl::init("use"));
-
-cl::opt<unsigned> MaxSites(
-    "arbiter-hotset-max-sites",
-    cl::desc("Maximum number of selected hot-set sites including seeds"),
-    cl::init(16));
-
-cl::opt<bool> IncludeMMap(
-    "arbiter-hotset-include-mmap",
-    cl::desc("Allow anonymous mmap sites as expanded hot-set members"),
-    cl::init(false));
-
 cl::opt<unsigned> HITMWeightEscapeReturn(
     "arbiter-hitm-weight-escape-return",
     cl::desc("Point weight for an allocation escaping through return"),
@@ -117,26 +103,5 @@ cl::opt<uint64_t> MaxEstimatedBytes(
     "arbiter-hotset-max-estimated-bytes",
     cl::desc("Maximum estimated bytes across the hot set; zero is unlimited"),
     cl::init(0));
-
-cl::opt<unsigned> MaxMembersPerSeed(
-    "arbiter-hotset-max-members-per-seed",
-    cl::desc("Maximum access-affinity members assigned to one seed; zero is "
-             "unlimited"),
-    cl::init(4));
-
-cl::opt<unsigned> MemberMinAffinity(
-    "arbiter-hotset-member-min-affinity",
-    cl::desc("Minimum member affinity: 1 ownership, 3 read, or 5 write"),
-    cl::init(3));
-
-cl::opt<unsigned> MemberMaxCallDepth(
-    "arbiter-hotset-member-max-call-depth",
-    cl::desc("Maximum direct-call depth for member access tracing"),
-    cl::init(1));
-
-cl::opt<unsigned> MemberMaxLoadDepth(
-    "arbiter-hotset-member-max-load-depth",
-    cl::desc("Maximum pointer-load depth for member access tracing"),
-    cl::init(2));
 
 } // namespace arbiter::llvm::hotset
