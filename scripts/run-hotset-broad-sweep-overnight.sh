@@ -565,14 +565,8 @@ reset_policy() {
   REQUIRE_SYNC=1
   LARGE_THRESHOLD=4096
   INCLUDE_DYNAMIC=0
-  EXPANSION=use
-  MAX_SITES=16
   DYNAMIC_ESTIMATE=4096
   MAX_ESTIMATED_BYTES=0
-  MAX_MEMBERS=4
-  MIN_AFFINITY=3
-  MAX_CALL_DEPTH=1
-  MAX_LOAD_DEPTH=2
 }
 
 set_weight_bundle() {
@@ -637,15 +631,8 @@ ARBITER_HITM_REQUIRE_ESCAPE=${REQUIRE_ESCAPE}
 ARBITER_HITM_REQUIRE_SYNC=${REQUIRE_SYNC}
 ARBITER_HITM_LARGE_ALLOCATION_THRESHOLD=${LARGE_THRESHOLD}
 ARBITER_HITM_INCLUDE_DYNAMIC_SIZE=${INCLUDE_DYNAMIC}
-ARBITER_HOTSET_EXPANSION=${EXPANSION}
-ARBITER_HOTSET_MAX_SITES=${MAX_SITES}
-ARBITER_HOTSET_INCLUDE_MMAP=0
 ARBITER_HOTSET_DYNAMIC_SIZE_ESTIMATE=${DYNAMIC_ESTIMATE}
 ARBITER_HOTSET_MAX_ESTIMATED_BYTES=${MAX_ESTIMATED_BYTES}
-ARBITER_HOTSET_MAX_MEMBERS_PER_SEED=${MAX_MEMBERS}
-ARBITER_HOTSET_MEMBER_MIN_AFFINITY=${MIN_AFFINITY}
-ARBITER_HOTSET_MEMBER_MAX_CALL_DEPTH=${MAX_CALL_DEPTH}
-ARBITER_HOTSET_MEMBER_MAX_LOAD_DEPTH=${MAX_LOAD_DEPTH}
 EOF
   printf '%s\t%s\t%s\n' "${CURRENT_ID}" "${design}" "${config}" >>"${RESULT_DIR}/raw-candidates.tsv"
 }
@@ -655,32 +642,26 @@ EOF
 # Fourteen designed, pin-free reference points come first.  Their order deliberately
 # makes the smallest static policy the representative when runtime behavior is
 # identical (for example k3 and k6 both executing only site 68).
-next_candidate; MIN_SCORE=13; SEED_LIMIT=1; INCLUDE_DYNAMIC=0; EXPANSION=none; MAX_SITES=1; MAX_MEMBERS=1; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k1-fixed
-next_candidate; MIN_SCORE=13; SEED_LIMIT=2; INCLUDE_DYNAMIC=0; EXPANSION=none; MAX_SITES=2; MAX_MEMBERS=1; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k2-fixed
-next_candidate; MIN_SCORE=12; SEED_LIMIT=3; INCLUDE_DYNAMIC=0; EXPANSION=none; MAX_SITES=3; MAX_MEMBERS=1; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k3-fixed
-next_candidate; MIN_SCORE=12; SEED_LIMIT=6; INCLUDE_DYNAMIC=0; EXPANSION=none; MAX_SITES=6; MAX_MEMBERS=1; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k6-fixed
+next_candidate; MIN_SCORE=13; SEED_LIMIT=1; INCLUDE_DYNAMIC=0; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k1-fixed
+next_candidate; MIN_SCORE=13; SEED_LIMIT=2; INCLUDE_DYNAMIC=0; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k2-fixed
+next_candidate; MIN_SCORE=12; SEED_LIMIT=3; INCLUDE_DYNAMIC=0; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k3-fixed
+next_candidate; MIN_SCORE=12; SEED_LIMIT=6; INCLUDE_DYNAMIC=0; MAX_ESTIMATED_BYTES=1024; emit_candidate auto-k6-fixed
 next_candidate; emit_candidate broad-default
-next_candidate; SEED_LIMIT=8; MAX_SITES=24; MAX_MEMBERS=6; emit_candidate broad-top8
-next_candidate; SEED_LIMIT=12; EXPANSION=none; MAX_SITES=12; MAX_MEMBERS=1; emit_candidate broad-top12-noexp
-next_candidate; MIN_SCORE=4; SEED_LIMIT=16; REQUIRE_ESCAPE=0; REQUIRE_SYNC=0; MAX_SITES=32; MAX_MEMBERS=8; MIN_AFFINITY=1; MAX_CALL_DEPTH=2; MAX_LOAD_DEPTH=3; emit_candidate permissive-deep
-next_candidate; MIN_SCORE=10; SEED_LIMIT=8; INCLUDE_DYNAMIC=0; EXPANSION=none; MAX_SITES=8; MAX_MEMBERS=1; emit_candidate strict-fixed
-next_candidate; MIN_SCORE=6; SEED_LIMIT=6; LARGE_THRESHOLD=96; MAX_SITES=24; MIN_AFFINITY=1; emit_candidate fixed-small-threshold
-next_candidate; SEED_LIMIT=8; MAX_SITES=24; MIN_AFFINITY=5; emit_candidate high-affinity
-next_candidate; SEED_LIMIT=6; MAX_SITES=32; MAX_MEMBERS=8; MIN_AFFINITY=1; MAX_CALL_DEPTH=3; MAX_LOAD_DEPTH=4; emit_candidate deep-expansion
-next_candidate; MIN_SCORE=8; SEED_LIMIT=8; set_weight_bundle flat; REQUIRE_ESCAPE=0; REQUIRE_SYNC=1; LARGE_THRESHOLD=64; EXPANSION=none; MAX_SITES=8; MAX_ESTIMATED_BYTES=1024; MAX_MEMBERS=1; MIN_AFFINITY=3; MAX_CALL_DEPTH=0; MAX_LOAD_DEPTH=0; emit_candidate flat-fixed-aggressive
-next_candidate; MIN_SCORE=7; SEED_LIMIT=3; set_weight_bundle hybrid; REQUIRE_ESCAPE=1; REQUIRE_SYNC=1; LARGE_THRESHOLD=4096; EXPANSION=use; MAX_SITES=24; MAX_ESTIMATED_BYTES=1024; MAX_MEMBERS=2; MIN_AFFINITY=1; MAX_CALL_DEPTH=1; MAX_LOAD_DEPTH=4; emit_candidate hybrid-fixed-expansion
+next_candidate; SEED_LIMIT=8; emit_candidate broad-top8
+next_candidate; SEED_LIMIT=12; emit_candidate broad-top12
+next_candidate; MIN_SCORE=4; SEED_LIMIT=16; REQUIRE_ESCAPE=0; REQUIRE_SYNC=0; emit_candidate permissive-top16
+next_candidate; MIN_SCORE=10; SEED_LIMIT=8; INCLUDE_DYNAMIC=0; MAX_ESTIMATED_BYTES=1024; emit_candidate strict-fixed
+next_candidate; MIN_SCORE=6; SEED_LIMIT=6; LARGE_THRESHOLD=96; emit_candidate fixed-small-threshold
+next_candidate; MIN_SCORE=10; SEED_LIMIT=12; set_weight_bundle sync-heavy; emit_candidate sync-heavy-top12
+next_candidate; MIN_SCORE=8; SEED_LIMIT=8; set_weight_bundle size-heavy; LARGE_THRESHOLD=64; emit_candidate size-heavy-top8
+next_candidate; MIN_SCORE=8; SEED_LIMIT=8; set_weight_bundle flat; REQUIRE_ESCAPE=0; REQUIRE_SYNC=1; LARGE_THRESHOLD=64; MAX_ESTIMATED_BYTES=1024; emit_candidate flat-fixed-aggressive
+next_candidate; MIN_SCORE=7; SEED_LIMIT=3; set_weight_bundle hybrid; REQUIRE_ESCAPE=1; REQUIRE_SYNC=1; LARGE_THRESHOLD=4096; MAX_ESTIMATED_BYTES=1024; emit_candidate hybrid-fixed
 
 scores=(4 5 6 7 8 10 12 13 14)
 seed_limits=(1 2 3 4 6 8 12 16 24)
 gate_choices=(1:1 1:1 1:0 0:1 0:0)
 large_thresholds=(64 96 128 512 4096 16384)
-expansions=(none use use)
-site_caps=(4 6 8 12 16 24 32)
-byte_budgets=(0 0 16384 32768 65536)
-member_caps=(1 2 4 6 8)
-affinities=(1 3 5)
-call_depths=(0 1 2 3)
-load_depths=(0 1 2 3 4)
+byte_budgets=(0 0 1024 16384 32768 65536)
 weight_bundles=(default escape-heavy sync-heavy worker-heavy size-heavy flat hybrid)
 
 while [[ "${RAW_INDEX}" -lt "${RAW_CANDIDATES}" ]]; do
@@ -689,22 +670,8 @@ while [[ "${RAW_INDEX}" -lt "${RAW_CANDIDATES}" ]]; do
   pick_from seed_limits; SEED_LIMIT="${PICKED}"
   pick_from gate_choices; IFS=: read -r REQUIRE_ESCAPE REQUIRE_SYNC <<<"${PICKED}"
   pick_from large_thresholds; LARGE_THRESHOLD="${PICKED}"
-  pick_from expansions; EXPANSION="${PICKED}"
-  pick_from site_caps; MAX_SITES="${PICKED}"
-  if [[ "${MAX_SITES}" -lt "${SEED_LIMIT}" ]]; then MAX_SITES="${SEED_LIMIT}"; fi
-  if [[ "${MAX_SITES}" -gt 32 ]]; then MAX_SITES=32; fi
   pick_from byte_budgets; MAX_ESTIMATED_BYTES="${PICKED}"
-  pick_from member_caps; MAX_MEMBERS="${PICKED}"
-  pick_from affinities; MIN_AFFINITY="${PICKED}"
-  pick_from call_depths; MAX_CALL_DEPTH="${PICKED}"
-  pick_from load_depths; MAX_LOAD_DEPTH="${PICKED}"
   pick_from weight_bundles; bundle="${PICKED}"; set_weight_bundle "${bundle}"
-  if [[ "${EXPANSION}" == none ]]; then
-    MAX_SITES="${SEED_LIMIT}"
-    MAX_MEMBERS=1
-    MAX_CALL_DEPTH=0
-    MAX_LOAD_DEPTH=0
-  fi
   emit_candidate "random-${bundle}"
 done
 

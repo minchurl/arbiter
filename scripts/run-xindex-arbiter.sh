@@ -21,7 +21,7 @@ if [[ "${YCSB_TYPE}" != "a" && ! -f "${DEFAULT_LOAD_PATH}" && -f "${XINDEX_DATA_
 fi
 LOAD_PATH="${YCSB_LOAD_PATH:-${DEFAULT_LOAD_PATH}}"
 TX_PATH="${YCSB_TX_PATH:-${XINDEX_DATA_DIR}/xindex_transaction_ycsb_${YCSB_TYPE}.dat}"
-MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
+MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/latest/lib}"
 HEAP_BACKEND="${ARBITER_HEAP_BACKEND:-direct}"
 
 if [[ -d "${MKL_RUNTIME_DIR}" ]]; then

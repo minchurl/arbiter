@@ -24,7 +24,7 @@ XINDEX_GENERIC_DIR="${XINDEX_GENERIC_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex
 GUPS_BUILD_DIR="${GUPS_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/gups}"
 XINDEX_DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 
-MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/2025.3/lib/intel64}"
+MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/latest/lib}"
 if [[ -d "${MKL_RUNTIME_DIR}" ]]; then
   export LD_LIBRARY_PATH="${MKL_RUNTIME_DIR}${LD_LIBRARY_PATH:+:${LD_LIBRARY_PATH}}"
 fi

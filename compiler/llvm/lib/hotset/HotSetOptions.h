@@ -12,9 +12,6 @@ extern ::llvm::cl::opt<std::string> ReportPath;
 extern ::llvm::cl::opt<unsigned> HITMMinScore;
 extern ::llvm::cl::opt<unsigned> HITMSeedLimit;
 extern ::llvm::cl::opt<std::string> HITMSeedSiteIds;
-extern ::llvm::cl::opt<std::string> Expansion;
-extern ::llvm::cl::opt<unsigned> MaxSites;
-extern ::llvm::cl::opt<bool> IncludeMMap;
 extern ::llvm::cl::opt<unsigned> HITMWeightEscapeReturn;
 extern ::llvm::cl::opt<unsigned> HITMWeightEscapeStore;
 extern ::llvm::cl::opt<unsigned> HITMWeightEscapeCall;
@@ -31,10 +28,6 @@ extern ::llvm::cl::opt<uint64_t> HITMLargeAllocationThreshold;
 extern ::llvm::cl::opt<bool> HITMIncludeDynamicSize;
 extern ::llvm::cl::opt<uint64_t> DynamicSizeEstimate;
 extern ::llvm::cl::opt<uint64_t> MaxEstimatedBytes;
-extern ::llvm::cl::opt<unsigned> MaxMembersPerSeed;
-extern ::llvm::cl::opt<unsigned> MemberMinAffinity;
-extern ::llvm::cl::opt<unsigned> MemberMaxCallDepth;
-extern ::llvm::cl::opt<unsigned> MemberMaxLoadDepth;
 
 } // namespace arbiter::llvm::hotset
 

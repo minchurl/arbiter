@@ -1,7 +1,7 @@
 #include "arbiter/LLVM/HotSet/Passes.h"
 
+#include "HITMRiskScoring.h"
 #include "HotSetOptions.h"
-#include "UseBasedHotSet.h"
 #include "arbiter/LLVM/AllocationSite.h"
 #include "arbiter/LLVM/RewritePlan.h"
 
@@ -40,20 +40,8 @@ HITMSeedPolicy hitmSeedPolicyFromOptions() {
   policy.scoring.weightSize = HITMWeightSize;
   policy.scoring.largeAllocationThreshold = HITMLargeAllocationThreshold;
   policy.scoring.includeDynamicSize = HITMIncludeDynamicSize;
-  return policy;
-}
-
-HotSetPolicy hotSetPolicyFromOptions() {
-  HotSetPolicy policy;
-  policy.expansion = Expansion;
-  policy.maxSites = MaxSites;
-  policy.includeMMap = IncludeMMap;
   policy.dynamicSizeEstimate = DynamicSizeEstimate;
   policy.maxEstimatedBytes = MaxEstimatedBytes;
-  policy.maxMembersPerSeed = MaxMembersPerSeed;
-  policy.memberMinAffinity = MemberMinAffinity;
-  policy.memberMaxCallDepth = MemberMaxCallDepth;
-  policy.memberMaxLoadDepth = MemberMaxLoadDepth;
   return policy;
 }
 
@@ -87,12 +75,10 @@ std::unique_ptr<raw_fd_ostream> openFile(StringRef path,
   return std::make_unique<raw_fd_ostream>(path, error, sys::fs::OF_Text);
 }
 
-void emitReport(raw_ostream &stream, ArrayRef<HotSetSiteDecision> records) {
+void emitReport(raw_ostream &stream, ArrayRef<HITMSeedDecision> records) {
   stream << "site_id,kind,function,file,line,callee,size_expr,"
-            "estimated_bytes,score,role,group_id,selected,reasons,"
-            "member_affinity,member_access_kind,"
-            "member_access_depth\n";
-  for (const HotSetSiteDecision &record : records) {
+            "estimated_bytes,score,role,group_id,selected,reasons\n";
+  for (const HITMSeedDecision &record : records) {
     const AllocationSite &site = *record.site;
     stream << site.id << ',';
     writeCsvValue(stream, kindToString(site.kind));
@@ -106,30 +92,20 @@ void emitReport(raw_ostream &stream, ArrayRef<HotSetSiteDecision> records) {
     writeCsvValue(stream, site.sizeExpr);
     stream << ',' << record.score.estimatedBytes << ','
            << record.score.value << ',';
-    writeCsvValue(stream, hotSetRoleName(record.role));
-    bool selected = record.role != HotSetRole::Rejected;
+    writeCsvValue(stream, record.selected ? "seed" : "rejected");
     stream << ',' << record.groupId << ','
-           << (selected ? "yes" : "no") << ',';
-    writeCsvValue(stream, record.reason);
-    stream << ',' << record.memberAffinity << ',';
-    writeCsvValue(stream, record.memberAccessKind);
-    stream << ',' << record.memberAccessDepth << '\n';
+           << (record.selected ? "yes" : "no") << ',';
+    writeCsvValue(stream, record.score.reasons);
+    stream << '\n';
   }
 }
 
-RewritePlan buildRewritePlan(const HotSetSelection &selection) {
+RewritePlan buildRewritePlan(const HITMSeedSelection &selection) {
   RewritePlan plan;
-  for (const HotSetSiteDecision &record : selection.records) {
-    if (record.role == HotSetRole::Rejected)
+  for (const HITMSeedDecision &record : selection.records) {
+    if (!record.selected)
       continue;
-
-    if (isHeapAllocation(record.site->kind)) {
-      plan.selectHeapAllocation(record.site->id, record.reason);
-      continue;
-    }
-
-    if (isMMapAllocation(record.site->kind))
-      plan.selectMMap(record.site->id, record.reason);
+    plan.selectHeapAllocation(record.site->id, record.score.reasons);
   }
   return plan;
 }
@@ -138,10 +114,8 @@ RewritePlan buildRewritePlan(const HotSetSelection &selection) {
 
 PreservedAnalyses ReportPass::run(Module &module, ModuleAnalysisManager &) {
   std::vector<AllocationSite> sites = collectAllocationSites(module);
-  HITMSeedSelection hitmSeeds =
+  HITMSeedSelection selection =
       selectHITMSeeds(module, sites, hitmSeedPolicyFromOptions());
-  HotSetSelection selection =
-      discoverUseBasedHotSet(module, hitmSeeds, hotSetPolicyFromOptions());
 
   std::error_code error;
   std::unique_ptr<raw_fd_ostream> file = openFile(ReportPath, error);
@@ -158,15 +132,11 @@ PreservedAnalyses ReportPass::run(Module &module, ModuleAnalysisManager &) {
 PreservedAnalyses RewriteExperimentPass::run(Module &module,
                                              ModuleAnalysisManager &) {
   std::vector<AllocationSite> sites = collectAllocationSites(module);
-  HITMSeedSelection hitmSeeds =
+  HITMSeedSelection selection =
       selectHITMSeeds(module, sites, hitmSeedPolicyFromOptions());
-  HotSetSelection selection =
-      discoverUseBasedHotSet(module, hitmSeeds, hotSetPolicyFromOptions());
   RewritePlan plan = buildRewritePlan(selection);
 
-  bool changed = false;
-  changed |= applyMMapRewrites(module, sites, plan);
-  changed |= applyHeapRewrites(module, sites, plan);
+  bool changed = applyHeapRewrites(module, sites, plan);
   return changed ? PreservedAnalyses::none() : PreservedAnalyses::all();
 }
 
