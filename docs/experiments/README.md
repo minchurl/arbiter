@@ -33,3 +33,6 @@ large traces and benchmark binaries must remain outside git.
 - [2026-08-22 XIndex broad sweep v2](artifacts/hotset-broad-sweep-v2-20260822-012131/README.md):
   exact top-level artifacts from the fixed-size screen and its ranking-format
   failure.
+- [2026-10-06 completed XIndex adaptive broad sweep](artifacts/hotset-broad-sweep-v2-rerun-20261006-110924/README.md):
+  131-row completed screen/confirmation/final run, aggregate measurements,
+  finalist configs, safety checks, and homogeneous 180-second results.

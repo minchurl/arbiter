@@ -1,15 +1,70 @@
 # XIndex Full-Trace Broad Hot-Set Sweep Results
 
-This ledger preserves the useful evidence from two preliminary full-trace
-parameter sweeps. Both runs used 100M load records, 400M YCSB A transactions,
-31 foreground workers, one background worker, CPU/local NUMA node 0, CXL NUMA
-node 2, strict fixed-slot arenas, `MemoryMax=64G`, and no swap.
+This ledger preserves the evidence from two preliminary full-trace parameter
+sweeps and the completed adaptive rerun. All runs used 100M load records, 400M
+YCSB A transactions, 31 foreground workers, one background worker, CPU/local
+NUMA node 0, CXL NUMA node 2, strict fixed-slot arenas, `MemoryMax=64G`, and no
+swap.
 
-Neither run reached its planned repeated confirmation phase. The percentages
-below are therefore **15-second, one-pair screening signals**, not stable
-performance claims. The strongest validated long-run result remains the
-20M/80M automatic-k1 experiment described in [Hot-Set Placement Experiment
-Results](hotset-results.md).
+The 2026-10-06 run completed screening, confirmation, and final phases after
+the two earlier controllers exposed bugs during promotion. It is the primary
+result. The August runs remain below because their failure modes motivated the
+fixed-size filter and fail-closed controller checks.
+
+## 2026-10-06: Completed Adaptive Rerun
+
+The rerun used commit `fff0b32`, generated the same 100 deterministic configs,
+and admitted 18 statically unique fixed-size candidates to screening. Thirteen
+runtime-active candidates passed the broad screen and entered two additional
+60-second pairs. Five distinct runtime fingerprints then entered four
+additional 180-second pairs, for seven pairs per finalist across all phases.
+
+The controller completed 131 fresh-process rows in 5 hours 39 minutes:
+
+- final status `complete` and zero controller parse failures;
+- 123 `ok` rows and eight screen rows with no runtime arena activity;
+- zero OOM, timeout, swap, arena fallback, or placement-query error;
+- maximum RSS 34,880,388 KiB (33.26 GiB);
+- maximum CXL-resident arena 20,275,609,600 bytes (18.88 GiB);
+- native anchors 27.9994M, 28.1054M, and 27.4271M op/s, with end versus start
+  drift of -2.04%.
+
+The controller's seven-pair summary mixes 15-, 60-, and 180-second rows. The
+following table therefore reports only the homogeneous four-pair 180-second
+final stage:
+
+| Candidate | Runtime sites | Local | CXL | Mean paired delta | Delta stddev | CXL wins | CXL resident / peak RSS |
+|---|---|---:|---:|---:|---:|---:|---:|
+| `raw-043` | `21+37+68+69+71+74` | 27.656M | 57.345M | +107.68% | 9.05%p | 4/4 | 18.88 GiB / 59.81% |
+| `raw-046` | `68+71+74` | 27.886M | 56.813M | +103.75% | 3.25%p | 4/4 | 17.31 GiB / 57.33% |
+| `raw-021` | `68+69+71+74` | 28.484M | 57.103M | +100.47% | 0.79%p | 4/4 | 18.88 GiB / 59.81% |
+| `raw-013` | `68+69+71` | 28.086M | 55.786M | +98.63% | 1.88%p | 4/4 | 18.88 GiB / 59.81% |
+| `raw-082` | `71` | 28.801M | 44.896M | +55.86% | 11.63%p | 4/4 | 14.16 GiB / 48.12% |
+
+All five finalists won all seven local/CXL pairs when screen and confirmation
+were included. Within each 180-second process, 30-second throughput intervals
+were generally stable; most coefficients of variation were below 0.5%.
+`raw-082` had one lower CXL process, but that process remained steadily lower
+for the full three minutes rather than showing a transient collapse.
+
+The top policies converge on two important runtime allocations:
+
+- site 68: a 96-byte group/hash object in `xindex_group_impl.h`;
+- site 71: a 520-byte leaf allocation in `xindex_buffer_impl.h`.
+
+Site 68 alone retained a roughly +50% signal through three pairs, site 71 alone
+reached +55.86% in the 180-second final stage, and `raw-046` combined sites 68
+and 71 for +103.75%. Site 74 allocated only 143 objects and contributed
+negligible resident volume. Additional site 69 placement increased resident
+memory without improving the absolute CXL throughput beyond the 68+71 policy.
+
+The local finalist means remained close to the 27.844M native-anchor mean, so
+the slab/rewrite path did not create a large local overhead. This strengthens
+the placement signal but does not prove its mechanism. HITM/C2C and latency
+counters were not collected, and the benchmark did not validate `get`/`put`
+return values or a final data checksum. Correctness instrumentation and focused
+long runs of site 68, site 71, and their automatic combination should precede
+another broad parameter search.
 
 ## 2026-08-19: Broad Sweep v1
 
@@ -87,34 +142,29 @@ and the ending native anchor did not run. The driver now emits comma-separated
 rankings, tests the exact formatter in `--check`, and validates every promoted
 candidate before array lookup.
 
-## Interpretation and Next Run
+## Interpretation and Next Validation
 
-The broad screens establish three things only:
+The completed adaptive run confirms that the August signals were not isolated
+15-second outcomes. The next decision is no longer which static threshold to
+search. Multiple policies collapse to the same runtime fingerprints and the
+top absolute CXL throughput plateaus near 56--58M op/s. The highest-value work
+is now validation:
 
-1. Full-trace fixed-size placement is safe under the tested 64G/zero-swap
-   envelope.
-2. Sites 68, 69, and 71 are active at full scale, while the partial-trace
-   sites 97 and 99 are not active in this workload shape.
-3. Moving roughly 10%, 14%, 48%, or 60% of peak RSS is experimentally
-   reachable, and each tier had a large positive 15-second signal worth
-   confirming.
+1. add `get`/`put` success counts and a deterministic final checksum;
+2. compare automatic site-68, site-71, and combined policies in five or more
+   10-minute pairs;
+3. isolate benchmark CPUs from OS/editor activity;
+4. collect HITM/C2C, memory-bandwidth, and p99 latency counters;
+5. require correctness agreement and a confidence-interval floor before
+   exploring new thresholds or probabilistic placement.
 
-They do not establish a +40% to +103% durable gain or prove that reduced HITM
-caused the signal. There is only one pair per policy, rows are short, the host's
-background tasks were not isolated from node 0, and no HITM/C2C or latency
-counters were collected.
-
-The next run should first execute the driver's non-mutating `--check`, then
-repeat representative runtime footprints rather than every static duplicate.
-Site 71 is the priority because its 48% resident/RSS ratio lies inside the
-previously proposed 30--55% migration band. At minimum, confirm `68`, `68+69`,
-`71`, and one aggressive roughly-60% policy with three 60-second pairs before
-promoting finalists to seven 180-second pairs or longer. Keep benchmark CPUs on
-node 0 and isolate OS/editor/Codex activity to node 1 where operationally
-possible. A later mechanism run should add HITM/C2C and p99 latency collection.
+Manual site pins may be useful for mechanism ablation, but the primary
+performance candidates remain the automatic configs. `raw-082` is the clean
+single-site result and `raw-046` is the efficient aggressive result.
 
 ## Archived Evidence
 
 - [V1 top-level artifacts](artifacts/hotset-broad-sweep-20260819-234706/README.md)
 - [V2 top-level artifacts](artifacts/hotset-broad-sweep-v2-20260822-012131/README.md)
+- [Completed adaptive rerun aggregates](artifacts/hotset-broad-sweep-v2-rerun-20261006-110924/README.md)
 - [Next-run plan and commands](hotset-broad-sweep-plan.md)

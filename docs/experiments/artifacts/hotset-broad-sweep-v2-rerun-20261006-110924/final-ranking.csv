@@ -1,0 +1,6 @@
+rank,candidate,mean_paired_delta_pct,runtime_fingerprint
+1,raw-043,106.526,21+37+68+69+71+74
+2,raw-046,106.157,68+71+74
+3,raw-013,102.067,68+69+71
+4,raw-021,102.005,68+69+71+74
+5,raw-082,61.4418,71

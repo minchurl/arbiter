@@ -1,11 +1,11 @@
 # XIndex Full-Trace Broad Hot-Set Sweep
 
-Status: ready for a new unattended run after controller fixes. Two preliminary
-runs on 2026-08-19 and 2026-08-22 reached the screen phase, but neither reached
-confirmation because of controller parsing/CSV bugs. Their useful screen data
-and exact limitations are recorded in
-[Full-Trace Broad Sweep Results](hotset-broad-sweep-results.md). Updating this
-plan and driver did not start another benchmark.
+Status: completed successfully on 2026-10-06 after the controller fixes. The
+run reached screening, confirmation, final, and the ending native anchor with
+131 recorded rows and zero controller parse failures. Results and the retained
+aggregate evidence are recorded in
+[Full-Trace Broad Sweep Results](hotset-broad-sweep-results.md). The remainder
+of this document preserves the reviewed schedule and launch contract.
 
 ## Question and Scope
 

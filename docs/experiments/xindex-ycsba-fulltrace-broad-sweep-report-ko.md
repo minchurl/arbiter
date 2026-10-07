@@ -2,12 +2,36 @@
 
 - 작성일: 2026-09-18
 - 대상 실행: 2026-08-22 broad sweep v2
-- 상태: screening 완료, confirmation/final 미실행
+- 상태: 2026-10-06 재실험에서 screening/confirmation/final 완료
 
 이 문서는 XIndex/YCSB-A benchmark가 실제로 어떻게 실행되고 처리량이
 어떻게 측정되는지, Arbiter local/CXL 비교가 무엇을 뜻하는지, 마지막
 full-trace broad parameter sweep을 어떤 설정으로 계획했으며 실제로 어디까지
 진행됐는지를 한곳에 정리한 공유용 문서다.
+
+## 2026-10-06 재실험 업데이트
+
+이 문서의 본문은 2026-08-22 preliminary screen의 구조와 실패 원인을
+설명한다. 이후 수정된 동일 driver를 commit `fff0b32`에서 다시 실행했고,
+이번에는 131개 fresh process row와 native-end까지 정상 완료했다.
+
+- Controller 최종 상태: `complete`
+- Parsing failure, OOM, swap, timeout, arena fallback, placement error: 0
+- Finalist 다섯 개 모두 local/CXL 7 pair에서 CXL 승리
+- 동일한 180초 final-stage 4 pair 기준:
+  - `raw-046`, runtime `68+71+74`: +103.75%
+  - `raw-021`, runtime `68+69+71+74`: +100.47%
+  - `raw-013`, runtime `68+69+71`: +98.63%
+  - `raw-082`, runtime site `71`: +55.86%
+- Native 평균 27.844M op/s, finalist local 평균 27.66~28.80M op/s
+- 최대 RSS 33.26 GiB, 최대 CXL-resident arena 18.88 GiB
+
+따라서 아래의 “confirmation/final 미실행” 설명은 2026-08-22 실행에만
+해당한다. 최신 해석과 aggregate 원본은
+[영문 결과 원장](hotset-broad-sweep-results.md)과
+[2026-10-06 artifact](artifacts/hotset-broad-sweep-v2-rerun-20261006-110924/README.md)를
+기준으로 한다. 다음 단계는 추가 broad threshold 탐색보다 correctness,
+HITM/C2C, 10분 paired run 검증에 집중하는 것이다.
 
 ## 1. 요약
 
