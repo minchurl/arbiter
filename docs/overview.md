@@ -1,6 +1,7 @@
 # Arbiter Overview
 
-This is the code-reading map for the active Arbiter implementation.
+This is the code-reading map for Arbiter's heuristic-guided HITM-risk seed
+placement implementation.
 
 ## System Flow
 
@@ -9,14 +10,14 @@ XIndex source
   -> clang++ emits LLVM bitcode
   -> AllocationSite assigns deterministic site IDs
   -> HITMRiskScoring scores and selects heap seeds
-  -> HotSetPasses reports decisions and rewrites selected calls
+  -> HITMSeedPasses reports decisions and rewrites selected calls
   -> arbiter_runtime_site dispatches selected allocations
   -> arbiter_slab_arena packs fixed-size objects into NUMA-bound slabs
   -> the same binary runs with its arena on local node 0 or CXL node 2
 ```
 
-Only the arena node changes between `hotset-seed-local` and
-`hotset-seed-target`. The binary, selected sites, allocator implementation,
+Only the arena node changes between `hitm-seed-local` and
+`hitm-seed-target`. The binary, selected sites, allocator implementation,
 workload, and worker count remain fixed.
 
 ## Compiler Code
@@ -26,23 +27,23 @@ mapping calls and assigns site IDs. `RewriteHeapAllocations.cpp` and
 `RewriteMMapAllocations.cpp` implement the common rewrite ABI. The generic
 all-site rewrite is retained for infrastructure checks and GUPS.
 
-The XIndex policy is isolated under `compiler/llvm/lib/hotset/`:
+The XIndex policy is isolated under `compiler/llvm/lib/hitm_seed/`:
 
 - `HITMRiskScoring`: escape/synchronization/worker/size signals, gates,
   deterministic ordering, top-k selection, and byte-budget validation;
-- `HotSetOptions`: command-line policy parameters;
-- `HotSetPasses`: CSV reporting and selected heap-site rewriting.
+- `HITMSeedOptions`: command-line policy parameters;
+- `HITMSeedPasses`: CSV reporting and selected heap-site rewriting.
 
 The plugin exposes four active pipelines:
 
 ```text
 arbiter-report-sites
 arbiter-experiment-all-rewrite
-arbiter-report-hotset-sites
-arbiter-experiment-hotset-rewrite
+arbiter-report-hitm-seed-sites
+arbiter-experiment-hitm-seed-rewrite
 ```
 
-The hot-set report schema is:
+The HITM-risk seed decision report schema is:
 
 ```text
 site_id,kind,function,file,line,callee,size_expr,estimated_bytes,
@@ -73,18 +74,20 @@ direct backend when a site's shape changes or capacity is exhausted.
 
 - `scripts/build-xindex-llvm.sh` builds native and seed-rewritten XIndex;
 - `scripts/run-xindex-arbiter.sh` executes one native/local/remote process;
-- `scripts/run-protected-hotset-experiment.sh` builds, launches fresh
+- `scripts/run-protected-hitm-seed-experiment.sh` builds, launches fresh
   processes, enforces memory limits, validates arena placement, and writes CSVs;
-- `scripts/run-xindex-hotset-replay.sh` fixes the validated `raw-046` full-scale
-  conditions and records a machine manifest.
+- `scripts/run-xindex-hitm-seed-replay.sh` fixes the validated `raw-046` full-scale
+  conditions and records a machine manifest;
+- `scripts/summarize-xindex-hitm-seed-result.sh` turns one result directory into
+  a readable policy, throughput, active-site, placement, and safety report.
 
-The canonical config is `configs/hotset/candidates/raw-046.config`. Eleven
+The canonical config is `configs/hitm-seed/candidates/raw-046.config`. Eleven
 other safe measured policies remain for sensitivity studies.
 
 ## Measurement Contract
 
-`native` measures the unmodified binary. `hotset-seed-local` and
-`hotset-seed-target` use the same rewritten binary and strict arena, bound to
+`native` measures the unmodified binary. `hitm-seed-local` and
+`hitm-seed-target` use the same rewritten binary and strict arena, bound to
 the local and CXL nodes respectively. Therefore:
 
 ```text
@@ -103,10 +106,11 @@ not clear anonymous memory or CPU caches.
 
 The active repository no longer builds the unused MLIR prototype,
 shared-mutable heuristic, lock-touch migration, or broad search controllers.
-Their parameter configs and measured results remain checked in for reanalysis
-and for adapting the policy space to another benchmark. Removed implementation
-code remains recoverable from git history. This keeps the executable path
-focused on the seed-only result without discarding experimental evidence.
+Historical methods are separated under `docs/history/`. Reusable search inputs
+and reportable measurements remain checked in under `configs/` and `results/`;
+failed raw runs and removed implementation code remain recoverable from Git
+history. This keeps the executable path focused on the seed-only result without
+discarding the evidence behind the current claim.
 
 The measured throughput gain does not by itself prove reduced HITM. A causal
 claim still requires correctness checks, HITM/C2C counters, memory-bandwidth

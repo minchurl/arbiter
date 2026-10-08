@@ -8,10 +8,9 @@ cmake-build-*/
 *.dylib
 *.so
 *.ll
-!tests/llvm/hotset-report.ll
-!tests/llvm/hotset-rewrite.ll
-!tests/llvm/hotset-config.ll
-!tests/llvm/hotset-affinity.ll
+!tests/llvm/hitm-seed-report.ll
+!tests/llvm/hitm-seed-rewrite.ll
+!tests/llvm/hitm-seed-config.ll
 *.bc
 *.mlir.tmp
 .DS_Store

@@ -73,6 +73,35 @@ printf "smoke: report sites\n"
   -disable-output \
   "${tmpdir}/smoke.bc"
 
+printf "smoke: report HITM-risk seeds\n"
+"${OPT}" -load-pass-plugin "${PLUGIN}" \
+  -passes=arbiter-report-hitm-seed-sites \
+  -arbiter-hitm-seed-report-path="${tmpdir}/hitm-seed-sites.csv" \
+  -arbiter-hitm-require-escape=0 \
+  -arbiter-hitm-require-sync=0 \
+  -arbiter-hitm-min-score=0 \
+  -arbiter-hitm-seed-limit=1 \
+  -disable-output \
+  "${tmpdir}/smoke.bc"
+
+grep -q ',seed,.*yes,' "${tmpdir}/hitm-seed-sites.csv"
+
+printf "smoke: rewrite HITM-risk seed allocations\n"
+"${OPT}" -load-pass-plugin "${PLUGIN}" \
+  -passes=arbiter-experiment-hitm-seed-rewrite \
+  -arbiter-hitm-seed-report-path="${tmpdir}/hitm-seed-rewrite.csv" \
+  -arbiter-hitm-require-escape=0 \
+  -arbiter-hitm-require-sync=0 \
+  -arbiter-hitm-min-score=0 \
+  -arbiter-hitm-seed-limit=1 \
+  "${tmpdir}/smoke.bc" \
+  -o "${tmpdir}/smoke.hitm-seed.bc"
+
+"${LLVM_DIS}" "${tmpdir}/smoke.hitm-seed.bc" \
+  -o "${tmpdir}/smoke.hitm-seed.ll"
+
+grep -q "arbiter_alloc_site" "${tmpdir}/smoke.hitm-seed.ll"
+
 printf "smoke: rewrite allocations\n"
 "${OPT}" -load-pass-plugin "${PLUGIN}" \
   -passes=arbiter-experiment-all-rewrite \

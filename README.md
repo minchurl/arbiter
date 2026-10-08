@@ -1,8 +1,8 @@
 # Arbiter
 
-Arbiter is an LLVM-assisted allocator for placing coherence-sensitive XIndex
-objects on local or CXL-attached NUMA memory. The current implementation is a
-single seed-only pipeline:
+Arbiter implements **heuristic-guided HITM-risk seed placement** for
+coherence-sensitive XIndex objects on local or CXL-attached NUMA memory. The
+current implementation is a single seed-only pipeline:
 
 ```text
 XIndex C++ -> LLVM IR -> HITM-risk seed selection -> allocation rewrite
@@ -16,20 +16,22 @@ not migrate existing objects.
 
 ## Repository Map
 
-- `compiler/llvm/lib/hotset/`: seed scoring, options, report, and rewrite
+- `compiler/llvm/lib/hitm_seed/`: seed scoring, options, report, and rewrite
 - `runtime/src/arbiter_slab_arena.cpp`: NUMA-bound slab allocator
 - `runtime/src/arbiter_runtime_site.cpp`: rewritten allocation ABI
-- `configs/hotset/candidates/`: curated top 12 measured seed policies
-- `scripts/run-xindex-hotset-replay.sh`: canonical full-scale reproduction
-- `scripts/run-protected-hotset-experiment.sh`: lower-level experiment driver
+- `configs/hitm-seed/candidates/`: curated top 12 measured seed policies
+- `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale reproduction
+- `scripts/run-protected-hitm-seed-experiment.sh`: lower-level experiment driver
 - `docs/overview.md`: architecture and code-reading guide
-- `docs/hotset-migration.md`: policy and runtime reference
-- `docs/experiments/xindex-hotset.md`: setup, method, and retained results
+- `docs/hitm-risk-seed-placement.md`: policy and runtime reference
+- `docs/results/`: current XIndex/YCSB results and claim boundaries
+- `results/xindex/`: retained machine-readable evidence
 
 Generic allocation rewriting and the GUPS smoke path remain as infrastructure.
 The unused MLIR, shared-mutable, lock-touch, and broad-search executables were
-removed from the active tree. Historical configs and experiment results are
-preserved so they can be reanalysed or adapted to another benchmark.
+removed from the active tree. Historical methods are separated under
+`docs/history/`; reusable search inputs and reportable measurements remain
+checked in under `configs/` and `results/`.
 
 ## Requirements
 
@@ -78,42 +80,63 @@ cmake --build build-llvm18 --target \
 First verify the machine and full traces without starting a benchmark:
 
 ```sh
-ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh --check
+ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
-Then start the four-pair confirmation in tmux:
+Run one full-trace local/CXL pair for a roughly 10-minute regression check:
 
 ```sh
-tmux new-session -d -s arbiter-hotset -c "$(pwd)" \
-  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh \
-   > build/arbiter-bench/xindex-hotset-replay.console.log 2>&1'
-tmux attach -t arbiter-hotset
+ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --quick
+```
+
+`--quick` changes only the repeat count from four to one. It still uses the
+100M/400M traces and measures each placement for 180 seconds. For the stronger
+four-pair confirmation (roughly 35 minutes on the validated machine), start
+the default command in tmux:
+
+```sh
+tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
+  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh \
+   > build/arbiter-bench/xindex-hitm-seed-replay.console.log 2>&1'
+tmux attach -t arbiter-hitm-seed
 ```
 
 The wrapper uses `raw-046`, 100M load records, the 400M-operation YCSB-A
 trace, 31 foreground plus one background worker, four alternating 180-second
 local/CXL pairs, 30-second throughput samples, strict 24GiB arenas,
-`MemoryMax=64G`, and no swap. Override `REPEATS=1` for the shorter regression
-shape used after the seed-only cleanup.
+`MemoryMax=64G`, and no swap.
 
 Results are written to a unique timestamped directory under
-`build/arbiter-bench/`. Inspect `summary.md`, `runs.csv`,
-`throughput-samples.csv`, `hotset-sites.csv`, and `replay-manifest.txt`.
+`build/arbiter-bench/`. Each completed run now writes `interpretation.md`,
+which reports paired throughput, all statically selected sites, sites that
+actually allocated objects, CXL resident bytes, NUMA placement, fallbacks,
+swaps, and row status. To interpret the newest replay or a specific result:
+
+```sh
+./scripts/summarize-xindex-hitm-seed-result.sh
+./scripts/summarize-xindex-hitm-seed-result.sh \
+  build/arbiter-bench/xindex-hitm-seed-replay-YYYYMMDD-HHMMSS
+```
+
+The canonical `raw-046` selection is automatic: sites
+`68+71+74+90+97+98+99+100` are rewritten, while only `68+71+74` allocate in
+the current YCSB-A trace. The report keeps this static-selection/runtime-use
+distinction explicit; no site ID is pinned in the config.
 
 The retained four-pair result for `raw-046` was 27.886M local versus 56.813M
 CXL op/s, a mean paired improvement of +103.75%. A later one-pair seed-only
-replay measured +104.33%. See [the experiment report](docs/experiments/xindex-hotset.md)
+replay measured +104.33%. See [the YCSB-A result](docs/results/xindex-ycsb-a.md)
 for safety counters and claim limits.
 
 ## Build Another Retained Policy
 
 ```sh
-ARBITER_HOTSET_CONFIG=configs/hotset/candidates/raw-082.config \
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/candidates/raw-082.config \
   ./scripts/build-xindex-llvm.sh
 ```
 
 The 12 retained policies and their measured runtime fingerprints are listed in
-[the config index](configs/hotset/README.md). `raw-046.config` is the default.
+[the config index](configs/hitm-seed/README.md). `raw-046.config` is the default.
 
 ## Tests
 
@@ -129,6 +152,6 @@ ARBITER_HEAP_BACKEND=arena ARBITER_TARGET_NODE=0 \
 ## Documentation
 
 - [Architecture and code map](docs/overview.md)
-- [Seed selection and allocator reference](docs/hotset-migration.md)
-- [XIndex experiment and results](docs/experiments/xindex-hotset.md)
+- [Seed selection and allocator reference](docs/hitm-risk-seed-placement.md)
+- [Validated XIndex results](docs/results/README.md)
 - [Benchmark data management](docs/benchmark-data.md)

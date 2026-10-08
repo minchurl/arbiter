@@ -1,0 +1,108 @@
+#include "HITMSeedOptions.h"
+
+using namespace llvm;
+
+namespace arbiter::llvm::hitm_seed {
+
+cl::opt<std::string> ReportPath(
+    "arbiter-hitm-seed-report-path",
+    cl::desc("Path for Arbiter LLVM HITM-risk seed reports; '-' means stdout"),
+    cl::init("-"));
+
+cl::opt<unsigned> HITMMinScore(
+    "arbiter-hitm-min-score",
+    cl::desc("Minimum point score required for automatic HITM-risk seeds"),
+    cl::init(6));
+
+cl::opt<unsigned> HITMSeedLimit(
+    "arbiter-hitm-seed-limit",
+    cl::desc("Maximum number of automatic HITM-risk seeds"), cl::init(3));
+
+cl::opt<std::string> HITMSeedSiteIds(
+    "arbiter-hitm-seed-site-ids",
+    cl::desc("Comma-separated explicit HITM seed site IDs; overrides scored "
+             "seeds"),
+    cl::init(""));
+
+cl::opt<unsigned> HITMWeightEscapeReturn(
+    "arbiter-hitm-weight-escape-return",
+    cl::desc("Point weight for an allocation escaping through return"),
+    cl::init(3));
+
+cl::opt<unsigned> HITMWeightEscapeStore(
+    "arbiter-hitm-weight-escape-store",
+    cl::desc("Point weight for storing an allocation-derived pointer"),
+    cl::init(3));
+
+cl::opt<unsigned> HITMWeightEscapeCall(
+    "arbiter-hitm-weight-escape-call",
+    cl::desc("Point weight for passing an allocation to a non-ignored call"),
+    cl::init(2));
+
+cl::opt<unsigned> HITMWeightSyncAtomic(
+    "arbiter-hitm-weight-sync-atomic",
+    cl::desc("Point weight for same-function atomic RMW or cmpxchg"),
+    cl::init(3));
+
+cl::opt<unsigned> HITMWeightSyncStore(
+    "arbiter-hitm-weight-sync-store",
+    cl::desc("Point weight for same-function atomic or volatile stores"),
+    cl::init(2));
+
+cl::opt<unsigned> HITMWeightSyncInlineAsm(
+    "arbiter-hitm-weight-sync-inline-asm",
+    cl::desc("Point weight for same-function lock/cmpxchg inline assembly"),
+    cl::init(2));
+
+cl::opt<unsigned> HITMWeightSyncFile(
+    "arbiter-hitm-weight-sync-file",
+    cl::desc("Point weight for synchronization mutation in the same debug file"),
+    cl::init(1));
+
+cl::opt<unsigned> HITMWeightWorkerEntry(
+    "arbiter-hitm-weight-worker-entry",
+    cl::desc("Point weight for allocations in a pthread worker entry"),
+    cl::init(3));
+
+cl::opt<unsigned> HITMWeightWorkerReachable(
+    "arbiter-hitm-weight-worker-reachable",
+    cl::desc("Point weight for allocations reachable from a pthread worker"),
+    cl::init(2));
+
+cl::opt<unsigned> HITMWeightSize(
+    "arbiter-hitm-weight-size",
+    cl::desc("Point weight for configured large or dynamic allocation sizes"),
+    cl::init(1));
+
+cl::opt<bool> HITMRequireEscape(
+    "arbiter-hitm-require-escape",
+    cl::desc("Require an escape signal for automatic seed selection"),
+    cl::init(true));
+
+cl::opt<bool> HITMRequireSync(
+    "arbiter-hitm-require-sync",
+    cl::desc("Require a sync/mutable signal for automatic seed selection"),
+    cl::init(true));
+
+cl::opt<uint64_t> HITMLargeAllocationThreshold(
+    "arbiter-hitm-large-allocation-threshold",
+    cl::desc("Bytes required for the large-allocation score; zero disables it"),
+    cl::init(4096));
+
+cl::opt<bool> HITMIncludeDynamicSize(
+    "arbiter-hitm-include-dynamic-size",
+    cl::desc("Award the size score to dynamically sized allocations"),
+    cl::init(true));
+
+cl::opt<uint64_t> DynamicSizeEstimate(
+    "arbiter-hitm-seed-dynamic-size-estimate",
+    cl::desc("Estimated bytes charged to a dynamically sized selected site"),
+    cl::init(4096));
+
+cl::opt<uint64_t> MaxEstimatedBytes(
+    "arbiter-hitm-seed-max-estimated-bytes",
+    cl::desc("Maximum estimated bytes across selected HITM-risk seeds; zero "
+             "is unlimited"),
+    cl::init(0));
+
+} // namespace arbiter::llvm::hitm_seed
