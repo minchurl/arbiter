@@ -1,6 +1,7 @@
 # Arbiter Overview
 
-This is the code-reading map for the active Arbiter implementation.
+This is the code-reading map for Arbiter's heuristic-guided HITM-risk seed
+placement implementation.
 
 ## System Flow
 
@@ -42,7 +43,7 @@ arbiter-report-hotset-sites
 arbiter-experiment-hotset-rewrite
 ```
 
-The hot-set report schema is:
+The HITM-risk seed decision report schema is:
 
 ```text
 site_id,kind,function,file,line,callee,size_expr,estimated_bytes,
@@ -103,10 +104,11 @@ not clear anonymous memory or CPU caches.
 
 The active repository no longer builds the unused MLIR prototype,
 shared-mutable heuristic, lock-touch migration, or broad search controllers.
-Their parameter configs and measured results remain checked in for reanalysis
-and for adapting the policy space to another benchmark. Removed implementation
-code remains recoverable from git history. This keeps the executable path
-focused on the seed-only result without discarding experimental evidence.
+Historical methods are separated under `docs/history/`. Reusable search inputs
+and reportable measurements remain checked in under `configs/` and `results/`;
+failed raw runs and removed implementation code remain recoverable from Git
+history. This keeps the executable path focused on the seed-only result without
+discarding the evidence behind the current claim.
 
 The measured throughput gain does not by itself prove reduced HITM. A causal
 claim still requires correctness checks, HITM/C2C counters, memory-bandwidth

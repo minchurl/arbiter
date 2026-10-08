@@ -1,8 +1,8 @@
 # Arbiter
 
-Arbiter is an LLVM-assisted allocator for placing coherence-sensitive XIndex
-objects on local or CXL-attached NUMA memory. The current implementation is a
-single seed-only pipeline:
+Arbiter implements **heuristic-guided HITM-risk seed placement** for
+coherence-sensitive XIndex objects on local or CXL-attached NUMA memory. The
+current implementation is a single seed-only pipeline:
 
 ```text
 XIndex C++ -> LLVM IR -> HITM-risk seed selection -> allocation rewrite
@@ -23,13 +23,15 @@ not migrate existing objects.
 - `scripts/run-xindex-hotset-replay.sh`: canonical full-scale reproduction
 - `scripts/run-protected-hotset-experiment.sh`: lower-level experiment driver
 - `docs/overview.md`: architecture and code-reading guide
-- `docs/hotset-migration.md`: policy and runtime reference
-- `docs/experiments/xindex-hotset.md`: setup, method, and retained results
+- `docs/hitm-risk-seed-placement.md`: policy and runtime reference
+- `docs/results/`: current XIndex/YCSB results and claim boundaries
+- `results/xindex/`: retained machine-readable evidence
 
 Generic allocation rewriting and the GUPS smoke path remain as infrastructure.
 The unused MLIR, shared-mutable, lock-touch, and broad-search executables were
-removed from the active tree. Historical configs and experiment results are
-preserved so they can be reanalysed or adapted to another benchmark.
+removed from the active tree. Historical methods are separated under
+`docs/history/`; reusable search inputs and reportable measurements remain
+checked in under `configs/` and `results/`.
 
 ## Requirements
 
@@ -102,7 +104,7 @@ Results are written to a unique timestamped directory under
 
 The retained four-pair result for `raw-046` was 27.886M local versus 56.813M
 CXL op/s, a mean paired improvement of +103.75%. A later one-pair seed-only
-replay measured +104.33%. See [the experiment report](docs/experiments/xindex-hotset.md)
+replay measured +104.33%. See [the YCSB-A result](docs/results/xindex-ycsb-a.md)
 for safety counters and claim limits.
 
 ## Build Another Retained Policy
@@ -129,6 +131,6 @@ ARBITER_HEAP_BACKEND=arena ARBITER_TARGET_NODE=0 \
 ## Documentation
 
 - [Architecture and code map](docs/overview.md)
-- [Seed selection and allocator reference](docs/hotset-migration.md)
-- [XIndex experiment and results](docs/experiments/xindex-hotset.md)
+- [Seed selection and allocator reference](docs/hitm-risk-seed-placement.md)
+- [Validated XIndex results](docs/results/README.md)
 - [Benchmark data management](docs/benchmark-data.md)

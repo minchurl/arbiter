@@ -1,4 +1,4 @@
-# Retained XIndex Hot-Set Configs
+# Retained XIndex HITM-Risk Seed Configs
 
 `candidates/` is a curated view of the 12 safe, runtime-active policies that retained the
 strongest signals in the completed full-scale sweep and still produce the same
@@ -23,11 +23,12 @@ resident memory than the larger policies.
 
 These values combine one 15-second screening pair and two 60-second
 confirmation pairs. The five finalists also have homogeneous four-pair,
-180-second results in [the experiment report](../../docs/experiments/xindex-hotset.md).
+180-second results in [the YCSB-A result](../../docs/results/xindex-ycsb-a.md).
 Config names are historical identifiers, not manually pinned site IDs; every
 file leaves `ARBITER_HITM_SEED_SITE_IDS` empty.
 
-The older named configs in this directory and every generated sweep config in
-`docs/experiments/artifacts/` are intentionally preserved. They are historical
-inputs and may not satisfy the current seed-only expected-count checks without
-review; `candidates/` is the validated starting point for current runs.
+The exact 100-input parameter space used by the broad YCSB-A and YCSB-B sweeps
+is retained under `search-spaces/xindex-broad-100/`. Those inputs contain
+historical no-op keys and are intended for search reproduction, not as
+validated single-policy defaults. `candidates/` is the starting point for
+current runs.

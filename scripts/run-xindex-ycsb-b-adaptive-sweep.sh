@@ -43,7 +43,7 @@ EOF
   *) echo "usage: $0 --check | --run" >&2; exit 2 ;;
 esac
 
-CONFIG_DIR="${HOTSET_CONFIG_DIR:-${ROOT_DIR}/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs}"
+CONFIG_DIR="${HOTSET_CONFIG_DIR:-${ROOT_DIR}/configs/hotset/search-spaces/xindex-broad-100}"
 TOP_CONFIRM="${HOTSET_TOP_CONFIRM:-10}"
 TOP_FINAL="${HOTSET_TOP_FINAL:-3}"
 CONFIRM_EXTRA_PAIRS="${HOTSET_CONFIRM_EXTRA_PAIRS:-2}"
