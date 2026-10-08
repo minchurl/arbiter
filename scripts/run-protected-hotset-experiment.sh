@@ -382,7 +382,17 @@ run_one() {
   local tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_${workload}.dat"
   local log="${RESULT_DIR}/logs/xindex_${workload}_${config}_r${repeat}.log"
   local time_log="${RESULT_DIR}/logs/xindex_${workload}_${config}_r${repeat}.time"
-  local -a env_args=(
+  local -a env_args
+  local rc time_sec throughput max_rss wall_time swaps status
+  local allocator allocation_node arena_allocations arena_peak_live
+  local arena_assigned_bytes arena_fallbacks arena_report_node
+  local arena_resident_bytes arena_majority_node arena_query_error_pages
+
+  if [[ "${workload}" != "a" && ! -f "${load_path}" ]]; then
+    load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_a.dat"
+  fi
+
+  env_args=(
     "YCSB_TYPE=${workload}"
     "XINDEX_FG=${XINDEX_FG}"
     "XINDEX_ITERATION=${XINDEX_ITERATION}"
@@ -393,15 +403,6 @@ run_one() {
     "LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}"
     "XINDEX_BG=${XINDEX_BG}"
   )
-  local rc time_sec throughput max_rss wall_time swaps status
-  local allocator allocation_node arena_allocations arena_peak_live
-  local arena_assigned_bytes arena_fallbacks arena_report_node
-  local arena_resident_bytes arena_majority_node arena_query_error_pages
-
-  if [[ "${workload}" != "a" && ! -f "${load_path}" ]]; then
-    load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_a.dat"
-    env_args[4]="YCSB_LOAD_PATH=${load_path}"
-  fi
 
   if [[ "${mode}" == "native" ]]; then
     env_args+=("NATIVE_XINDEX_BIN=${binary}")

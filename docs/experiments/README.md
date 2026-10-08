@@ -12,6 +12,10 @@ large traces and benchmark binaries must remain outside git.
 - [Current XIndex hot-set method and retained results](xindex-hotset.md):
   concise entry point, canonical `raw-046` replay, top-12 policy index, and
   claim boundaries.
+- [XIndex/YCSB-B adaptive hot-set sweep](xindex-ycsb-b-adaptive-sweep.md):
+  rebuild all 100 archived parameter configs with the seed-only compiler,
+  screen static-unique policies on B, and retain the completed read-heavy
+  workload result and its claim boundary.
 - [Generic Placement Experiment Results](generic-placement-results.md)
 - [Hot-Set Placement Experiment Results](hotset-results.md)
 - [XIndex Automatic Hot-Set Sweep and Overnight Plan](hotset-auto-sweep-plan.md)

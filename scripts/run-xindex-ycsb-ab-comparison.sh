@@ -12,7 +12,8 @@ usage: scripts/run-xindex-ycsb-ab-comparison.sh [--check]
 Compares full-trace XIndex/YCSB-A and YCSB-B with the same native binary,
 the same seed-rewritten binary, and the same hot-set policy. Each round runs
 native, seed-local, and seed-target rows for both workloads. Workload and
-placement order alternate between rounds.
+placement order alternate between rounds. By default, each row consumes its
+400M-operation transaction trace exactly once and exits.
 
 Use --check to validate the machine, traces, config, disk headroom, and tools
 without building or starting a benchmark.
@@ -21,6 +22,10 @@ Common overrides:
   ARBITER_HOTSET_CONFIG  policy config, default raw-046
   ARBITER_TARGET_NODE    CXL NUMA node, default 2
   ROUNDS                 balanced A/B rounds, default 4
+  XINDEX_ITERATION       full-trace passes per row, default 1
+  XINDEX_DURATION_SECONDS
+                         default 0 (iteration mode); positive values repeat
+                         each worker's trace partition for that many seconds
   RESULT_DIR             unique parent result directory
   BUILD_BENCHMARKS       rebuild once before round 1, default 1
   RUN_NATIVE             include native rows, default 1
@@ -37,8 +42,9 @@ TARGET_NODE="${ARBITER_TARGET_NODE:-2}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
 MEM_NODE="${ARBITER_MEM_NODE:-0}"
 ROUNDS="${ROUNDS:-4}"
-DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-180}"
-SAMPLE_SECONDS="${XINDEX_THROUGHPUT_SAMPLE_SECONDS:-30}"
+ITERATIONS="${XINDEX_ITERATION:-1}"
+DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-0}"
+SAMPLE_SECONDS="${XINDEX_THROUGHPUT_SAMPLE_SECONDS:-0}"
 RUN_NATIVE_VALUE="${RUN_NATIVE:-1}"
 REBUILD="${BUILD_BENCHMARKS:-1}"
 MIN_FREE_GIB="${MIN_FREE_GIB:-8}"
@@ -76,6 +82,15 @@ require_positive_integer() {
   fi
 }
 
+require_nonnegative_integer() {
+  local name="$1"
+  local value="$2"
+  if [[ ! "${value}" =~ ^[0-9]+$ ]]; then
+    echo "${name} must be a non-negative integer: ${value}" >&2
+    exit 1
+  fi
+}
+
 resolve_tool() {
   local candidate
   for candidate in "$@"; do
@@ -108,8 +123,11 @@ for command in awk basename cat cp date df git head ln lscpu numactl pgrep sed \
   require_command "${command}"
 done
 
-for value_name in ROUNDS DURATION_SECONDS SAMPLE_SECONDS MIN_FREE_GIB; do
+for value_name in ROUNDS ITERATIONS MIN_FREE_GIB; do
   require_positive_integer "${value_name}" "${!value_name}"
+done
+for value_name in DURATION_SECONDS SAMPLE_SECONDS; do
+  require_nonnegative_integer "${value_name}" "${!value_name}"
 done
 for value_name in RUN_NATIVE_VALUE REBUILD; do
   value="${!value_name}"
@@ -224,7 +242,14 @@ if [[ -f "${MANIFEST_PATH}" ]]; then
 fi
 ROWS_PER_ROUND=$((2 * (2 + RUN_NATIVE_VALUE)))
 TOTAL_ROWS=$((ROUNDS * ROWS_PER_ROUND))
-MEASURED_SECONDS=$((TOTAL_ROWS * DURATION_SECONDS))
+if [[ "${DURATION_SECONDS}" -eq 0 ]]; then
+  EXECUTION_MODE="one full transaction trace per row"
+  PLANNED_OPERATIONS=$((TOTAL_ROWS * ITERATIONS * 400000000))
+  PLANNED_WORK="${PLANNED_OPERATIONS} transaction operations"
+else
+  EXECUTION_MODE="fixed-duration trace replay"
+  PLANNED_WORK="$((TOTAL_ROWS * DURATION_SECONDS)) measured seconds"
+fi
 
 cat <<EOF
 XIndex/YCSB A/B comparison settings:
@@ -233,8 +258,10 @@ XIndex/YCSB A/B comparison settings:
   trace bytes A-load/A/B:  ${LOAD_BYTES} / ${TX_A_BYTES} / ${TX_B_BYTES}
   expected B SHA-256:      ${EXPECTED_B_SHA:-not recorded}
   rounds / total rows:     ${ROUNDS} / ${TOTAL_ROWS}
-  duration / sample:       ${DURATION_SECONDS}s / ${SAMPLE_SECONDS}s
-  measured time total:     ${MEASURED_SECONDS}s
+  execution mode:          ${EXECUTION_MODE}
+  iteration / duration:    ${ITERATIONS} / ${DURATION_SECONDS}s
+  throughput sample:       ${SAMPLE_SECONDS}s (duration mode only)
+  planned measured work:   ${PLANNED_WORK}
   workers:                 31 foreground + 1 background
   CPU / local / CXL:       ${CPU_NODE} / ${MEM_NODE} / ${TARGET_NODE}
   target node CPUs:        ${TARGET_CPUS:-none}
@@ -285,6 +312,7 @@ ln -s "${TX_B_PATH}" "${RUN_DATA_DIR}/xindex_transaction_ycsb_b.dat"
   echo "expected_b_sha256=${EXPECTED_B_SHA}"
   echo "rounds=${ROUNDS}"
   echo "total_rows=${TOTAL_ROWS}"
+  echo "iteration=${ITERATIONS}"
   echo "duration_seconds=${DURATION_SECONDS}"
   echo "sample_seconds=${SAMPLE_SECONDS}"
   echo "foreground_threads=31"
@@ -327,6 +355,7 @@ for round in $(seq 1 "${ROUNDS}"); do
     XINDEX_SCALE_DATA_DIR="${RUN_DATA_DIR}" \
     XINDEX_SCALE_LOAD_RECORDS=100000000 \
     XINDEX_SCALE_TX_OPS=400000000 \
+    XINDEX_ITERATION="${ITERATIONS}" \
     XINDEX_DURATION_SECONDS="${DURATION_SECONDS}" \
     XINDEX_THROUGHPUT_SAMPLE_SECONDS="${SAMPLE_SECONDS}" \
     XINDEX_FG=31 \
@@ -447,7 +476,13 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo "- Workloads: A (50% read, 50% update); B (95% read, 5% update)"
   echo "- Rows per workload: native/local/CXL x ${ROUNDS}"
   echo "- Workers: 31 foreground + 1 background"
-  echo "- Timed interval: ${DURATION_SECONDS}s; throughput sample: ${SAMPLE_SECONDS}s"
+  if [[ "${DURATION_SECONDS}" -eq 0 ]]; then
+    echo "- Execution: consume the 400M-operation transaction trace ${ITERATIONS} time(s) per row"
+    echo "- Throughput: completed transaction operations divided by measured transaction time"
+  else
+    echo "- Execution: repeat trace partitions for ${DURATION_SECONDS}s per row"
+    echo "- Throughput sample: every ${SAMPLE_SECONDS}s"
+  fi
   echo "- CPU/local/CXL nodes: ${CPU_NODE}/${MEM_NODE}/${TARGET_NODE}"
   echo "- Memory protection: MemoryMax=64G, MemorySwapMax=0"
   echo "- Ordering: workload and local/CXL order reverse on even rounds"

@@ -1,0 +1,1248 @@
+[build] common native binary
+[build] raw-001 design=auto-k1-fixed
+[build] raw-002 design=auto-k2-fixed
+[build] raw-003 design=auto-k3-fixed
+[build] raw-004 design=auto-k6-fixed
+[build] raw-005 design=broad-default
+[build] raw-006 design=broad-top8
+[build] raw-007 design=broad-top12-noexp
+[build] raw-008 design=permissive-deep
+[build] raw-009 design=strict-fixed
+[build] raw-010 design=fixed-small-threshold
+[build] raw-011 design=high-affinity
+[build] raw-012 design=deep-expansion
+[build] raw-013 design=flat-fixed-aggressive
+[build] raw-014 design=hybrid-fixed-expansion
+[build] raw-015 design=random-size-heavy
+[build] raw-016 design=random-hybrid
+[build] raw-017 design=random-escape-heavy
+[build] raw-018 design=random-size-heavy
+[build] raw-019 design=random-size-heavy
+[build] raw-020 design=random-flat
+[build] raw-021 design=random-default
+[build] raw-022 design=random-sync-heavy
+[build] raw-023 design=random-hybrid
+[build] raw-024 design=random-default
+[build] raw-025 design=random-hybrid
+[build] raw-026 design=random-hybrid
+[build] raw-027 design=random-size-heavy
+[build] raw-028 design=random-default
+[build] raw-029 design=random-hybrid
+[build] raw-030 design=random-escape-heavy
+[build] raw-031 design=random-worker-heavy
+[build] raw-032 design=random-size-heavy
+[build] raw-033 design=random-flat
+[build] raw-034 design=random-default
+[build] raw-035 design=random-worker-heavy
+[build] raw-036 design=random-escape-heavy
+[build] raw-037 design=random-hybrid
+[build] raw-038 design=random-hybrid
+[build] raw-039 design=random-size-heavy
+[build] raw-040 design=random-hybrid
+[build] raw-041 design=random-worker-heavy
+[build] raw-042 design=random-worker-heavy
+[build] raw-043 design=random-size-heavy
+[build] raw-044 design=random-size-heavy
+[build] raw-045 design=random-worker-heavy
+[build] raw-046 design=random-size-heavy
+[build] raw-047 design=random-sync-heavy
+[build] raw-048 design=random-flat
+[build] raw-049 design=random-worker-heavy
+[build] raw-050 design=random-escape-heavy
+[build] raw-051 design=random-escape-heavy
+[build] raw-052 design=random-hybrid
+[build] raw-053 design=random-hybrid
+[build] raw-054 design=random-sync-heavy
+[build] raw-055 design=random-flat
+[build] raw-056 design=random-hybrid
+[build] raw-057 design=random-default
+[build] raw-058 design=random-worker-heavy
+[build] raw-059 design=random-escape-heavy
+[build] raw-060 design=random-default
+[build] raw-061 design=random-hybrid
+[build] raw-062 design=random-flat
+[build] raw-063 design=random-escape-heavy
+[build] raw-064 design=random-sync-heavy
+[build] raw-065 design=random-hybrid
+[build] raw-066 design=random-size-heavy
+[build] raw-067 design=random-sync-heavy
+[build] raw-068 design=random-size-heavy
+[build] raw-069 design=random-worker-heavy
+[build] raw-070 design=random-sync-heavy
+[build] raw-071 design=random-default
+[build] raw-072 design=random-sync-heavy
+[build] raw-073 design=random-sync-heavy
+[build] raw-074 design=random-escape-heavy
+[build] raw-075 design=random-hybrid
+[build] raw-076 design=random-escape-heavy
+[build] raw-077 design=random-escape-heavy
+[build] raw-078 design=random-escape-heavy
+[build] raw-079 design=random-hybrid
+[build] raw-080 design=random-sync-heavy
+[build] raw-081 design=random-size-heavy
+[build] raw-082 design=random-size-heavy
+[build] raw-083 design=random-size-heavy
+[build] raw-084 design=random-size-heavy
+[build] raw-085 design=random-sync-heavy
+[build] raw-086 design=random-flat
+[build] raw-087 design=random-worker-heavy
+[build] raw-088 design=random-flat
+[build] raw-089 design=random-hybrid
+[build] raw-090 design=random-size-heavy
+[build] raw-091 design=random-sync-heavy
+[build] raw-092 design=random-worker-heavy
+[build] raw-093 design=random-flat
+[build] raw-094 design=random-escape-heavy
+[build] raw-095 design=random-escape-heavy
+[build] raw-096 design=random-sync-heavy
+[build] raw-097 design=random-worker-heavy
+[build] raw-098 design=random-worker-heavy
+[build] raw-099 design=random-sync-heavy
+[build] raw-100 design=random-flat
+[build-done] selected=21 duplicate=62 unsafe=12 failed=1
+[phase] B screen: 21 static-unique config(s)
+[row 1] phase=screen candidate=raw-001 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-001.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/001-screen-raw-001-b-r01-local
+Running scope as unit: run-rd2710a068ed44ece90b3632099565f39.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.86982e+07 runtime_sites=none exit=1
+[row 2] phase=screen candidate=raw-001 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-001.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/002-screen-raw-001-b-r01-cxl
+Running scope as unit: run-r9df6db187b33479cb0e72af3794168cb.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=1.00582e+08 runtime_sites=none exit=1
+[row 3] phase=screen candidate=raw-002 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-002.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/003-screen-raw-002-b-r01-cxl
+Running scope as unit: run-r9e0a0ae613984263bfc9766266ec2eea.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.94257e+07 runtime_sites=none exit=1
+[row 4] phase=screen candidate=raw-002 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-002.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/004-screen-raw-002-b-r01-local
+Running scope as unit: run-r0b237af1c8f04b4d876d295dfe0db40e.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.86673e+07 runtime_sites=none exit=1
+[row 5] phase=screen candidate=raw-003 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-003.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local
+Running scope as unit: run-rfc51ad2f341d45d59de366858f16f40e.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.06306 throughput=9.84481e+07 max_rss_kb=33440544
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/005-screen-raw-003-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.84481e+07 runtime_sites=68 exit=0
+[row 6] phase=screen candidate=raw-003 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-003.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl
+Running scope as unit: run-rd98c92d0b1f44c4c86998159e2c95b9d.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.27129 throughput=7.58827e+07 max_rss_kb=33440552
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/006-screen-raw-003-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.58827e+07 runtime_sites=68 exit=0
+[row 7] phase=screen candidate=raw-004 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-004.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl
+Running scope as unit: run-r0b0159af2b064b85854ed6069865f9e9.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.68597 throughput=7.03486e+07 max_rss_kb=33440012
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/007-screen-raw-004-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.03486e+07 runtime_sites=68 exit=0
+[row 8] phase=screen candidate=raw-004 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-004.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local
+Running scope as unit: run-r15a346a8de5b4a5c94f4e2e0d9f816f8.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=3.65621 throughput=1.09403e+08 max_rss_kb=33440484
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/008-screen-raw-004-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=1.09403e+08 runtime_sites=68 exit=0
+[row 9] phase=screen candidate=raw-006 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-006.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local
+Running scope as unit: run-rc709579fe6f74dccbdb6f0bf84c1045c.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.10543 throughput=9.74319e+07 max_rss_kb=33103020
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/009-screen-raw-006-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.74319e+07 runtime_sites=68+69+71 exit=0
+[row 10] phase=screen candidate=raw-006 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-006.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl
+Running scope as unit: run-rbe233c87b3b3475db712c98c8495f450.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=6.66744 throughput=5.9993e+07 max_rss_kb=33102700
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/010-screen-raw-006-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=5.9993e+07 runtime_sites=68+69+71 exit=0
+[row 11] phase=screen candidate=raw-009 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-009.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl
+Running scope as unit: run-r1066a900c4774389a657093f4d7e0d08.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.22473 throughput=7.6559e+07 max_rss_kb=34879776
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/011-screen-raw-009-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.6559e+07 runtime_sites=68+69 exit=0
+[row 12] phase=screen candidate=raw-009 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-009.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local
+Running scope as unit: run-rd99c82d706514c198e9e9cb95e011aa6.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.06365 throughput=9.84336e+07 max_rss_kb=34880320
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/012-screen-raw-009-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.84336e+07 runtime_sites=68+69 exit=0
+[row 13] phase=screen candidate=raw-014 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-014.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/013-screen-raw-014-b-r01-local
+Running scope as unit: run-r0d7d53832af24f4da1345f55dbe2781c.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.98144e+07 runtime_sites=none exit=1
+[row 14] phase=screen candidate=raw-014 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-014.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/014-screen-raw-014-b-r01-cxl
+Running scope as unit: run-r512f83f4267c4ec3b0c57925135c13cf.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=1.00392e+08 runtime_sites=none exit=1
+[row 15] phase=screen candidate=raw-018 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-018.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl
+Running scope as unit: run-r9ff6cb27b7a544d78457379bc1f6a387.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=6.96796 throughput=5.74056e+07 max_rss_kb=31663100
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/015-screen-raw-018-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=5.74056e+07 runtime_sites=68+71+74 exit=0
+[row 16] phase=screen candidate=raw-018 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-018.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local
+Running scope as unit: run-r383f6006751441358be7bd5ed21e6027.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.12075 throughput=9.70696e+07 max_rss_kb=31663044
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/016-screen-raw-018-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.70696e+07 runtime_sites=68+71+74 exit=0
+[row 17] phase=screen candidate=raw-019 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-019.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local
+Running scope as unit: run-r410cc0dda39c4e81a2777fde31dc69fc.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.05567 throughput=9.86272e+07 max_rss_kb=30865172
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/017-screen-raw-019-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.86272e+07 runtime_sites=71+74 exit=0
+[row 18] phase=screen candidate=raw-019 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-019.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl
+Running scope as unit: run-radf622837b0b476296354affe43bb734.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.69504 throughput=7.02365e+07 max_rss_kb=30865064
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/018-screen-raw-019-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.02365e+07 runtime_sites=71+74 exit=0
+[row 19] phase=screen candidate=raw-021 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-021.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl
+Running scope as unit: run-r913199ce162f4223828894d262fd2f88.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=6.9734 throughput=5.73608e+07 max_rss_kb=33103072
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/019-screen-raw-021-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=5.73608e+07 runtime_sites=68+69+71+74 exit=0
+[row 20] phase=screen candidate=raw-021 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-021.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local
+Running scope as unit: run-r691d1bd552834f4ea94cd67b0c61a38a.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.03914 throughput=9.9031e+07 max_rss_kb=33102632
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/020-screen-raw-021-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.9031e+07 runtime_sites=68+69+71+74 exit=0
+[row 21] phase=screen candidate=raw-030 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-030.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local
+Running scope as unit: run-ra93b6d2e2ec64df58716488218c26b86.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.04658 throughput=9.88488e+07 max_rss_kb=34879888
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/021-screen-raw-030-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.88488e+07 runtime_sites=21+68+69 exit=0
+[row 22] phase=screen candidate=raw-030 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-030.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl
+Running scope as unit: run-r41f85a0d8aed4c30adf4435a2083a976.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.26684 throughput=7.59469e+07 max_rss_kb=34880312
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/022-screen-raw-030-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.59469e+07 runtime_sites=21+68+69 exit=0
+[row 23] phase=screen candidate=raw-031 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-031.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/023-screen-raw-031-b-r01-cxl
+Running scope as unit: run-r03cadb3feb464de2b3c8fd5729da5a9e.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.92202e+07 runtime_sites=none exit=1
+[row 24] phase=screen candidate=raw-031 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-031.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/024-screen-raw-031-b-r01-local
+Running scope as unit: run-r4ea865e5d9e7460a905a4f8800377696.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.81091e+07 runtime_sites=none exit=1
+[row 25] phase=screen candidate=raw-036 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-036.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local
+Running scope as unit: run-r57815cb1d57f4c99914974e5a5a67055.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.04742 throughput=9.88285e+07 max_rss_kb=33440592
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/025-screen-raw-036-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.88285e+07 runtime_sites=68 exit=0
+[row 26] phase=screen candidate=raw-036 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-036.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl
+Running scope as unit: run-r72ef00c0e9454b80af25ce564347c2c4.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.49196 throughput=7.28337e+07 max_rss_kb=33440284
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/026-screen-raw-036-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.28337e+07 runtime_sites=68 exit=0
+[row 27] phase=screen candidate=raw-039 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-039.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl
+Running scope as unit: run-r7aba2de2b6ee418b91bb2904e6a6f6bd.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=6.60993 throughput=6.0515e+07 max_rss_kb=31662244
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/027-screen-raw-039-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=6.0515e+07 runtime_sites=68+71+74 exit=0
+[row 28] phase=screen candidate=raw-039 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-039.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local
+Running scope as unit: run-rc4162c1ea69b4cb6806ebe7a00d01760.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=3.61317 throughput=1.10706e+08 max_rss_kb=31663064
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/028-screen-raw-039-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=1.10706e+08 runtime_sites=68+71+74 exit=0
+[row 29] phase=screen candidate=raw-041 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-041.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/029-screen-raw-041-b-r01-local
+Running scope as unit: run-r2d5ca55fad4244d193d4780f5ef804c4.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.99884e+07 runtime_sites=none exit=1
+[row 30] phase=screen candidate=raw-041 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-041.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/030-screen-raw-041-b-r01-cxl
+Running scope as unit: run-rae3182da00df438896f21402eea49443.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.96954e+07 runtime_sites=none exit=1
+[row 31] phase=screen candidate=raw-043 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-043.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl
+Running scope as unit: run-r58c70b54fc4a4b6badd784a3e0ddefbc.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=7.00839 throughput=5.70745e+07 max_rss_kb=33103012
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/031-screen-raw-043-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=5.70745e+07 runtime_sites=21+37+68+69+71+74 exit=0
+[row 32] phase=screen candidate=raw-043 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-043.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local
+Running scope as unit: run-r58210aad3e484dac8aeee6215c34cb7b.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.01 throughput=9.97507e+07 max_rss_kb=33102316
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/032-screen-raw-043-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.97507e+07 runtime_sites=21+37+68+69+71+74 exit=0
+[row 33] phase=screen candidate=raw-047 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-047.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local
+Running scope as unit: run-r02e08f8a19284f62bd7fd94eca259702.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.04711 throughput=9.88359e+07 max_rss_kb=34879780
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/033-screen-raw-047-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.88359e+07 runtime_sites=68+69 exit=0
+[row 34] phase=screen candidate=raw-047 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-047.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl
+Running scope as unit: run-raa9371bee89e4f9cb5377c3eca13dd69.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.28848 throughput=7.5636e+07 max_rss_kb=34880148
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/034-screen-raw-047-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.5636e+07 runtime_sites=68+69 exit=0
+[row 35] phase=screen candidate=raw-063 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-063.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/035-screen-raw-063-b-r01-cxl
+Running scope as unit: run-r8a6df437d09440d4a59a62dc3f98ecf3.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[fail] workload=b config=hotset-seed-target status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=1.00373e+08 runtime_sites=none exit=1
+[row 36] phase=screen candidate=raw-063 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-063.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/036-screen-raw-063-b-r01-local
+Running scope as unit: run-ra008aa9be2ef469299cf91a8b8571c9d.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[fail] workload=b config=hotset-seed-local status=arena-report-missing
+FAIL_FAST=1: stopping after the first failed run
+[row-done] status=arena-report-missing throughput=9.9364e+07 runtime_sites=none exit=1
+[row 37] phase=screen candidate=raw-081 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-081.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local
+Running scope as unit: run-rf292722599e948c991eec02b2bf1a1c4.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.09793 throughput=9.76103e+07 max_rss_kb=30865192
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/037-screen-raw-081-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.76103e+07 runtime_sites=71+74 exit=0
+[row 38] phase=screen candidate=raw-081 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-081.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl
+Running scope as unit: run-r8fb7d0930c1d4ec3ad5cee804ddd32fa.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.66296 throughput=7.06345e+07 max_rss_kb=30865176
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/038-screen-raw-081-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.06345e+07 runtime_sites=71+74 exit=0
+[row 39] phase=screen candidate=raw-082 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-082.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl
+Running scope as unit: run-r5f4fcb1bd4c541ec94fa4e4688a909cc.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.66438 throughput=7.06168e+07 max_rss_kb=30865128
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/039-screen-raw-082-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.06168e+07 runtime_sites=71 exit=0
+[row 40] phase=screen candidate=raw-082 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-082.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local
+Running scope as unit: run-r5a6bd2958f6a466ca13a5bbf48f0c76d.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.00555 throughput=9.98613e+07 max_rss_kb=30865100
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/040-screen-raw-082-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.98613e+07 runtime_sites=71 exit=0
+[row 41] phase=screen candidate=raw-091 workload=b replicate=1 mode=local
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-091.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local
+Running scope as unit: run-r843c411c4312443bb7f55ade6ffdeb54.scope
+[run] workload=b config=hotset-seed-local repeat=1
+[done] workload=b config=hotset-seed-local time=4.06162 throughput=9.84828e+07 max_rss_kb=33440412
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/041-screen-raw-091-b-r01-local/hotset-effective.opt-args
+[row-done] status=ok throughput=9.84828e+07 runtime_sites=68 exit=0
+[row 42] phase=screen candidate=raw-091 workload=b replicate=1 mode=cxl
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/docs/experiments/artifacts/hotset-broad-sweep-v2-20260822-012131/configs/raw-091.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl
+Running scope as unit: run-r9b187bdb107640d98a268379deeae475.scope
+[run] workload=b config=hotset-seed-target repeat=1
+[done] workload=b config=hotset-seed-target time=5.02568 throughput=7.95912e+07 max_rss_kb=33440488
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/042-screen-raw-091-b-r01-cxl/hotset-effective.opt-args
+[row-done] status=ok throughput=7.95912e+07 runtime_sites=68 exit=0
+[phase] B confirmation: 0 candidate(s)
+[phase] A/B final: 0 candidate(s)
+[row 43] phase=final-native candidate=native workload=a replicate=1 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native
+Running scope as unit: run-r4bac5a6ddec442539861a0070e962660.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=15.2276 throughput=2.6268e+07 max_rss_kb=32641988
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/043-final-native-native-a-r01-native/hotset-effective.opt-args
+[row-done] status=ok throughput=2.6268e+07 runtime_sites=native exit=0
+[row 44] phase=final-native candidate=native workload=b replicate=1 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native
+Running scope as unit: run-r8aafa2565abf4aa19c9a489fdef8cd5b.scope
+[run] workload=b config=native repeat=1
+[done] workload=b config=native time=3.98443 throughput=1.00391e+08 max_rss_kb=32642000
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/044-final-native-native-b-r01-native/hotset-effective.opt-args
+[row-done] status=ok throughput=1.00391e+08 runtime_sites=native exit=0
+[row 45] phase=final-native candidate=native workload=b replicate=2 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native
+Running scope as unit: run-r7deecab38bae47e5bf239f434ac33159.scope
+[run] workload=b config=native repeat=1
+[done] workload=b config=native time=3.99356 throughput=1.00161e+08 max_rss_kb=32641968
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/045-final-native-native-b-r02-native/hotset-effective.opt-args
+[row-done] status=ok throughput=1.00161e+08 runtime_sites=native exit=0
+[row 46] phase=final-native candidate=native workload=a replicate=2 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native
+Running scope as unit: run-r4aa58899d88f4cd0aa90e0af3416da71.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=15.089 throughput=2.65095e+07 max_rss_kb=32641636
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/046-final-native-native-a-r02-native/hotset-effective.opt-args
+[row-done] status=ok throughput=2.65095e+07 runtime_sites=native exit=0
+[row 47] phase=final-native candidate=native workload=a replicate=3 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native
+Running scope as unit: run-r57260e23457e43e7a2db571df8c7f4f8.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=15.3791 throughput=2.60093e+07 max_rss_kb=32642036
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/047-final-native-native-a-r03-native/hotset-effective.opt-args
+[row-done] status=ok throughput=2.60093e+07 runtime_sites=native exit=0
+[row 48] phase=final-native candidate=native workload=b replicate=3 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native
+Running scope as unit: run-r916c3a049670477da28680e1cf3a7b74.scope
+[run] workload=b config=native repeat=1
+[done] workload=b config=native time=4.12261 throughput=9.7026e+07 max_rss_kb=32641964
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/048-final-native-native-b-r03-native/hotset-effective.opt-args
+[row-done] status=ok throughput=9.7026e+07 runtime_sites=native exit=0
+[row 49] phase=final-native candidate=native workload=b replicate=4 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native
+Running scope as unit: run-r9e18994f40a14138baed3478661cac97.scope
+[run] workload=b config=native repeat=1
+[done] workload=b config=native time=4.03767 throughput=9.90672e+07 max_rss_kb=32642068
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/049-final-native-native-b-r04-native/hotset-effective.opt-args
+[row-done] status=ok throughput=9.90672e+07 runtime_sites=native exit=0
+[row 50] phase=final-native candidate=native workload=a replicate=4 mode=native
+Starting protected hot-set scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hotset/candidates/raw-046.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native
+Running scope as unit: run-r62bef7a020ad43e39cd2139bd0358484.scope
+[run] workload=a config=native repeat=1
+[done] workload=a config=native time=15.3761 throughput=2.60144e+07 max_rss_kb=32642060
+
+Hot-set experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/hotset-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/hotset-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548/rows/050-final-native-native-a-r04-native/hotset-effective.opt-args
+[row-done] status=ok throughput=2.60144e+07 runtime_sites=native exit=0
+[complete] status=complete result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-b-sweep-20261008-085548
