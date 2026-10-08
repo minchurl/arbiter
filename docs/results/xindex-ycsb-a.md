@@ -28,8 +28,8 @@ startup, and teardown.
 ## Comparison and Controls
 
 The experiment compares the same seed-rewritten binary in two modes. In
-`hotset-seed-local`, selected allocations use an arena bound to node 0. In
-`hotset-seed-target`, that arena is bound to CXL node 2. XIndex's other memory
+`hitm-seed-local`, selected allocations use an arena bound to node 0. In
+`hitm-seed-target`, that arena is bound to CXL node 2. XIndex's other memory
 and all benchmark CPUs remain on node 0.
 
 | Control | Value |
@@ -56,7 +56,7 @@ should reserve one housekeeping CPU and keep all unrelated processes there.
 The curated current set keeps 12 policies that were safe, won all three
 screening/confirmation pairs, and reproduce their static seed fingerprints
 with the seed-only compiler. Their exact parameters and three-pair rankings
-are in [`configs/hotset/README.md`](../../configs/hotset/README.md). All other
+are in [`configs/hitm-seed/README.md`](../../configs/hitm-seed/README.md). All other
 historical configs and raw results remain checked in alongside this shortlist.
 
 Five candidates received a homogeneous final stage of four local/CXL pairs at
@@ -104,15 +104,15 @@ Validate the machine, traces, NUMA nodes, CPU count, and config without
 building or running:
 
 ```sh
-ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh --check
+ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
 Run the four-pair experiment directly or under tmux:
 
 ```sh
-tmux new-session -d -s arbiter-hotset -c "$(pwd)" \
-  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh \
-   > build/arbiter-bench/xindex-hotset-replay.console.log 2>&1'
+tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
+  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh \
+   > build/arbiter-bench/xindex-hitm-seed-replay.console.log 2>&1'
 ```
 
 Use `REPEATS=1` for a shorter regression check. The wrapper rebuilds by
@@ -122,7 +122,7 @@ local `.tools` fallback, refuses to overwrite an existing result, and rejects
 a concurrently running `ycsb_bench` unless explicitly overridden.
 
 Inspect `summary.md`, `runs.csv`, `throughput-samples.csv`,
-`hotset-sites.csv`, and `replay-manifest.txt` in the timestamped result
+`hitm-seed-sites.csv`, and `replay-manifest.txt` in the timestamped result
 directory. The retained checked-in evidence is under
 [`results/xindex/ycsb-a/`](../../results/xindex/ycsb-a/README.md).
 

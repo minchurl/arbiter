@@ -29,9 +29,9 @@ Default schedule:
   controller budget:      8 hours (admission only; running rows finish)
 
 Useful overrides:
-  HOTSET_TOP_CONFIRM      default 10
-  HOTSET_TOP_FINAL        default 3
-  HOTSET_CONFIG_DIR       directory containing raw-*.config
+  HITM_SEED_TOP_CONFIRM      default 10
+  HITM_SEED_TOP_FINAL        default 3
+  HITM_SEED_CONFIG_DIR       directory containing raw-*.config
   OVERNIGHT_MAX_WALL_SECONDS
                           default 28800 (8 hours)
   RESULT_DIR              unique result directory
@@ -43,15 +43,15 @@ EOF
   *) echo "usage: $0 --check | --run" >&2; exit 2 ;;
 esac
 
-CONFIG_DIR="${HOTSET_CONFIG_DIR:-${ROOT_DIR}/configs/hotset/search-spaces/xindex-broad-100}"
-TOP_CONFIRM="${HOTSET_TOP_CONFIRM:-10}"
-TOP_FINAL="${HOTSET_TOP_FINAL:-3}"
-CONFIRM_EXTRA_PAIRS="${HOTSET_CONFIRM_EXTRA_PAIRS:-2}"
-FINAL_ROUNDS="${HOTSET_FINAL_ROUNDS:-4}"
-SCREEN_MIN_DELTA_PCT="${HOTSET_SCREEN_MIN_DELTA_PCT:--15}"
-CONFIRM_MIN_DELTA_PCT="${HOTSET_CONFIRM_MIN_DELTA_PCT:--10}"
-MAX_CONFIRM_PER_RUNTIME_FP="${HOTSET_MAX_CONFIRM_PER_RUNTIME_FINGERPRINT:-2}"
-MAX_FINAL_PER_RUNTIME_FP="${HOTSET_MAX_FINAL_PER_RUNTIME_FINGERPRINT:-1}"
+CONFIG_DIR="${HITM_SEED_CONFIG_DIR:-${ROOT_DIR}/configs/hitm-seed/search-spaces/xindex-broad-100}"
+TOP_CONFIRM="${HITM_SEED_TOP_CONFIRM:-10}"
+TOP_FINAL="${HITM_SEED_TOP_FINAL:-3}"
+CONFIRM_EXTRA_PAIRS="${HITM_SEED_CONFIRM_EXTRA_PAIRS:-2}"
+FINAL_ROUNDS="${HITM_SEED_FINAL_ROUNDS:-4}"
+SCREEN_MIN_DELTA_PCT="${HITM_SEED_SCREEN_MIN_DELTA_PCT:--15}"
+CONFIRM_MIN_DELTA_PCT="${HITM_SEED_CONFIRM_MIN_DELTA_PCT:--10}"
+MAX_CONFIRM_PER_RUNTIME_FP="${HITM_SEED_MAX_CONFIRM_PER_RUNTIME_FINGERPRINT:-2}"
+MAX_FINAL_PER_RUNTIME_FP="${HITM_SEED_MAX_FINAL_PER_RUNTIME_FINGERPRINT:-1}"
 MAX_WALL_SECONDS="${OVERNIGHT_MAX_WALL_SECONDS:-28800}"
 ROW_ADMISSION_BUDGET_SECONDS="${XINDEX_ROW_ADMISSION_BUDGET_SECONDS:-90}"
 FINALIZE_RESERVE_SECONDS="${FINALIZE_RESERVE_SECONDS:-300}"
@@ -102,7 +102,7 @@ MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-}"
 MKL_LINK_DIR="${MKL_LINK_DIR:-}"
 MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-}"
 
-RUN_ID="${HOTSET_RUN_ID:-$(date +%Y%m%d-%H%M%S)}"
+RUN_ID="${HITM_SEED_RUN_ID:-$(date +%Y%m%d-%H%M%S)}"
 RESULT_DIR="${RESULT_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-ycsb-b-sweep-${RUN_ID}}"
 
 require_positive_integer() {
@@ -148,7 +148,7 @@ require_number SCREEN_MIN_DELTA_PCT "${SCREEN_MIN_DELTA_PCT}"
 require_number CONFIRM_MIN_DELTA_PCT "${CONFIRM_MIN_DELTA_PCT}"
 
 if [[ "${TOP_FINAL}" -gt "${TOP_CONFIRM}" ]]; then
-  echo "HOTSET_TOP_FINAL cannot exceed HOTSET_TOP_CONFIRM" >&2
+  echo "HITM_SEED_TOP_FINAL cannot exceed HITM_SEED_TOP_CONFIRM" >&2
   exit 1
 fi
 if [[ "${MEMORY_MAX}" != 64G || "${MEMORY_SWAP_MAX}" != 0 ]]; then
@@ -170,7 +170,7 @@ done
 
 for path in "${CLANGXX}" "${OPT}" "${PLUGIN}" "${RUNTIME_LIB}" \
   "${ROOT_DIR}/scripts/build-xindex-llvm.sh" \
-  "${ROOT_DIR}/scripts/run-protected-hotset-experiment.sh"; do
+  "${ROOT_DIR}/scripts/run-protected-hitm-seed-experiment.sh"; do
   if [[ ! -s "${path}" ]]; then
     echo "missing required build artifact: ${path}" >&2
     exit 1
@@ -355,15 +355,15 @@ NATIVE_BUILD_LOG="${RESULT_DIR}/build-logs/native.log"
 echo "[build] common native binary"
 env "${build_env[@]}" \
   ARBITER_BENCH_BUILD_DIR="${NATIVE_BUILD_DIR}" \
-  ARBITER_HOTSET_CONFIG="${ROOT_DIR}/configs/hotset/candidates/raw-046.config" \
+  ARBITER_HITM_SEED_CONFIG="${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config" \
   ARBITER_BUILD_XINDEX_NATIVE=1 \
   "${ROOT_DIR}/scripts/build-xindex-llvm.sh" >"${NATIVE_BUILD_LOG}" 2>&1
 if [[ ! -x "${NATIVE_BUILD_DIR}/ycsb_bench-native" ]]; then
   echo "native build failed; see ${NATIVE_BUILD_LOG}" >&2
   exit 1
 fi
-cp "${ROOT_DIR}/configs/hotset/candidates/raw-046.config" \
-  "${NATIVE_BUILD_DIR}/hotset-build.config"
+cp "${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config" \
+  "${NATIVE_BUILD_DIR}/hitm-seed-build.config"
 
 declare -A SEEN_STATIC=()
 BUILD_FAILURES=0
@@ -380,19 +380,19 @@ for config in "${CONFIG_PATHS[@]}"; do
   set +e
   env "${build_env[@]}" \
     ARBITER_BENCH_BUILD_DIR="${build_dir}" \
-    ARBITER_HOTSET_CONFIG="${config}" \
+    ARBITER_HITM_SEED_CONFIG="${config}" \
     ARBITER_BUILD_XINDEX_NATIVE=0 \
     "${ROOT_DIR}/scripts/build-xindex-llvm.sh" >"${build_log}" 2>&1
   build_rc=$?
   set -e
-  report="${build_dir}/ycsb_bench.hotset-sites.csv"
+  report="${build_dir}/ycsb_bench.hitm-seed-sites.csv"
   if [[ "${build_rc}" -ne 0 || ! -x "${build_dir}/ycsb_bench-arbiter" || ! -s "${report}" ]]; then
     printf '%s,%s,build-failed:%s,,,,%s,%s\n' "${candidate}" "${design}" "${build_rc}" "${build_dir}" "${build_log}" >>"${BUILDS_CSV}"
     BUILD_FAILURES=$((BUILD_FAILURES + 1))
     continue
   fi
   cp "${NATIVE_BUILD_DIR}/ycsb_bench-native" "${build_dir}/ycsb_bench-native"
-  cp "${config}" "${build_dir}/hotset-build.config"
+  cp "${config}" "${build_dir}/hitm-seed-build.config"
   nonconstant="$(awk -F, 'NR > 1 && $12 == "yes" && $7 !~ /^[0-9]+$/ {print $1}' "${report}" | sort -n -u | paste -sd+ -)"
   static_fp="$(awk -F, 'NR > 1 && $12 == "yes" {print $1}' "${report}" | sort -n -u | paste -sd+ -)"
   selected_sites="$(awk -F, 'NR > 1 && $12 == "yes" {n++} END {print n+0}' "${report}")"
@@ -474,7 +474,7 @@ run_row() {
   local config build_dir static_fp run_native=0 run_local=0 run_target=0
   local row_dir driver_rc runs_count log runtime_fp
   if [[ "${candidate}" == native ]]; then
-    config="${ROOT_DIR}/configs/hotset/candidates/raw-046.config"
+    config="${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config"
     build_dir="${NATIVE_BUILD_DIR}"
     static_fp=native
   else
@@ -493,7 +493,7 @@ run_row() {
   echo "[row ${ROW_SEQUENCE}] phase=${phase} candidate=${candidate} workload=${workload} replicate=${replicate} mode=${requested_mode}"
   set +e
   env \
-    RESULT_DIR="${row_dir}" HOTSET_BUILD_DIR="${build_dir}" \
+    RESULT_DIR="${row_dir}" HITM_SEED_BUILD_DIR="${build_dir}" \
     XINDEX_SCALE_DATA_DIR="${DATA_DIR}" \
     XINDEX_SCALE_LOAD_RECORDS=100000000 XINDEX_SCALE_TX_OPS=400000000 \
     XINDEX_ITERATION=1 XINDEX_DURATION_SECONDS=0 \
@@ -501,7 +501,7 @@ run_row() {
     XINDEX_FG="${XINDEX_FG}" XINDEX_BG="${XINDEX_BG}" \
     YCSB_TYPES="${workload}" REPEATS=1 \
     ARBITER_CPU_NODE="${CPU_NODE}" ARBITER_MEM_NODE="${MEM_NODE}" \
-    ARBITER_TARGET_NODE="${TARGET_NODE}" ARBITER_HOTSET_CONFIG="${config}" \
+    ARBITER_TARGET_NODE="${TARGET_NODE}" ARBITER_HITM_SEED_CONFIG="${config}" \
     ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_SLAB_BYTES="${ARENA_SLAB_BYTES}" \
     ARBITER_ARENA_RESERVE_BYTES="${ARENA_RESERVE_BYTES}" \
     ARBITER_ARENA_SLOT_ALIGNMENT="${ARENA_SLOT_ALIGNMENT}" \
@@ -513,7 +513,7 @@ run_row() {
     USE_SYSTEMD_SCOPE=1 MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR}" \
     MKL_LINK_DIR="${MKL_LINK_DIR}" MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR}" \
     LD_LIBRARY_PATH="${MKL_RUNTIME_DIR}" \
-    "${ROOT_DIR}/scripts/run-protected-hotset-experiment.sh"
+    "${ROOT_DIR}/scripts/run-protected-hitm-seed-experiment.sh"
   driver_rc=$?
   set -e
 

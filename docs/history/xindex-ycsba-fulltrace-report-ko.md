@@ -537,11 +537,11 @@ selection에는 영향을 주지 않는다.
 
 정확한 config 원본:
 
-- [`raw-021.config`](../../configs/hotset/search-spaces/xindex-broad-100/raw-021.config)
-- [`raw-013.config`](../../configs/hotset/search-spaces/xindex-broad-100/raw-013.config)
-- [`raw-043.config`](../../configs/hotset/search-spaces/xindex-broad-100/raw-043.config)
-- [`raw-046.config`](../../configs/hotset/search-spaces/xindex-broad-100/raw-046.config)
-- [`raw-039.config`](../../configs/hotset/search-spaces/xindex-broad-100/raw-039.config)
+- [`raw-021.config`](../../configs/hitm-seed/search-spaces/xindex-broad-100/raw-021.config)
+- [`raw-013.config`](../../configs/hitm-seed/search-spaces/xindex-broad-100/raw-013.config)
+- [`raw-043.config`](../../configs/hitm-seed/search-spaces/xindex-broad-100/raw-043.config)
+- [`raw-046.config`](../../configs/hitm-seed/search-spaces/xindex-broad-100/raw-046.config)
+- [`raw-039.config`](../../configs/hitm-seed/search-spaces/xindex-broad-100/raw-039.config)
 
 ## 12. 이전 full-scale short run과의 비교
 
@@ -623,6 +623,6 @@ weight 기반이라 공격적 후보 중 설명이 쉽다.
 
 - [Broad sweep 영문 결과 원장](xindex-broad-sweep-results.md)
 - [Broad sweep 계획과 실행 명령](hotset-broad-sweep-plan.md)
-- [100개 config 원본](../../configs/hotset/search-spaces/xindex-broad-100/README.md)
+- [100개 config 원본](../../configs/hitm-seed/search-spaces/xindex-broad-100/README.md)
 - [완료된 rerun 결과](../../results/xindex/ycsb-a/fulltrace-sweep-20261006/README.md)
 - [HITM-risk seed compiler/runtime 설계](../hitm-risk-seed-placement.md)

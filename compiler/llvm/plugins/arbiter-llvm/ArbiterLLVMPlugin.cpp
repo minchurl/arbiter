@@ -1,5 +1,5 @@
 #include "arbiter/LLVM/Passes.h"
-#include "arbiter/LLVM/HotSet/Passes.h"
+#include "arbiter/LLVM/HITMSeed/Passes.h"
 
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
@@ -18,12 +18,12 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::AllRewriteExperimentPass());
     return true;
   }
-  if (name == "arbiter-report-hotset-sites") {
-    manager.addPass(arbiter::llvm::hotset::ReportPass());
+  if (name == "arbiter-report-hitm-seed-sites") {
+    manager.addPass(arbiter::llvm::hitm_seed::ReportPass());
     return true;
   }
-  if (name == "arbiter-experiment-hotset-rewrite") {
-    manager.addPass(arbiter::llvm::hotset::RewriteExperimentPass());
+  if (name == "arbiter-experiment-hitm-seed-rewrite") {
+    manager.addPass(arbiter::llvm::hitm_seed::RewriteExperimentPass());
     return true;
   }
   return false;

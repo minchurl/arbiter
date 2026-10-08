@@ -3,7 +3,7 @@
 > Historical result ledger: archived configs retain the member-expansion fields
 > used by the original search. The active compiler is seed-only. The strongest
 > seed-only finalist, `raw-046`, is reproduced by
-> `configs/hotset/xindex-cxl-arena-seed-size-heavy.config`.
+> `configs/hitm-seed/xindex-cxl-arena-seed-size-heavy.config`.
 
 This ledger preserves the evidence from two preliminary full-trace parameter
 sweeps and the completed adaptive rerun. All runs used 100M load records, 400M
@@ -188,5 +188,5 @@ single-site result and `raw-046` is the efficient aggressive result.
   tree and remain recoverable from Git history.
 - [Completed adaptive rerun aggregates](../../results/xindex/ycsb-a/fulltrace-sweep-20261006/README.md)
 - [Seed-only `raw-046` replay evidence](../../results/xindex/ycsb-a/seed-only-replay-20261008/README.md)
-- [Frozen 100-config search inputs](../../configs/hotset/search-spaces/xindex-broad-100/README.md)
+- [Frozen 100-config search inputs](../../configs/hitm-seed/search-spaces/xindex-broad-100/README.md)
 - [Historical plan and commands](hotset-broad-sweep-plan.md)

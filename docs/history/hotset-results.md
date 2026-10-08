@@ -31,7 +31,7 @@ ARBITER_CPU_NODE=0 \
 ARBITER_MEM_NODE=0 \
 ARBITER_TARGET_NODE=2 \
 ARBITER_HEAP_BACKEND=direct \
-ARBITER_HOTSET_CONFIG=configs/hotset/xindex-sweep-base.config \
+ARBITER_HOTSET_CONFIG=configs/hitm-seed/xindex-sweep-base.config \
 ./scripts/run-protected-hotset-experiment.sh
 ```
 
@@ -42,7 +42,7 @@ node 2.
 
 ### Sweep-Base Observation
 
-`configs/hotset/xindex-sweep-base.config` selected three seeds and four
+`configs/hitm-seed/xindex-sweep-base.config` selected three seeds and four
 members. All four selected members already had the maximum write affinity of
 5, so raising only `ARBITER_HOTSET_MEMBER_MIN_AFFINITY` would not reduce the
 set.
@@ -63,7 +63,7 @@ therefore substantially understate runtime CXL footprint.
 
 ### Conservative `put` Pair
 
-The now-removed `configs/hotset/xindex-cxl-conservative.config` raised the seed
+The now-removed `configs/hitm-seed/xindex-cxl-conservative.config` raised the seed
 threshold, pinned the score-14 `put` root (site 99 in this matching build), kept one
 fixed-size write member, rejects the dynamically sized member through a 1KiB
 budget, and selects two sites total.
@@ -88,7 +88,7 @@ live-byte profiling.
 ## 2026-08-12: Site-99 Slab/Arena Validation
 
 This implementation validation used
-`configs/hotset/xindex-cxl-arena-site99-baseline.config`, which selects only the fixed 96-byte
+`configs/hitm-seed/xindex-cxl-arena-site99-baseline.config`, which selects only the fixed 96-byte
 `put` root. Local and CXL runs used the same 2MiB-slab allocator with 64-byte
 minimum alignment, making each object occupy a 128-byte slot. The only runtime
 difference was binding the arena to node 0 or node 2.
@@ -139,7 +139,7 @@ ARBITER_CPU_NODE=0 \
 ARBITER_MEM_NODE=0 \
 ARBITER_TARGET_NODE=2 \
 ARBITER_HEAP_BACKEND=arena \
-ARBITER_HOTSET_CONFIG=configs/hotset/xindex-cxl-arena-site99-baseline.config \
+ARBITER_HOTSET_CONFIG=configs/hitm-seed/xindex-cxl-arena-site99-baseline.config \
 HOTSET_BUILD_DIR="$PWD/build/arbiter-bench/xindex-hotset-site99-baseline" \
 MEMORY_MAX=16G \
 MEMORY_SWAP_MAX=0 \
@@ -227,7 +227,7 @@ result manifest.
 
 This tuning pass removed the build-specific site-99 ID from the default
 policy. Site 99 remains only in
-`configs/hotset/xindex-cxl-arena-site99-baseline.config` as a reproduction
+`configs/hitm-seed/xindex-cxl-arena-site99-baseline.config` as a reproduction
 reference. Automatic policies selected fixed-size roots by score and rank;
 dynamic-size sites and caller/callee expansion remained disabled.
 

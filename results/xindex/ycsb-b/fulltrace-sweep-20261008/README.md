@@ -27,8 +27,9 @@ also excluded. Later focused and allocator-alignment experiments are out of
 scope.
 
 The CSVs preserve the absolute paths recorded during execution. Their old
-`docs/experiments/artifacts/.../configs` prefix maps to the frozen inputs now
-stored under `configs/hotset/search-spaces/xindex-broad-100/`. The
+`docs/experiments/artifacts/.../configs` prefix maps to the same parameter
+combinations, translated to the current interface under
+`configs/hitm-seed/search-spaces/xindex-broad-100/`. The
 interpretation and claim boundary are documented in
 [`docs/results/xindex-ycsb-b.md`](../../../../docs/results/xindex-ycsb-b.md).
 Run `sha256sum -c artifacts.sha256` from this directory to verify the result.

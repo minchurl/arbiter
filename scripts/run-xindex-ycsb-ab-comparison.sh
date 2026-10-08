@@ -10,7 +10,7 @@ elif [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
 usage: scripts/run-xindex-ycsb-ab-comparison.sh [--check]
 
 Compares full-trace XIndex/YCSB-A and YCSB-B with the same native binary,
-the same seed-rewritten binary, and the same hot-set policy. Each round runs
+the same seed-rewritten binary, and the same HITM-risk seed policy. Each round runs
 native, seed-local, and seed-target rows for both workloads. Workload and
 placement order alternate between rounds. By default, each row consumes its
 400M-operation transaction trace exactly once and exits.
@@ -19,7 +19,7 @@ Use --check to validate the machine, traces, config, disk headroom, and tools
 without building or starting a benchmark.
 
 Common overrides:
-  ARBITER_HOTSET_CONFIG  policy config, default raw-046
+  ARBITER_HITM_SEED_CONFIG  policy config, default raw-046
   ARBITER_TARGET_NODE    CXL NUMA node, default 2
   ROUNDS                 balanced A/B rounds, default 4
   XINDEX_ITERATION       full-trace passes per row, default 1
@@ -36,7 +36,7 @@ elif [[ $# -ne 0 ]]; then
   exit 1
 fi
 
-CONFIG="${ARBITER_HOTSET_CONFIG:-${ROOT_DIR}/configs/hotset/candidates/raw-046.config}"
+CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config}"
 DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 TARGET_NODE="${ARBITER_TARGET_NODE:-2}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
@@ -59,7 +59,7 @@ if [[ "${DATA_DIR}" != /* ]]; then
 fi
 CONFIG_NAME="$(basename "${CONFIG}")"
 CONFIG_NAME="${CONFIG_NAME%.config}"
-HOTSET_BUILD_DIR="${HOTSET_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-ab-${CONFIG_NAME}}"
+HITM_SEED_BUILD_DIR="${HITM_SEED_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-ab-${CONFIG_NAME}}"
 
 LOAD_PATH="${DATA_DIR}/xindex_load_ycsb_a.dat"
 TX_A_PATH="${DATA_DIR}/xindex_transaction_ycsb_a.dat"
@@ -351,7 +351,7 @@ for round in $(seq 1 "${ROUNDS}"); do
   echo "[round ${round}/${ROUNDS}] workloads=${workloads} first_placement=${first_placement} build=${round_build}"
   env \
     RESULT_DIR="${round_dir}" \
-    HOTSET_BUILD_DIR="${HOTSET_BUILD_DIR}" \
+    HITM_SEED_BUILD_DIR="${HITM_SEED_BUILD_DIR}" \
     XINDEX_SCALE_DATA_DIR="${RUN_DATA_DIR}" \
     XINDEX_SCALE_LOAD_RECORDS=100000000 \
     XINDEX_SCALE_TX_OPS=400000000 \
@@ -365,7 +365,7 @@ for round in $(seq 1 "${ROUNDS}"); do
     ARBITER_CPU_NODE="${CPU_NODE}" \
     ARBITER_MEM_NODE="${MEM_NODE}" \
     ARBITER_TARGET_NODE="${TARGET_NODE}" \
-    ARBITER_HOTSET_CONFIG="${CONFIG}" \
+    ARBITER_HITM_SEED_CONFIG="${CONFIG}" \
     ARBITER_HEAP_BACKEND=arena \
     ARBITER_ARENA_SLAB_BYTES=2097152 \
     ARBITER_ARENA_RESERVE_BYTES=25769803776 \
@@ -393,7 +393,7 @@ for round in $(seq 1 "${ROUNDS}"); do
     LD_LIBRARY_PATH="${LD_LIBRARY_PATH:-}" \
     LIBRARY_PATH="${LIBRARY_PATH:-}" \
     CPLUS_INCLUDE_PATH="${CPLUS_INCLUDE_PATH:-}" \
-    "${ROOT_DIR}/scripts/run-protected-hotset-experiment.sh"
+    "${ROOT_DIR}/scripts/run-protected-hitm-seed-experiment.sh"
 done
 
 RUNS_CSV="${RESULT_DIR}/runs.csv"
@@ -417,7 +417,7 @@ done
 SUMMARY_CSV="${RESULT_DIR}/summary.csv"
 printf 'benchmark,workload,config,metric,repeats,avg_time_sec,avg_throughput,avg_max_rss_kb\n' > "${SUMMARY_CSV}"
 for workload in a b; do
-  for config in native hotset-seed-local hotset-seed-target; do
+  for config in native hitm-seed-local hitm-seed-target; do
     awk -F, -v workload="${workload}" -v config="${config}" '
       NR > 1 && $2 == workload && $3 == config && $20 == "ok" {
         count++
@@ -449,17 +449,17 @@ for workload in a b; do
     }
     END {
       native=(count["native"] ? throughput["native"]/count["native"] : 0)
-      local=(count["hotset-seed-local"] ? throughput["hotset-seed-local"]/count["hotset-seed-local"] : 0)
-      target=(count["hotset-seed-target"] ? throughput["hotset-seed-target"]/count["hotset-seed-target"] : 0)
+      local=(count["hitm-seed-local"] ? throughput["hitm-seed-local"]/count["hitm-seed-local"] : 0)
+      target=(count["hitm-seed-target"] ? throughput["hitm-seed-target"]/count["hitm-seed-target"] : 0)
       local_native=(native ? (local/native-1)*100 : 0)
       target_local=(local ? (target/local-1)*100 : 0)
       target_native=(native ? (target/native-1)*100 : 0)
-      local_resident=(count["hotset-seed-local"] ? resident["hotset-seed-local"]/count["hotset-seed-local"]/(1024^3) : 0)
-      target_resident=(count["hotset-seed-target"] ? resident["hotset-seed-target"]/count["hotset-seed-target"]/(1024^3) : 0)
-      local_alloc=(count["hotset-seed-local"] ? allocations["hotset-seed-local"]/count["hotset-seed-local"] : 0)
-      target_alloc=(count["hotset-seed-target"] ? allocations["hotset-seed-target"]/count["hotset-seed-target"] : 0)
+      local_resident=(count["hitm-seed-local"] ? resident["hitm-seed-local"]/count["hitm-seed-local"]/(1024^3) : 0)
+      target_resident=(count["hitm-seed-target"] ? resident["hitm-seed-target"]/count["hitm-seed-target"]/(1024^3) : 0)
+      local_alloc=(count["hitm-seed-local"] ? allocations["hitm-seed-local"]/count["hitm-seed-local"] : 0)
+      target_alloc=(count["hitm-seed-target"] ? allocations["hitm-seed-target"]/count["hitm-seed-target"] : 0)
       printf "%s,%d,%.9g,%.9g,%.9g,%.6f,%.6f,%.6f,%.6f,%.6f,%.9g,%.9g\n",
-             workload, count["hotset-seed-target"], native, local, target,
+             workload, count["hitm-seed-target"], native, local, target,
              local_native, target_local, target_native, local_resident,
              target_resident, local_alloc, target_alloc
     }
@@ -496,16 +496,16 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
            $6, $7, $8, $9, $10
   }' "${COMPARISON_CSV}"
   echo
-  echo "The local and CXL rows use the same rewritten binary and hot-set policy."
+  echo "The local and CXL rows use the same rewritten binary and HITM-risk seed policy."
   echo "The comparison changes only the YCSB trace and selected-arena node."
   echo "Runtime allocation counts and resident arena bytes are retained in"
   echo "\`ab-comparison.csv\` and \`runs.csv\` to show whether A and B activate"
   echo "the selected allocation sites differently."
 } > "${SUMMARY_MD}"
 
-cp "${RESULT_DIR}/round-01/hotset-input.config" "${RESULT_DIR}/hotset-input.config"
-cp "${RESULT_DIR}/round-01/hotset-sites.csv" "${RESULT_DIR}/hotset-sites.csv"
-cp "${RESULT_DIR}/round-01/hotset-effective.opt-args" "${RESULT_DIR}/hotset-effective.opt-args"
+cp "${RESULT_DIR}/round-01/hitm-seed-input.config" "${RESULT_DIR}/hitm-seed-input.config"
+cp "${RESULT_DIR}/round-01/hitm-seed-sites.csv" "${RESULT_DIR}/hitm-seed-sites.csv"
+cp "${RESULT_DIR}/round-01/hitm-seed-effective.opt-args" "${RESULT_DIR}/hitm-seed-effective.opt-args"
 cp "${RESULT_DIR}/round-01/binaries.sha256" "${RESULT_DIR}/binaries.sha256"
 
 cat <<EOF

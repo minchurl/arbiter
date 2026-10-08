@@ -33,8 +33,8 @@ planned multi-pair confirmation stage did not run.
 
 ## Comparison Contract
 
-`native` uses the unmodified binary. `hotset-seed-local` and
-`hotset-seed-target` use the same rewritten binary and strict arena; only the
+`native` uses the unmodified binary. `hitm-seed-local` and
+`hitm-seed-target` use the same rewritten binary and strict arena; only the
 arena NUMA node changes. Therefore:
 
 ```text

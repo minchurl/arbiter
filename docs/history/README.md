@@ -20,4 +20,4 @@ The history covers:
 Large raw artifacts from failed or superseded runs were removed from the
 active tree. They remain recoverable from Git history. Exact inputs reused by
 the current YCSB-B analysis were retained under
-[`configs/hotset/search-spaces/xindex-broad-100/`](../../configs/hotset/search-spaces/xindex-broad-100/README.md).
+[`configs/hitm-seed/search-spaces/xindex-broad-100/`](../../configs/hitm-seed/search-spaces/xindex-broad-100/README.md).

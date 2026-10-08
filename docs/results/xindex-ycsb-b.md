@@ -74,7 +74,7 @@ size.
 ## Reproduce and Inspect
 
 The frozen inputs are under
-[`configs/hotset/search-spaces/xindex-broad-100/`](../../configs/hotset/search-spaces/xindex-broad-100/README.md).
+[`configs/hitm-seed/search-spaces/xindex-broad-100/`](../../configs/hitm-seed/search-spaces/xindex-broad-100/README.md).
 Validate the runner without building or benchmarking:
 
 ```sh

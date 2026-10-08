@@ -10,9 +10,9 @@ RUNTIME_LIB="${ARBITER_RUNTIME_LIB:-${BUILD_DIR}/runtime/libarbiter_runtime.a}"
 MKL_INCLUDE_DIR="${MKL_INCLUDE_DIR:-/opt/intel/oneapi/mkl/latest/include}"
 MKL_LINK_DIR="${MKL_LINK_DIR:-/opt/intel/oneapi/mkl/latest/lib}"
 XINDEX_EXTRA_LIBS="${XINDEX_EXTRA_LIBS:--ljemalloc -lmkl_rt -lpthread}"
-HOTSET_CONFIG="${ARBITER_HOTSET_CONFIG:-${ROOT_DIR}/configs/hotset/candidates/raw-046.config}"
+HITM_SEED_CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config}"
 BUILD_NATIVE="${ARBITER_BUILD_XINDEX_NATIVE:-1}"
-EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/hotset.sh"
+EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/hitm-seed.sh"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
@@ -83,14 +83,14 @@ fi
   -disable-output \
   "${OUT_DIR}/ycsb_bench.bc"
 
-if [[ ! -f "${HOTSET_CONFIG}" && -f "${ROOT_DIR}/${HOTSET_CONFIG}" ]]; then
-  HOTSET_CONFIG="${ROOT_DIR}/${HOTSET_CONFIG}"
+if [[ ! -f "${HITM_SEED_CONFIG}" && -f "${ROOT_DIR}/${HITM_SEED_CONFIG}" ]]; then
+  HITM_SEED_CONFIG="${ROOT_DIR}/${HITM_SEED_CONFIG}"
 fi
-if [[ ! -f "${HOTSET_CONFIG}" ]]; then
-  echo "missing ARBITER_HOTSET_CONFIG=${HOTSET_CONFIG}" >&2
+if [[ ! -f "${HITM_SEED_CONFIG}" ]]; then
+  echo "missing ARBITER_HITM_SEED_CONFIG=${HITM_SEED_CONFIG}" >&2
   exit 1
 fi
-ARBITER_HOTSET_CONFIG="${HOTSET_CONFIG}"
+ARBITER_HITM_SEED_CONFIG="${HITM_SEED_CONFIG}"
 
 REWRITE_PASS=""
 REWRITE_ARGS=()
@@ -107,7 +107,7 @@ fi
 configure_xindex_experiment
 
 if [[ -z "${REWRITE_PASS}" ]]; then
-  echo "XIndex hot-set setup did not set REWRITE_PASS" >&2
+  echo "XIndex HITM-risk seed setup did not set REWRITE_PASS" >&2
   exit 1
 fi
 

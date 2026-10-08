@@ -16,12 +16,12 @@ not migrate existing objects.
 
 ## Repository Map
 
-- `compiler/llvm/lib/hotset/`: seed scoring, options, report, and rewrite
+- `compiler/llvm/lib/hitm_seed/`: seed scoring, options, report, and rewrite
 - `runtime/src/arbiter_slab_arena.cpp`: NUMA-bound slab allocator
 - `runtime/src/arbiter_runtime_site.cpp`: rewritten allocation ABI
-- `configs/hotset/candidates/`: curated top 12 measured seed policies
-- `scripts/run-xindex-hotset-replay.sh`: canonical full-scale reproduction
-- `scripts/run-protected-hotset-experiment.sh`: lower-level experiment driver
+- `configs/hitm-seed/candidates/`: curated top 12 measured seed policies
+- `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale reproduction
+- `scripts/run-protected-hitm-seed-experiment.sh`: lower-level experiment driver
 - `docs/overview.md`: architecture and code-reading guide
 - `docs/hitm-risk-seed-placement.md`: policy and runtime reference
 - `docs/results/`: current XIndex/YCSB results and claim boundaries
@@ -80,16 +80,16 @@ cmake --build build-llvm18 --target \
 First verify the machine and full traces without starting a benchmark:
 
 ```sh
-ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh --check
+ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
 Then start the four-pair confirmation in tmux:
 
 ```sh
-tmux new-session -d -s arbiter-hotset -c "$(pwd)" \
-  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hotset-replay.sh \
-   > build/arbiter-bench/xindex-hotset-replay.console.log 2>&1'
-tmux attach -t arbiter-hotset
+tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
+  'ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh \
+   > build/arbiter-bench/xindex-hitm-seed-replay.console.log 2>&1'
+tmux attach -t arbiter-hitm-seed
 ```
 
 The wrapper uses `raw-046`, 100M load records, the 400M-operation YCSB-A
@@ -100,7 +100,7 @@ shape used after the seed-only cleanup.
 
 Results are written to a unique timestamped directory under
 `build/arbiter-bench/`. Inspect `summary.md`, `runs.csv`,
-`throughput-samples.csv`, `hotset-sites.csv`, and `replay-manifest.txt`.
+`throughput-samples.csv`, `hitm-seed-sites.csv`, and `replay-manifest.txt`.
 
 The retained four-pair result for `raw-046` was 27.886M local versus 56.813M
 CXL op/s, a mean paired improvement of +103.75%. A later one-pair seed-only
@@ -110,12 +110,12 @@ for safety counters and claim limits.
 ## Build Another Retained Policy
 
 ```sh
-ARBITER_HOTSET_CONFIG=configs/hotset/candidates/raw-082.config \
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/candidates/raw-082.config \
   ./scripts/build-xindex-llvm.sh
 ```
 
 The 12 retained policies and their measured runtime fingerprints are listed in
-[the config index](configs/hotset/README.md). `raw-046.config` is the default.
+[the config index](configs/hitm-seed/README.md). `raw-046.config` is the default.
 
 ## Tests
 

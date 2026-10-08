@@ -1,9 +1,8 @@
 # HITM-Risk Seed Placement
 
 Arbiter selects allocation sites at compile time and places allocations from
-those sites into a NUMA-bound runtime arena. “Hot-set migration” is the
-historical experiment name; the current runtime places new objects and never
-migrates an already allocated object.
+those sites into a NUMA-bound runtime arena. The current runtime places new
+objects and never migrates an already allocated object.
 
 ## Seed Selection
 
@@ -35,8 +34,8 @@ XIndex policy sets it to zero.
 
 ## Static Byte Budget
 
-`ARBITER_HOTSET_DYNAMIC_SIZE_ESTIMATE` is the accounting size for a selected
-dynamic allocation. `ARBITER_HOTSET_MAX_ESTIMATED_BYTES` caps the sum of
+`ARBITER_HITM_SEED_DYNAMIC_SIZE_ESTIMATE` is the accounting size for a selected
+dynamic allocation. `ARBITER_HITM_SEED_MAX_ESTIMATED_BYTES` caps the sum of
 selected estimates; zero means unlimited. Exceeding a nonzero budget aborts
 compilation rather than silently changing the selected set.
 
@@ -74,7 +73,7 @@ The default build uses the recommended retained policy:
 Select another measured candidate with:
 
 ```sh
-ARBITER_HOTSET_CONFIG=configs/hotset/candidates/raw-082.config \
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/candidates/raw-082.config \
   ./scripts/build-xindex-llvm.sh
 ```
 
@@ -82,8 +81,8 @@ Each build retains:
 
 ```text
 ycsb_bench.sites.csv
-ycsb_bench.hotset-sites.csv
-ycsb_bench.hotset-effective.opt-args
+ycsb_bench.hitm-seed-sites.csv
+ycsb_bench.hitm-seed-effective.opt-args
 ```
 
 Site IDs are stable for the same source, compiler, and optimization settings,
@@ -94,8 +93,8 @@ scores and gates rather than pinning a site ID.
 
 ```text
 native
-hotset-seed-local
-hotset-seed-target
+hitm-seed-local
+hitm-seed-target
 ```
 
 Local and target rows use the same rewritten binary and arena code. Only the
