@@ -20,7 +20,7 @@ not migrate existing objects.
 - `runtime/src/arbiter_slab_arena.cpp`: NUMA-bound slab allocator
 - `runtime/src/arbiter_runtime_site.cpp`: rewritten allocation ABI
 - `configs/hitm-seed/candidates/`: curated top 12 measured seed policies
-- `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale reproduction
+- `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale one-pass runner
 - `scripts/run-protected-hitm-seed-experiment.sh`: lower-level experiment driver
 - `docs/overview.md`: architecture and code-reading guide
 - `docs/hitm-risk-seed-placement.md`: policy and runtime reference
@@ -75,7 +75,7 @@ cmake --build build-llvm18 --target \
   arbiter-slab-arena-smoke
 ```
 
-## Reproduce the XIndex Result
+## Run the XIndex Experiment
 
 First verify the machine and full traces without starting a benchmark:
 
@@ -83,16 +83,16 @@ First verify the machine and full traces without starting a benchmark:
 ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
-Run one full-trace local/CXL pair for a roughly 10-minute regression check:
+Run one complete 400M-operation trace for each side of one local/CXL pair:
 
 ```sh
 ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --quick
 ```
 
-`--quick` changes only the repeat count from four to one. It still uses the
-100M/400M traces and measures each placement for 180 seconds. For the stronger
-four-pair confirmation (roughly 35 minutes on the validated machine), start
-the default command in tmux:
+`--quick` changes only the pair count from four to one. Every row consumes the
+transaction trace exactly once and exits; there is no duration cutoff and no
+cyclic trace replay. For the stronger four-pair confirmation, start the default
+command in tmux:
 
 ```sh
 tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
@@ -102,9 +102,8 @@ tmux attach -t arbiter-hitm-seed
 ```
 
 The wrapper uses `raw-046`, 100M load records, the 400M-operation YCSB-A
-trace, 31 foreground plus one background worker, four alternating 180-second
-local/CXL pairs, 30-second throughput samples, strict 24GiB arenas,
-`MemoryMax=64G`, and no swap.
+trace, 31 foreground plus one background worker, four alternating one-pass
+local/CXL pairs, strict 24GiB arenas, `MemoryMax=64G`, and no swap.
 
 Results are written to a unique timestamped directory under
 `build/arbiter-bench/`. Each completed run now writes `interpretation.md`,
@@ -123,10 +122,12 @@ The canonical `raw-046` selection is automatic: sites
 the current YCSB-A trace. The report keeps this static-selection/runtime-use
 distinction explicit; no site ID is pinned in the config.
 
-The retained four-pair result for `raw-046` was 27.886M local versus 56.813M
-CXL op/s, a mean paired improvement of +103.75%. A later one-pair seed-only
-replay measured +104.33%. See [the YCSB-A result](docs/results/xindex-ycsb-a.md)
-for safety counters and claim limits.
+The retained duration-controlled cyclic-replay result for `raw-046` was
+27.886M local versus 56.813M CXL op/s, a mean paired improvement of +103.75%
+across four 180-second pairs. It is preserved as prior evidence, but it is not
+a one-pass result and must not be mixed with results from the current runner.
+See [the YCSB-A result](docs/results/xindex-ycsb-a.md) for the protocol history,
+safety counters, and claim limits.
 
 ## Build Another Retained Policy
 

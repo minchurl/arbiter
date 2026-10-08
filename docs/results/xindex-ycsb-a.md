@@ -1,12 +1,13 @@
 # XIndex/YCSB-A HITM-Risk Seed Placement
 
-This is the canonical record for the retained XIndex experiment. The
+This is the record for the retained duration-controlled XIndex experiment. The
 recommended `raw-046` policy placed 17.31GiB of live arena pages on CXL and
 improved throughput from 27.886M to 56.813M op/s: **+103.75% mean paired
 improvement across four 180-second pairs**. A later seed-only replay measured
-+104.33%, showing that removing member expansion preserved the signal.
++104.33%, showing that removing member expansion preserved the signal under
+the same cyclic-replay protocol. These are not one-pass results.
 
-## What Each Process Does
+## Retained Cyclic-Replay Protocol
 
 One local or CXL row is one fresh `ycsb_bench` process:
 
@@ -20,10 +21,12 @@ One local or CXL row is one fresh `ycsb_bench` process:
 5. Report `executed operations / measured seconds` as throughput, then report
    arena allocation and residency counters.
 
-The 400M trace is therefore a reusable operation source, not a limit on the
+The 400M trace was therefore a reusable operation source, not a limit on the
 number of timed operations. A typical row took about 4m03s--4m17s wall time:
 roughly 180 seconds measured plus trace loading, index construction/training,
-startup, and teardown.
+startup, and teardown. “Full-scale” in the retained artifacts means that the
+full-size traces were loaded; it does not mean that each row consumed exactly
+one transaction-trace pass.
 
 ## Comparison and Controls
 
@@ -94,10 +97,10 @@ specific trace. For the target row, the three active sites collectively used
 alignment, slot padding, and 2MiB slab granularity, so it is larger than the
 sum of requested payload bytes.
 
-## Seed-Only Regression Replay
+## Seed-Only Cyclic-Replay Regression
 
-After member expansion was deleted, one full-trace pair reproduced the same
-static and runtime fingerprints:
+After member expansion was deleted, one 180-second cyclic-replay pair
+reproduced the same static and runtime fingerprints:
 
 | Placement | Throughput | Max RSS | Arena resident | Majority node |
 |---|---:|---:|---:|---:|
@@ -108,6 +111,22 @@ The paired delta was +104.33%. Both rows exited successfully with 52,791,182
 arena allocations, zero fallback, zero swap, and zero placement-query errors.
 All 4,537,669 resident arena pages were found on the requested node. Each of
 the six 30-second intervals retained the same performance separation.
+
+## Current One-Pass Contract
+
+The current canonical runner no longer uses the retained duration-controlled
+protocol. Every row now uses:
+
+```text
+XINDEX_ITERATION=1
+XINDEX_DURATION_SECONDS=0
+XINDEX_THROUGHPUT_SAMPLE_SECONDS=0
+```
+
+Each process consumes the complete 400M-operation transaction trace exactly
+once and exits when the work is finished. This matches the YCSB-B execution
+contract. New one-pass measurements must be reported separately from the
+retained 15-, 60-, and 180-second cyclic-replay results above.
 
 ## Reproduce
 
@@ -125,13 +144,13 @@ building or running:
 ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
-Run the same full-scale trace as a one-pair regression check:
+Run one complete trace pass for each side of one local/CXL pair:
 
 ```sh
 ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --quick
 ```
 
-Run the four-pair experiment directly or under tmux:
+Run four alternating one-pass local/CXL pairs directly or under tmux:
 
 ```sh
 tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
@@ -162,9 +181,10 @@ retained checked-in evidence is under
 ## Claim Boundary
 
 The result demonstrates a large, repeatable throughput difference between
-local and CXL placement for this binary, trace, allocator, and machine setup.
-It does not yet prove that reduced cache-line bouncing caused the gain: these
-runs did not collect HITM/C2C or memory-bandwidth counters, operation-latency
-percentiles, or a final correctness checksum. Those measurements and stricter
-CPU isolation are required before making a causal or general performance
-claim.
+local and CXL placement under the retained cyclic-replay protocol. It does not
+yet establish the effect size for one complete trace pass or prove that reduced
+cache-line bouncing caused the gain. The retained runs did not collect
+HITM/C2C or memory-bandwidth counters, operation-latency percentiles, or a
+final correctness checksum. A protocol-matched one-pass rerun, those
+measurements, and stricter CPU isolation are required before making a causal or
+general performance claim.

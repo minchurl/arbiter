@@ -58,6 +58,9 @@ for required in "${RUNS_CSV}" "${SUMMARY_CSV}" "${SITES_CSV}"; do
 done
 
 SELECTED_COUNT="$(awk -F, 'NR > 1 && $12 == "yes" {count++} END {print count + 0}' "${SITES_CSV}")"
+FIRST_ITERATION="$(awk -F, 'NR > 1 {print $11; exit}' "${RUNS_CSV}")"
+FIRST_DURATION="$(awk -F, 'NR > 1 {print $30; exit}' "${RUNS_CSV}")"
+FIRST_SAMPLE="$(awk -F, 'NR > 1 {print $34; exit}' "${RUNS_CSV}")"
 TARGET_INFO="$(awk -F, 'NR > 1 && $5 == "remote" && $20 == "ok" {print $2 "," $4 "," $18; exit}' "${RUNS_CSV}")"
 TARGET_WORKLOAD=""
 TARGET_REPEAT=""
@@ -69,6 +72,13 @@ fi
 printf '# XIndex HITM-Risk Seed Result Interpretation\n\n'
 printf -- '- Result directory: `%s`\n' "${RESULT_DIR}"
 printf -- '- Static seeds selected by the compiler: %s\n' "${SELECTED_COUNT}"
+if [[ "${FIRST_DURATION}" == "0" ]]; then
+  printf -- '- Execution contract: fixed-operation, %s complete trace pass(es), no duration cutoff\n' \
+    "${FIRST_ITERATION}"
+else
+  printf -- '- Execution contract: %s-second cyclic trace replay, sampled every %s second(s)\n' \
+    "${FIRST_DURATION}" "${FIRST_SAMPLE}"
+fi
 printf -- '- Comparison: the same rewritten binary and arena allocator; only the arena NUMA node changes\n\n'
 
 if [[ -s "${POLICY_CONFIG}" ]]; then

@@ -1,9 +1,9 @@
 # XIndex/YCSB-B Result
 
-This result tests whether Arbiter's seed-only placement benefit extends from
-write-heavy YCSB-A to read-heavy YCSB-B. The run rebuilt the same frozen
-100-config search space with the current compiler and executed one complete
-400M-operation YCSB-B trace per process.
+This result explores whether Arbiter's seed-only placement signal extends to
+read-heavy YCSB-B. The run rebuilt the same frozen 100-config search space with
+the current compiler and executed one complete 400M-operation YCSB-B trace per
+process.
 
 ## Setup
 
@@ -65,11 +65,13 @@ For this XIndex/YCSB-B setup, moving selected objects to CXL did not improve
 throughput. With only about 5% updates, the measured coherence benefit was not
 large enough to offset added CXL access cost.
 
-This is a workload-level boundary for the positive YCSB-A result, not a
-general claim about every read-heavy workload. Each candidate was screened
-with one local/CXL pair, so the uniform negative direction is useful evidence,
-but the exact regression of an individual candidate is not a confirmed effect
-size.
+This is directional evidence of a workload boundary, not a general claim about
+every read-heavy workload. Each candidate was screened with one local/CXL pair,
+so the exact regression of an individual candidate is not a confirmed effect
+size. In addition, the retained positive YCSB-A result used duration-controlled
+cyclic replay, whereas this YCSB-B screen used one pass. A protocol-matched
+workload comparison therefore requires rerunning YCSB-A with the current
+one-pass runner.
 
 ## Reproduce and Inspect
 

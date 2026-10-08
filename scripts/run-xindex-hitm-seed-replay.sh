@@ -16,11 +16,11 @@ while [[ $# -gt 0 ]]; do
       cat <<'EOF'
 usage: scripts/run-xindex-hitm-seed-replay.sh [--check] [--quick]
 
-Replays the validated XIndex/YCSB-A raw-046 local-versus-CXL experiment.
+Runs the canonical one-pass XIndex/YCSB-A raw-046 local-versus-CXL experiment.
 Use --check to validate inputs and print the resolved settings without
 building a binary or starting a benchmark.
-Use --quick for one full-trace local/CXL pair instead of four pairs. The
-trace scale and 180-second measurement interval are unchanged.
+Use --quick for one local/CXL pair instead of four pairs. Every row consumes
+the complete 400M-operation transaction trace exactly once and then exits.
 
 Common overrides:
   ARBITER_TARGET_NODE  CXL NUMA node, default 2
@@ -46,10 +46,10 @@ CPU_NODE="${ARBITER_CPU_NODE:-0}"
 MEM_NODE="${ARBITER_MEM_NODE:-0}"
 if [[ "${QUICK}" == "1" ]]; then
   REPLAY_REPEATS=1
-  REPLAY_SHAPE="quick full-trace pair"
+  REPLAY_SHAPE="quick one-pass pair"
 else
   REPLAY_REPEATS="${REPEATS:-4}"
-  REPLAY_SHAPE="configured confirmation (${REPLAY_REPEATS} pair(s))"
+  REPLAY_SHAPE="configured one-pass confirmation (${REPLAY_REPEATS} pair(s))"
 fi
 RESULT_DIR="${RESULT_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-hitm-seed-replay-$(date +%Y%m%d-%H%M%S)}"
 HITM_SEED_BUILD_DIR="${HITM_SEED_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-hitm-seed-raw-046}"
@@ -189,7 +189,8 @@ cat <<EOF
 XIndex HITM-risk seed replay settings:
   config:             ${CONFIG}
   load / tx records:  100000000 / 400000000
-  duration / sample:  180s / 30s
+  execution mode:     iteration=1, duration=0 (400M operations once)
+  throughput samples: disabled
   repeats:            ${REPLAY_REPEATS}
   replay shape:       ${REPLAY_SHAPE}
   workers:            31 foreground + 1 background
@@ -228,8 +229,10 @@ mkdir -p "${RESULT_DIR}"
   echo "data_dir=${DATA_DIR}"
   echo "load_records=100000000"
   echo "transaction_ops=400000000"
-  echo "duration_seconds=180"
-  echo "sample_seconds=30"
+  echo "execution_mode=iteration"
+  echo "iteration=1"
+  echo "duration_seconds=0"
+  echo "sample_seconds=0"
   echo "repeats=${REPLAY_REPEATS}"
   echo "foreground_threads=31"
   echo "background_threads=1"
@@ -255,8 +258,9 @@ exec env \
   XINDEX_SCALE_DATA_DIR="${DATA_DIR}" \
   XINDEX_SCALE_LOAD_RECORDS=100000000 \
   XINDEX_SCALE_TX_OPS=400000000 \
-  XINDEX_DURATION_SECONDS=180 \
-  XINDEX_THROUGHPUT_SAMPLE_SECONDS=30 \
+  XINDEX_ITERATION=1 \
+  XINDEX_DURATION_SECONDS=0 \
+  XINDEX_THROUGHPUT_SAMPLE_SECONDS=0 \
   XINDEX_FG=31 \
   XINDEX_BG=1 \
   YCSB_TYPES=a \

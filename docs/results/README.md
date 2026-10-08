@@ -5,7 +5,7 @@ compile-time seed selection followed by allocation-time placement in a
 NUMA-bound slab arena. It does not expand seeds to related members and does
 not migrate already allocated objects.
 
-## Primary Result: XIndex/YCSB-A
+## Retained Result: XIndex/YCSB-A Cyclic Replay
 
 The automatic `raw-046` policy selected a runtime allocation fingerprint of
 sites `68+71+74`. Across four homogeneous 180-second local/CXL pairs:
@@ -15,21 +15,26 @@ sites `68+71+74`. Across four homogeneous 180-second local/CXL pairs:
 | Local arena | 27.886 M op/s |
 | CXL arena | 56.813 M op/s |
 
-The mean paired improvement was **+103.75%**, and CXL won all four pairs. A
-later seed-only regression pair reproduced the same runtime fingerprint and
-measured +104.33%. See [the full YCSB-A result](xindex-ycsb-a.md).
+The mean paired improvement was **+103.75%**, and CXL won all four pairs. These
+were duration-controlled rows that cyclically replayed the 400M trace, not
+one-pass rows. A later cyclic-replay regression pair reproduced the same
+runtime fingerprint and measured +104.33%. See
+[the full YCSB-A result](xindex-ycsb-a.md).
 
 ## Workload Boundary: XIndex/YCSB-B
 
 YCSB-B contains approximately 95% reads and 5% updates. A full-trace screen of
 the same 100-config parameter space produced 15 runtime-valid local/CXL pairs;
-all 15 regressed with CXL, from -19.18% to -45.34%. This indicates that the
+all 15 regressed with CXL, from -19.18% to -45.34%. This suggests that the
 coherence benefit did not offset CXL access cost for this read-heavy workload.
 See [the YCSB-B result](xindex-ycsb-b.md).
 
 The YCSB-B values are directional screening evidence, not confirmed
-per-policy effect sizes. No policy passed the promotion threshold, so the
-planned multi-pair confirmation stage did not run.
+per-policy effect sizes. YCSB-B used one complete trace pass while the retained
+YCSB-A result used cyclic replay, so a protocol-matched A/B comparison still
+requires rerunning YCSB-A with the current one-pass runner. No YCSB-B policy
+passed the promotion threshold, so its planned multi-pair confirmation stage
+did not run.
 
 ## Comparison Contract
 

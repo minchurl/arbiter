@@ -24,8 +24,8 @@ USE_SYSTEMD_SCOPE="${USE_SYSTEMD_SCOPE:-1}"
 REPEATS="${REPEATS:-1}"
 XINDEX_FG="${XINDEX_FG:-8}"
 XINDEX_BG="${XINDEX_BG:-1}"
-XINDEX_ITERATION="${XINDEX_ITERATION:-3}"
-XINDEX_DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-60}"
+XINDEX_ITERATION="${XINDEX_ITERATION:-1}"
+XINDEX_DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-0}"
 XINDEX_THROUGHPUT_SAMPLE_SECONDS="${XINDEX_THROUGHPUT_SAMPLE_SECONDS:-0}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
 MEM_NODE="${ARBITER_MEM_NODE:-0}"
@@ -61,8 +61,9 @@ Defaults:
   repeats:            1
   foreground threads: 8
   background threads: 1
-  duration:           60 seconds per measured run
-  iterations:         3 (used only when duration is 0)
+  execution:          one complete transaction-trace pass
+  duration:           0 (no measured-duration cutoff)
+  iterations:         1
   MemoryMax:          16G
   MemorySwapMax:      0
 
@@ -79,10 +80,10 @@ Useful environment:
   REPEATS                   default: 1
   XINDEX_FG                 default: 8
   XINDEX_BG                 default: 1
-  XINDEX_ITERATION          default: 3
-  XINDEX_DURATION_SECONDS   default: 60; set 0 for iteration mode
+  XINDEX_ITERATION          full transaction-trace passes, default: 1
+  XINDEX_DURATION_SECONDS   default: 0; positive values enable cyclic replay
   XINDEX_THROUGHPUT_SAMPLE_SECONDS
-                           default: 0; 10 for short, 60 for long runs
+                           default: 0; sampling requires a positive duration
   ARBITER_CPU_NODE          default: 0
   ARBITER_MEM_NODE          default: 0
   MEMORY_MAX               default: 16G
@@ -162,6 +163,12 @@ require_toggle FAIL_FAST "${FAIL_FAST}"
 require_toggle ALTERNATE_PLACEMENT_ORDER "${ALTERNATE_PLACEMENT_ORDER}"
 require_toggle ARBITER_ARENA_STRICT "${ARENA_STRICT}"
 require_toggle ARBITER_ARENA_REPORT "${ARENA_REPORT}"
+
+if [[ "${XINDEX_DURATION_SECONDS}" == "0" && \
+      "${XINDEX_THROUGHPUT_SAMPLE_SECONDS}" != "0" ]]; then
+  echo "XINDEX_THROUGHPUT_SAMPLE_SECONDS must be 0 in iteration mode" >&2
+  exit 1
+fi
 
 if [[ "${FIRST_PLACEMENT}" != "local" && "${FIRST_PLACEMENT}" != "target" ]]; then
   echo "FIRST_PLACEMENT must be local or target: ${FIRST_PLACEMENT}" >&2
@@ -598,6 +605,11 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo "- Repeats: ${REPEATS}"
   echo "- Foreground threads: ${XINDEX_FG}"
   echo "- Background threads: ${XINDEX_BG}"
+  if [[ "${XINDEX_DURATION_SECONDS}" == "0" ]]; then
+    echo "- Execution contract: fixed-operation, ${XINDEX_ITERATION} complete trace pass(es), no duration cutoff"
+  else
+    echo "- Execution contract: ${XINDEX_DURATION_SECONDS}-second cyclic trace replay"
+  fi
   echo "- Iterations: ${XINDEX_ITERATION}"
   echo "- Duration seconds (0 means iteration mode): ${XINDEX_DURATION_SECONDS}"
   echo "- Throughput sample seconds: ${XINDEX_THROUGHPUT_SAMPLE_SECONDS}"

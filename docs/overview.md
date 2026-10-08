@@ -76,8 +76,8 @@ direct backend when a site's shape changes or capacity is exhausted.
 - `scripts/run-xindex-arbiter.sh` executes one native/local/remote process;
 - `scripts/run-protected-hitm-seed-experiment.sh` builds, launches fresh
   processes, enforces memory limits, validates arena placement, and writes CSVs;
-- `scripts/run-xindex-hitm-seed-replay.sh` fixes the validated `raw-046` full-scale
-  conditions and records a machine manifest;
+- `scripts/run-xindex-hitm-seed-replay.sh` fixes the current `raw-046` full-scale
+  one-pass conditions and records a machine manifest;
 - `scripts/summarize-xindex-hitm-seed-result.sh` turns one result directory into
   a readable policy, throughput, active-site, placement, and safety report.
 
@@ -101,6 +101,13 @@ counters. The validated experiment intentionally keeps filesystem page cache
 warm and does not flush CPU caches. System-wide `drop_caches` is not invoked
 automatically because it requires privilege, affects unrelated jobs, and does
 not clear anonymous memory or CPU caches.
+
+The current canonical runner uses fixed-operation iteration mode: each row
+consumes the complete 400M-operation transaction trace exactly once and exits.
+It does not set a measured-duration cutoff or loop over the trace. Retained
+YCSB-A results from the earlier parameter sweep used 15-, 60-, and 180-second
+cyclic replay and are labeled as historical protocol results. Retained YCSB-B
+screening already used the current one-pass contract.
 
 ## Scope
 
