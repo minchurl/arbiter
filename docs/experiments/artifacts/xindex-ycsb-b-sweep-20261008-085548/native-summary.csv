@@ -1,0 +1,3 @@
+workload,rows,safe,mean_ops,stddev_ops
+a,4,1,26200300,238906
+b,4,1,99161300,1.53622e+06
