@@ -1,0 +1,3 @@
+benchmark,workload,config,metric,repeats,avg_time_sec,avg_throughput,avg_max_rss_kb
+xindex,a,hitm-seed-local,op/s,4,15.081625,26531375,31662867
+xindex,a,hitm-seed-target,op/s,4,8.152665,49067525,31662970

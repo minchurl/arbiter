@@ -68,10 +68,8 @@ large enough to offset added CXL access cost.
 This is directional evidence of a workload boundary, not a general claim about
 every read-heavy workload. Each candidate was screened with one local/CXL pair,
 so the exact regression of an individual candidate is not a confirmed effect
-size. In addition, the retained positive YCSB-A result used duration-controlled
-cyclic replay, whereas this YCSB-B screen used one pass. A protocol-matched
-workload comparison therefore requires rerunning YCSB-A with the current
-one-pass runner.
+size. The four-pair one-pass `raw-046` YCSB-A result provides a
+protocol-matched positive write-heavy reference.
 
 ## Reproduce and Inspect
 

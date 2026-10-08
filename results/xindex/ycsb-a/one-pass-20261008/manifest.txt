@@ -1,0 +1,37 @@
+started_at=2026-10-08T19:27:34+09:00
+git_commit=5cc711bf2b6172432631ef3e618ee847276e3f30
+git_dirty_files=0
+config=configs/hitm-seed/candidates/raw-046.config
+config_sha256=204e17d6c53aed16201963c4dd950499866eb3034cb9d7a8691ec39af651b526
+load_records=100000000
+transaction_ops=400000000
+execution_mode=iteration
+iteration=1
+duration_seconds=0
+sample_seconds=0
+repeats=4
+foreground_threads=31
+background_threads=1
+cpu_node=0
+local_memory_node=0
+target_memory_node=2
+memory_max=64G
+memory_swap_max=0
+arena_slab_bytes=2097152
+arena_reserve_bytes=25769803776
+arena_slot_alignment=64
+build_benchmarks=1
+cache_policy=fresh process per row; filesystem page cache not dropped; CPU cache not flushed
+
+available: 3 nodes (0-2)
+node 0 cpus: 0-31
+node 0 size: 128613 MB
+node 1 cpus: 32-63
+node 1 size: 32240 MB
+node 2 cpus: none
+node 2 size: 131072 MB
+node distances:
+node   0   1   2
+  0:  10  21  14
+  1:  21  10  24
+  2:  14  24  10

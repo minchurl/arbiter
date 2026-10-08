@@ -122,12 +122,10 @@ The canonical `raw-046` selection is automatic: sites
 the current YCSB-A trace. The report keeps this static-selection/runtime-use
 distinction explicit; no site ID is pinned in the config.
 
-The retained duration-controlled cyclic-replay result for `raw-046` was
-27.886M local versus 56.813M CXL op/s, a mean paired improvement of +103.75%
-across four 180-second pairs. It is preserved as prior evidence, but it is not
-a one-pass result and must not be mixed with results from the current runner.
-See [the YCSB-A result](docs/results/xindex-ycsb-a.md) for the protocol history,
-safety counters, and claim limits.
+Across four one-pass pairs, `raw-046` averaged 26.531M local versus 49.068M
+CXL op/s: **+85.03% mean paired improvement**. See
+[the YCSB-A result](docs/results/xindex-ycsb-a.md) for pairwise results, safety
+counters, and the earlier cyclic-replay history.
 
 ## Build Another Retained Policy
 

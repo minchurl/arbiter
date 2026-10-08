@@ -4,7 +4,8 @@
 strongest signals in the completed full-scale sweep and still produce the same
 static seed fingerprint with the seed-only compiler. `raw-046.config` is the
 recommended default: it reaches the high-throughput plateau with less CXL
-resident memory than the larger policies.
+resident memory than the larger policies. Its current four-pair one-pass result
+is 26.531M local versus 49.068M CXL op/s, or +85.03% mean paired improvement.
 
 | Config | Three-pair delta | Runtime sites | Static seeds |
 |---|---:|---|---:|

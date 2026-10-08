@@ -1,11 +1,26 @@
 # XIndex/YCSB-A HITM-Risk Seed Placement
 
-This is the record for the retained duration-controlled XIndex experiment. The
-recommended `raw-046` policy placed 17.31GiB of live arena pages on CXL and
-improved throughput from 27.886M to 56.813M op/s: **+103.75% mean paired
-improvement across four 180-second pairs**. A later seed-only replay measured
-+104.33%, showing that removing member expansion preserved the signal under
-the same cyclic-replay protocol. These are not one-pass results.
+The recommended `raw-046` policy placed 17.31GiB of live arena pages on CXL.
+Across four one-pass pairs it improved mean throughput from 26.531M to
+49.068M op/s: **+85.03% mean paired improvement**.
+
+## One-Pass Result
+
+Each row consumed the complete 400M-operation transaction trace once and then
+exited. Local/CXL order alternated across pairs.
+
+| Repeat | Local | CXL | CXL vs local |
+|---:|---:|---:|---:|
+| 1 | 26.423M op/s | 49.276M op/s | +86.49% |
+| 2 | 26.094M op/s | 49.661M op/s | +90.31% |
+| 3 | 27.360M op/s | 48.527M op/s | +77.36% |
+| 4 | 26.248M op/s | 48.806M op/s | +85.94% |
+
+All eight rows completed successfully with zero swap, arena fallback, and
+placement-query errors. Every row reported 17.310GiB of resident arena memory
+on its requested NUMA node. Mean max RSS was 30.196GiB. The retained
+machine-readable summary is under
+[`results/xindex/ycsb-a/one-pass-20261008/`](../../results/xindex/ycsb-a/one-pass-20261008/README.md).
 
 ## Retained Cyclic-Replay Protocol
 
@@ -125,8 +140,8 @@ XINDEX_THROUGHPUT_SAMPLE_SECONDS=0
 
 Each process consumes the complete 400M-operation transaction trace exactly
 once and exits when the work is finished. This matches the YCSB-B execution
-contract. New one-pass measurements must be reported separately from the
-retained 15-, 60-, and 180-second cyclic-replay results above.
+contract. The retained 15-, 60-, and 180-second cyclic-replay values above are
+historical results and remain separate from the primary one-pass result.
 
 ## Reproduce
 
@@ -181,10 +196,8 @@ retained checked-in evidence is under
 ## Claim Boundary
 
 The result demonstrates a large, repeatable throughput difference between
-local and CXL placement under the retained cyclic-replay protocol. It does not
-yet establish the effect size for one complete trace pass or prove that reduced
-cache-line bouncing caused the gain. The retained runs did not collect
+local and CXL placement across four complete trace passes. It does not prove
+that reduced cache-line bouncing caused the gain. The runs did not collect
 HITM/C2C or memory-bandwidth counters, operation-latency percentiles, or a
-final correctness checksum. A protocol-matched one-pass rerun, those
-measurements, and stricter CPU isolation are required before making a causal or
-general performance claim.
+final correctness checksum. Those measurements and stricter CPU isolation are
+required before making a causal or general performance claim.
