@@ -625,6 +625,15 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo "local row and node ${TARGET_NODE:-disabled} for the target row."
 } > "${SUMMARY_MD}"
 
+INTERPRETATION_MD="${RESULT_DIR}/interpretation.md"
+if "${ROOT_DIR}/scripts/summarize-xindex-hitm-seed-result.sh" \
+    "${RESULT_DIR}" > "${INTERPRETATION_MD}"; then
+  echo "[report] wrote ${INTERPRETATION_MD}"
+else
+  rm -f "${INTERPRETATION_MD}"
+  echo "[report] failed to generate result interpretation" >&2
+fi
+
 cat <<EOF
 
 HITM-risk seed experiment complete.
@@ -632,6 +641,7 @@ Results:
   ${RUNS_CSV}
   ${SUMMARY_CSV}
   ${SUMMARY_MD}
+  ${INTERPRETATION_MD}
   ${SAMPLES_CSV}
   ${RESULT_DIR}/hitm-seed-input.config
   ${RESULT_DIR}/hitm-seed-sites.csv

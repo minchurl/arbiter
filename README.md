@@ -83,7 +83,16 @@ First verify the machine and full traces without starting a benchmark:
 ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --check
 ```
 
-Then start the four-pair confirmation in tmux:
+Run one full-trace local/CXL pair for a roughly 10-minute regression check:
+
+```sh
+ARBITER_TARGET_NODE=2 ./scripts/run-xindex-hitm-seed-replay.sh --quick
+```
+
+`--quick` changes only the repeat count from four to one. It still uses the
+100M/400M traces and measures each placement for 180 seconds. For the stronger
+four-pair confirmation (roughly 35 minutes on the validated machine), start
+the default command in tmux:
 
 ```sh
 tmux new-session -d -s arbiter-hitm-seed -c "$(pwd)" \
@@ -95,12 +104,24 @@ tmux attach -t arbiter-hitm-seed
 The wrapper uses `raw-046`, 100M load records, the 400M-operation YCSB-A
 trace, 31 foreground plus one background worker, four alternating 180-second
 local/CXL pairs, 30-second throughput samples, strict 24GiB arenas,
-`MemoryMax=64G`, and no swap. Override `REPEATS=1` for the shorter regression
-shape used after the seed-only cleanup.
+`MemoryMax=64G`, and no swap.
 
 Results are written to a unique timestamped directory under
-`build/arbiter-bench/`. Inspect `summary.md`, `runs.csv`,
-`throughput-samples.csv`, `hitm-seed-sites.csv`, and `replay-manifest.txt`.
+`build/arbiter-bench/`. Each completed run now writes `interpretation.md`,
+which reports paired throughput, all statically selected sites, sites that
+actually allocated objects, CXL resident bytes, NUMA placement, fallbacks,
+swaps, and row status. To interpret the newest replay or a specific result:
+
+```sh
+./scripts/summarize-xindex-hitm-seed-result.sh
+./scripts/summarize-xindex-hitm-seed-result.sh \
+  build/arbiter-bench/xindex-hitm-seed-replay-YYYYMMDD-HHMMSS
+```
+
+The canonical `raw-046` selection is automatic: sites
+`68+71+74+90+97+98+99+100` are rewritten, while only `68+71+74` allocate in
+the current YCSB-A trace. The report keeps this static-selection/runtime-use
+distinction explicit; no site ID is pinned in the config.
 
 The retained four-pair result for `raw-046` was 27.886M local versus 56.813M
 CXL op/s, a mean paired improvement of +103.75%. A later one-pair seed-only

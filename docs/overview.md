@@ -77,7 +77,9 @@ direct backend when a site's shape changes or capacity is exhausted.
 - `scripts/run-protected-hitm-seed-experiment.sh` builds, launches fresh
   processes, enforces memory limits, validates arena placement, and writes CSVs;
 - `scripts/run-xindex-hitm-seed-replay.sh` fixes the validated `raw-046` full-scale
-  conditions and records a machine manifest.
+  conditions and records a machine manifest;
+- `scripts/summarize-xindex-hitm-seed-result.sh` turns one result directory into
+  a readable policy, throughput, active-site, placement, and safety report.
 
 The canonical config is `configs/hitm-seed/candidates/raw-046.config`. Eleven
 other safe measured policies remain for sensitivity studies.

@@ -3,15 +3,24 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 MODE=run
-if [[ "${1:-}" == "--check" ]]; then
-  MODE=check
-elif [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
-  cat <<'EOF'
-usage: scripts/run-xindex-hitm-seed-replay.sh [--check]
+QUICK=0
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --check)
+      MODE=check
+      ;;
+    --quick)
+      QUICK=1
+      ;;
+    -h|--help)
+      cat <<'EOF'
+usage: scripts/run-xindex-hitm-seed-replay.sh [--check] [--quick]
 
 Replays the validated XIndex/YCSB-A raw-046 local-versus-CXL experiment.
 Use --check to validate inputs and print the resolved settings without
 building a binary or starting a benchmark.
+Use --quick for one full-trace local/CXL pair instead of four pairs. The
+trace scale and 180-second measurement interval are unchanged.
 
 Common overrides:
   ARBITER_TARGET_NODE  CXL NUMA node, default 2
@@ -20,18 +29,28 @@ Common overrides:
   BUILD_BENCHMARKS     rebuild XIndex, default 1
   RUN_NATIVE           include a native row per repeat, default 0
 EOF
-  exit 0
-elif [[ $# -ne 0 ]]; then
-  echo "unknown argument: $1" >&2
-  exit 1
-fi
+      exit 0
+      ;;
+    *)
+      echo "unknown argument: $1" >&2
+      exit 1
+      ;;
+  esac
+  shift
+done
 
 CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config}"
 DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 TARGET_NODE="${ARBITER_TARGET_NODE:-2}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
 MEM_NODE="${ARBITER_MEM_NODE:-0}"
-REPLAY_REPEATS="${REPEATS:-4}"
+if [[ "${QUICK}" == "1" ]]; then
+  REPLAY_REPEATS=1
+  REPLAY_SHAPE="quick full-trace pair"
+else
+  REPLAY_REPEATS="${REPEATS:-4}"
+  REPLAY_SHAPE="configured confirmation (${REPLAY_REPEATS} pair(s))"
+fi
 RESULT_DIR="${RESULT_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-hitm-seed-replay-$(date +%Y%m%d-%H%M%S)}"
 HITM_SEED_BUILD_DIR="${HITM_SEED_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-hitm-seed-raw-046}"
 ARBITER_BUILD_DIR="${ARBITER_BUILD_DIR:-${ROOT_DIR}/build-llvm18}"
@@ -172,6 +191,7 @@ XIndex HITM-risk seed replay settings:
   load / tx records:  100000000 / 400000000
   duration / sample:  180s / 30s
   repeats:            ${REPLAY_REPEATS}
+  replay shape:       ${REPLAY_SHAPE}
   workers:            31 foreground + 1 background
   CPU / local / CXL:  ${CPU_NODE} / ${MEM_NODE} / ${TARGET_NODE}
   target node CPUs:   ${TARGET_CPUS:-none}
