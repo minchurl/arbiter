@@ -101,8 +101,12 @@ if [[ -s "${POLICY_CONFIG}" ]]; then
   printf '|---|---:|---|\n'
   printf '| Minimum score | %s | selection threshold |\n' "${MIN_SCORE:-unknown}"
   printf '| Seed limit | %s | maximum selected groups/sites after ranking |\n' "${SEED_LIMIT:-unknown}"
-  printf '| Explicit site IDs | `%s` | `%s` means score-based automatic selection |\n' \
-    "${EXPLICIT_SITE_IDS:-empty}" "${EXPLICIT_SITE_IDS:-empty}"
+  if [[ -n "${EXPLICIT_SITE_IDS}" ]]; then
+    printf '| Explicit site IDs | `%s` | pinned selection; automatic ranking is bypassed |\n' \
+      "${EXPLICIT_SITE_IDS}"
+  else
+    printf '| Explicit site IDs | `empty` | empty means score-based automatic selection |\n'
+  fi
   printf '| Size weight | %s | score weight for allocation size |\n' "${SIZE_WEIGHT:-unknown}"
   printf '| Require escape / synchronization | %s / %s | both gates must pass |\n' \
     "${REQUIRE_ESCAPE:-unknown}" "${REQUIRE_SYNC:-unknown}"

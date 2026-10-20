@@ -8,17 +8,22 @@ not migrate already allocated objects.
 ## Primary Result: XIndex/YCSB-A One Pass
 
 The automatic `raw-046` policy selected a runtime allocation fingerprint of
-sites `68+71+74`. Across four complete-trace local/CXL pairs:
+sites `68+71+74`. In the latest four complete-trace local/CXL pairs:
 
 | Placement | Mean throughput |
 |---|---:|
-| Local arena | 26.531 M op/s |
-| CXL arena | 49.068 M op/s |
+| Local arena | 26.287 M op/s |
+| CXL arena | 50.324 M op/s |
 
-The mean paired improvement was **+85.03%**, and CXL won all four pairs. Every
+The mean paired improvement was **+91.53%**, and CXL won all four pairs. Every
 row consumed the 400M-operation trace once and exited. See
 [the full YCSB-A result](xindex-ycsb-a.md). Earlier 180-second cyclic-replay
 results are retained there as historical evidence.
+
+A four-way site ablation found +46.35% for site 68 alone, +50.78% for site 71
+alone, and +90.79% for sites 68+71 together. The resulting generalized policy
+uses allocation size only as a +1 tie breaker and produces the same XIndex
+rewrite as raw-046 without its size-dominant scoring rule.
 
 ## Workload Boundary: XIndex/YCSB-B
 

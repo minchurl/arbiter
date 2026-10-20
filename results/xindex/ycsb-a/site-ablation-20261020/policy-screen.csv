@@ -1,0 +1,3 @@
+policy,local_ops,cxl_ops,paired_delta_pct,cxl_resident_gib,status,fallbacks,swaps
+evidence-balanced-size-tiebreaker,27385200,49390400,80.354352,17.309834,ok,0,0
+balanced-size-tiebreaker,26540800,50284800,89.462262,18.883121,ok,0,0

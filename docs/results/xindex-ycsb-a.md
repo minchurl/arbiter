@@ -1,8 +1,8 @@
 # XIndex/YCSB-A HITM-Risk Seed Placement
 
-The recommended `raw-046` policy placed 17.31GiB of live arena pages on CXL.
-Across four one-pass pairs it improved mean throughput from 26.531M to
-49.068M op/s: **+85.03% mean paired improvement**.
+The retained `raw-046` search policy placed 17.31GiB of live arena pages on
+CXL. In the latest four-pair one-pass run it improved mean throughput from
+26.287M to 50.324M op/s: **+91.53% mean paired improvement**.
 
 ## One-Pass Result
 
@@ -11,16 +11,39 @@ exited. Local/CXL order alternated across pairs.
 
 | Repeat | Local | CXL | CXL vs local |
 |---:|---:|---:|---:|
-| 1 | 26.423M op/s | 49.276M op/s | +86.49% |
-| 2 | 26.094M op/s | 49.661M op/s | +90.31% |
-| 3 | 27.360M op/s | 48.527M op/s | +77.36% |
-| 4 | 26.248M op/s | 48.806M op/s | +85.94% |
+| 1 | 25.997M op/s | 49.806M op/s | +91.58% |
+| 2 | 26.748M op/s | 50.841M op/s | +90.08% |
+| 3 | 25.572M op/s | 50.827M op/s | +98.76% |
+| 4 | 26.831M op/s | 49.820M op/s | +85.68% |
 
 All eight rows completed successfully with zero swap, arena fallback, and
 placement-query errors. Every row reported 17.310GiB of resident arena memory
-on its requested NUMA node. Mean max RSS was 30.196GiB. The retained
-machine-readable summary is under
-[`results/xindex/ycsb-a/one-pass-20261008/`](../../results/xindex/ycsb-a/one-pass-20261008/README.md).
+on its requested NUMA node. The earlier 2026-10-08 one-pass evidence remains
+under [`results/xindex/ycsb-a/one-pass-20261008/`](../../results/xindex/ycsb-a/one-pass-20261008/README.md).
+
+## Site Ablation and Generalized Policy
+
+The 2026-10-20 ablation used four Local/CXL pairs per policy under the same
+400M-operation one-pass contract:
+
+| Policy | Runtime sites | Local | CXL | Mean paired delta | CXL resident |
+|---|---|---:|---:|---:|---:|
+| Site 68 only | `68` | 26.893M op/s | 39.367M op/s | +46.35% | 3.147GiB |
+| Site 71 only | `71` | 26.924M op/s | 40.597M op/s | +50.78% | 14.163GiB |
+| Sites 68+71 | `68,71` | 26.290M op/s | 50.092M op/s | +90.79% | 17.310GiB |
+| raw-046 | `68,71,74` | 26.287M op/s | 50.324M op/s | +91.53% | 17.310GiB |
+
+All 32 rows succeeded with zero fallback, swap, and placement-query errors.
+Sites 68 and 71 both contribute, while site 74 accounts for only one 2MiB
+slab and provides no detectable improvement over 68+71 in this experiment.
+
+The automatic `evidence-balanced-size-tiebreaker` policy was derived from this
+result. It requires escape and synchronization/mutation evidence, weights
+worker reachability at two points, and assigns size only one tie-breaking
+point. It selects the same eight static XIndex sites as raw-046 and produces a
+byte-identical rewritten XIndex executable, but avoids raw-046's dominant +6
+size weight. The policy is therefore the preferred input for cross-benchmark
+generality tests; raw-046 remains the historical search result.
 
 ## Retained Cyclic-Replay Protocol
 
