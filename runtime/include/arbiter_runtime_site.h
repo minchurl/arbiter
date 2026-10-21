@@ -15,7 +15,15 @@ void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
                         uint32_t site_id, uint32_t reserved);
 void arbiter_free_maybe(void *ptr);
 void arbiter_cxx_delete_maybe(void *ptr);
+void arbiter_cxx_delete_sized_maybe(void *ptr, uint64_t size);
+void arbiter_cxx_delete_aligned_maybe(void *ptr, uint64_t align);
+void arbiter_cxx_delete_sized_aligned_maybe(void *ptr, uint64_t size,
+                                            uint64_t align);
 void arbiter_cxx_delete_array_maybe(void *ptr);
+void arbiter_cxx_delete_array_sized_maybe(void *ptr, uint64_t size);
+void arbiter_cxx_delete_array_aligned_maybe(void *ptr, uint64_t align);
+void arbiter_cxx_delete_array_sized_aligned_maybe(void *ptr, uint64_t size,
+                                                  uint64_t align);
 int arbiter_munmap_maybe(void *ptr, uint64_t size);
 
 #ifdef __cplusplus

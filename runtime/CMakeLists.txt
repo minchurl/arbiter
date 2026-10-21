@@ -55,6 +55,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
     ../tests/llvm/arbiter-slab-arena-smoke.cpp
   )
 
+  add_executable(arbiter-slab-arena-boundary-smoke
+    ../tests/llvm/arbiter-slab-arena-boundary-smoke.cpp
+  )
+
   target_include_directories(arbiter-numa-placement
     PRIVATE
     ${NUMA_INCLUDE_DIR}
@@ -62,6 +66,12 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
   )
 
   target_include_directories(arbiter-slab-arena-smoke
+    PRIVATE
+    ${NUMA_INCLUDE_DIR}
+    ${NUMAIF_INCLUDE_DIR}
+  )
+
+  target_include_directories(arbiter-slab-arena-boundary-smoke
     PRIVATE
     ${NUMA_INCLUDE_DIR}
     ${NUMAIF_INCLUDE_DIR}
@@ -77,11 +87,20 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
     arbiter_runtime
   )
 
+  target_link_libraries(arbiter-slab-arena-boundary-smoke
+    PRIVATE
+    arbiter_runtime
+  )
+
   set_target_properties(arbiter-numa-placement PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
   )
 
   set_target_properties(arbiter-slab-arena-smoke PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
+  )
+
+  set_target_properties(arbiter-slab-arena-boundary-smoke PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR}
   )
 

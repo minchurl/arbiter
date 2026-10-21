@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <new>
 
 namespace {
 
@@ -22,6 +23,15 @@ bool exerciseSiteAllocation(uint64_t size, uint64_t alignment) {
 
   if (size > 0)
     std::memset(ptr, 0x5a, static_cast<size_t>(size));
+  if (alignment > 1 &&
+      reinterpret_cast<uintptr_t>(ptr) % alignment != 0) {
+    std::fprintf(stderr,
+                 "arbiter-runtime-smoke: pointer is not aligned "
+                 "(ptr=%p, alignment=%llu)\n",
+                 ptr, static_cast<unsigned long long>(alignment));
+    arbiter_free_maybe(ptr);
+    return false;
+  }
   arbiter_free_maybe(ptr);
   return true;
 }
@@ -58,6 +68,71 @@ bool exerciseFreeFallback() {
   return true;
 }
 
+bool exerciseDeleteFallbacks() {
+  constexpr size_t size = 256;
+  constexpr size_t alignment = 64;
+
+  arbiter_cxx_delete_maybe(::operator new(size));
+  arbiter_cxx_delete_sized_maybe(::operator new(size), size);
+  arbiter_cxx_delete_aligned_maybe(
+      ::operator new(size, static_cast<std::align_val_t>(alignment)),
+      alignment);
+  arbiter_cxx_delete_sized_aligned_maybe(
+      ::operator new(size, static_cast<std::align_val_t>(alignment)), size,
+      alignment);
+
+  arbiter_cxx_delete_array_maybe(::operator new[](size));
+  arbiter_cxx_delete_array_sized_maybe(::operator new[](size), size);
+  arbiter_cxx_delete_array_aligned_maybe(
+      ::operator new[](size, static_cast<std::align_val_t>(alignment)),
+      alignment);
+  arbiter_cxx_delete_array_sized_aligned_maybe(
+      ::operator new[](size, static_cast<std::align_val_t>(alignment)), size,
+      alignment);
+  return true;
+}
+
+bool exerciseTrackedDeleteHelpers() {
+  constexpr uint64_t size = 256;
+  constexpr uint64_t alignment = 64;
+  using DeleteFn = void (*)(void *);
+
+  DeleteFn ordinary[] = {arbiter_cxx_delete_maybe,
+                         arbiter_cxx_delete_array_maybe};
+  for (DeleteFn fn : ordinary) {
+    void *ptr = arbiter_alloc_site(size, alignment, 9, 0);
+    if (!ptr)
+      return false;
+    fn(ptr);
+  }
+
+  void *ptr = arbiter_alloc_site(size, alignment, 10, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_sized_maybe(ptr, size);
+  ptr = arbiter_alloc_site(size, alignment, 11, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_aligned_maybe(ptr, alignment);
+  ptr = arbiter_alloc_site(size, alignment, 12, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_sized_aligned_maybe(ptr, size, alignment);
+  ptr = arbiter_alloc_site(size, alignment, 13, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_array_sized_maybe(ptr, size);
+  ptr = arbiter_alloc_site(size, alignment, 14, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_array_aligned_maybe(ptr, alignment);
+  ptr = arbiter_alloc_site(size, alignment, 15, 0);
+  if (!ptr)
+    return false;
+  arbiter_cxx_delete_array_sized_aligned_maybe(ptr, size, alignment);
+  return true;
+}
+
 } // namespace
 
 int main() {
@@ -69,7 +144,8 @@ int main() {
       if (!exerciseSiteAllocation(size, alignment))
         return 1;
 
-  if (!exerciseSiteCalloc() || !exerciseFreeFallback())
+  if (!exerciseSiteCalloc() || !exerciseFreeFallback() ||
+      !exerciseDeleteFallbacks() || !exerciseTrackedDeleteHelpers())
     return 1;
 
   return 0;
