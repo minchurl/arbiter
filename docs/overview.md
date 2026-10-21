@@ -78,6 +78,10 @@ direct backend when a site's shape changes or capacity is exhausted.
   processes, enforces memory limits, validates arena placement, and writes CSVs;
 - `scripts/run-xindex-hitm-seed-replay.sh` fixes the current `raw-046` full-scale
   one-pass conditions and records a machine manifest;
+- `scripts/validate-xindex-runtime-correctness.sh` runs ABI, arena-boundary,
+  and short native/Local/CXL semantic gates;
+- `scripts/validate-xindex-runtime-correctness-full.sh` runs a fail-closed
+  one-pair or four-pair 100M/400M correctness confirmation;
 - `scripts/summarize-xindex-hitm-seed-result.sh` turns one result directory into
   a readable policy, throughput, active-site, placement, and safety report.
 
@@ -119,6 +123,6 @@ failed raw runs and removed implementation code remain recoverable from Git
 history. This keeps the executable path focused on the seed-only result without
 discarding the evidence behind the current claim.
 
+The runtime ABI and XIndex logical result now have explicit correctness checks.
 The measured throughput gain does not by itself prove reduced HITM. A causal
-claim still requires correctness checks, HITM/C2C counters, memory-bandwidth
-counters, and latency measurements.
+claim still requires HITM/C2C, memory-bandwidth, and latency counters.
