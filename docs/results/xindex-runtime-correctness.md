@@ -5,6 +5,25 @@ Date: 2026-10-21
 Branch: `validation/xindex-runtime-correctness`
 Policy under confirmation: automatic Site 68+71 policy
 
+## Current measurement loop
+
+The per-operation attempted/successful counters have been removed from the
+benchmark. The measured loop again uses only the original throughput counter.
+After timing, the driver reports that existing total as
+`xindex-operation-count executed=...` and optionally validates the 4,096-key
+state digest. Validation scripts check the executed count, sampled state, and
+placement. They no longer claim to check every operation's return value.
+
+The measurements below are retained historical evidence from the
+counter-instrumented driver. They are not counter-free remeasurements.
+
+The removal was build-checked and smoke-tested with a 200K-record load and
+1M-operation trace on native, arena node 0, and arena node 2. All three rows
+reported 1M executed operations and the same 4,096-key digest
+`0x9d30d99a719185fa`; arena rows had zero fallback and placement-query errors.
+The automatic policy still selected the same eight static sites. A new
+counter-free full-trace performance measurement has not been run.
+
 ## Result
 
 The runtime/correctness gates passed. Native, rewritten-Local, and
@@ -48,9 +67,9 @@ changes, alignment changes, and objects larger than half a slab.
 
 ## Correctness evidence
 
-The benchmark now reports attempted and successful counts by operation type.
-It also reads a deterministic 4,096-key sample after the timed region and
-prints an FNV-1a state digest.
+The historical validation driver reported attempted and successful counts by
+operation type. It also read a deterministic 4,096-key sample after the timed
+region and printed an FNV-1a state digest.
 
 The short 200K-load/1M-operation validation covered native, Site 68+71 Local,
 Site 68+71 CXL, raw-046 Local, and raw-046 CXL. Every row completed all 500K
@@ -124,8 +143,9 @@ Then run a full diagnostic pair or the four-pair confirmation:
 ./scripts/validate-xindex-runtime-correctness-full.sh --four-pairs
 ```
 
-Both drivers stop on operation failures, state-digest disagreement, arena
-fallback, placement failure, process failure, or an incomplete result matrix.
+The current drivers stop on an incomplete executed-operation count, sampled
+read failures, state-digest disagreement, arena fallback, placement failure,
+process failure, or an incomplete result matrix.
 
 ## Decision
 

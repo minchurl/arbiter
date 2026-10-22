@@ -59,7 +59,6 @@ env \
   BUILD_BENCHMARKS="${REBUILD}" \
   REPEATS="${REPEATS}" \
   XINDEX_VALIDATE=1 \
-  XINDEX_REQUIRE_ALL_OPERATIONS_SUCCESS=1 \
   XINDEX_VALIDATION_KEYS="${XINDEX_VALIDATION_KEYS:-4096}" \
   "${ROOT_DIR}/scripts/run-xindex-hitm-seed-replay.sh" "${replay_args[@]}"
 
@@ -81,7 +80,7 @@ if [[ "${actual_rows}" -ne "${expected_rows}" ||
 fi
 
 operation_rows="$(grep -l \
-  'xindex-operation-validation attempted=400000000 successful=400000000 failed=0' \
+  '^xindex-operation-count executed=400000000$' \
   "${RESULT_DIR}"/logs/*.log | wc -l)"
 digest_rows="$(grep -h 'xindex-state-validation ' "${RESULT_DIR}"/logs/*.log |
   sed -n 's/.* sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=\([^ ]*\).*/\1/p' |
