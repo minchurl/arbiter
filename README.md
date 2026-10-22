@@ -77,6 +77,24 @@ cmake --build build-llvm18 --target \
 
 ## Run the XIndex Experiment
 
+For the meeting demo, run A or F independently:
+
+```sh
+./scripts/run-xindex-a-demo.sh   # A: read 50% / update 50%
+./scripts/run-xindex-f-demo.sh   # F: read 50% / RMW 50%
+```
+
+Each script is linear: set the workload/policy, build, run **Local once then CXL
+once**, and print both throughputs and the percentage change to the console.
+Native is excluded. Every process builds the index from 100M load records and
+finishes all 400M transactions; there is no duration cutoff or cyclic replay.
+The automatic evidence-balanced policy, 31+1 workers, 64G memory limit, and
+post-timing validation are shared. The demo scripts take no arguments.
+F uses A's trace with UPDATE interpreted as RMW. Each RMW counts as one logical
+transaction, so A and F do not perform the same number of index API calls.
+The [2026-10-22 demo results](results/xindex/af-demo-20261022-1447/README.md)
+retain the measured A/F pairs and their raw logs.
+
 For the automatic policy with size reduced to a +1 tie breaker:
 
 ```sh

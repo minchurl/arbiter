@@ -22,8 +22,14 @@ The removal was build-checked and smoke-tested with a 200K-record load and
 reported 1M executed operations and the same 4,096-key digest
 `0x9d30d99a719185fa`; arena rows had zero fallback and placement-query errors.
 The automatic policy still selected the same eight static sites. The subsequent
-[counter-free F remeasurement](../xindex-ycsb-f.md) passed all 12 full-trace rows;
-the historical A measurements below have not been remeasured without counters.
+[counter-free F remeasurement](../xindex-ycsb-f.md) passed all 12 full-trace rows.
+The [2026-10-22 counter-free A/F demo](../../results/xindex/af-demo-20261022-1447/README.md)
+then measured one Local/CXL pair per workload with the automatic evidence-balanced
+policy: A 26.593M/49.304M transactions/s (+85.41%), F 32.959M/50.437M (+53.03%).
+All four rows passed executed-count, sampled-state, and placement checks.
+The placement benefit remains after the ABI fixes; the older change from
++90.79% to +80.42% was not an isolated measurement of correctness-fix overhead.
+The historical four-pair Site 68+71 measurements below remain separate evidence.
 
 ## Result
 
