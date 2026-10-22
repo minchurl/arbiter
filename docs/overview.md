@@ -78,6 +78,8 @@ direct backend when a site's shape changes or capacity is exhausted.
   processes, enforces memory limits, validates arena placement, and writes CSVs;
 - `scripts/run-xindex-hitm-seed-replay.sh` fixes the current `raw-046` full-scale
   one-pass conditions and records a machine manifest;
+- `scripts/run-xindex-ycsb-f.sh` runs the automatic evidence-balanced policy
+  on read/read-modify-write F, with native/Local/CXL correctness checks;
 - `scripts/validate-xindex-runtime-correctness.sh` runs ABI, arena-boundary,
   and short native/Local/CXL semantic gates;
 - `scripts/validate-xindex-runtime-correctness-full.sh` runs a fail-closed
@@ -87,6 +89,11 @@ direct backend when a site's shape changes or capacity is exhausted.
 
 The canonical config is `configs/hitm-seed/candidates/raw-046.config`. Eleven
 other safe measured policies remain for sensitivity studies.
+
+Active workloads are A and F. F maps each UPDATE in A's trace to a sequential
+get and put by the same worker and counts that pair as one logical transaction.
+It uses the same allocation runtime and policy as A. B's negative results and
+compressed input are archived; its active sweep launchers were removed.
 
 ## Measurement Contract
 

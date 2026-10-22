@@ -19,5 +19,5 @@ the original search dimensions.
 
 Use `../../candidates/raw-046.config` for the recommended current policy. Run
 `sha256sum -c configs.sha256` from this directory to verify the translated
-inputs. The adaptive YCSB-B driver uses this directory only when intentionally
+inputs. The historical adaptive YCSB-B driver used this directory when intentionally
 replaying the full parameter space.

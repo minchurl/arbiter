@@ -16,13 +16,14 @@ while [[ $# -gt 0 ]]; do
       cat <<'EOF'
 usage: scripts/run-xindex-hitm-seed-replay.sh [--check] [--quick]
 
-Runs the canonical one-pass XIndex/YCSB-A raw-046 local-versus-CXL experiment.
+Runs a one-pass XIndex/YCSB-A or F local-versus-CXL experiment.
 Use --check to validate inputs and print the resolved settings without
 building a binary or starting a benchmark.
 Use --quick for one local/CXL pair instead of four pairs. Every row consumes
 the complete 400M-operation transaction trace exactly once and then exits.
 
 Common overrides:
+  YCSB_TYPE            a (default) or f; F maps A's UPDATE to read-then-update
   ARBITER_TARGET_NODE  CXL NUMA node, default 2
   REPEATS              local/CXL pairs, default 4
   RESULT_DIR           unique result directory
@@ -40,6 +41,11 @@ EOF
 done
 
 CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/candidates/raw-046.config}"
+WORKLOAD="${YCSB_TYPE:-a}"
+if [[ "${WORKLOAD}" != "a" && "${WORKLOAD}" != "f" ]]; then
+  echo "YCSB_TYPE must be a or f" >&2
+  exit 1
+fi
 DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 TARGET_NODE="${ARBITER_TARGET_NODE:-2}"
 CPU_NODE="${ARBITER_CPU_NODE:-0}"
@@ -64,6 +70,9 @@ if [[ "${DATA_DIR}" != /* ]]; then
 fi
 LOAD_PATH="${DATA_DIR}/xindex_load_ycsb_a.dat"
 TX_PATH="${DATA_DIR}/xindex_transaction_ycsb_a.dat"
+if [[ "${WORKLOAD}" == "f" && -s "${DATA_DIR}/xindex_transaction_ycsb_f.dat" ]]; then
+  TX_PATH="${DATA_DIR}/xindex_transaction_ycsb_f.dat"
+fi
 
 require_command() {
   if ! command -v "$1" >/dev/null 2>&1; then
@@ -187,9 +196,11 @@ TARGET_MEMORY_KB="$(awk '/MemTotal/ {print $4}' "/sys/devices/system/node/node${
 
 cat <<EOF
 XIndex HITM-risk seed replay settings:
+  workload:           ${WORKLOAD} (F: same-worker read-then-update)
+  native baseline:    ${RUN_NATIVE:-0}
   config:             ${CONFIG}
   load / tx records:  100000000 / 400000000
-  execution mode:     iteration=1, duration=0 (400M operations once)
+  execution mode:     iteration=1, duration=0 (400M logical transactions once)
   throughput samples: disabled
   repeats:            ${REPLAY_REPEATS}
   replay shape:       ${REPLAY_SHAPE}
@@ -227,6 +238,10 @@ mkdir -p "${RESULT_DIR}"
   echo "config=${CONFIG}"
   echo "config_sha256=$(sha256sum "${CONFIG}" | awk '{print $1}')"
   echo "data_dir=${DATA_DIR}"
+  echo "workload=${WORKLOAD}"
+  echo "transaction_source=${TX_PATH}"
+  echo "update_mapping=$([[ "${WORKLOAD}" == "f" ]] && echo read-then-update || echo update)"
+  echo "throughput_unit=logical-transactions/s"
   echo "load_records=100000000"
   echo "transaction_ops=400000000"
   echo "execution_mode=iteration"
@@ -266,7 +281,7 @@ exec env \
   XINDEX_VALIDATION_KEYS="${XINDEX_VALIDATION_KEYS:-4096}" \
   XINDEX_FG=31 \
   XINDEX_BG=1 \
-  YCSB_TYPES=a \
+  YCSB_TYPES="${WORKLOAD}" \
   REPEATS="${REPLAY_REPEATS}" \
   ARBITER_CPU_NODE="${CPU_NODE}" \
   ARBITER_MEM_NODE="${MEM_NODE}" \

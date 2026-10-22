@@ -3,3 +3,4 @@ benchmark/xindex/YCSB/xindex_dat/github-parts/MANIFEST.sha256 text eol=lf
 
 # Preserve archived raw experiment output byte-for-byte.
 docs/experiments/artifacts/** -whitespace
+results/xindex/ycsb-f/one-pass-20261022/**/replay-manifest.txt -whitespace

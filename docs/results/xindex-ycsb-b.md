@@ -1,5 +1,11 @@
 # XIndex/YCSB-B Result
 
+YCSB-B is archived. Its measured results and compressed trace chunks are
+retained, but the B sweep/A-B comparison launchers and local decompressed B
+trace have been removed from the active workflow. The original launchers are
+available in Git at commit `d78356a`; use
+`scripts/restore-xindex-ycsb-data.sh --include-archived-b` to restore its data.
+
 This result explores whether Arbiter's seed-only placement signal extends to
 read-heavy YCSB-B. The run rebuilt the same frozen 100-config search space with
 the current compiler and executed one complete 400M-operation YCSB-B trace per
@@ -75,17 +81,9 @@ protocol-matched positive write-heavy reference.
 
 The frozen inputs are under
 [`configs/hitm-seed/search-spaces/xindex-broad-100/`](../../configs/hitm-seed/search-spaces/xindex-broad-100/README.md).
-Validate the runner without building or benchmarking:
-
-```sh
-./scripts/run-xindex-ycsb-b-adaptive-sweep.sh --check
-```
-
-Start a fresh run with:
-
-```sh
-./scripts/run-xindex-ycsb-b-adaptive-sweep.sh --run
-```
+The historical runner is retained in Git at commit `d78356a` as
+`scripts/run-xindex-ycsb-b-adaptive-sweep.sh`. Use that revision to reproduce
+the archived protocol.
 
 The reportable outputs from the completed run are retained under
 [`results/xindex/ycsb-b/fulltrace-sweep-20261008/`](../../results/xindex/ycsb-b/fulltrace-sweep-20261008/README.md).

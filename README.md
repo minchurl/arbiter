@@ -39,7 +39,7 @@ checked in under `configs/` and `results/`.
 - LLVM 18 development files and tools (`clang`, `opt`, `llvm-link`)
 - Linux `libnuma`
 - Intel MKL and jemalloc for XIndex
-- `git-lfs` and `zstd` when restoring the packaged 46GB YCSB traces
+- `git-lfs` and `zstd` when restoring the packaged 26GB YCSB-A traces
 - systemd user scopes for the protected 64G benchmark limit
 
 Ubuntu packages:
@@ -60,8 +60,8 @@ git lfs install
 ```
 
 This restores the full traces, builds the LLVM plugin/runtime and benchmark
-binaries, creates smoke traces, and runs short local checks. The raw traces
-need roughly 46GB of disk space. Use `--no-smoke` or `--no-data` only when the
+binaries, creates smoke traces, and runs short local checks. The active raw traces
+need roughly 26GB of disk space. Use `--no-smoke` or `--no-data` only when the
 corresponding artifacts already exist.
 
 Manual compiler/runtime build:
@@ -76,6 +76,21 @@ cmake --build build-llvm18 --target \
 ```
 
 ## Run the XIndex Experiment
+
+For the automatic policy with size reduced to a +1 tie breaker:
+
+```sh
+./scripts/run-xindex-evidence-balanced.sh   # A: read/update
+./scripts/run-xindex-ycsb-f.sh              # F: read/read-modify-write
+```
+
+The F runner compares native, selected-Local, and selected-CXL with correctness
+checks and one full trace pass per process. `--smoke` checks short traces first;
+`--check` only checks the full-run settings. F reuses A's input keys and maps
+each UPDATE to a same-worker get followed by put, counted as one logical
+transaction. It needs no additional full trace. Use `REPEATS=4` for four rounds.
+See [the F protocol](docs/xindex-ycsb-f.md). B's results are
+[archived](docs/results/xindex-ycsb-b.md); B is no longer an active workload.
 
 First verify the machine and full traces without starting a benchmark:
 
