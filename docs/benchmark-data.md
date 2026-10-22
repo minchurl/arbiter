@@ -7,12 +7,11 @@ trace files are large generated artifacts. The canonical local source is:
 ~/niagara_workloads/YCSB/xindex_dat
 ```
 
-Expected full-size files:
+Active full-size files (shared by A and F):
 
 ```text
 xindex_load_ycsb_a.dat
 xindex_transaction_ycsb_a.dat
-xindex_transaction_ycsb_b.dat
 ```
 
 Import them into the repository working tree with:
@@ -21,7 +20,7 @@ Import them into the repository working tree with:
 ./scripts/import-niagara-workloads.sh --mode copy
 ```
 
-For local work on the same filesystem, this avoids another 46GB copy:
+For local work on the same filesystem, this avoids another 26GB copy:
 
 ```sh
 ./scripts/import-niagara-workloads.sh --mode hardlink
@@ -85,6 +84,14 @@ benchmark/xindex/YCSB/xindex_dat
 Override the directory with `XINDEX_DATA_DIR` or pass exact files with
 `YCSB_LOAD_PATH` and `YCSB_TX_PATH`.
 
-YCSB-B uses `xindex_transaction_ycsb_b.dat`. If
-`xindex_load_ycsb_b.dat` is absent, the wrapper falls back to
-`xindex_load_ycsb_a.dat`, matching the available Niagara workload data.
+YCSB-F reuses the A load and transaction files. In F mode the driver interprets
+each UPDATE as one same-worker get/put transaction. It retains the original key
+order and read/update mixture and creates no second multi-gigabyte trace.
+Explicit `READMODIFYWRITE usertable user<key> ...` records are also accepted.
+
+YCSB-B's measured results and compressed Git LFS chunks are retained as history.
+The import, package, and restore defaults now use A only. To restore archived B:
+
+```sh
+./scripts/restore-xindex-ycsb-data.sh --include-archived-b
+```

@@ -76,7 +76,7 @@ Useful environment:
   HITM_SEED_BUILD_DIR          HITM-risk seed build output directory
   XINDEX_SCALE_LOAD_RECORDS scaled load records
   XINDEX_SCALE_TX_OPS       scaled transaction operations
-  YCSB_TYPES                workload list, such as "a" or "a b"
+  YCSB_TYPES                workload list, such as "a" or "a f"
   REPEATS                   default: 1
   XINDEX_FG                 default: 8
   XINDEX_BG                 default: 1
@@ -143,6 +143,12 @@ require_toggle() {
 }
 
 require_positive_integer XINDEX_SCALE_LOAD_RECORDS "${LOAD_RECORDS}"
+for workload in ${YCSB_TYPES}; do
+  if [[ "${workload}" != "a" && "${workload}" != "f" ]]; then
+    echo "YCSB_TYPES supports a and f; B experiments are archived" >&2
+    exit 1
+  fi
+done
 require_positive_integer XINDEX_SCALE_TX_OPS "${TX_OPS}"
 require_positive_integer REPEATS "${REPEATS}"
 require_positive_integer XINDEX_FG "${XINDEX_FG}"
@@ -315,6 +321,9 @@ else
   for workload in ${YCSB_TYPES}; do
     load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_${workload}.dat"
     tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_${workload}.dat"
+    if [[ "${workload}" == "f" && ! -s "${tx_path}" ]]; then
+      tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_a.dat"
+    fi
     if [[ "${workload}" != "a" && ! -s "${load_path}" ]]; then
       load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_a.dat"
     fi
@@ -389,6 +398,9 @@ run_one() {
   local binary="$5"
   local load_path="${XINDEX_SCALE_DATA_DIR}/xindex_load_ycsb_${workload}.dat"
   local tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_${workload}.dat"
+  if [[ "${workload}" == "f" && ! -s "${tx_path}" ]]; then
+    tx_path="${XINDEX_SCALE_DATA_DIR}/xindex_transaction_ycsb_a.dat"
+  fi
   local log="${RESULT_DIR}/logs/xindex_${workload}_${config}_r${repeat}.log"
   local time_log="${RESULT_DIR}/logs/xindex_${workload}_${config}_r${repeat}.time"
   local -a env_args

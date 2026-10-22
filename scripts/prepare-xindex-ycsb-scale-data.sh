@@ -81,11 +81,18 @@ require_positive_integer XINDEX_SCALE_TX_OPS "${TX_OPS}"
 mkdir -p "${OUT_DIR}"
 
 for ycsb_type in ${YCSB_TYPES}; do
+  if [[ "${ycsb_type}" != "a" && "${ycsb_type}" != "f" ]]; then
+    echo "YCSB_TYPES supports a and f" >&2
+    exit 1
+  fi
   load_src="${DATA_DIR}/xindex_load_ycsb_${ycsb_type}.dat"
   if [[ "${ycsb_type}" != "a" && ! -f "${load_src}" && -f "${DATA_DIR}/xindex_load_ycsb_a.dat" ]]; then
     load_src="${DATA_DIR}/xindex_load_ycsb_a.dat"
   fi
   tx_src="${DATA_DIR}/xindex_transaction_ycsb_${ycsb_type}.dat"
+  if [[ "${ycsb_type}" == "f" && ! -f "${tx_src}" ]]; then
+    tx_src="${DATA_DIR}/xindex_transaction_ycsb_a.dat"
+  fi
 
   if [[ ! -f "${load_src}" || ! -f "${tx_src}" ]]; then
     restore_data_if_available

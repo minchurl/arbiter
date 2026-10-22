@@ -26,6 +26,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <cerrno>
 #include <chrono>
 #include <cstring>
 #include <fstream>
@@ -38,6 +39,7 @@
 
 #include "helper.h"
 #include "xindex_impl.h"
+#include "ycsb_rmw.h"
 
 #include <numaif.h>
 #include <sys/mman.h>
@@ -179,24 +181,18 @@ int main(int argc, char **argv) {
     }
   }
   if (ycsb_load_path.empty()) {
-    ycsb_load_path = ycsb_type == 'a'
-                         ? "YCSB/xindex_dat/xindex_load_ycsb_a.dat"
-                         : "YCSB/xindex_dat/xindex_load_ycsb_b.dat";
+    ycsb_load_path = "YCSB/xindex_dat/xindex_load_ycsb_a.dat";
   }
   if (ycsb_tx_path.empty()) {
-    ycsb_tx_path = ycsb_type == 'a'
-                       ? "YCSB/xindex_dat/xindex_transaction_ycsb_a.dat"
-                       : "YCSB/xindex_dat/xindex_transaction_ycsb_b.dat";
+    ycsb_tx_path = "YCSB/xindex_dat/xindex_transaction_ycsb_a.dat";
   }
 
-  if(ycsb_type == 'a') {
-    load_ycsb_data(ycsb_load_path.c_str());
-    load_ycsb_transaction(ycsb_tx_path.c_str());
-  }
-  else if(ycsb_type == 'b') {
-    load_ycsb_data(ycsb_load_path.c_str());
-    load_ycsb_transaction(ycsb_tx_path.c_str());
-  }
+  std::cout << "xindex-workload workload=" << ycsb_type
+            << " throughput_unit=logical-transactions/s"
+            << " update_mapping=" << (ycsb_type == 'f' ? "read-then-update" : "update")
+            << std::endl;
+  load_ycsb_data(ycsb_load_path.c_str());
+  load_ycsb_transaction(ycsb_tx_path.c_str());
 
   xindex_t *tab_hi;
   prepare_xindex(tab_hi);
@@ -304,7 +300,7 @@ void load_ycsb_transaction(const char *path)
   FILE *ycsb;
   char *buf = NULL;
   size_t len = 0;
-  size_t query_i = 0, insert_i = 0, delete_i = 0, update_i = 0;
+  size_t query_i = 0, insert_i = 0, delete_i = 0, update_i = 0, rmw_i = 0;
   size_t item_num = 0;
   char key[20];
   key_type key_input = 0;
@@ -316,7 +312,7 @@ void load_ycsb_transaction(const char *path)
   }
 
   while(getline(&buf, &len, ycsb) != -1) {
-    if(strncmp(buf, "READ", 4) == 0) {
+    if(strncmp(buf, "READ ", 5) == 0) {
       for(i = 0; i < 20 ; i++) {
         if(buf[i + 19] != ' ')
           key[i] = buf[i + 19];
@@ -344,19 +340,41 @@ void load_ycsb_transaction(const char *path)
       item_num++;
       insert_i++;
     }
-    else if(strncmp(buf, "UPDATE", 6) == 0) {
-      for(i = 0; i < 20 ; i++) {
-        if(buf[i + 21] != ' ')
-          key[i] = buf[i + 21];
-        else {
-          key[i] = '\0';
-          break;
+    else if(strncmp(buf, "UPDATE ", 7) == 0 ||
+            strncmp(buf, "READMODIFYWRITE ", 16) == 0) {
+      if (buf[0] == 'R') {
+        if (ycsb_type != 'f') {
+          COUT_N_EXIT("READMODIFYWRITE requires --ycsb_type f");
         }
+        if (strncmp(buf, "READMODIFYWRITE usertable user", 30) != 0) {
+          COUT_N_EXIT("invalid READMODIFYWRITE record");
+        }
+        char *end = nullptr;
+        errno = 0;
+        key_input = std::strtoull(buf + 30, &end, 10);
+        if (buf[30] < '0' || buf[30] > '9' || errno == ERANGE ||
+            (*end != ' ' && *end != '\n' && *end != '\r' && *end != '\0')) {
+          COUT_N_EXIT("invalid READMODIFYWRITE key");
+        }
+      } else {
+        for(i = 0; i < 20 ; i++) {
+          if(buf[i + 21] != ' ')
+            key[i] = buf[i + 21];
+          else {
+            key[i] = '\0';
+            break;
+          }
+        }
+        key_input = strtoul(key, NULL, 10);
       }
-      key_input = strtoul(key, NULL, 10);
-      YCSBconfig.operate_queue.push_back({key_input, 0, 2});
+      // Share vector growth with UPDATE so new input syntax adds no heap site.
+      YCSBconfig.operate_queue.push_back(
+          {key_input, 0, static_cast<uint8_t>(ycsb_type == 'f' ? 4 : 2)});
       item_num++;
-      update_i++;
+      if (ycsb_type == 'f')
+        rmw_i++;
+      else
+        update_i++;
     }
     else if(strncmp(buf, "REMOVE", 6) == 0) {
       for(i = 0; i < 20 ; i++) {
@@ -383,9 +401,14 @@ void load_ycsb_transaction(const char *path)
   std::cerr << "  read: " << query_i << std::endl;
   std::cerr << "insert: " << insert_i << std::endl;
   std::cerr << "update: " << update_i << std::endl;
+  std::cerr << "   rmw: " << rmw_i << std::endl;
   std::cerr << "remove: " << delete_i << std::endl;
   YCSBconfig.operate_num = YCSBconfig.operate_queue.size();
   assert(item_num == YCSBconfig.operate_num);
+  if (YCSBconfig.operate_num == 0 ||
+      (ycsb_type == 'f' && (insert_i != 0 || delete_i != 0))) {
+    COUT_N_EXIT("empty or incompatible YCSB transaction trace");
+  }
   std::cerr << "operation count: " << YCSBconfig.operate_num << std::endl;
   //COUT_VAR(&YCSBconfig);
   //COUT_VAR(&YCSBconfig.operate_queue);
@@ -506,6 +529,10 @@ void *run_fg(void *param) {
       res = table->put(item.key, item.key, thread_id);
     } else if (item.op == 3) {  // remove
       res = table->remove(item.key, thread_id);
+    } else if (item.op == 4) {  // one logical read-modify-write transaction
+      const auto rmw = ycsb::read_modify_write(
+          *table, index_key_t(item.key), item.key, thread_id);
+      res = rmw.read_successful && rmw.update_successful;
     } else {
       COUT_THIS("Wrong operator");
       exit(1);
@@ -760,6 +787,9 @@ inline void parse_args(int argc, char **argv) {
         iteration = strtoul(optarg, NULL, 10);
         break;
       case 'n':
+        if (std::strcmp(optarg, "a") != 0 && std::strcmp(optarg, "f") != 0) {
+          COUT_N_EXIT("--ycsb_type supports a or f (B experiments are archived)");
+        }
         ycsb_type = optarg[0];
         break;
       case 1000:

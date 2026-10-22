@@ -32,7 +32,18 @@ eight rows completed the same 400M successful operations with an identical
 post-run digest. See the
 [runtime/correctness validation](xindex-runtime-correctness.md).
 
-## Workload Boundary: XIndex/YCSB-B
+## Additional Workload: XIndex/YCSB-F
+
+The automatic evidence-balanced policy was applied unchanged to F by mapping
+A's UPDATE records to same-worker get/put transactions. Four counter-free rounds
+averaged 33.983M native, 33.953M selected-Local, and 50.681M selected-CXL logical
+transactions/s: **+49.27% CXL/Local**, **+49.14% CXL/native**, using ratios of mean
+throughput. All 12 rows completed 400M transactions with matching sampled-state
+digests and zero fallback, placement-query errors, or swap. See
+[the retained evidence](../../results/xindex/ycsb-f/counterfree-20261022/README.md)
+and [the F execution protocol](../xindex-ycsb-f.md).
+
+## Archived Workload Boundary: XIndex/YCSB-B
 
 YCSB-B contains approximately 95% reads and 5% updates. A full-trace screen of
 the same 100-config parameter space produced 15 runtime-valid local/CXL pairs;

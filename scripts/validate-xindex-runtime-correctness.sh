@@ -13,6 +13,7 @@ FG="${XINDEX_CORRECTNESS_FG:-4}"
 BG="${XINDEX_CORRECTNESS_BG:-1}"
 CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/xindex-site68-71-ablation.config}"
 EXPECTED_RUNTIME_SITES="${XINDEX_EXPECTED_RUNTIME_SITES:-68,71}"
+WORKLOAD="${YCSB_TYPE:-a}"
 
 TINFO_DIR="${ROOT_DIR}/.tools/libtinfo5-root/lib/x86_64-linux-gnu"
 LLVM_SHARED_DIR="${ROOT_DIR}/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu"
@@ -96,19 +97,20 @@ COMMON_ARGS=(
   --fg "${FG}"
   --bg "${BG}"
   --iteration 1
-  --ycsb_type a
+  --ycsb_type "${WORKLOAD}"
   --ycsb-load "${LOAD_PATH}"
-  --ycsb-tx "${TX_PATH}"
 )
 
 run_native() {
-  echo "[validation] run=native"
+  local name="${1:-native}"
+  local tx_path="${2:-${TX_PATH}}"
+  echo "[validation] run=${name}"
   env LD_LIBRARY_PATH="${RUN_LD_PATH}" XINDEX_VALIDATE=1 \
     numactl --physcpubind="${CPU_LIST}" --membind="${LOCAL_NODE}" \
-    "${BENCH_DIR}/ycsb_bench-native" "${COMMON_ARGS[@]}" \
-    >"${RESULT_DIR}/native.log" 2>&1
+    "${BENCH_DIR}/ycsb_bench-native" "${COMMON_ARGS[@]}" --ycsb-tx "${tx_path}" \
+    >"${RESULT_DIR}/${name}.log" 2>&1
   grep -E 'xindex-operation-count|xindex-state-validation|Throughput\(op/s\)' \
-    "${RESULT_DIR}/native.log"
+    "${RESULT_DIR}/${name}.log"
 }
 
 run_arbiter() {
@@ -119,7 +121,7 @@ run_arbiter() {
     ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_STRICT=1 \
     ARBITER_ARENA_REPORT=1 ARBITER_TARGET_NODE="${target_node}" \
     numactl --physcpubind="${CPU_LIST}" --membind="${LOCAL_NODE}" \
-    "${BENCH_DIR}/ycsb_bench-arbiter" "${COMMON_ARGS[@]}" \
+    "${BENCH_DIR}/ycsb_bench-arbiter" "${COMMON_ARGS[@]}" --ycsb-tx "${TX_PATH}" \
     >"${RESULT_DIR}/${name}.log" 2>&1
   grep -E 'xindex-operation-count|xindex-state-validation|Throughput\(op/s\)|arbiter-arena-(site|summary|residency)' \
     "${RESULT_DIR}/${name}.log"
@@ -152,8 +154,9 @@ runtime_sites() {
 }
 local_sites="$(runtime_sites "${RESULT_DIR}/local.log")"
 cxl_sites="$(runtime_sites "${RESULT_DIR}/cxl.log")"
-if [[ "${local_sites}" != "${EXPECTED_RUNTIME_SITES}" ||
-      "${cxl_sites}" != "${EXPECTED_RUNTIME_SITES}" ]]; then
+if [[ -z "${local_sites}" || "${local_sites}" != "${cxl_sites}" ||
+      ( "${EXPECTED_RUNTIME_SITES}" != "auto" &&
+        "${local_sites}" != "${EXPECTED_RUNTIME_SITES}" ) ]]; then
   echo "runtime site mismatch: expected=${EXPECTED_RUNTIME_SITES} local=${local_sites} cxl=${cxl_sites}" >&2
   exit 1
 fi
@@ -168,6 +171,30 @@ if [[ -z "${native_digest}" || "${native_digest}" != "${local_digest}" ||
       "${native_digest}" != "${cxl_digest}" ]]; then
   echo "state digest mismatch: native=${native_digest} local=${local_digest} cxl=${cxl_digest}" >&2
   exit 1
+fi
+
+if [[ "${WORKLOAD}" == "f" ]]; then
+  # Explicit RMW records must behave identically to the A-trace UPDATE mapping.
+  explicit_tx="${RESULT_DIR}/explicit-f.dat"
+  awk '$1 == "UPDATE" {$1 = "READMODIFYWRITE"} {print}' "${TX_PATH}" >"${explicit_tx}"
+  run_native explicit-f "${explicit_tx}"
+  grep -qx "xindex-operation-count executed=${EXPECTED_OPERATIONS}" \
+    "${RESULT_DIR}/explicit-f.log"
+  grep -q 'xindex-state-validation .* failed_reads=0 ' \
+    "${RESULT_DIR}/explicit-f.log"
+  if [[ "$(digest "${RESULT_DIR}/explicit-f.log")" != "${native_digest}" ]]; then
+    echo "explicit RMW input differs from UPDATE-to-RMW mapping" >&2
+    exit 1
+  fi
+  grep -Eq '^   rmw: [1-9][0-9]*$' "${RESULT_DIR}/native.log"
+  for operation in read insert update rmw remove; do
+    native_count="$(grep -E "^[[:space:]]*${operation}: [0-9]+$" "${RESULT_DIR}/native.log")"
+    explicit_count="$(grep -E "^[[:space:]]*${operation}: [0-9]+$" "${RESULT_DIR}/explicit-f.log")"
+    if [[ "${native_count}" != "${explicit_count}" ]]; then
+      echo "explicit RMW input has a different ${operation} trace count" >&2
+      exit 1
+    fi
+  done
 fi
 
 echo "[validation] PASS digest=${native_digest} result_dir=${RESULT_DIR}"

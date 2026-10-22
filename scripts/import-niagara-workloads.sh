@@ -13,7 +13,7 @@ Imports the full XIndex/YCSB trace files from NIAGARA_WORKLOADS
 (default: ~/niagara_workloads) into benchmark/xindex/YCSB/xindex_dat.
 
 copy     duplicates the files into this repository
-hardlink links the files without consuming another 46GB on the same filesystem
+hardlink links the A files without consuming another 26GB on the same filesystem
 symlink  links by path for local-only runs
 EOF
 }
@@ -50,7 +50,6 @@ DST_DATA_DIR="${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat"
 DATA_FILES=(
   xindex_load_ycsb_a.dat
   xindex_transaction_ycsb_a.dat
-  xindex_transaction_ycsb_b.dat
 )
 
 if [[ ! -d "${SRC_DATA_DIR}" ]]; then

@@ -14,6 +14,10 @@ BG="${XINDEX_BG:-1}"
 ITERATION="${XINDEX_ITERATION:-1}"
 DURATION_SECONDS="${XINDEX_DURATION_SECONDS:-0}"
 YCSB_TYPE="${YCSB_TYPE:-a}"
+if [[ "${YCSB_TYPE}" != "a" && "${YCSB_TYPE}" != "f" ]]; then
+  echo "YCSB_TYPE must be a or f; B experiments are archived" >&2
+  exit 1
+fi
 XINDEX_DATA_DIR="${XINDEX_DATA_DIR:-${ROOT_DIR}/benchmark/xindex/YCSB/xindex_dat}"
 DEFAULT_LOAD_PATH="${XINDEX_DATA_DIR}/xindex_load_ycsb_${YCSB_TYPE}.dat"
 if [[ "${YCSB_TYPE}" != "a" && ! -f "${DEFAULT_LOAD_PATH}" && -f "${XINDEX_DATA_DIR}/xindex_load_ycsb_a.dat" ]]; then
@@ -21,6 +25,10 @@ if [[ "${YCSB_TYPE}" != "a" && ! -f "${DEFAULT_LOAD_PATH}" && -f "${XINDEX_DATA_
 fi
 LOAD_PATH="${YCSB_LOAD_PATH:-${DEFAULT_LOAD_PATH}}"
 TX_PATH="${YCSB_TX_PATH:-${XINDEX_DATA_DIR}/xindex_transaction_ycsb_${YCSB_TYPE}.dat}"
+# F reuses A's keys and maps UPDATE to a worker-local read-then-update.
+if [[ "${YCSB_TYPE}" == "f" && -z "${YCSB_TX_PATH:-}" && ! -f "${TX_PATH}" ]]; then
+  TX_PATH="${XINDEX_DATA_DIR}/xindex_transaction_ycsb_a.dat"
+fi
 MKL_RUNTIME_DIR="${MKL_RUNTIME_DIR:-/opt/intel/oneapi/mkl/latest/lib}"
 HEAP_BACKEND="${ARBITER_HEAP_BACKEND:-direct}"
 

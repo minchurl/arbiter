@@ -17,9 +17,11 @@ while [[ $# -gt 0 ]]; do
       cat <<'EOF'
 usage: scripts/validate-xindex-runtime-correctness-full.sh [--check] [--four-pairs]
 
-Runs a fail-closed Site 68+71 XIndex/YCSB-A correctness confirmation with the
-complete 100M-record load and 400M-operation trace. The default is one Local/CXL
-diagnostic pair; --four-pairs runs the alternating four-pair confirmation.
+Runs a fail-closed XIndex correctness confirmation with the complete 100M-record
+load and 400M-transaction trace. Defaults to A and the Site 68+71 ablation.
+YCSB_TYPE=f selects read-modify-write; ARBITER_HITM_SEED_CONFIG selects a policy.
+RUN_NATIVE=1 includes a native baseline. The default is one Local/CXL pair;
+--four-pairs runs the alternating four-pair confirmation.
 
 Run scripts/validate-xindex-runtime-correctness.sh first to pass the ABI,
 arena-boundary, and short native/Local/CXL gates.
@@ -43,6 +45,11 @@ CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/xindex-site68-
 RESULT_DIR="${XINDEX_CORRECTNESS_FULL_RESULT_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-runtime-correctness-full-$(date +%Y%m%d-%H%M%S)}"
 BUILD_DIR="${XINDEX_CORRECTNESS_FULL_BUILD_DIR:-${ROOT_DIR}/build/arbiter-bench/xindex-runtime-correctness-full-build}"
 REBUILD="${BUILD_BENCHMARKS:-1}"
+RUN_NATIVE_VALUE="${RUN_NATIVE:-0}"
+if [[ "${RUN_NATIVE_VALUE}" != "0" && "${RUN_NATIVE_VALUE}" != "1" ]]; then
+  echo "RUN_NATIVE must be 0 or 1" >&2
+  exit 1
+fi
 
 replay_args=()
 if [[ "${MODE}" == "check" ]]; then
@@ -57,6 +64,7 @@ env \
   RESULT_DIR="${RESULT_DIR}" \
   HITM_SEED_BUILD_DIR="${BUILD_DIR}" \
   BUILD_BENCHMARKS="${REBUILD}" \
+  RUN_NATIVE="${RUN_NATIVE_VALUE}" \
   REPEATS="${REPEATS}" \
   XINDEX_VALIDATE=1 \
   XINDEX_VALIDATION_KEYS="${XINDEX_VALIDATION_KEYS:-4096}" \
@@ -66,11 +74,11 @@ if [[ "${MODE}" == "check" ]]; then
   exit 0
 fi
 
-expected_rows=$((REPEATS * 2))
+expected_rows=$((REPEATS * (2 + RUN_NATIVE_VALUE)))
 actual_rows="$(awk -F, 'NR > 1 {count++} END {print count + 0}' "${RESULT_DIR}/runs.csv")"
 ok_rows="$(awk -F, 'NR > 1 && $20 == "ok" {count++} END {print count + 0}' "${RESULT_DIR}/runs.csv")"
-safety_rows="$(awk -F, 'NR > 1 && $17 == 0 && $20 == "ok" && $29 == 0 &&
-                              $32 == $22 && $33 == 0 {count++}
+safety_rows="$(awk -F, 'NR > 1 && $17 == 0 && $20 == "ok" &&
+                       ($3 == "native" || ($29 == 0 && $32 == $22 && $33 == 0)) {count++}
                          END {print count + 0}' "${RESULT_DIR}/runs.csv")"
 if [[ "${actual_rows}" -ne "${expected_rows}" ||
       "${ok_rows}" -ne "${expected_rows}" ||
@@ -82,6 +90,20 @@ fi
 operation_rows="$(grep -l \
   '^xindex-operation-count executed=400000000$' \
   "${RESULT_DIR}"/logs/*.log | wc -l)"
+grep -h '^xindex-operation-count ' "${RESULT_DIR}"/logs/*.log \
+  >"${RESULT_DIR}/validation-operations.txt"
+if [[ "$(sort -u "${RESULT_DIR}/validation-operations.txt" | wc -l)" -ne 1 ]]; then
+  echo "executed-operation counts differ across placements" >&2
+  exit 1
+fi
+if [[ "${YCSB_TYPE:-a}" == "f" ]]; then
+  for log in "${RESULT_DIR}"/logs/*.log; do
+    grep -qx 'xindex-workload workload=f throughput_unit=logical-transactions/s update_mapping=read-then-update' "${log}"
+    # These are input counts computed before timing, not hot-loop counters.
+    grep -Eq '^   rmw: [1-9][0-9]*$' "${log}"
+    grep -qx 'update: 0' "${log}"
+  done
+fi
 digest_rows="$(grep -h 'xindex-state-validation ' "${RESULT_DIR}"/logs/*.log |
   sed -n 's/.* sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=\([^ ]*\).*/\1/p' |
   tee "${RESULT_DIR}/validation-digests.txt" | wc -l)"

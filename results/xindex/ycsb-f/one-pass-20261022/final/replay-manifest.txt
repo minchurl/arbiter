@@ -1,0 +1,47 @@
+started_at=2026-10-22T13:58:24+09:00
+git_commit=d78356af5541f435c6d6b6a65a7f312e5973eb20
+git_dirty_files=24
+config=/home/shin/arbiter/configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config
+config_sha256=e60729fc877532b6fdbeb0ed3337be4fd8d29fc72de68dab8941ba76acf8f9e3
+data_dir=/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat
+workload=f
+transaction_source=/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat
+update_mapping=read-then-update
+throughput_unit=logical-transactions/s
+load_records=100000000
+transaction_ops=400000000
+execution_mode=iteration
+iteration=1
+duration_seconds=0
+sample_seconds=0
+repeats=1
+foreground_threads=31
+background_threads=1
+cpu_node=0
+local_memory_node=0
+target_memory_node=2
+memory_max=64G
+memory_swap_max=0
+arena_slab_bytes=2097152
+arena_reserve_bytes=25769803776
+arena_slot_alignment=64
+build_benchmarks=1
+clangxx=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++
+opt=/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18
+cache_policy=fresh process per row; filesystem page cache not dropped; CPU cache not flushed
+
+available: 3 nodes (0-2)
+node 0 cpus: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31
+node 0 size: 128613 MB
+node 0 free: 62323 MB
+node 1 cpus: 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+node 1 size: 32240 MB
+node 1 free: 8256 MB
+node 2 cpus:
+node 2 size: 131072 MB
+node 2 free: 131050 MB
+node distances:
+node   0   1   2 
+  0:  10  21  14 
+  1:  21  10  24 
+  2:  14  24  10 

@@ -10,7 +10,6 @@ REQUIRE_GIT_LFS="${REQUIRE_GIT_LFS:-1}"
 DATA_FILES=(
   xindex_load_ycsb_a.dat
   xindex_transaction_ycsb_a.dat
-  xindex_transaction_ycsb_b.dat
 )
 
 if [[ "${REQUIRE_GIT_LFS}" == "1" ]] && ! git lfs version >/dev/null 2>&1; then
@@ -37,7 +36,13 @@ done
 (
   cd "${DATA_DIR}"
   sha256sum "${DATA_FILES[@]}"
-) > "${PARTS_DIR}/MANIFEST.sha256"
+) > "${PARTS_DIR}/MANIFEST.sha256.tmp"
+if [[ -f "${PARTS_DIR}/MANIFEST.sha256" ]]; then
+  # Keep the checksum for the archived B chunks while packaging only A.
+  awk '$2 == "xindex_transaction_ycsb_b.dat" {print}' \
+    "${PARTS_DIR}/MANIFEST.sha256" >> "${PARTS_DIR}/MANIFEST.sha256.tmp"
+fi
+mv "${PARTS_DIR}/MANIFEST.sha256.tmp" "${PARTS_DIR}/MANIFEST.sha256"
 
 for file in "${DATA_FILES[@]}"; do
   src="${DATA_DIR}/${file}"

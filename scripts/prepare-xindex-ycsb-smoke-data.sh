@@ -13,6 +13,9 @@ if [[ "${YCSB_TYPE}" != "a" && ! -f "${LOAD_SRC}" && -f "${DATA_DIR}/xindex_load
   LOAD_SRC="${DATA_DIR}/xindex_load_ycsb_a.dat"
 fi
 TX_SRC="${YCSB_TX_PATH:-${DATA_DIR}/xindex_transaction_ycsb_${YCSB_TYPE}.dat}"
+if [[ "${YCSB_TYPE}" == "f" && -z "${YCSB_TX_PATH:-}" && ! -f "${TX_SRC}" ]]; then
+  TX_SRC="${DATA_DIR}/xindex_transaction_ycsb_a.dat"
+fi
 
 if [[ ! -f "${LOAD_SRC}" || ! -f "${TX_SRC}" ]]; then
   if [[ -x "${ROOT_DIR}/scripts/restore-xindex-ycsb-data.sh" ]]; then
