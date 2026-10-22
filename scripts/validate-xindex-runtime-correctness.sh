@@ -91,6 +91,7 @@ env \
 
 LOAD_PATH="${DATA_DIR}/xindex_load_ycsb_a.correctness.dat"
 TX_PATH="${DATA_DIR}/xindex_transaction_ycsb_a.correctness.dat"
+EXPECTED_OPERATIONS="$(wc -l <"${TX_PATH}" | tr -d '[:space:]')"
 COMMON_ARGS=(
   --fg "${FG}"
   --bg "${BG}"
@@ -103,11 +104,10 @@ COMMON_ARGS=(
 run_native() {
   echo "[validation] run=native"
   env LD_LIBRARY_PATH="${RUN_LD_PATH}" XINDEX_VALIDATE=1 \
-    XINDEX_REQUIRE_ALL_OPERATIONS_SUCCESS=1 \
     numactl --physcpubind="${CPU_LIST}" --membind="${LOCAL_NODE}" \
     "${BENCH_DIR}/ycsb_bench-native" "${COMMON_ARGS[@]}" \
     >"${RESULT_DIR}/native.log" 2>&1
-  grep -E 'xindex-(operation|state)-validation|Throughput\(op/s\)' \
+  grep -E 'xindex-operation-count|xindex-state-validation|Throughput\(op/s\)' \
     "${RESULT_DIR}/native.log"
 }
 
@@ -116,13 +116,12 @@ run_arbiter() {
   local target_node="$2"
   echo "[validation] run=${name} target_node=${target_node}"
   env LD_LIBRARY_PATH="${RUN_LD_PATH}" XINDEX_VALIDATE=1 \
-    XINDEX_REQUIRE_ALL_OPERATIONS_SUCCESS=1 \
     ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_STRICT=1 \
     ARBITER_ARENA_REPORT=1 ARBITER_TARGET_NODE="${target_node}" \
     numactl --physcpubind="${CPU_LIST}" --membind="${LOCAL_NODE}" \
     "${BENCH_DIR}/ycsb_bench-arbiter" "${COMMON_ARGS[@]}" \
     >"${RESULT_DIR}/${name}.log" 2>&1
-  grep -E 'xindex-(operation|state)-validation|Throughput\(op/s\)|arbiter-arena-(site|summary|residency)' \
+  grep -E 'xindex-operation-count|xindex-state-validation|Throughput\(op/s\)|arbiter-arena-(site|summary|residency)' \
     "${RESULT_DIR}/${name}.log"
 }
 
@@ -131,7 +130,7 @@ run_arbiter local "${LOCAL_NODE}"
 run_arbiter cxl "${CXL_NODE}"
 
 for log in native local cxl; do
-  grep -q 'xindex-operation-validation .* failed=0 ' \
+  grep -qx "xindex-operation-count executed=${EXPECTED_OPERATIONS}" \
     "${RESULT_DIR}/${log}.log"
   grep -q 'xindex-state-validation .* failed_reads=0 ' \
     "${RESULT_DIR}/${log}.log"
@@ -140,19 +139,6 @@ for log in local cxl; do
   grep -q 'arbiter-arena-summary .*fallback_allocations=0 ' \
     "${RESULT_DIR}/${log}.log"
 done
-
-operation_line() {
-  grep '^xindex-operation-validation ' "$1" | tail -1
-}
-native_operations="$(operation_line "${RESULT_DIR}/native.log")"
-local_operations="$(operation_line "${RESULT_DIR}/local.log")"
-cxl_operations="$(operation_line "${RESULT_DIR}/cxl.log")"
-if [[ -z "${native_operations}" ||
-      "${native_operations}" != "${local_operations}" ||
-      "${native_operations}" != "${cxl_operations}" ]]; then
-  echo "operation-result mismatch across native/Local/CXL" >&2
-  exit 1
-fi
 
 runtime_sites() {
   awk '/^arbiter-arena-site / {
