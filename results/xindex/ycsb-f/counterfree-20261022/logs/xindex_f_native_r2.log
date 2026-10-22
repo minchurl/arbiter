@@ -1,0 +1,64 @@
+fg_n: 31
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=f throughput_unit=logical-transactions/s update_mapping=read-then-update
+exist_keys.size() : 100000000, item_num : 100000000
+load number : 100000000
+  read: 199993860
+insert: 0
+update: 0
+   rmw: 200006140
+remove: 0
+operation count: 400000000
+exist_keys.size(): 100000000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.326569, mean error: 39.8777
+table: 0x7f0643440000
+training done
+[ycsb] Worker0 Ready.
+[ycsb] Worker1 Ready.
+[ycsb] Worker4 Ready.
+[ycsb] Worker6 Ready.
+[ycsb] Worker[ycsb] Worker87 Ready.
+[ycsb] Worker9 Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker10 Ready.11
+ Ready.[ycsb] Worker15 Ready.
+[ycsb] Worker14 Ready.[ycsb] Worker
+[ycsb] Worker[ycsb] Worker[ycsb] Worker19 Ready.
+18 Ready. Ready.[ycsb] Worker[ycsb] Worker[ycsb] Worker17
+ Ready.[ycsb] prepare data ...
+20 Ready.
+[ycsb] Worker25 Ready.
+[ycsb] Worker28 Ready.
+5
+ Ready.
+[ycsb] Worker22 Ready.
+21 Ready.
+
+2[ycsb] Worker[ycsb] Worker[ycsb] Worker12 Ready.
+[ycsb] Worker[ycsb] Worker26 Ready.
+27[ycsb] Worker16 Ready.
+[ycsb] Worker[ycsb] Worker30 Ready.
+ Ready.23 Ready.
+
+24 Ready.
+
+3[ycsb] Worker Ready.29 Ready.
+ Ready.
+13 Ready.
+
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+xindex-operation-count executed=400000000
+[ycsb] Time(sec) : 11.9104
+[ycsb] Throughput(op/s): 3.35841e+07
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+hash resize group cnt: 0

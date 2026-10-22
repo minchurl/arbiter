@@ -118,7 +118,7 @@ fi
 
 printf '## Throughput\n\n'
 if awk -F, 'NR > 1 && $2 == "f" {found=1} END {exit !found}' "${RUNS_CSV}"; then
-  printf 'For YCSB-F, op/s counts logical transactions: one get/put pair is one RMW transaction. Exact get/put counts are recorded in each row log.\n\n'
+  printf 'For YCSB-F, op/s counts logical transactions: one get/put pair is one RMW transaction. Input operation counts are recorded before timing.\n\n'
 fi
 printf '| Workload | Placement | Successful rows | Mean measured time | Mean throughput | Mean max RSS |\n'
 printf '|---|---|---:|---:|---:|---:|\n'

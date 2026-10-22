@@ -1,0 +1,216 @@
+YCSB-F: A trace READ stays READ; UPDATE becomes same-worker get + put.
+One F transaction counts once; trace-mix counts are reported before timing.
+Native / selected-Local / selected-CXL; 31+1 workers; MemoryMax=64G.
+XIndex HITM-risk seed replay settings:
+  workload:           f (F: same-worker read-then-update)
+  native baseline:    1
+  config:             /home/shin/arbiter/configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config
+  load / tx records:  100000000 / 400000000
+  execution mode:     iteration=1, duration=0 (400M logical transactions once)
+  throughput samples: disabled
+  repeats:            4
+  replay shape:       configured one-pass confirmation (4 pair(s))
+  workers:            31 foreground + 1 background
+  CPU / local / CXL:  0 / 0 / 2
+  target node CPUs:   none
+  target memory:      134217728 KiB
+  memory / swap cap:  64G / 0
+  arena capacity:     25769803776 bytes
+  rebuild / clang++:  1 / /home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++
+  opt:                /home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18
+  result:             /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720
+  cache policy:       fresh process; warm filesystem cache; no drop_caches
+Starting protected HITM-risk seed scope:
+  MemoryMax=64G
+  MemorySwapMax=0
+  config=/home/shin/arbiter/configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config
+  target_node=2
+  heap_backend=arena
+  arena_slab_bytes=2097152
+  arena_reserve_bytes=25769803776
+  duration_seconds=0
+  result=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720
+Running scope as unit: run-r18a32abc804a48e2b4fd23d26abca083.scope
+clang++: warning: argument unused during compilation: '-fmax-errors=5' [-Wunused-command-line-argument]
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:41:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_impl.h:21:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex.h:24:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_root.h:23:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_group.h:25:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_buffer.h:20:
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+   89 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  104 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:199:3: note: in instantiation of function template specialization 'run_benchmark<xindex::XIndex<Key, unsigned long>>' requested here
+  199 |   run_benchmark(tab_hi, duration_seconds);
+      |   ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+  571 |   pthread_t threads[fg_n];
+      |                     ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+7 warnings generated.
+clang++: warning: argument unused during compilation: '-fmax-errors=5' [-Wunused-command-line-argument]
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:41:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_impl.h:21:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex.h:24:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_root.h:23:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_group.h:25:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_buffer.h:20:
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+   89 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  104 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:199:3: note: in instantiation of function template specialization 'run_benchmark<xindex::XIndex<Key, unsigned long>>' requested here
+  199 |   run_benchmark(tab_hi, duration_seconds);
+      |   ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+  571 |   pthread_t threads[fg_n];
+      |                     ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+7 warnings generated.
+wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-build/ycsb_bench-arbiter
+wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-build/ycsb_bench-native
+wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-build/ycsb_bench.sites.csv
+wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-build/ycsb_bench.hitm-seed-sites.csv
+wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-build/ycsb_bench.hitm-seed-effective.opt-args
+[run] workload=f config=native repeat=1
+[done] workload=f config=native time=12.088 throughput=3.30907e+07 max_rss_kb=32641880
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-local repeat=1
+[done] workload=f config=hitm-seed-local time=11.8271 throughput=3.38208e+07 max_rss_kb=31663008
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-target repeat=1
+[done] workload=f config=hitm-seed-target time=7.86992 throughput=5.08264e+07 max_rss_kb=31663000
+[cooldown] 2 seconds
+[run] workload=f config=native repeat=2
+[done] workload=f config=native time=11.9104 throughput=3.35841e+07 max_rss_kb=32642080
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-target repeat=2
+[done] workload=f config=hitm-seed-target time=7.9759 throughput=5.0151e+07 max_rss_kb=31662900
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-local repeat=2
+[done] workload=f config=hitm-seed-local time=11.4601 throughput=3.49038e+07 max_rss_kb=31663084
+[cooldown] 2 seconds
+[run] workload=f config=native repeat=3
+[done] workload=f config=native time=11.5011 throughput=3.47793e+07 max_rss_kb=32641852
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-local repeat=3
+[done] workload=f config=hitm-seed-local time=12.2146 throughput=3.27477e+07 max_rss_kb=31663048
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-target repeat=3
+[done] workload=f config=hitm-seed-target time=7.4585 throughput=5.36301e+07 max_rss_kb=31663056
+[cooldown] 2 seconds
+[run] workload=f config=native repeat=4
+[done] workload=f config=native time=11.6022 throughput=3.44762e+07 max_rss_kb=32642080
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-target repeat=4
+[done] workload=f config=hitm-seed-target time=8.31311 throughput=4.81167e+07 max_rss_kb=31662904
+[cooldown] 2 seconds
+[run] workload=f config=hitm-seed-local repeat=4
+[done] workload=f config=hitm-seed-local time=11.6477 throughput=3.43416e+07 max_rss_kb=31663004
+[cooldown] 2 seconds
+[report] wrote /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/interpretation.md
+
+HITM-risk seed experiment complete.
+Results:
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/runs.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/summary.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/summary.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/interpretation.md
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/throughput-samples.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/hitm-seed-input.config
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/hitm-seed-sites.csv
+  /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/hitm-seed-effective.opt-args
+[full-validation] PASS rows=12 digest=0x7474b8e9d3962859 result_dir=/home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720
+
+native: 33.983M transactions/s
+hitm-seed-local: 33.953M transactions/s
+hitm-seed-target: 50.681M transactions/s
+Details: /home/shin/arbiter/build/arbiter-bench/xindex-ycsb-f-counterfree-20261022-141720/interpretation.md

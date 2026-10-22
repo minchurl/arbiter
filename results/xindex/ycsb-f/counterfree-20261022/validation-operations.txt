@@ -1,0 +1,12 @@
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000
+xindex-operation-count executed=400000000

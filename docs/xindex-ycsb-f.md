@@ -1,9 +1,9 @@
 # XIndex/YCSB-F
 
-The [initial full-run evidence](../results/xindex/ycsb-f/one-pass-20261022/README.md)
-is retained: +45.68% CXL/Local in one counter-instrumented round. The current
-runner incorporates main's per-operation counter removal (PR #16); those
-historical numbers are not counter-free remeasurements.
+Four counter-free full-trace rounds averaged 33.983M native, 33.953M Local,
+and 50.681M CXL transactions/s: **+49.27% CXL/Local**, **+49.14% CXL/native**.
+All 12 rows completed 400M transactions with matching sampled-state digests.
+See [the measured results and logs](../results/xindex/ycsb-f/counterfree-20261022/README.md).
 
 ```sh
 ./scripts/run-xindex-ycsb-f.sh --smoke
@@ -65,8 +65,9 @@ The PR #16 integration passed counter-free 200K-load/1M-transaction smoke
 checks for A and F on native, Local, and CXL, plus explicit RMW input equivalence.
 All rows executed 1M transactions with the same 4,096-key digest
 `0x9d30d99a719185fa`; arena rows had zero fallback and placement-query errors.
-Static selection remained `68,71,74,90,97,98,99,100`. No counter-free full-trace
-performance run has been recorded yet.
+Static selection remained `68,71,74,90,97,98,99,100`. The subsequent four-round
+full-trace remeasurement also passed, with zero fallback, placement-query errors,
+or swap. The throughput changes above use ratios of mean throughput.
 
 Results appear under `build/arbiter-bench/xindex-ycsb-f-<timestamp>/`, including
 `runs.csv`, `interpretation.md`, `validation-operations.txt`, and

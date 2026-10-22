@@ -21,8 +21,9 @@ The removal was build-checked and smoke-tested with a 200K-record load and
 1M-operation trace on native, arena node 0, and arena node 2. All three rows
 reported 1M executed operations and the same 4,096-key digest
 `0x9d30d99a719185fa`; arena rows had zero fallback and placement-query errors.
-The automatic policy still selected the same eight static sites. A new
-counter-free full-trace performance measurement has not been run.
+The automatic policy still selected the same eight static sites. The subsequent
+[counter-free F remeasurement](../xindex-ycsb-f.md) passed all 12 full-trace rows;
+the historical A measurements below have not been remeasured without counters.
 
 ## Result
 
