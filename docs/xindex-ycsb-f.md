@@ -1,8 +1,9 @@
 # XIndex/YCSB-F
 
 The [initial full-run evidence](../results/xindex/ycsb-f/one-pass-20261022/README.md)
-is retained with logs and correctness checks: +45.68% CXL/Local in one
-final-code round. Additional rounds are needed for a repeated estimate.
+is retained: +45.68% CXL/Local in one counter-instrumented round. The current
+runner incorporates main's per-operation counter removal (PR #16); those
+historical numbers are not counter-free remeasurements.
 
 ```sh
 ./scripts/run-xindex-ycsb-f.sh --smoke
@@ -39,7 +40,8 @@ the full A-derived trace there are 400,000,000 logical transactions:
 
 Do not compare F's transaction rate with A's as if they performed equal work.
 The CSV's legacy `throughput` field and `op/s` display mean logical
-transactions/s; exact API call counts are included in each row log.
+transactions/s. Input-mix counts are reported before timing; the API totals
+above follow from that mix, not from per-call success counters.
 
 ## Controls and correctness
 
@@ -50,10 +52,21 @@ transactions/s; exact API call counts are included in each row log.
 - Arena node 0 for Local, node 2 for CXL; strict 24GiB arena.
 - MemoryMax=64G and MemorySwapMax=0.
 - Fresh process per row; warm filesystem cache, no global cache flush.
-- Operation attempts/successes, both RMW sub-call outcomes, placement checks,
-  and a deterministic sampled 4,096-key final-state digest.
+- The measured loop keeps only its original throughput counter. After timing,
+  the validator checks executed transaction totals, memory placement, and a
+  deterministic sampled 4,096-key final-state digest.
+- RMW call ordering/failure behavior is unit-tested; explicit RMW input is
+  smoke-tested against the UPDATE mapping. Operation return values are not
+  counted during performance measurement.
 - Full-run counts and digest must agree across native/Local/CXL. The digest
   samples state; it is not an exhaustive linearizability proof.
+
+The PR #16 integration passed counter-free 200K-load/1M-transaction smoke
+checks for A and F on native, Local, and CXL, plus explicit RMW input equivalence.
+All rows executed 1M transactions with the same 4,096-key digest
+`0x9d30d99a719185fa`; arena rows had zero fallback and placement-query errors.
+Static selection remained `68,71,74,90,97,98,99,100`. No counter-free full-trace
+performance run has been recorded yet.
 
 Results appear under `build/arbiter-bench/xindex-ycsb-f-<timestamp>/`, including
 `runs.csv`, `interpretation.md`, `validation-operations.txt`, and

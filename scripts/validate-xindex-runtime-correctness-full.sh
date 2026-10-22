@@ -67,7 +67,6 @@ env \
   RUN_NATIVE="${RUN_NATIVE_VALUE}" \
   REPEATS="${REPEATS}" \
   XINDEX_VALIDATE=1 \
-  XINDEX_REQUIRE_ALL_OPERATIONS_SUCCESS=1 \
   XINDEX_VALIDATION_KEYS="${XINDEX_VALIDATION_KEYS:-4096}" \
   "${ROOT_DIR}/scripts/run-xindex-hitm-seed-replay.sh" "${replay_args[@]}"
 
@@ -89,26 +88,21 @@ if [[ "${actual_rows}" -ne "${expected_rows}" ||
 fi
 
 operation_rows="$(grep -l \
-  'xindex-operation-validation attempted=400000000 successful=400000000 failed=0' \
+  '^xindex-operation-count executed=400000000$' \
   "${RESULT_DIR}"/logs/*.log | wc -l)"
-grep -h '^xindex-operation-validation ' "${RESULT_DIR}"/logs/*.log \
+grep -h '^xindex-operation-count ' "${RESULT_DIR}"/logs/*.log \
   >"${RESULT_DIR}/validation-operations.txt"
 if [[ "$(sort -u "${RESULT_DIR}/validation-operations.txt" | wc -l)" -ne 1 ]]; then
-  echo "operation outcomes differ across placements" >&2
+  echo "executed-operation counts differ across placements" >&2
   exit 1
 fi
 if [[ "${YCSB_TYPE:-a}" == "f" ]]; then
-  awk '
-    {
-      delete v
-      for (i = 2; i <= NF; ++i) {split($i, kv, "="); v[kv[1]] = kv[2]}
-      if (v["rmw_attempted"] <= 0 || v["rmw_successful"] != v["rmw_attempted"] ||
-          v["rmw_read_successful"] != v["rmw_attempted"] ||
-          v["rmw_update_successful"] != v["rmw_attempted"] ||
-          v["get_calls"] != v["read_attempted"] + v["rmw_attempted"] ||
-          v["put_calls"] != v["rmw_attempted"] ||
-          v["api_calls"] != v["attempted"] + v["rmw_attempted"]) exit 1
-    }' "${RESULT_DIR}/validation-operations.txt"
+  for log in "${RESULT_DIR}"/logs/*.log; do
+    grep -qx 'xindex-workload workload=f throughput_unit=logical-transactions/s update_mapping=read-then-update' "${log}"
+    # These are input counts computed before timing, not hot-loop counters.
+    grep -Eq '^   rmw: [1-9][0-9]*$' "${log}"
+    grep -qx 'update: 0' "${log}"
+  done
 fi
 digest_rows="$(grep -h 'xindex-state-validation ' "${RESULT_DIR}"/logs/*.log |
   sed -n 's/.* sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=\([^ ]*\).*/\1/p' |

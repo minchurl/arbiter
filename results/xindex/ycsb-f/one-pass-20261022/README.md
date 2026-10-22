@@ -1,6 +1,11 @@
 # XIndex/YCSB-F introduction — 2026-10-22
 
-The final-code full run completed one native/selected-Local/selected-CXL round:
+These retained runs used the per-operation validation counters that were later
+removed in main's PR #16. The current A/F runners use the counter-free loop;
+the numbers below are historical, not counter-free remeasurements. Raw logs
+and hashes remain unchanged.
+
+The final counter-instrumented build completed one full native/Local/CXL round:
 
 | Placement | Logical transactions/s | Measured interval |
 |---|---:|---:|
@@ -8,7 +13,7 @@ The final-code full run completed one native/selected-Local/selected-CXL round:
 | Selected-Local | 35.478M | 11.2747s |
 | Selected-CXL | 51.686M | 7.73909s |
 
-CXL/Local was **+45.68%** and CXL/native was **+48.27%**. This is one final-code
+CXL/Local was **+45.68%** and CXL/native was **+48.27%**. This is one measured
 round, not a repeated estimate or proof of a HITM-reduction mechanism.
 
 ## Protocol
@@ -35,8 +40,8 @@ not changed for F.
 
 ## Evidence and reproduction
 
-- [`final/`](final/): final-code manifests, CSVs, selection, correctness output,
-  source/binary hashes, raw row logs, and timing logs.
+- [`final/`](final/): final counter-instrumented manifests, CSVs, selection,
+  correctness output, source/binary hashes, raw row logs, and timing logs.
 - [`development/`](development/): earlier full development check of the same
   policy/workload: 31.833M native, 34.096M Local, 49.282M CXL (+44.54% CXL/Local).
   It used an earlier parser binary and is not pooled with the final run.

@@ -131,5 +131,8 @@ history. This keeps the executable path focused on the seed-only result without
 discarding the evidence behind the current claim.
 
 The runtime ABI and XIndex logical result now have explicit correctness checks.
+The measured loop retains only the original throughput counter; operation
+completion and the optional sampled-state digest are checked after timing.
+Per-operation attempted/successful validation counters are not present.
 The measured throughput gain does not by itself prove reduced HITM. A causal
 claim still requires HITM/C2C, memory-bandwidth, and latency counters.

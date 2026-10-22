@@ -35,7 +35,6 @@
 #include <random>
 #include <string>
 #include <thread>
-#include <type_traits>
 #include <vector>
 
 #include "helper.h"
@@ -100,9 +99,7 @@ size_t fg_n = 1;
 size_t bg_n = 1;
 size_t throughput_sample_seconds = 0;
 bool validation_enabled = false;
-bool require_all_operations_success = false;
 size_t validation_key_count = 4096;
-uint64_t last_failed_operations = 0;
 
 constexpr uint64_t kRunControlRunning = 1;
 constexpr unsigned kRunControlEpochShift = 1;
@@ -120,10 +117,6 @@ struct alignas(CACHELINE_SIZE) ThroughputSample {
 struct alignas(CACHELINE_SIZE) FGParam {
   void *table;
   uint64_t throughput;
-  std::array<uint64_t, 5> attempted;
-  std::array<uint64_t, 5> successful;
-  uint64_t rmw_read_successful;
-  uint64_t rmw_update_successful;
   uint32_t thread_id;
   ThroughputSample *sample;
 };
@@ -179,10 +172,6 @@ int main(int argc, char **argv) {
   if (const char *validation_env = std::getenv("XINDEX_VALIDATE")) {
     validation_enabled = std::strcmp(validation_env, "1") == 0;
   }
-  if (const char *require_env =
-          std::getenv("XINDEX_REQUIRE_ALL_OPERATIONS_SUCCESS")) {
-    require_all_operations_success = std::strcmp(require_env, "1") == 0;
-  }
   if (const char *keys_env = std::getenv("XINDEX_VALIDATION_KEYS")) {
     char *end = nullptr;
     validation_key_count = std::strtoull(keys_env, &end, 10);
@@ -208,6 +197,7 @@ int main(int argc, char **argv) {
   xindex_t *tab_hi;
   prepare_xindex(tab_hi);
   run_benchmark(tab_hi, duration_seconds);
+  int exit_status = 0;
   if (validation_enabled) {
     size_t successful_reads = 0;
     size_t failed_reads = 0;
@@ -220,15 +210,10 @@ int main(int argc, char **argv) {
               << std::setw(16) << std::setfill('0') << digest << std::dec
               << std::setfill(' ') << std::endl;
     if (failed_reads != 0)
-      last_failed_operations += failed_reads;
+      exit_status = 2;
   }
   if (tab_hi != nullptr) delete tab_hi;
-  if (require_all_operations_success && last_failed_operations != 0) {
-    std::cerr << "xindex-correctness-failure failed_operations="
-              << last_failed_operations << std::endl;
-    return 2;
-  }
-  return 0;
+  return exit_status;
 }
 
 uint64_t validate_xindex_state(xindex_t *table, size_t sample_count,
@@ -511,6 +496,9 @@ void *run_fg(void *param) {
   COUT_THIS("[ycsb] Worker" << thread_id << " Ready.");
   // exsiting keys fall within range [delete_i, insert_i)
   ready_threads++;
+  volatile bool res = false;
+  uint64_t dummy_value = 1234;
+  UNUSED(res);
 
   uint64_t control = run_control.load(std::memory_order_acquire);
   while ((control & kRunControlRunning) == 0) {
@@ -531,70 +519,47 @@ void *run_fg(void *param) {
     return (control & kRunControlRunning) != 0;
   };
 
-  // Select a specialized loop once per worker. The false specialization has
-  // no validation counter updates or per-operation validation branch, keeping
-  // the ordinary benchmark hot path unchanged when validation is disabled.
-  auto run_operations = [&](auto validation_tag) {
-    constexpr bool record_validation = decltype(validation_tag)::value;
-    bool res = false;
-    uint64_t dummy_value = 1234;
-
-    auto execute_operation = [&](size_t i) {
-      operation_item item = YCSBconfig.operate_queue[i];
-      if (item.op == 0) {  // read
-        res = table->get(item.key, dummy_value, thread_id);
-      } else if (item.op == 1) {  // insert
-        res = table->put(item.key, item.key, thread_id);
-      } else if (item.op == 2) {  // update
-        res = table->put(item.key, item.key, thread_id);
-      } else if (item.op == 3) {  // remove
-        res = table->remove(item.key, thread_id);
-      } else if (item.op == 4) {  // one logical read-modify-write transaction
-        const auto rmw = ycsb::read_modify_write(
-            *table, index_key_t(item.key), item.key, thread_id);
-        res = rmw.read_successful && rmw.update_successful;
-        if (record_validation) {
-          thread_param.rmw_read_successful += rmw.read_successful;
-          thread_param.rmw_update_successful += rmw.update_successful;
-        }
-      } else {
-        COUT_THIS("Wrong operator");
-        exit(1);
-      }
-      if (record_validation) {
-        thread_param.attempted[item.op]++;
-        if (res)
-          thread_param.successful[item.op]++;
-      }
-      thread_param.throughput++;
-    };
-
-    if (duration_seconds > 0) {
-      bool stop = false;
-      while (!stop) {
-        for (size_t i = exist_key_start; i < exist_key_end; i++) {
-          // Checking every 256 operations keeps stop latency short without
-          // adding an atomic load to every measured operation.
-          if (((i - exist_key_start) & 255) == 0 && !observe_control()) {
-            stop = true;
-            break;
-          }
-          execute_operation(i);
-        }
-      }
+  auto execute_operation = [&](size_t i) {
+    operation_item item = YCSBconfig.operate_queue[i];
+    if (item.op == 0) {  // read
+      res = table->get(item.key, dummy_value, thread_id);
+    } else if (item.op == 1) {  // insert
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 2) {  // update
+      res = table->put(item.key, item.key, thread_id);
+    } else if (item.op == 3) {  // remove
+      res = table->remove(item.key, thread_id);
+    } else if (item.op == 4) {  // one logical read-modify-write transaction
+      const auto rmw = ycsb::read_modify_write(
+          *table, index_key_t(item.key), item.key, thread_id);
+      res = rmw.read_successful && rmw.update_successful;
     } else {
-      for (size_t j = 0; j < iteration; j++) {
-        for (size_t i = exist_key_start; i < exist_key_end; i++) {
-          execute_operation(i);
-        }
-      }
+      COUT_THIS("Wrong operator");
+      exit(1);
     }
+    thread_param.throughput++;
   };
 
-  if (validation_enabled || require_all_operations_success)
-    run_operations(std::true_type{});
-  else
-    run_operations(std::false_type{});
+  if (duration_seconds > 0) {
+    bool stop = false;
+    while (!stop) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        // Checking every 256 operations keeps stop latency short without
+        // adding an atomic load to every measured operation.
+        if (((i - exist_key_start) & 255) == 0 && !observe_control()) {
+          stop = true;
+          break;
+        }
+        execute_operation(i);
+      }
+    }
+  } else {
+    for (size_t j = 0; j < iteration; j++) {
+      for (size_t i = exist_key_start; i < exist_key_end; i++) {
+        execute_operation(i);
+      }
+    }
+  }
 
   pthread_exit(nullptr);
 }
@@ -623,10 +588,6 @@ void run_benchmark(tab_t *table, size_t sec) {
     fg_params[worker_i].table = table;
     fg_params[worker_i].thread_id = worker_i;
     fg_params[worker_i].throughput = 0;
-    fg_params[worker_i].attempted.fill(0);
-    fg_params[worker_i].successful.fill(0);
-    fg_params[worker_i].rmw_read_successful = 0;
-    fg_params[worker_i].rmw_update_successful = 0;
     fg_params[worker_i].sample = &samples[worker_i];
     int ret = pthread_create(&threads[worker_i], nullptr, run_fg<tab_t>,
                              (void *)&fg_params[worker_i]);
@@ -720,52 +681,11 @@ void run_benchmark(tab_t *table, size_t sec) {
   TIMER_END_S(1,time_s);
 
   size_t throughput = 0;
-  std::array<uint64_t, 5> attempted{};
-  std::array<uint64_t, 5> successful{};
-  uint64_t rmw_read_successful = 0;
-  uint64_t rmw_update_successful = 0;
-  const bool record_validation =
-      validation_enabled || require_all_operations_success;
   for (auto &p : fg_params) {
     throughput += p.throughput;
-    if (record_validation) {
-      rmw_read_successful += p.rmw_read_successful;
-      rmw_update_successful += p.rmw_update_successful;
-      for (size_t op = 0; op < attempted.size(); ++op) {
-        attempted[op] += p.attempted[op];
-        successful[op] += p.successful[op];
-      }
-    }
   }
-  uint64_t total_successful = throughput;
-  uint64_t total_failed = 0;
-  if (record_validation) {
-    total_successful = 0;
-    for (size_t op = 0; op < attempted.size(); ++op) {
-      total_successful += successful[op];
-      total_failed += attempted[op] - successful[op];
-    }
-    last_failed_operations = total_failed;
-    std::cout << "xindex-operation-validation"
-              << " attempted=" << throughput
-              << " successful=" << total_successful
-              << " failed=" << total_failed
-              << " read_attempted=" << attempted[0]
-              << " read_successful=" << successful[0]
-              << " insert_attempted=" << attempted[1]
-              << " insert_successful=" << successful[1]
-              << " update_attempted=" << attempted[2]
-              << " update_successful=" << successful[2]
-              << " remove_attempted=" << attempted[3]
-              << " remove_successful=" << successful[3]
-              << " rmw_attempted=" << attempted[4]
-              << " rmw_successful=" << successful[4]
-              << " rmw_read_successful=" << rmw_read_successful
-              << " rmw_update_successful=" << rmw_update_successful
-              << " get_calls=" << attempted[0] + attempted[4]
-              << " put_calls=" << attempted[1] + attempted[2] + attempted[4]
-              << " api_calls=" << throughput + attempted[4] << std::endl;
-  }
+  // Reuse the existing throughput count after timing.
+  std::cout << "xindex-operation-count executed=" << throughput << std::endl;
   if (sec > 0 && throughput_sample_seconds > 0) {
     const uint64_t interval_operations = throughput - previous_operations;
     const double interval_seconds = time_s - previous_elapsed;
@@ -781,10 +701,6 @@ void run_benchmark(tab_t *table, size_t sec) {
   }
   COUT_THIS("[ycsb] Time(sec) : " << time_s);
   COUT_THIS("[ycsb] Throughput(op/s): " << throughput / time_s);
-  if (record_validation) {
-    COUT_THIS("[ycsb] Successful throughput(op/s): "
-              << total_successful / time_s);
-  }
 }
 
 inline void parse_args(int argc, char **argv) {

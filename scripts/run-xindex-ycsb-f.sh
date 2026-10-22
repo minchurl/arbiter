@@ -26,7 +26,7 @@ if [[ "${1:-}" == "--smoke" && $# == 1 ]]; then
 fi
 
 echo "YCSB-F: A trace READ stays READ; UPDATE becomes same-worker get + put."
-echo "One F transaction counts once; the log also reports actual get/put calls."
+echo "One F transaction counts once; trace-mix counts are reported before timing."
 echo "Native / selected-Local / selected-CXL; 31+1 workers; MemoryMax=64G."
 "${ROOT_DIR}/scripts/validate-xindex-runtime-correctness-full.sh" "$@"
 if [[ "${1:-}" != "--check" && "${1:-}" != "--help" && "${1:-}" != "-h" ]]; then

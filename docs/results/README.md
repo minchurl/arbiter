@@ -35,11 +35,13 @@ post-run digest. See the
 ## Additional Workload: XIndex/YCSB-F
 
 The automatic evidence-balanced policy was applied unchanged to F by mapping
-A's UPDATE records to same-worker get/put transactions. One final-code full run
-measured 34.858M native, 35.478M selected-Local, and 51.686M selected-CXL logical
+A's UPDATE records to same-worker get/put transactions. One counter-instrumented
+full run measured 34.858M native, 35.478M selected-Local, and 51.686M selected-CXL logical
 transactions/s: **+45.68% CXL/Local**, **+48.27% CXL/native**. All rows completed
 400M transactions and agreed on operation outcomes and the sampled state digest.
-This is an introduction check, not a repeated performance estimate. See
+This is an introduction check, not a repeated performance estimate. The current
+runner incorporates PR #16's counter removal; the values above have not been
+remeasured with that loop. See
 [the retained evidence](../../results/xindex/ycsb-f/one-pass-20261022/README.md)
 and [the F execution protocol](../xindex-ycsb-f.md).
 
