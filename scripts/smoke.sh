@@ -33,6 +33,7 @@ find_plugin() {
 }
 
 CLANG="${CLANG:-$(find_tool clang)}"
+CLANGXX="${CLANGXX:-$(find_tool clang++)}"
 OPT="${OPT:-$(find_tool opt)}"
 LLVM_DIS="${LLVM_DIS:-$(find_tool llvm-dis)}"
 PLUGIN="$(find_plugin)"
@@ -114,6 +115,56 @@ grep -q "arbiter_alloc_site" "${tmpdir}/smoke.arbiter.ll"
 grep -q "arbiter_free_maybe" "${tmpdir}/smoke.arbiter.ll"
 grep -q "arbiter_mmap_site" "${tmpdir}/smoke.arbiter.ll"
 grep -q "arbiter_munmap_maybe" "${tmpdir}/smoke.arbiter.ll"
+
+cat >"${tmpdir}/delete-variants.cpp" <<'EOF'
+#include <cstddef>
+#include <new>
+
+extern "C" void delete_sized(void *, std::size_t) asm("_ZdlPvm");
+extern "C" void delete_sized_aligned(void *, std::size_t, std::align_val_t)
+    asm("_ZdlPvmSt11align_val_t");
+extern "C" void delete_array_sized(void *, std::size_t) asm("_ZdaPvm");
+extern "C" void delete_array_sized_aligned(void *, std::size_t,
+                                            std::align_val_t)
+    asm("_ZdaPvmSt11align_val_t");
+
+void delete_variants(void *plain, void *array, void *aligned,
+                     void *aligned_array) {
+  ::operator delete(plain);
+  delete_sized(plain, std::size_t{64});
+  ::operator delete(aligned, std::align_val_t{64});
+  delete_sized_aligned(aligned, std::size_t{64}, std::align_val_t{64});
+  ::operator delete[](array);
+  delete_array_sized(array, std::size_t{64});
+  ::operator delete[](aligned_array, std::align_val_t{64});
+  delete_array_sized_aligned(aligned_array, std::size_t{64},
+                             std::align_val_t{64});
+}
+
+void *selected_allocation() { return ::operator new(64); }
+EOF
+
+printf "smoke: preserve C++ delete ABIs\n"
+"${CLANGXX}" -std=c++17 -O0 -emit-llvm -c "${tmpdir}/delete-variants.cpp" \
+  -o "${tmpdir}/delete-variants.bc"
+"${OPT}" -load-pass-plugin "${PLUGIN}" \
+  -passes=arbiter-experiment-all-rewrite \
+  "${tmpdir}/delete-variants.bc" \
+  -o "${tmpdir}/delete-variants.arbiter.bc"
+"${LLVM_DIS}" "${tmpdir}/delete-variants.arbiter.bc" \
+  -o "${tmpdir}/delete-variants.arbiter.ll"
+
+for helper in \
+  arbiter_cxx_delete_maybe \
+  arbiter_cxx_delete_sized_maybe \
+  arbiter_cxx_delete_aligned_maybe \
+  arbiter_cxx_delete_sized_aligned_maybe \
+  arbiter_cxx_delete_array_maybe \
+  arbiter_cxx_delete_array_sized_maybe \
+  arbiter_cxx_delete_array_aligned_maybe \
+  arbiter_cxx_delete_array_sized_aligned_maybe; do
+  grep -q "${helper}" "${tmpdir}/delete-variants.arbiter.ll"
+done
 
 printf "smoke: runtime fallback\n"
 "${RUNTIME_SMOKE}"

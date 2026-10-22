@@ -25,6 +25,13 @@ alone, and +90.79% for sites 68+71 together. The resulting generalized policy
 uses allocation size only as a +1 tie breaker and produces the same XIndex
 rewrite as raw-046 without its size-dominant scoring rule.
 
+After correcting the allocation/delete ABI and adding operation-success and
+state-digest checks, a new four-pair Site 68+71 confirmation measured 27.685M
+op/s Local versus 49.917M op/s CXL, or +80.42% mean paired improvement. All
+eight rows completed the same 400M successful operations with an identical
+post-run digest. See the
+[runtime/correctness validation](xindex-runtime-correctness.md).
+
 ## Workload Boundary: XIndex/YCSB-B
 
 YCSB-B contains approximately 95% reads and 5% updates. A full-trace screen of
@@ -63,6 +70,6 @@ Machine-readable retained results live under [`results/xindex/`](../../results/x
 Historical plans, superseded implementations, and failed controller runs are
 described separately under [`docs/history/`](../history/README.md).
 
-The measured throughput differences do not by themselves prove reduced HITM.
-A causal claim still requires correctness validation, HITM/C2C counters,
-memory-bandwidth counters, and latency measurements.
+The runtime and logical XIndex result now have explicit correctness validation.
+The measured throughput differences still do not by themselves prove reduced
+HITM. A causal claim requires HITM/C2C, memory-bandwidth, and latency counters.

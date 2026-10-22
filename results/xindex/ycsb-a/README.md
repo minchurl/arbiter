@@ -1,5 +1,8 @@
 # XIndex/YCSB-A Evidence
 
+- [`runtime-correctness-20261021/`](runtime-correctness-20261021/README.md):
+  post-ABI-fix four-pair Site 68+71 confirmation with per-operation success,
+  state digest, raw row logs, placement, and safety evidence.
 - [`site-ablation-20261020/`](site-ablation-20261020/README.md): latest
   four-pair comparison of sites 68, 71, 68+71, and raw-046, plus the automatic
   policy follow-up.

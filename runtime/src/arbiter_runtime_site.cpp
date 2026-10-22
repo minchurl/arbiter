@@ -12,10 +12,25 @@
 #include <limits>
 #include <new>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #if ARBITER_HAS_NUMA
 #include <numa.h>
 #endif
+
+// libstdc++ hides the sized deallocation declarations unless the translation
+// unit is compiled with -fsized-deallocation. The ABI symbols still exist and
+// must be called exactly when the LLVM pass rewrites an existing call.
+extern "C" void arbiter_abi_delete_sized(void *, size_t) noexcept
+    __asm__("_ZdlPvm");
+extern "C" void arbiter_abi_delete_sized_aligned(void *, size_t,
+                                                  std::align_val_t) noexcept
+    __asm__("_ZdlPvmSt11align_val_t");
+extern "C" void arbiter_abi_delete_array_sized(void *, size_t) noexcept
+    __asm__("_ZdaPvm");
+extern "C" void arbiter_abi_delete_array_sized_aligned(
+    void *, size_t, std::align_val_t) noexcept
+    __asm__("_ZdaPvmSt11align_val_t");
 
 namespace {
 
@@ -138,11 +153,32 @@ bool isNumaAvailable() {
 }
 #endif
 
-void *allocateMalloc(uint64_t size) {
+bool isPowerOfTwo(uint64_t value) {
+  return value != 0 && (value & (value - 1)) == 0;
+}
+
+bool normalizeAlignment(uint64_t requested, size_t &alignment) {
+  if (requested == 0)
+    requested = alignof(std::max_align_t);
+  if (!fitsSizeT(requested) || !isPowerOfTwo(requested))
+    return false;
+
+  alignment = static_cast<size_t>(requested);
+  return true;
+}
+
+void *allocateAlignedMalloc(uint64_t size, size_t alignment) {
   if (!fitsSizeT(size))
     return nullptr;
+  if (alignment <= alignof(std::max_align_t))
+    return std::malloc(static_cast<size_t>(size));
 
-  return std::malloc(static_cast<size_t>(size));
+  // posix_memalign requires at least sizeof(void *) alignment. All larger
+  // power-of-two values accepted by normalizeAlignment satisfy that rule.
+  void *ptr = nullptr;
+  if (posix_memalign(&ptr, alignment, static_cast<size_t>(size)) != 0)
+    return nullptr;
+  return ptr;
 }
 
 void *allocateNuma(uint64_t size, int32_t node) {
@@ -159,9 +195,13 @@ void *allocateNuma(uint64_t size, int32_t node) {
 #endif
 }
 
-BackendAllocation tryAllocateOnTargetNode(uint64_t size) {
+BackendAllocation tryAllocateOnTargetNode(uint64_t size, size_t alignment) {
   const RuntimeConfig &config = getRuntimeConfig();
   if (!config.hasTargetNode)
+    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
+
+  const long pageSize = sysconf(_SC_PAGESIZE);
+  if (pageSize <= 0 || alignment > static_cast<size_t>(pageSize))
     return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
 
   void *ptr = allocateNuma(size, config.targetNode);
@@ -171,12 +211,17 @@ BackendAllocation tryAllocateOnTargetNode(uint64_t size) {
   return {ptr, SideTableBackend::Numa, config.targetNode};
 }
 
-BackendAllocation allocateHeap(uint64_t size) {
-  BackendAllocation allocation = tryAllocateOnTargetNode(size);
+BackendAllocation allocateHeap(uint64_t size, uint64_t requestedAlignment) {
+  size_t alignment = 0;
+  if (!normalizeAlignment(requestedAlignment, alignment))
+    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
+
+  BackendAllocation allocation = tryAllocateOnTargetNode(size, alignment);
   if (allocation.ptr)
     return allocation;
 
-  return {allocateMalloc(size), SideTableBackend::Malloc, kNoTargetNode};
+  return {allocateAlignedMalloc(size, alignment), SideTableBackend::Malloc,
+          kNoTargetNode};
 }
 
 void freeNuma(void *ptr, uint64_t size) {
@@ -284,7 +329,7 @@ extern "C" void *arbiter_alloc_site(uint64_t size, uint64_t align,
       return nullptr;
   }
 
-  BackendAllocation allocation = allocateHeap(size);
+  BackendAllocation allocation = allocateHeap(size, align);
   if (!allocation.ptr)
     return nullptr;
 
@@ -319,7 +364,8 @@ extern "C" void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
   if (size == 0 || !fitsSizeT(size))
     return MAP_FAILED;
 
-  BackendAllocation target = tryAllocateOnTargetNode(size);
+  BackendAllocation target =
+      tryAllocateOnTargetNode(size, alignof(std::max_align_t));
   if (target.ptr) {
     std::memset(target.ptr, 0, static_cast<size_t>(size));
     SideTableEntry entry =
@@ -362,6 +408,39 @@ extern "C" void arbiter_cxx_delete_maybe(void *ptr) {
   ::operator delete(ptr);
 }
 
+extern "C" void arbiter_cxx_delete_sized_maybe(void *ptr, uint64_t size) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  arbiter_abi_delete_sized(ptr, static_cast<size_t>(size));
+}
+
+extern "C" void arbiter_cxx_delete_aligned_maybe(void *ptr, uint64_t align) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  ::operator delete(ptr, static_cast<std::align_val_t>(align));
+}
+
+extern "C" void arbiter_cxx_delete_sized_aligned_maybe(void *ptr,
+                                                         uint64_t size,
+                                                         uint64_t align) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  arbiter_abi_delete_sized_aligned(ptr, static_cast<size_t>(size),
+                                   static_cast<std::align_val_t>(align));
+}
+
 extern "C" void arbiter_cxx_delete_array_maybe(void *ptr) {
   if (!ptr)
     return;
@@ -370,6 +449,40 @@ extern "C" void arbiter_cxx_delete_array_maybe(void *ptr) {
     return;
 
   ::operator delete[](ptr);
+}
+
+extern "C" void arbiter_cxx_delete_array_sized_maybe(void *ptr,
+                                                       uint64_t size) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  arbiter_abi_delete_array_sized(ptr, static_cast<size_t>(size));
+}
+
+extern "C" void arbiter_cxx_delete_array_aligned_maybe(void *ptr,
+                                                         uint64_t align) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  ::operator delete[](ptr, static_cast<std::align_val_t>(align));
+}
+
+extern "C" void arbiter_cxx_delete_array_sized_aligned_maybe(
+    void *ptr, uint64_t size, uint64_t align) {
+  if (!ptr)
+    return;
+
+  if (releaseHeapAllocation(ptr))
+    return;
+
+  arbiter_abi_delete_array_sized_aligned(
+      ptr, static_cast<size_t>(size), static_cast<std::align_val_t>(align));
 }
 
 extern "C" int arbiter_munmap_maybe(void *ptr, uint64_t size) {

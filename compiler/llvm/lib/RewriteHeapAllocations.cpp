@@ -58,15 +58,20 @@ FunctionCallee getVoidPtrRuntimeFn(Module &module, StringRef name) {
   return module.getOrInsertFunction(name, voidTy, ptrTy);
 }
 
-FunctionCallee getDeallocationFn(Module &module, AllocationKind kind) {
-  switch (kind) {
-  case AllocationKind::CxxDelete:
-    return getVoidPtrRuntimeFn(module, "arbiter_cxx_delete_maybe");
-  case AllocationKind::CxxDeleteArray:
-    return getVoidPtrRuntimeFn(module, "arbiter_cxx_delete_array_maybe");
-  default:
-    return getVoidPtrRuntimeFn(module, "arbiter_free_maybe");
-  }
+FunctionCallee getVoidPtrI64RuntimeFn(Module &module, StringRef name) {
+  LLVMContext &context = module.getContext();
+  Type *ptrTy = PointerType::getUnqual(context);
+  Type *i64Ty = Type::getInt64Ty(context);
+  Type *voidTy = Type::getVoidTy(context);
+  return module.getOrInsertFunction(name, voidTy, ptrTy, i64Ty);
+}
+
+FunctionCallee getVoidPtrI64I64RuntimeFn(Module &module, StringRef name) {
+  LLVMContext &context = module.getContext();
+  Type *ptrTy = PointerType::getUnqual(context);
+  Type *i64Ty = Type::getInt64Ty(context);
+  Type *voidTy = Type::getVoidTy(context);
+  return module.getOrInsertFunction(name, voidTy, ptrTy, i64Ty, i64Ty);
 }
 
 bool rewriteAllocation(Module &module, const AllocationSite &site) {
@@ -113,8 +118,50 @@ bool rewriteDeallocation(Module &module, const AllocationSite &site) {
     return false;
 
   IRBuilder<> builder(call);
-  builder.CreateCall(getDeallocationFn(module, site.kind),
-                     {call->getArgOperand(0)});
+  Value *ptr = call->getArgOperand(0);
+  Type *i64Ty = builder.getInt64Ty();
+
+  if (site.kind == AllocationKind::Free) {
+    builder.CreateCall(getVoidPtrRuntimeFn(module, "arbiter_free_maybe"),
+                       {ptr});
+  } else if (site.callee == "_ZdlPv" || site.callee == "_ZdaPv") {
+    StringRef helper = site.kind == AllocationKind::CxxDelete
+                           ? "arbiter_cxx_delete_maybe"
+                           : "arbiter_cxx_delete_array_maybe";
+    builder.CreateCall(getVoidPtrRuntimeFn(module, helper), {ptr});
+  } else if (site.callee == "_ZdlPvm" || site.callee == "_ZdaPvm") {
+    if (call->arg_size() < 2)
+      return false;
+    StringRef helper = site.kind == AllocationKind::CxxDelete
+                           ? "arbiter_cxx_delete_sized_maybe"
+                           : "arbiter_cxx_delete_array_sized_maybe";
+    Value *size = castInteger(builder, call->getArgOperand(1), i64Ty);
+    builder.CreateCall(getVoidPtrI64RuntimeFn(module, helper), {ptr, size});
+  } else if (site.callee == "_ZdlPvSt11align_val_t" ||
+             site.callee == "_ZdaPvSt11align_val_t") {
+    if (call->arg_size() < 2)
+      return false;
+    StringRef helper = site.kind == AllocationKind::CxxDelete
+                           ? "arbiter_cxx_delete_aligned_maybe"
+                           : "arbiter_cxx_delete_array_aligned_maybe";
+    Value *align = castInteger(builder, call->getArgOperand(1), i64Ty);
+    builder.CreateCall(getVoidPtrI64RuntimeFn(module, helper), {ptr, align});
+  } else if (site.callee == "_ZdlPvmSt11align_val_t" ||
+             site.callee == "_ZdaPvmSt11align_val_t") {
+    if (call->arg_size() < 3)
+      return false;
+    StringRef helper = site.kind == AllocationKind::CxxDelete
+                           ? "arbiter_cxx_delete_sized_aligned_maybe"
+                           : "arbiter_cxx_delete_array_sized_aligned_maybe";
+    Value *size = castInteger(builder, call->getArgOperand(1), i64Ty);
+    Value *align = castInteger(builder, call->getArgOperand(2), i64Ty);
+    builder.CreateCall(getVoidPtrI64I64RuntimeFn(module, helper),
+                       {ptr, size, align});
+  } else {
+    // Placement and implementation-specific delete overloads must retain
+    // their original ABI rather than being collapsed to delete(void *).
+    return false;
+  }
   call->eraseFromParent();
   return true;
 }
