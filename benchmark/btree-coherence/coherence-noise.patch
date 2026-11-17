@@ -1,0 +1,18 @@
+--- a/coherence_noise.cpp
++++ b/coherence_noise.cpp
+@@ -13,4 +13,5 @@
+ //   combined - spin master + maint workers simultaneously
+ 
++#include "page-sample.h"
+ #include <atomic>
+ #include <chrono>
+@@ -333,4 +334,9 @@
+            (unsigned long long)checksum);
+ 
++    sample_pages("table", g_table, &g_table[g_table_size / 2],
++                 &g_table[g_table_size - 1]);
++    if (g_ballast_elems)
++        sample_pages("ballast", g_ballast, &g_ballast[g_ballast_elems / 2],
++                     &g_ballast[g_ballast_elems - 1]);
+     free_table();
+     return 0;

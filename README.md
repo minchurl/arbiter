@@ -75,6 +75,30 @@ cmake --build build-llvm18 --target \
   arbiter-slab-arena-smoke
 ```
 
+## Run B-tree and the coherence microbenchmark
+
+Use the compiler/runtime build above on a host with local DRAM and a CXL
+memory node. For the measured configuration, add `-DCMAKE_BUILD_TYPE=Release`
+when configuring CMake. These workloads also need Clang's OpenMP development package
+(`libomp-18-dev` on Ubuntu), `patch`, GNU time, and Python 3.9+.
+
+```sh
+./scripts/build-btree-coherence.sh
+./scripts/run-btree-coherence.py
+```
+
+The build reads the supplied sources from `~/vmitosis-workloads` and
+`~/microbench`. Set `VMITOSIS_DIR`, `MICROBENCH_DIR`, or `ARBITER_BUILD_DIR`
+to use different locations. It applies the evidence-balanced selection policy
+to both originals and builds matched binaries for explicit placement.
+
+The runner uses 32 workers and three rounds of native, selected-local, and
+selected-CXL placement. CPU and local memory default to node 0 and CXL to
+node 2. Use `--cpu-node`, `--local-node`, and `--cxl-node` on a different
+topology, or `--benchmark btree` / `--benchmark micro` to run just one workload.
+Each run records throughput, peak RSS and live page locations under
+`build/arbiter-bench/`. See the [results and methodology](docs/results/btree-coherence.md).
+
 ## Run the XIndex Experiment
 
 For the meeting demo, run A or F independently:
