@@ -158,7 +158,8 @@ distinction explicit; no site ID is pinned in the config.
 With the original slab allocator, four one-pass pairs of `raw-046` averaged
 26.531M local versus 49.068M CXL op/s for a **+85.03% mean paired improvement**. See
 [the YCSB-A result](docs/results/xindex-ycsb-a.md) for pairwise results, safety
-counters, and the earlier cyclic-replay history.
+counters, and the earlier cyclic-replay history. Both runtimes were also compared on the
+same host for throughput, memory use and allocation time. [Jemalloc comparison](docs/results/xindex-jemalloc.md)
 
 ## Build Another Retained Policy
 

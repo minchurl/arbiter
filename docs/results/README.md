@@ -1,9 +1,8 @@
 # Validated Results
 
-Arbiter's current evaluation uses heuristic-guided HITM-risk seed placement:
-compile-time seed selection followed by allocation-time placement in a
-NUMA-bound slab arena. It does not expand seeds to related members and does
-not migrate already allocated objects.
+The historical XIndex A and F results below used the original NUMA-bound slab
+allocator. A separate YCSB-A experiment compares jemalloc and the slab with
+the same seed placement policy. [Allocator comparison](xindex-jemalloc.md)
 
 ## Primary Result: XIndex/YCSB-A One Pass
 
