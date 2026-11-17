@@ -1,7 +1,7 @@
 #include "arbiter_runtime_site.h"
 
 #include "arbiter_side_table.h"
-#include "arbiter_slab_arena.h"
+#include "arbiter_jemalloc_arena.h"
 
 #include <cerrno>
 #include <cstddef>
@@ -265,15 +265,15 @@ bool releaseIfTracked(void *ptr) {
 bool releaseHeapAllocation(void *ptr) {
   const RuntimeConfig &config = getRuntimeConfig();
   if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
-    switch (arbiter::runtime::slabArenaDeallocate(ptr)) {
-    case arbiter::runtime::SlabArenaDeallocation::Released:
+    switch (arbiter::runtime::arenaDeallocate(ptr)) {
+    case arbiter::runtime::ArenaDeallocation::Released:
       return true;
-    case arbiter::runtime::SlabArenaDeallocation::Invalid:
+    case arbiter::runtime::ArenaDeallocation::Invalid:
       std::fprintf(stderr,
                    "arbiter-runtime: invalid or duplicate free inside the "
-                   "slab arena\n");
+                   "jemalloc arena\n");
       std::abort();
-    case arbiter::runtime::SlabArenaDeallocation::NotOwned:
+    case arbiter::runtime::ArenaDeallocation::NotOwned:
       break;
     }
 
@@ -317,14 +317,14 @@ extern "C" void *arbiter_alloc_site(uint64_t size, uint64_t align,
     return nullptr;
 
   if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
-    arbiter::runtime::SlabArenaFailure failure =
-        arbiter::runtime::SlabArenaFailure::None;
-    void *ptr = arbiter::runtime::slabArenaAllocate(
+    arbiter::runtime::ArenaFailure failure =
+        arbiter::runtime::ArenaFailure::None;
+    void *ptr = arbiter::runtime::arenaAllocate(
         size, align, site_id, config.targetNode, failure);
     if (ptr)
       return ptr;
 
-    arbiter::runtime::slabArenaRecordFallback(failure);
+    arbiter::runtime::arenaRecordFallback(failure);
     if (config.arenaStrict)
       return nullptr;
   }

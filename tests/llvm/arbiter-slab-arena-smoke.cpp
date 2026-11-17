@@ -192,8 +192,7 @@ int main() {
   for (std::thread &worker : workers)
     worker.join();
 
-  // Allocate the same population again. The current slab has only partial
-  // fresh capacity, so this must also exercise slots returned by free().
+  // Repeat the workload after another set of threads freed the objects.
   std::vector<void *> reused;
   reused.reserve(static_cast<size_t>(objectCount));
   for (uint64_t i = 0; i < objectCount; ++i) {
@@ -227,10 +226,11 @@ int main() {
                 static_cast<unsigned long long>(entry.second));
   std::printf("majority=node%d\n", observedNode);
 
-  if (hasExpectedNode && observedNode != expectedNode) {
+  if (hasExpectedNode && counts[expectedNode] != residentPages.size()) {
     std::fprintf(stderr,
-                 "arbiter-slab-arena-smoke: expected node%d, observed node%d\n",
-                 expectedNode, observedNode);
+                 "arbiter-slab-arena-smoke: %llu of %zu pages on expected node%d\n",
+                 static_cast<unsigned long long>(counts[expectedNode]),
+                 residentPages.size(), expectedNode);
     return 1;
   }
 

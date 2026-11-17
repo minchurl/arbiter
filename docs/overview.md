@@ -12,7 +12,7 @@ XIndex source
   -> HITMRiskScoring scores and selects heap seeds
   -> HITMSeedPasses reports decisions and rewrites selected calls
   -> arbiter_runtime_site dispatches selected allocations
-  -> arbiter_slab_arena packs fixed-size objects into NUMA-bound slabs
+  -> arbiter_jemalloc_arena supplies NUMA-bound extents to jemalloc
   -> the same binary runs with its arena on local node 0 or CXL node 2
 ```
 
@@ -59,16 +59,18 @@ Selected heap calls lower to the site-aware ABI declared in
 `runtime/include/arbiter_runtime_site.h`. Deallocation sites use `*_maybe`
 functions, so ordinary pointers still fall back to normal `free`/`delete`.
 
-Two allocation backends remain:
+The runtime supports two allocation backends.
 
-- `direct`: per-object NUMA allocation plus a sharded ownership side table;
-- `arena`: one reserved virtual range divided into site/size/alignment slabs.
+- `direct` uses per-object NUMA allocation and a sharded ownership side table.
+- `arena` uses a private jemalloc arena for each active site. All sites draw
+  extents from one bounded mapping on the requested NUMA node.
 
-The XIndex experiment uses strict arena mode. Each allocation normally takes
-an atomic bump slot; locking is limited to slab installation and free-list slow
-paths. Arena ownership is recognized by address range, so there is no
-per-object side-table lookup. Strict mode fails instead of silently using the
-direct backend when a site's shape changes or capacity is exhausted.
+Rewritten allocations call `mallocx` with the site's arena, alignment and
+thread-cache bypass flags. jemalloc owns size classes, free lists and reuse.
+The runtime recognizes ordinary pointers by range and checks arena pointers
+against a bitmap of live allocation starts before calling `dallocx`. One site
+ID per page attributes frees without a per-object hash table. Strict mode
+returns allocation failure on a shape mismatch or exhausted reserve.
 
 ## Benchmark Code
 

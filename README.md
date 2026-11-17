@@ -6,7 +6,7 @@ current implementation is a single seed-only pipeline:
 
 ```text
 XIndex C++ -> LLVM IR -> HITM-risk seed selection -> allocation rewrite
-           -> fixed-size NUMA arena -> local/CXL comparison
+           -> NUMA-bound jemalloc arenas -> local/CXL comparison
 ```
 
 The compiler score is a static proxy built from pointer escape,
@@ -17,7 +17,7 @@ not migrate existing objects.
 ## Repository Map
 
 - `compiler/llvm/lib/hitm_seed/`: seed scoring, options, report, and rewrite
-- `runtime/src/arbiter_slab_arena.cpp`: NUMA-bound slab allocator
+- `runtime/src/arbiter_jemalloc_arena.cpp`: jemalloc arenas and NUMA extent hooks
 - `runtime/src/arbiter_runtime_site.cpp`: rewritten allocation ABI
 - `configs/hitm-seed/candidates/`: curated top 12 measured seed policies
 - `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale one-pass runner
@@ -37,8 +37,8 @@ checked in under `configs/` and `results/`.
 
 - CMake 3.20+, Ninja, and a C++17 compiler
 - LLVM 18 development files and tools (`clang`, `opt`, `llvm-link`)
-- Linux `libnuma`
-- Intel MKL and jemalloc for XIndex
+- Linux `libnuma` and jemalloc 5 development files for the NUMA arena
+- Intel MKL for XIndex
 - `git-lfs` and `zstd` when restoring the packaged 26GB YCSB-A traces
 - systemd user scopes for the protected 64G benchmark limit
 
@@ -155,8 +155,8 @@ The canonical `raw-046` selection is automatic: sites
 the current YCSB-A trace. The report keeps this static-selection/runtime-use
 distinction explicit; no site ID is pinned in the config.
 
-Across four one-pass pairs, `raw-046` averaged 26.531M local versus 49.068M
-CXL op/s: **+85.03% mean paired improvement**. See
+With the original slab allocator, four one-pass pairs of `raw-046` averaged
+26.531M local versus 49.068M CXL op/s for a **+85.03% mean paired improvement**. See
 [the YCSB-A result](docs/results/xindex-ycsb-a.md) for pairwise results, safety
 counters, and the earlier cyclic-replay history.
 
@@ -178,7 +178,7 @@ ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
 build-llvm18/bin/arbiter-runtime-smoke
 ARBITER_HEAP_BACKEND=arena ARBITER_TARGET_NODE=0 \
   ARBITER_ARENA_STRICT=1 ARBITER_ARENA_REPORT=1 \
-  build-llvm18/bin/arbiter-slab-arena-smoke 40000
+  ARBITER_TEST_OBJECTS=40000 build-llvm18/bin/arbiter-slab-arena-smoke
 ```
 
 ## Documentation
