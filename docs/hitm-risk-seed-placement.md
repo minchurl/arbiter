@@ -18,6 +18,7 @@ signal:
 | `WEIGHT_SYNC_STORE` | atomic or volatile store in the function |
 | `WEIGHT_SYNC_INLINE_ASM` | lock/cmpxchg inline assembly |
 | `WEIGHT_SYNC_FILE` | synchronization mutation in the source file |
+| `WEIGHT_PUBLISHED_RMW` | a global pointer publishes the allocation and its loaded pointee feeds atomic RMW/cmpxchg, default 0 |
 | `WEIGHT_WORKER_ENTRY` | allocation is in a pthread entry function |
 | `WEIGHT_WORKER_REACHABLE` | allocation is reachable from a worker |
 | `WEIGHT_SIZE` | allocation crosses the configured size threshold |

@@ -40,6 +40,7 @@ struct EscapeSignals {
   bool returns = false;
   bool stores = false;
   bool calls = false;
+  bool publishedRMW = false;
 };
 
 struct ScoreDecision {
@@ -59,6 +60,7 @@ struct ScoringContext {
   std::unordered_set<std::string> filesWithSyncMutation;
   std::vector<const Function *> workerEntries;
   std::unordered_set<const Function *> allWorkerReachable;
+  SmallPtrSet<const GlobalVariable *, 16> globalsWithPointeeRMW;
 };
 
 bool contains(StringRef value, StringRef needle) {
@@ -161,7 +163,37 @@ bool callUsesValueAsArgument(const CallBase &call, const Value *value) {
   return false;
 }
 
-EscapeSignals analyzeEscapes(const AllocationSite &site) {
+// Follow pointer loads from a global and address arithmetic on the pointee.
+// A load through the pointee itself starts a different allocation and is excluded.
+bool hasPointeeRMW(const GlobalVariable &global) {
+  SmallVector<const Value *, 16> worklist;
+  SmallPtrSet<const Value *, 32> visited;
+  for (const User *user : global.users()) {
+    const auto *load = dyn_cast<LoadInst>(user);
+    if (load && load->getType()->isPointerTy())
+      worklist.push_back(load);
+  }
+  while (!worklist.empty()) {
+    const Value *value = worklist.pop_back_val();
+    if (!visited.insert(value).second)
+      continue;
+    for (const User *user : value->users()) {
+      if (const auto *rmw = dyn_cast<AtomicRMWInst>(user)) {
+        if (rmw->getPointerOperand() == value)
+          return true;
+      } else if (const auto *cas = dyn_cast<AtomicCmpXchgInst>(user)) {
+        if (cas->getPointerOperand() == value)
+          return true;
+      } else if (isTransparentPointerTransform(user)) {
+        worklist.push_back(user);
+      }
+    }
+  }
+  return false;
+}
+
+EscapeSignals analyzeEscapes(const AllocationSite &site,
+                             const ScoringContext &context) {
   EscapeSignals signals;
   if (!site.call)
     return signals;
@@ -180,8 +212,13 @@ EscapeSignals analyzeEscapes(const AllocationSite &site) {
       }
 
       if (const auto *store = dyn_cast<StoreInst>(user)) {
-        if (store->getValueOperand() == value)
+        if (store->getValueOperand() == value) {
           signals.stores = true;
+          const auto *global = dyn_cast<GlobalVariable>(
+              store->getPointerOperand()->stripPointerCasts());
+          signals.publishedRMW |=
+              global && context.globalsWithPointeeRMW.contains(global);
+        }
         continue;
       }
 
@@ -264,6 +301,11 @@ void collectWorkerReachability(
 ScoringContext buildContext(Module &module) {
   ScoringContext context;
   std::unordered_set<const Function *> knownWorkerEntries;
+
+  for (const GlobalVariable &global : module.globals()) {
+    if (global.getValueType()->isPointerTy() && hasPointeeRMW(global))
+      context.globalsWithPointeeRMW.insert(&global);
+  }
 
   for (Function &function : module) {
     if (function.isDeclaration())
@@ -469,8 +511,14 @@ HITMRiskScore scoreSite(const AllocationSite &site,
             joinReasons(decision.reasons)};
   }
 
-  addEscapeScore(analyzeEscapes(site), policy, decision);
+  EscapeSignals escapes = analyzeEscapes(site, context);
+  addEscapeScore(escapes, policy, decision);
   addSyncScore(site, context, policy, decision);
+  if (policy.weightPublishedRMW != 0 && escapes.publishedRMW) {
+    decision.value += policy.weightPublishedRMW;
+    decision.hasSyncOrMutable = true;
+    decision.reasons.push_back("published-pointee-atomic-rmw");
+  }
   addThreadScore(site, context, policy, decision);
   addSizeScore(size, policy, decision);
 

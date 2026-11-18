@@ -89,8 +89,8 @@ when configuring CMake. These workloads also need Clang's OpenMP development pac
 
 The build reads the supplied sources from `~/vmitosis-workloads` and
 `~/microbench`. Set `VMITOSIS_DIR`, `MICROBENCH_DIR`, or `ARBITER_BUILD_DIR`
-to use different locations. It applies the evidence-balanced selection policy
-to both originals and builds matched binaries for explicit placement.
+to use different locations. It applies the published-RMW selection policy
+to both originals and builds matched native and automatically selected binaries.
 
 The runner uses 32 workers and three rounds of native, selected-local, and
 selected-CXL placement. CPU and local memory default to node 0 and CXL to
@@ -98,6 +98,22 @@ node 2. Use `--cpu-node`, `--local-node`, and `--cxl-node` on a different
 topology, or `--benchmark btree` / `--benchmark micro` to run just one workload.
 Each run records throughput, peak RSS and live page locations under
 `build/arbiter-bench/`. See the [results and methodology](docs/results/btree-coherence.md).
+
+The published-RMW candidate adds object-level atomic evidence
+to distinguish the microbenchmark's table from its ballast. Rebuild the LLVM
+plugin with this checkout before using the candidate on XIndex.
+
+```sh
+export ARBITER_HITM_SEED_CONFIG="$PWD/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config"
+export ARBITER_BENCH_BUILD_DIR="$PWD/build/arbiter-bench/published-rmw"
+./scripts/build-btree-coherence.sh
+./scripts/run-btree-coherence.py
+```
+
+The runner reads the selected objects from the build manifest, including
+policies that select zero objects. Set `ARBITER_BENCH_SELECTION=targeted`
+when building to reproduce explicit node-array/table placement.
+See the [policy evaluation](docs/results/published-rmw-policy.md).
 
 ## Run the XIndex Experiment
 

@@ -6,6 +6,8 @@ the same seed placement policy. [Allocator comparison](xindex-jemalloc.md)
 
 The B-tree and coherence_noise experiments measure selective local and CXL
 placement under the same jemalloc runtime. [Benchmark results](btree-coherence.md)
+The published-RMW candidate extends automatic selection to the coherence
+table and preserves the XIndex executable. [Policy evaluation](published-rmw-policy.md)
 
 ## Primary Result: XIndex/YCSB-A One Pass
 
