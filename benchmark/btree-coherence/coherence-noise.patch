@@ -1,18 +1,362 @@
 --- a/coherence_noise.cpp
 +++ b/coherence_noise.cpp
-@@ -13,4 +13,5 @@
+@@ -1,6 +1,7 @@
+ // coherence_noise.cpp
+ //
+-// Microbenchmark reproducing XIndex-H's CHA IRQ congestion pattern.
++// Synthetic coherence, memory-traffic and maintenance microbenchmark.
++// The shared-table and epoch protocol is inspired by XIndex-H.
+ //
+ // Core mechanism: many threads doing CAS-locked writes on 32-byte entries
+ // (2 per cache line → false sharing + HITM). Maintenance noise threads
+@@ -12,7 +13,11 @@
+ //   maint    - periodic full table scan + rcu_barrier + sleep(1)
  //   combined - spin master + maint workers simultaneously
  
 +#include "page-sample.h"
++#include "perf-window.h"
  #include <atomic>
++#include <cerrno>
++#include <limits>
  #include <chrono>
-@@ -333,4 +334,9 @@
+ #include <cstdint>
+ #include <cstdio>
+@@ -24,6 +29,23 @@
+ #include <vector>
+ 
+ static constexpr int MAX_VICTIMS = 256;
++#ifndef ARBITER_MICRO_ENTRY_BYTES
++#define ARBITER_MICRO_ENTRY_BYTES 32
++#endif
++#ifndef ARBITER_MICRO_FAST_INDEX
++#define ARBITER_MICRO_FAST_INDEX 0
++#endif
++#ifndef ARBITER_MICRO_EPOCH_STORE
++#define ARBITER_MICRO_EPOCH_STORE 1
++#endif
++static_assert(ARBITER_MICRO_ENTRY_BYTES == 32 || ARBITER_MICRO_ENTRY_BYTES == 64,
++              "entry size must be 32 or 64");
++static constexpr uint64_t LOCK_BIT = 1ULL << 60;
++static inline void spin_pause() {
++#if defined(__x86_64__) || defined(__i386__)
++    __builtin_ia32_pause();
++#endif
++}
+ 
+ enum class NoiseMode { NONE, SPIN, MAINT, COMBINED };
+ 
+@@ -55,20 +77,21 @@
+ alignas(64) static std::atomic<bool> g_stop{false};
+ alignas(64) static std::atomic<int>  g_ready{0};
+ 
+-struct alignas(64) SpinFlag { volatile bool v; };
++struct alignas(64) SpinFlag { std::atomic<bool> v; };
+ static SpinFlag g_noise_flag{true};
+ 
+ // ---- data structure ----
+-// 32 bytes per entry → 2 entries per 64B cache line → false sharing.
++// Default: 32 bytes per entry, two entries per cache line. The 64-byte
++// comparison removes adjacent-entry false sharing but retains true sharing.
+ // Adjacent entries share a cache line, so CAS on entry N invalidates
+ // the line for any core accessing entry N±1.
+ struct Entry {
+     uint64_t          key;
+-    volatile uint64_t value;
+-    volatile uint64_t status;  // lock + version (like XIndex-H AtomicVal::status)
+-    uint64_t          pad;     // fill to exactly 32 bytes
++    uint64_t          value;
++    uint64_t          status;  // lock + version (like XIndex-H AtomicVal::status)
++    uint64_t          pad[ARBITER_MICRO_ENTRY_BYTES / 8 - 3];
+ };
+-static_assert(sizeof(Entry) == 32, "Entry must be 32 bytes");
++static_assert(sizeof(Entry) == ARBITER_MICRO_ENTRY_BYTES, "unexpected entry size");
+ 
+ static Entry*  g_table      = nullptr;
+ static size_t  g_table_size = 0;
+@@ -105,7 +128,7 @@
+         g_table[i].key    = rng.next();
+         g_table[i].value  = rng.next();
+         g_table[i].status = 0;
+-        g_table[i].pad    = 0;
++        for (auto& pad : g_table[i].pad) pad = 0;
+     }
+ 
+     // Allocate ballast region and touch every page to ensure RSS.
+@@ -127,64 +150,109 @@
+ 
+ // ---- victim thread ----
+ // Each op: pick random entry → read (version-checked) or write (CAS-locked).
+-// Both paths touch the status field, which shares a cache line with the
+-// adjacent entry → HITM on every cross-core access.
++// Both paths touch status; 32-byte entries also share lines with neighbors.
++// Ownership transfers depend on access interleaving and cache residency.
+ 
+ struct VictimResult {
+     uint64_t ops      = 0;
+     uint64_t checksum = 0;
++    uint64_t writes   = 0;
+ };
+ 
+ static void victim_thread(int id, Config cfg, VictimResult* out) {
+     Xorshift64 rng(0xCAFEBABEULL ^ ((uint64_t)id * 0x9E3779B97F4A7C15ULL));
+-    const uint32_t read_thresh = (uint32_t)(((uint64_t)cfg.read_pct << 32) / 100);
++    const uint64_t read_thresh = ((uint64_t)cfg.read_pct << 32) / 100;
++#if ARBITER_MICRO_FAST_INDEX
++    // Immutable after initialization. For power-of-two sizes, masking gives
++    // exactly the same index as modulo for every PRNG value.
++    Entry* const table = g_table;
++    const size_t table_size = g_table_size;
++    const bool table_power_two = (table_size & (table_size - 1)) == 0;
++    const uint64_t* const ballast = g_ballast;
++    const size_t ballast_elems = g_ballast_elems;
++    const bool ballast_power_two = (ballast_elems & (ballast_elems - 1)) == 0;
++#endif
+ 
+     g_ready.fetch_add(1, std::memory_order_acq_rel);
+     while (!g_start.load(std::memory_order_acquire)) { }
+ 
+     uint64_t ops = 0;
+     uint64_t checksum = 0;
++    uint64_t writes = 0;
+ 
+     while (!g_stop.load(std::memory_order_relaxed)) {
+         for (int k = 0; k < 64; ++k) {
+             // Pick a random entry.
++#if ARBITER_MICRO_FAST_INDEX
++            uint64_t choice = rng.next();
++            size_t idx = table_power_two ? choice & (table_size - 1) : choice % table_size;
++            Entry* e = &table[idx];
++#else
+             size_t idx = rng.next() % g_table_size;
+             Entry* e = &g_table[idx];
++#endif
+ 
+             // Read or write, matching XIndex-H's AtomicVal protocol:
+             uint32_t coin = (uint32_t)(rng.next() >> 32);
+             if (coin < read_thresh) {
+-                // get: version-checked read
+-                uint64_t v1 = e->status;
+-                checksum += e->value;
+-                uint64_t v2 = e->status;
+-                if (v1 != v2) checksum ^= v2;
++                // Atomic version-checked read; retry while a writer owns the entry.
++                uint64_t before, value;
++                do {
++                    do {
++                        before = __atomic_load_n(&e->status, __ATOMIC_ACQUIRE);
++                        if (before & LOCK_BIT) spin_pause();
++                    } while (before & LOCK_BIT);
++                    // Seeing a new value also orders its writer's lock before
++                    // the status recheck (including in the C++ memory model).
++                    value = __atomic_load_n(&e->value, __ATOMIC_ACQUIRE);
++                } while (before != __atomic_load_n(&e->status, __ATOMIC_RELAXED));
++                checksum += value;
+             } else {
+-                // put: CAS lock → write → version++ → unlock
++                // Only an unlocked status may be acquired. CAS(locked, locked)
++                // would succeed without acquiring exclusive ownership.
+                 uint64_t old_status;
+                 do {
+-                    old_status = e->status;
+-                } while (!__sync_bool_compare_and_swap(&e->status,
+-                         old_status, old_status | (1ULL << 60)));
+-                e->value = rng.next();
+-                e->status = (old_status + 1) & ~(1ULL << 60);
++                    do {
++                        old_status = __atomic_load_n(&e->status, __ATOMIC_RELAXED);
++                        if (old_status & LOCK_BIT) spin_pause();
++                    } while (old_status & LOCK_BIT);
++                } while (!__atomic_compare_exchange_n(&e->status, &old_status,
++                         old_status | LOCK_BIT, false, __ATOMIC_ACQUIRE, __ATOMIC_RELAXED));
++                __atomic_store_n(&e->value, rng.next(), __ATOMIC_RELEASE);
++                __atomic_store_n(&e->status, old_status + 1, __ATOMIC_RELEASE);
++                ++writes;
+             }
+ 
+             // Random read from ballast region — generates DRAM cache misses
+             // between contention ops, simulating XIndex-H's large working set.
++#if ARBITER_MICRO_FAST_INDEX
++            if (ballast_elems > 0) {
++                uint64_t choice = rng.next();
++                size_t bidx = ballast_power_two ? choice & (ballast_elems - 1) : choice % ballast_elems;
++                checksum += ballast[bidx];
++            }
++#else
+             if (g_ballast_elems > 0) {
+                 size_t bidx = rng.next() % g_ballast_elems;
+                 checksum += g_ballast[bidx];
+             }
++#endif
+ 
+             // rcu_progress: per-op epoch increment (matches XIndex-H)
++#if ARBITER_MICRO_EPOCH_STORE
++            // This victim is the only writer of its counter. Publish the same
++            // per-operation progress without an unnecessary locked RMW.
++            g_epochs[id].epoch.store(ops + k + 1, std::memory_order_relaxed);
++#else
+             g_epochs[id].epoch.fetch_add(1, std::memory_order_relaxed);
++#endif
+         }
+         ops += 64;
+     }
+ 
+     out->ops      = ops;
+     out->checksum = checksum;
++    out->writes   = writes;
+ }
+ 
+ // ---- noise threads ----
+@@ -192,7 +260,7 @@
+ static void noise_spin_thread() {
+     g_ready.fetch_add(1, std::memory_order_acq_rel);
+     while (!g_start.load(std::memory_order_acquire)) { }
+-    while (g_noise_flag.v) { }
++    while (g_noise_flag.v.load(std::memory_order_relaxed)) { }
+ }
+ 
+ // Maintenance: full table scan + rcu_barrier + sleep(1).
+@@ -204,7 +272,7 @@
+         // Phase 1: full scan — read every entry's value.
+         volatile uint64_t acc = 0;
+         for (size_t i = 0; i < g_table_size; ++i) {
+-            acc += g_table[i].value;
++            acc += __atomic_load_n(&g_table[i].value, __ATOMIC_RELAXED);
+         }
+ 
+         // Phase 2: rcu_barrier — spin-wait for every victim to advance.
+@@ -237,6 +305,22 @@
+         prog);
+ }
+ 
++static size_t parse_number(const char* value) {
++    char* end = nullptr;
++    errno = 0;
++    unsigned long long n = std::strtoull(value, &end, 10);
++    if (!*value || *value == '-' || errno || *end || n > std::numeric_limits<size_t>::max()) {
++        fprintf(stderr, "invalid non-negative integer: %s\n", value);
++        std::exit(1);
++    }
++    return static_cast<size_t>(n);
++}
++static int parse_int(const char* value) {
++    size_t n = parse_number(value);
++    if (n > std::numeric_limits<int>::max()) std::exit(1);
++    return static_cast<int>(n);
++}
++
+ int main(int argc, char** argv) {
+     Config cfg;
+ 
+@@ -246,12 +330,12 @@
+             if (i + 1 >= argc) { usage(argv[0]); std::exit(1); }
+             return argv[++i];
+         };
+-        if      (a == "--victims")    cfg.n_victims    = std::atoi(next_arg());
+-        else if (a == "--noise")      cfg.n_noise      = std::atoi(next_arg());
+-        else if (a == "--duration")   cfg.duration_sec  = std::atoi(next_arg());
+-        else if (a == "--table-size") cfg.table_size    = std::strtoull(next_arg(), nullptr, 10);
+-        else if (a == "--ballast-mb") cfg.ballast_mb    = std::strtoull(next_arg(), nullptr, 10);
+-        else if (a == "--read-pct")   cfg.read_pct      = std::atoi(next_arg());
++        if      (a == "--victims")    cfg.n_victims    = parse_int(next_arg());
++        else if (a == "--noise")      cfg.n_noise      = parse_int(next_arg());
++        else if (a == "--duration")   cfg.duration_sec  = parse_int(next_arg());
++        else if (a == "--table-size") cfg.table_size    = parse_number(next_arg());
++        else if (a == "--ballast-mb") cfg.ballast_mb    = parse_number(next_arg());
++        else if (a == "--read-pct")   cfg.read_pct      = parse_int(next_arg());
+         else if (a == "--mode") {
+             std::string m = next_arg();
+             if      (m == "none")     cfg.mode = NoiseMode::NONE;
+@@ -264,6 +348,13 @@
+         else { usage(argv[0]); return 1; }
+     }
+ 
++    if (cfg.n_victims < 1 || cfg.n_noise > MAX_VICTIMS || cfg.duration_sec < 1 ||
++        !cfg.table_size || cfg.read_pct > 100 ||
++        cfg.table_size > std::numeric_limits<size_t>::max() / sizeof(Entry) ||
++        cfg.ballast_mb > (std::numeric_limits<size_t>::max() >> 20)) {
++        fprintf(stderr, "invalid configuration: positive victims/duration/table required; read-pct 0..100\n");
++        return 1;
++    }
+     if (cfg.n_victims > MAX_VICTIMS) {
+         fprintf(stderr, "error: max %d victims\n", MAX_VICTIMS);
+         return 1;
+@@ -271,6 +362,9 @@
+     if (cfg.mode == NoiseMode::NONE) cfg.n_noise = 0;
+ 
+     init_table(cfg);
++    printf("objects: table=%p table_bytes=%zu ballast=%p ballast_bytes=%zu epochs=%p epochs_bytes=%zu\n",
++           (void*)g_table, g_table_size * sizeof(Entry), (void*)g_ballast,
++           g_ballast_elems * sizeof(uint64_t), (void*)g_epochs, sizeof(g_epochs));
+ 
+     size_t table_mb = (g_table_size * sizeof(Entry)) >> 20;
+ 
+@@ -289,6 +383,13 @@
+            mode_name(cfg.mode), cfg.duration_sec,
+            g_table_size, table_mb, cfg.ballast_mb, cfg.read_pct);
+ 
++    printf("layout: entry_bytes=%zu epoch_store=%d fast_index=%d table_alignment=%zu\n",
++           sizeof(Entry), ARBITER_MICRO_EPOCH_STORE, ARBITER_MICRO_FAST_INDEX, (uintptr_t)g_table % 64);
++    if (ARBITER_MICRO_ENTRY_BYTES == 64 && (uintptr_t)g_table % 64) {
++        fprintf(stderr, "64-byte entry experiment requires a cache-line-aligned table\n");
++        return 2;
++    }
++
+     std::vector<VictimResult> results(cfg.n_victims);
+     std::vector<std::thread>  victims, noises;
+ 
+@@ -307,31 +408,53 @@
+         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+     }
+ 
++    perf_window(true);
+     auto t0 = std::chrono::steady_clock::now();
+     g_start.store(true, std::memory_order_release);
+     std::this_thread::sleep_for(std::chrono::seconds(cfg.duration_sec));
+     g_stop.store(true, std::memory_order_release);
+     g_noise_flag.v = false;
+     auto t1 = std::chrono::steady_clock::now();
++    perf_window(false);
+ 
+     for (auto& t : victims) t.join();
+     for (auto& t : noises)  t.join();
+ 
+     const double secs = std::chrono::duration<double>(t1 - t0).count();
+-    uint64_t total_ops = 0, checksum = 0;
++    uint64_t total_ops = 0, checksum = 0, total_writes = 0;
+     for (const auto& r : results) {
+         total_ops += r.ops;
++        total_writes += r.writes;
+         checksum  ^= r.checksum;
+     }
+     const double mops_total = (double)total_ops / secs / 1e6;
+     const double mops_per   = mops_total / cfg.n_victims;
+ 
+-    printf("result: total_ops=%llu elapsed=%.3fs "
++    printf("result: total_ops=%llu elapsed=%.6fs "
+            "throughput=%.2f Mops/s per_victim=%.2f Mops/s checksum=0x%llx\n",
+            (unsigned long long)total_ops, secs,
+            mops_total, mops_per,
             (unsigned long long)checksum);
  
-+    sample_pages("table", g_table, &g_table[g_table_size / 2],
-+                 &g_table[g_table_size - 1]);
++    uint64_t versions = 0;
++    for (size_t i = 0; i < g_table_size; ++i) {
++        if (g_table[i].status & LOCK_BIT) return 2;
++        versions += g_table[i].status;
++    }
++    if (versions != total_writes) {
++        fprintf(stderr, "lost writes: versions=%llu writes=%llu\n",
++                (unsigned long long)versions, (unsigned long long)total_writes);
++        return 2;
++    }
++    for (int i = 0; i < cfg.n_victims; ++i)
++        if (g_epochs[i].epoch.load() != results[i].ops) return 2;
++    printf("validation: reads=%llu writes=%llu versions=%llu status=ok\n",
++           (unsigned long long)(total_ops - total_writes),
++           (unsigned long long)total_writes, (unsigned long long)versions);
++    sample_pages("table", g_table, &g_table[g_table_size / 2], &g_table[g_table_size - 1]);
 +    if (g_ballast_elems)
 +        sample_pages("ballast", g_ballast, &g_ballast[g_ballast_elems / 2],
 +                     &g_ballast[g_ballast_elems - 1]);
      free_table();
      return 0;
+ }

@@ -33,6 +33,15 @@ mkdir -p "${OUT_DIR}"
 cmake --build "${BUILD_DIR}" --target ArbiterLLVMPlugin arbiter_runtime
 ccflags=(-std=gnu99 -O3 -gline-tables-only -fopenmp)
 cxxflags=(-std=c++17 -O2 -gline-tables-only -march=native -pthread)
+entry_bytes="${ARBITER_MICRO_ENTRY_BYTES:-32}"
+epoch_store="${ARBITER_MICRO_EPOCH_STORE:-1}"
+fast_index="${ARBITER_MICRO_FAST_INDEX:-0}"
+if [[ ! "$entry_bytes" =~ ^(32|64)$ || ! "$epoch_store" =~ ^[01]$ || ! "$fast_index" =~ ^[01]$ ]]; then
+  echo "ARBITER_MICRO_ENTRY_BYTES must be 32 or 64; EPOCH_STORE and FAST_INDEX must be 0 or 1" >&2
+  exit 1
+fi
+cxxflags+=(-DARBITER_MICRO_ENTRY_BYTES="$entry_bytes" -DARBITER_MICRO_EPOCH_STORE="$epoch_store")
+cxxflags+=(-DARBITER_MICRO_FAST_INDEX="$fast_index")
 if [[ -d "${ROOT_DIR}/.tools/libstdcxx" && "${prefix}" == "${ROOT_DIR}/.tools/"* ]]; then
   cxxflags+=(--gcc-install-dir="$(dirname "$(gcc -print-libgcc-file-name)")")
 fi
@@ -133,5 +142,7 @@ if sys.argv[2] == "policy":
 PY
 sha256sum "${btree}/btree/btree.c" "${btree}/common/main-mt.c" "${micro}/coherence_noise.cpp" \
   "${ARBITER_HITM_SEED_CONFIG}" "${PLUGIN}" "${runtime}" "${OUT_DIR}/selected-objects.json" \
+  "${adapters}/coherence-noise.patch" "${adapters}/perf-window.h" "${OUT_DIR}/coherence_noise.cpp" \
   "${OUT_DIR}"/{btree,micro}-{native,placed} >"${OUT_DIR}/inputs.sha256"
+printf '{"entry_bytes":%s,"epoch_store":%s,"fast_index":%s}\n' "$entry_bytes" "$epoch_store" "$fast_index" >"${OUT_DIR}/micro-layout.json"
 printf 'Built B-tree and coherence_noise in %s (%s selection)\n' "${OUT_DIR}" "${selection}"

@@ -8,6 +8,8 @@ The B-tree and coherence_noise experiments measure selective local and CXL
 placement under the same jemalloc runtime. [Benchmark results](btree-coherence.md)
 The published-RMW candidate extends automatic selection to the coherence
 table and preserves the XIndex executable. [Policy evaluation](published-rmw-policy.md)
+The corrected microbenchmark adds measured layout/epoch improvements and
+measurement-window hardware counters. [Microbenchmark tuning](coherence-tuning.md)
 
 ## Primary Result: XIndex/YCSB-A One Pass
 

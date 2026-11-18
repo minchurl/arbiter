@@ -115,6 +115,47 @@ policies that select zero objects. Set `ARBITER_BENCH_SELECTION=targeted`
 when building to reproduce explicit node-array/table placement.
 See the [policy evaluation](docs/results/published-rmw-policy.md).
 
+The microbenchmark adapter now validates writes and fixes the supplied
+100%-read threshold, lock ownership and non-atomic shared accesses. It also
+publishes each single-writer epoch with an atomic store. Set
+`ARBITER_MICRO_EPOCH_STORE=0` when building for the corrected locked-increment
+control. These changes apply to the build copy; the supplied source is untouched.
+
+The runner accepts `--read-pct`, `--table-size`, `--ballast-mb`, `--victims`,
+`--noise`, and `--noise-mode`. For example, a 90%-write workload is:
+
+```sh
+./scripts/run-btree-coherence.py --benchmark micro --read-pct 10 \
+  --modes local cxl --rounds 3 --duration 30
+```
+
+To compare a cache-line-sized entry layout, build separately with
+`ARBITER_MICRO_ENTRY_BYTES=64`. The default remains 32 bytes to retain the
+original adjacent-entry false sharing. Both layouts select the same table
+allocation and keep ballast local. The 64-byte experiment verifies table
+alignment at runtime. Larger tables may require `--arena-chunk-bytes` of at
+least twice the allocation size, rounded up to a power of two.
+`ARBITER_MICRO_FAST_INDEX=1` additionally caches immutable table/ballast
+metadata and replaces modulo with equivalent masks for power-of-two sizes;
+other sizes retain modulo. Its default is zero for separate comparison.
+The measured throughput preset below enables padding and epoch stores, and
+keeps fast indexing disabled because it regressed in the confirmation runs.
+
+```sh
+. configs/benchmarks/coherence-throughput.config
+./scripts/build-btree-coherence.sh
+./scripts/run-btree-coherence.py --benchmark micro --modes local cxl \
+  --bin-dir "$ARBITER_BENCH_BUILD_DIR"
+python3 scripts/test-coherence-adapter.py "$ARBITER_BENCH_BUILD_DIR"
+```
+
+Use `--perf /path/to/perf` on a microbenchmark run to count cycles,
+instructions, L3 HitM loads, L3 misses and locked loads only during the
+measurement window. This event list targets the measured Intel host.
+`scripts/run-coherence-sweep.py` runs explicit JSON cases, alternating
+placement and case order. See the [microbenchmark tuning results](docs/results/coherence-tuning.md)
+for the allocation analysis, measured gains, full cases and reproduction.
+
 ## Run the XIndex Experiment
 
 For the meeting demo, run A or F independently:
