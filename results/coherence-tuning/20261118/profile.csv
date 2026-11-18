@@ -1,0 +1,11 @@
+case,build,victims,noise,noise_mode,table_size,ballast_mb,read_pct,entry_bytes,epoch_store,fast_index,benchmark,round,mode,node,operations,seconds,mops_per_s,max_rss_kib,arena_allocations,arena_resident_bytes_at_exit,swaps,live_sample_nodes,checked_keys,fallback_allocations,page_query_errors,selected_sites
+corrected,final-corrected,32,0,none,256,8192,50,32,0,0,micro,1,local,0,5317483712,15.00006,354.497496,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,0,micro,1,cxl,2,5317371008,15.00006,354.489983,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,0,micro,1,local,0,5646011520,15.00006,376.399262,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,0,micro,1,cxl,2,5638528640,15.000061,375.900381,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,0,micro,1,local,0,7974505024,15.000061,531.631506,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,0,micro,1,cxl,2,8005364672,15.00006,533.688843,8443392,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+read-only,final-epoch-store,32,0,none,256,8192,100,32,1,0,micro,1,local,0,14778160384,15.000062,985.206620,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+read-only,final-epoch-store,32,0,none,256,8192,100,32,1,0,micro,1,cxl,2,14683435520,15.000063,978.891590,8443648,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+large-table,final-epoch-store,32,0,none,1000000,8192,10,32,1,0,micro,1,local,0,10786995648,15.000064,719.129975,8474624,1,40960,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+large-table,final-epoch-store,32,0,none,1000000,8192,10,32,1,0,micro,1,cxl,2,3464229568,15.00006,230.947714,8474880,1,40960,0,"table=2,2,2 ballast=0,0,0",,0,0,4

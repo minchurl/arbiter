@@ -99,12 +99,12 @@ EXPERIMENT_REPORTS=()
 # shellcheck source=/dev/null
 source "${EXPERIMENT_CONFIG}"
 
-if ! declare -F configure_xindex_experiment >/dev/null; then
+if ! declare -F configure_hitm_seed_experiment >/dev/null; then
   echo "invalid XIndex experiment config: ${EXPERIMENT_CONFIG}" >&2
   exit 1
 fi
 
-configure_xindex_experiment
+configure_hitm_seed_experiment
 
 if [[ -z "${REWRITE_PASS}" ]]; then
   echo "XIndex HITM-risk seed setup did not set REWRITE_PASS" >&2

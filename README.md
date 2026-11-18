@@ -75,6 +75,71 @@ cmake --build build-llvm18 --target \
   arbiter-slab-arena-smoke
 ```
 
+## Run B-tree and the coherence microbenchmark
+
+Use the compiler/runtime build above on a host with local DRAM and a CXL
+memory node. For the measured configuration, add `-DCMAKE_BUILD_TYPE=Release`
+when configuring CMake. These workloads also need Clang's OpenMP development package
+(`libomp-18-dev` on Ubuntu), `patch`, GNU time, and Python 3.9+.
+
+```sh
+./scripts/build-btree-coherence.sh
+./scripts/run-btree-coherence.py
+```
+
+The build reads the supplied sources from `~/vmitosis-workloads` and
+`~/microbench`. Set `VMITOSIS_DIR`, `MICROBENCH_DIR`, or `ARBITER_BUILD_DIR`
+to use different locations. It applies the published-RMW selection policy
+to the patched copies and builds matched native and automatically selected binaries.
+
+The runner uses 32 workers and three rounds of native, selected-local, and
+selected-CXL placement. CPU and local memory default to node 0 and CXL to
+node 2. Use `--cpu-node`, `--local-node`, and `--cxl-node` on a different
+topology, or `--benchmark btree` / `--benchmark micro` to run just one workload.
+Each run records throughput, peak RSS and live page locations under
+`build/arbiter-bench/`. See the [results and methodology](docs/results/btree-coherence.md).
+
+The published-RMW policy distinguishes the shared table from its read-only
+ballast. `ARBITER_HITM_SEED_CONFIG` overrides the policy; the build manifest
+records the automatically selected objects, including zero selections.
+See the [policy evaluation](docs/results/published-rmw-policy.md).
+
+The microbenchmark adapter now validates writes and fixes the supplied
+100%-read threshold, lock ownership and non-atomic shared accesses. It also
+publishes each single-writer epoch with an atomic store. Set
+`ARBITER_MICRO_EPOCH_STORE=0` when building for the corrected locked-increment
+control. These changes apply to the build copy; the supplied source is untouched.
+
+The runner accepts `--read-pct`, `--table-size`, `--ballast-mb`, `--victims`,
+`--noise`, and `--noise-mode`. For example, a 90%-write workload is:
+
+```sh
+./scripts/run-btree-coherence.py --benchmark micro --read-pct 10 \
+  --modes local cxl --rounds 3 --duration 30
+```
+
+To compare a cache-line-sized entry layout, build separately with
+`ARBITER_MICRO_ENTRY_BYTES=64`. The default remains 32 bytes to retain the
+original adjacent-entry false sharing. Both layouts select the same table
+allocation and keep ballast local. The 64-byte experiment verifies table
+alignment at runtime. Larger tables may require `--arena-chunk-bytes` of at
+least twice the allocation size, rounded up to a power of two.
+The throughput preset below enables padding and epoch stores.
+
+```sh
+. configs/benchmarks/coherence-throughput.config
+./scripts/build-btree-coherence.sh
+./scripts/run-btree-coherence.py --benchmark micro --modes local cxl \
+  --bin-dir "$ARBITER_BENCH_BUILD_DIR"
+python3 scripts/test-coherence-adapter.py "$ARBITER_BENCH_BUILD_DIR"
+```
+
+Use `--perf /path/to/perf` on a microbenchmark run to count cycles,
+instructions, L3 HitM loads, L3 misses and locked loads only during the
+measurement window. This event list targets the measured Intel host.
+See the [microbenchmark tuning results](docs/results/coherence-tuning.md)
+for the allocation analysis, measured gains, full cases and reproduction.
+
 ## Run the XIndex Experiment
 
 For the meeting demo, run A or F independently:
