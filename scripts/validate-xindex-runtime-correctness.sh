@@ -74,6 +74,9 @@ for node in "${LOCAL_NODE}" "${CXL_NODE}"; do
   env ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_STRICT=1 \
     ARBITER_TARGET_NODE="${node}" \
     "${BUILD_DIR}/bin/arbiter-slab-arena-boundary-smoke"
+  env ARBITER_HEAP_BACKEND=arena ARBITER_ARENA_STRICT=1 \
+    ARBITER_TARGET_NODE="${node}" \
+    "${BUILD_DIR}/bin/arbiter-slab-arena-boundary-smoke" --capacity
 done
 
 XINDEX_CORRECTNESS_DATA_DIR="${DATA_DIR}" \

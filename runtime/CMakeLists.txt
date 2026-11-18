@@ -1,6 +1,6 @@
 add_library(arbiter_runtime STATIC
   src/arbiter_runtime_site.cpp
-  src/arbiter_slab_arena.cpp
+  src/arbiter_jemalloc_arena.cpp
   src/arbiter_side_table.cpp
 )
 
@@ -23,6 +23,10 @@ endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
    NUMAIF_INCLUDE_DIR AND NUMA_LIBRARY)
+  find_path(JEMALLOC_INCLUDE_DIR jemalloc/jemalloc.h REQUIRED)
+  find_library(JEMALLOC_LIBRARY jemalloc REQUIRED)
+  target_include_directories(arbiter_runtime PRIVATE ${JEMALLOC_INCLUDE_DIR})
+  target_link_libraries(arbiter_runtime PUBLIC ${JEMALLOC_LIBRARY})
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA_ARENA=1)
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_MOVE_PAGES=1)
   target_include_directories(arbiter_runtime PRIVATE ${NUMAIF_INCLUDE_DIR})
@@ -73,6 +77,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
 
   target_include_directories(arbiter-slab-arena-boundary-smoke
     PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${NUMA_INCLUDE_DIR}
     ${NUMAIF_INCLUDE_DIR}
   )

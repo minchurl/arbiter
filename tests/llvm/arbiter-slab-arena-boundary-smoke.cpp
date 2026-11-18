@@ -1,9 +1,11 @@
+#include "arbiter_jemalloc_arena.h"
 #include "arbiter_runtime_site.h"
 
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <vector>
 
 namespace {
 
@@ -31,9 +33,41 @@ bool requireNull(void *ptr, const char *caseName) {
   return false;
 }
 
+// Run in a fresh process with a small cap. A misplaced ordinary-heap
+// allocation would allow the payload alone to grow past that cap.
+bool exerciseCapacity() {
+  constexpr size_t reserve = 16 * 1024 * 1024;
+  constexpr size_t object = 64 * 1024;
+  if (setenv("ARBITER_ARENA_RESERVE_BYTES", "16777216", 1) != 0)
+    return false;
+
+  std::vector<void *> live;
+  while (live.size() <= reserve / object) {
+    void *ptr = arbiter_alloc_site(object, 64, 202, 0);
+    if (!ptr)
+      break;
+    live.push_back(ptr);
+  }
+  if (live.empty() || live.size() > reserve / object) {
+    std::fprintf(stderr, "unexpected capacity: %zu objects\n", live.size());
+    return false;
+  }
+  // A saturated arena must be able to reuse space after a free.
+  for (void *ptr : live)
+    arbiter_free_maybe(ptr);
+  for (auto &ptr : live) {
+    ptr = arbiter_alloc_site(object, 64, 202, 0);
+    if (!ptr)
+      return false;
+  }
+  for (void *ptr : live)
+    arbiter_free_maybe(ptr);
+  return true;
+}
+
 } // namespace
 
-int main() {
+int main(int argc, char **argv) {
   const char *backend = std::getenv("ARBITER_HEAP_BACKEND");
   const char *strict = std::getenv("ARBITER_ARENA_STRICT");
   if (!backend || std::strcmp(backend, "arena") != 0 || !strict ||
@@ -44,6 +78,9 @@ int main() {
                  "ARBITER_TARGET_NODE=<node>\n");
     return 2;
   }
+
+  if (argc == 2 && std::strcmp(argv[1], "--capacity") == 0)
+    return exerciseCapacity() ? 0 : 1;
 
   void *baseline = arbiter_alloc_site(96, 16, 200, 0);
   if (!baseline) {
@@ -68,7 +105,17 @@ int main() {
                       "oversized object");
   }
 
+  // Exercise the ownership check used by every rewritten delete. A failed
+  // check must leave the live object available for its legitimate owner.
+  using arbiter::runtime::arenaDeallocate;
+  using arbiter::runtime::ArenaDeallocation;
+  auto *bytes = static_cast<unsigned char *>(baseline);
+  if (arenaDeallocate(bytes + 1) != ArenaDeallocation::Invalid ||
+      arenaDeallocate(bytes + 64) != ArenaDeallocation::Invalid)
+    return 1;
   arbiter_free_maybe(baseline);
+  if (arenaDeallocate(baseline) != ArenaDeallocation::Invalid)
+    return 1;
   if (!ok)
     return 1;
 
