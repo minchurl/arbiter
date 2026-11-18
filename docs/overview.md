@@ -1,164 +1,117 @@
-# Arbiter Overview
+# Architecture and code map
 
-This is the code-reading map for Arbiter's heuristic-guided HITM-risk seed
-placement implementation.
+Arbiter rewrites selected allocation calls at compile time. Local and CXL runs
+use the same rewritten binary; only the selected allocations' NUMA node changes.
+Ordinary allocations remain under the process's normal memory policy.
 
-## System Flow
+## Code reading order
 
-```text
-XIndex source
-  -> clang++ emits LLVM bitcode
-  -> AllocationSite assigns deterministic site IDs
-  -> HITMRiskScoring scores and selects heap seeds
-  -> HITMSeedPasses reports decisions and rewrites selected calls
-  -> arbiter_runtime_site dispatches selected allocations
-  -> arbiter_jemalloc_arena supplies NUMA-bound extents to jemalloc
-  -> the same binary runs with its arena on local node 0 or CXL node 2
-```
+Paths below are relative to the repository root.
 
-Only the arena node changes between `hitm-seed-local` and
-`hitm-seed-target`. The binary, selected sites, allocator implementation,
-workload, and worker count remain fixed.
+| Order | File or directory | Responsibility |
+|---|---|---|
+| 1 | `compiler/llvm/lib/AllocationSite.cpp` | Discover supported allocations and assign deterministic site IDs |
+| 2 | `compiler/llvm/lib/hitm_seed/HITMRiskScoring.cpp` | Score, filter and select sites |
+| 3 | `compiler/llvm/lib/hitm_seed/HITMSeedOptions.cpp` and `HITMSeedPasses.cpp` | Policy options, CSV decisions and selected-site rewrite |
+| 4 | `compiler/llvm/lib/RewriteHeapAllocations.cpp` and `RewriteMMapAllocations.cpp` | Rewrite allocation/deallocation calls to the runtime ABI |
+| 5 | `runtime/include/arbiter_runtime_site.h` and `runtime/src/arbiter_runtime_site.cpp` | C/C++ allocation contracts, diagnostics and mmap |
+| 6 | `runtime/src/arbiter_jemalloc_arena.cpp` | Per-site jemalloc arenas, NUMA extent hooks and ownership lookup |
+| 7 | `scripts/build-xindex-llvm.sh` and `run-protected-hitm-seed-experiment.sh` | Build variants, run protected comparisons and validate reports |
 
-## Compiler Code
+Active LLVM pipelines are `arbiter-report-sites`,
+`arbiter-experiment-all-rewrite`, `arbiter-report-hitm-seed-sites` and
+`arbiter-experiment-hitm-seed-rewrite`. Generic all-site rewriting and GUPS
+remain infrastructure checks; the active placement policy is seed-only.
 
-`compiler/llvm/lib/AllocationSite.cpp` discovers supported heap and anonymous
-mapping calls and assigns site IDs. `RewriteHeapAllocations.cpp` and
-`RewriteMMapAllocations.cpp` implement the common rewrite ABI. The generic
-all-site rewrite is retained for infrastructure checks and GUPS.
+## Selection
 
-The XIndex policy is isolated under `compiler/llvm/lib/hitm_seed/`:
+The score combines pointer escape, synchronization/mutation, worker reachability
+and allocation size. Gates, score threshold and top-k select seeds in descending
+score order, breaking ties by site ID. The static byte budget rejects an
+oversized selection at compile time; it does not bound actual runtime memory.
+Report and rewrite repeat the same deterministic decision. Site IDs depend on
+source/compiler/optimization settings; automatic policies do not pin them.
 
-- `HITMRiskScoring`: escape/synchronization/worker/size signals, gates,
-  deterministic ordering, top-k selection, and byte-budget validation;
-- `HITMSeedOptions`: command-line policy parameters;
-- `HITMSeedPasses`: CSV reporting and selected heap-site rewriting.
+The published-RMW signal follows a globally published allocation pointer to
+RMW/CAS on its pointee. It selects the microbenchmark table while excluding
+read-only ballast. It is static evidence: it cannot prove runtime frequency,
+multiple writers, or a CXL speedup. B-tree uses unsupported `posix_memalign`,
+so its current automatic rewrite selects nothing.
 
-The plugin exposes four active pipelines:
+For the retained XIndex build, raw-046/evidence-balanced/published-RMW select
+`68,71,74,90,97,98,99,100`; only `68,71,74` allocate during full YCSB-A.
+The [config guide](../configs/hitm-seed/README.md) explains policy choices,
+parameters and analysis limits. Hardware measurements are separate from selection.
 
-```text
-arbiter-report-sites
-arbiter-experiment-all-rewrite
-arbiter-report-hitm-seed-sites
-arbiter-experiment-hitm-seed-rewrite
-```
+## Why jemalloc still needs NUMA hooks
 
-The HITM-risk seed decision report schema is:
+A separate page per small object wastes memory: an early 357,388-object,
+96-byte pilot used 43.63 MiB with packed slabs, versus about 1.36 GiB if each
+object occupied a 4 KiB page. The custom slab solved packing; jemalloc now
+handles size classes, reuse and statistics without maintaining that machinery.
 
-```text
-site_id,kind,function,file,line,callee,size_expr,estimated_bytes,
-score,role,group_id,selected,reasons
-```
+An ordinary jemalloc allocation does not take a NUMA-node argument. Each active
+site therefore gets an explicit arena whose extent hook obtains an aligned
+anonymous `mmap` and calls `mbind(MPOL_BIND)` before returning memory to jemalloc.
+`mallocx`/`dallocx` bypass the thread cache so objects cannot cross arena policies.
+This retains packing and NUMA placement without a pre-reserved pool.
+[jemalloc arena and extent API](https://jemalloc.net/jemalloc.3.html)
 
-`role` is `seed` or `rejected`. Report and rewrite independently repeat the
-same deterministic selection.
+An extent-range registry distinguishes selected pointers from ordinary pointers
+for `*_maybe` deallocation wrappers. Ordinary pointers use their matching
+`free`/`delete` ABI. There is no per-object side table, live bitmap, page-owner
+table, fixed object shape or pool capacity. Invalid/interior/double frees have
+ordinary allocator undefined behavior. Mappings and hooks survive static
+teardown; jemalloc can reuse extents and purge their physical pages.
 
-## Runtime Code
+## Placement and failure contract
 
-Selected heap calls lower to the site-aware ABI declared in
-`runtime/include/arbiter_runtime_site.h`. Deallocation sites use `*_maybe`
-functions, so ordinary pointers still fall back to normal `free`/`delete`.
+| Setting | Meaning |
+|---|---|
+| `ARBITER_TARGET_NODE` | Required target NUMA node, read once per process |
+| `ARBITER_ARENA_SLOT_ALIGNMENT` | Minimum heap alignment, default 64 bytes |
+| `ARBITER_ARENA_REPORT=1` | Enable exit-time allocation and residency reports; default off |
+| `ARBITER_HEAP_BACKEND=arena`, `ARBITER_ARENA_STRICT=1` | Optional compatibility settings; other values fail |
+| `ARBITER_ARENA_RESERVE_BYTES`, `ARBITER_ARENA_SLAB_BYTES` | Obsolete; ignored with a warning |
 
-The only heap backend is a strict, NUMA-bound jemalloc arena for each active
-site. Extent hooks obtain aligned anonymous mappings on demand and bind each
-to the requested NUMA node before returning it to jemalloc. Selected allocation
-requires `ARBITER_TARGET_NODE`; there is no direct backend or retry on a different backend.
-Legacy `ARBITER_HEAP_BACKEND=arena` and `ARBITER_ARENA_STRICT=1` are accepted,
-but other values reject allocation with a diagnostic.
+Selected allocations are strict: binding/allocation failure never retries on
+ordinary DRAM. Limit memory with a process/cgroup limit. One site may request
+mixed sizes/alignments, including objects larger than the former chunk limit.
 
-Rewritten allocations call `mallocx` with the site's arena, alignment and
-thread-cache bypass flags. jemalloc owns size classes, free lists and reuse.
-An extent-range registry distinguishes arena pointers from ordinary pointers
-before calling `dallocx`. jemalloc supplies allocation/free statistics; there
-is no object bitmap, page-owner table, fixed-size-per-site rule or pre-reserved
-pool. As with ordinary `free`, invalid/interior/double frees are undefined;
-the runtime no longer diagnoses them itself. The runtime returns allocation
-failure if mapping, NUMA binding or allocation fails. Process memory limits
-replace the old pool capacity. Freed space remains available for jemalloc
-reuse; retained mappings and hooks live until process exit.
+| API | Failure behavior |
+|---|---|
+| `malloc`, `calloc` | NULL with errno; calloc overflow is ENOMEM |
+| Throwing `new`/`new[]`, including aligned forms | Honor `new_handler`; retry the same arena if it returns; throw `bad_alloc` when no handler remains |
+| Nothrow `new`/`new[]` | Catch exceptions from the throwing helper and return NULL |
+| Selected `mmap` | MAP_FAILED and errno; failed binding releases the new mapping |
 
-Selected private anonymous `mmap` calls use real `mmap` followed by strict
-`mbind`. Protections are preserved; populated pages must migrate to the target
-node or the mapping is released and fails. `munmap` forwards to the kernel,
-including partial unmaps. No per-pointer side table remains. Shared, file-backed
-and fixed-address mappings are outside this selected-mapping contract and fail;
-ordinary unselected mappings are unchanged. Arena reports cover heap extents.
+Failures log `arbiter-allocation-failure` with API, site, bytes, alignment,
+configured node, stage and errno. Zero-size heap requests return a freeable
+allocation; `free` preserves errno. The compiler preserves `invoke` unwind
+edges and operand bundles, and leaves unsupported/placement-new signatures alone.
+Returned failures can be diagnosed; later page-fault OOM or process termination
+cannot be recovered by these wrappers.
 
-Allocation failures emit `arbiter-allocation-failure` with API family, site,
-requested bytes/alignment, configured node, failure stage and errno. `malloc`
-and `calloc` return NULL with errno; ordinary `new`/`new[]` honor `new_handler`
-and throw `bad_alloc` when no handler remains. Nothrow new catches exceptions
-and returns NULL. A handler may retry only the same NUMA arena, never another
-backend. Zero-size heap requests receive a freeable allocation. `mmap` returns
-MAP_FAILED and preserves the syscall error. `free` preserves errno.
+Selected mmap supports private anonymous, non-fixed mappings. It preserves
+protections and strictly binds/migrates populated pages or fails. Shared,
+file-backed and fixed mappings are outside this wrapper's contract; unselected
+mappings are unchanged. `munmap` forwards to the kernel, including partial unmaps.
+The heap extent report does not include these separate mmap allocations.
 
-The heap rewriter chooses the C, throwing-new or nothrow-new helper and retains
-`invoke` unwind destinations, so a caller's catch block still receives failures.
-Placement and unsupported new overload signatures are left unchanged.
+## Reading a heap report
 
-## Benchmark Code
+Reporting requires stats-enabled jemalloc. `allocated_bytes` is current usable
+live allocation size; `assigned_bytes` is mapped backing including retained
+capacity and metadata. Neither is RSS. `object_bytes=0` denotes mixed requested
+sizes at a site. Removed peak/cumulative/capacity fields stay empty in legacy CSVs.
+`fallback_allocations=0` remains for compatibility, not as a failed-request count.
 
-- `scripts/build-xindex-llvm.sh` builds native and seed-rewritten XIndex;
-- `scripts/run-xindex-arbiter.sh` executes one native/local/remote process;
-- `scripts/run-protected-hitm-seed-experiment.sh` builds, launches fresh
-  processes, enforces memory limits, validates arena placement, and writes CSVs;
-- `scripts/run-xindex-hitm-seed-replay.sh` fixes the current `raw-046` full-scale
-  one-pass conditions and records a machine manifest;
-- `scripts/run-xindex-ycsb-f.sh` runs the automatic evidence-balanced policy
-  on read/read-modify-write F, with native/Local/CXL correctness checks;
-- `scripts/validate-xindex-runtime-correctness.sh` runs ABI, arena-boundary,
-  and short native/Local/CXL semantic gates;
-- `scripts/validate-xindex-runtime-correctness-full.sh` runs a fail-closed
-  one-pair or four-pair 100M/400M correctness confirmation;
-- `scripts/summarize-xindex-hitm-seed-result.sh` turns one result directory into
-  a readable policy, throughput, active-site, placement, and safety report.
+`mincore` and `move_pages` locate private resident pages. Mapped kernel zero
+pages returning `-EFAULT` are rechecked and counted separately as `zero_pages`;
+other query failures remain errors. Valid comparisons require all located
+private pages on the requested node, not merely a majority. Live-object tests
+also write and query touched pages independently.
 
-The canonical config is `configs/hitm-seed/candidates/raw-046.config`. Eleven
-other safe measured policies remain for sensitivity studies.
-
-Active workloads are A and F. F maps each UPDATE in A's trace to a sequential
-get and put by the same worker and counts that pair as one logical transaction.
-It uses the same allocation runtime and policy as A. B's negative results and
-compressed input are archived; its active sweep launchers were removed.
-
-## Measurement Contract
-
-`native` measures the unmodified binary. `hitm-seed-local` and
-`hitm-seed-target` use the same rewritten binary and strict arena, bound to
-the local and CXL nodes respectively. Therefore:
-
-```text
-rewrite/allocator overhead = seed-local / native
-CXL placement effect       = seed-target / seed-local
-end-to-end effect           = seed-target / native
-```
-
-Every row is a fresh process, which resets the index, heap, arena, and runtime
-counters. The validated experiment intentionally keeps filesystem page cache
-warm and does not flush CPU caches. System-wide `drop_caches` is not invoked
-automatically because it requires privilege, affects unrelated jobs, and does
-not clear anonymous memory or CPU caches.
-
-The current canonical runner uses fixed-operation iteration mode: each row
-consumes the complete 400M-operation transaction trace exactly once and exits.
-It does not set a measured-duration cutoff or loop over the trace. Retained
-YCSB-A results from the earlier parameter sweep used 15-, 60-, and 180-second
-cyclic replay and are labeled as historical protocol results. Retained YCSB-B
-screening already used the current one-pass contract.
-
-## Scope
-
-The active repository no longer builds the unused MLIR prototype,
-shared-mutable heuristic, lock-touch migration, or broad search controllers.
-Historical methods are separated under `docs/history/`. Reusable search inputs
-and reportable measurements remain checked in under `configs/` and `results/`;
-failed raw runs and removed implementation code remain recoverable from Git
-history. This keeps the executable path focused on the seed-only result without
-discarding the evidence behind the current claim.
-
-The runtime ABI and XIndex logical result now have explicit correctness checks.
-The measured loop retains only the original throughput counter; operation
-completion and the optional sampled-state digest are checked after timing.
-Per-operation attempted/successful validation counters are not present.
-The measured throughput gain does not by itself prove reduced HITM. A causal
-claim still requires HITM/C2C, memory-bandwidth, and latency counters.
+See [benchmark validation](benchmarks.md#validation-and-measurement) and
+[design history](results.md#design-history) for the tests and decisions behind
+this contract.
