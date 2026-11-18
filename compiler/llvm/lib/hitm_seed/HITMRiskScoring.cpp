@@ -1,4 +1,5 @@
 #include "HITMRiskScoring.h"
+#include "ObjectAccessAnalysis.h"
 
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
@@ -61,6 +62,7 @@ struct ScoringContext {
   std::vector<const Function *> workerEntries;
   std::unordered_set<const Function *> allWorkerReachable;
   SmallPtrSet<const GlobalVariable *, 16> globalsWithPointeeRMW;
+  ObjectAccessInfo objectAccess;
 };
 
 bool contains(StringRef value, StringRef needle) {
@@ -301,6 +303,11 @@ void collectWorkerReachability(
 ScoringContext buildContext(Module &module) {
   ScoringContext context;
   std::unordered_set<const Function *> knownWorkerEntries;
+  context.objectAccess = analyzeObjectAccesses(module);
+  for (const Function *entry : context.objectAccess.threadEntries) {
+    knownWorkerEntries.insert(entry);
+    context.workerEntries.push_back(entry);
+  }
 
   for (const GlobalVariable &global : module.globals()) {
     if (global.getValueType()->isPointerTy() && hasPointeeRMW(global))
@@ -341,6 +348,10 @@ ScoringContext buildContext(Module &module) {
 
   DenseMap<const Function *, SmallVector<const Function *, 8>> graph =
       buildDirectCallGraph(module);
+  for (const auto &entry : context.objectAccess.calls)
+    for (const Function *callee : entry.second)
+      if (::llvm::find(graph[entry.first], callee) == graph[entry.first].end())
+        graph[entry.first].push_back(callee);
   collectWorkerReachability(graph, context);
   return context;
 }
@@ -469,14 +480,14 @@ void addThreadScore(const AllocationSite &site, const ScoringContext &context,
   for (const Function *entry : context.workerEntries) {
     if (function == entry) {
       decision.value += policy.weightWorkerEntry;
-      decision.reasons.push_back("pthread-worker-entry");
+      decision.reasons.push_back("thread-worker-entry");
       return;
     }
   }
 
   if (context.allWorkerReachable.count(function) != 0) {
     decision.value += policy.weightWorkerReachable;
-    decision.reasons.push_back("pthread-worker-reachable");
+    decision.reasons.push_back("thread-worker-reachable");
   }
 }
 
@@ -514,10 +525,14 @@ HITMRiskScore scoreSite(const AllocationSite &site,
   EscapeSignals escapes = analyzeEscapes(site, context);
   addEscapeScore(escapes, policy, decision);
   addSyncScore(site, context, policy, decision);
-  if (policy.weightPublishedRMW != 0 && escapes.publishedRMW) {
+  if (policy.weightPublishedRMW != 0 &&
+      (escapes.publishedRMW ||
+       context.objectAccess.rmwAllocations.contains(site.call))) {
     decision.value += policy.weightPublishedRMW;
     decision.hasSyncOrMutable = true;
-    decision.reasons.push_back("published-pointee-atomic-rmw");
+    decision.reasons.push_back(escapes.publishedRMW
+                                  ? "published-pointee-atomic-rmw"
+                                  : "object-pointee-atomic-rmw");
   }
   addThreadScore(site, context, policy, decision);
   addSizeScore(size, policy, decision);

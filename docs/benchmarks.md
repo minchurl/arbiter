@@ -122,6 +122,50 @@ micro phase using acknowledged enable/disable FIFOs. Events target the measured
 Intel host; inspect `--help` and event availability on other machines.
 `selected-objects.json` connects the build's decisions to live page checks.
 
+## Libcuckoo
+
+The builder fetches upstream commit `0dd0b4d68fef76791a17950fde1a24f2328a58fe`
+into the ignored `benchmark/libcuckoo/libcuckoo-upstream/` directory, or checks
+`LIBCUCKOO_SOURCE_DIR` is a clean checkout of that revision. It builds upstream's
+unmodified `universal_benchmark` and `benchmark/libcuckoo/contention.cpp`, each
+as matched native and selected executables. The same published-RMW policy is
+used for XIndex, micro and libcuckoo; numeric config values are unchanged.
+
+```sh
+./scripts/build-libcuckoo.sh
+./scripts/run-libcuckoo.py --result-dir build/libcuckoo-contention \
+  --reads 0 --keys 1048576 --hot 65536 --threads 32 --operations 1000000
+./scripts/run-libcuckoo.py --benchmark universal \
+  --result-dir build/libcuckoo-universal --reads 10 \
+  --initial-capacity 23 --prefill 75 --total-ops 1000
+```
+
+Use `ARBITER_BUILD_DIR`, `ARBITER_BENCH_BUILD_DIR` and runner `--bin-dir` for
+separate compiler/benchmark builds. Results include exact commands, binary
+hashes, raw JSON/stderr and `runs.csv`. Three alternating native/Local/CXL rounds
+are the default. Each process runs in a 64 GiB/no-swap systemd user scope, with
+CPU/ordinary memory on node 0 and selected objects on node 0 or 2. A selected
+run fails validation if no selected allocation executes, private pages appear
+on another node, or any residency query fails.
+
+Universal's read/update options specify **attempts**; missing-key updates are
+expected. `--total-ops` is a percentage of initial capacity. The contention
+workload preloads all keys and uses only find/update_fn, with no timed resize.
+Every successful update increments a value; after timing, all keys and the
+complete value sum are checked against the executed updates. `--hot` controls
+the common key set; `--partitioned` splits it among workers (keys are disjoint,
+but different keys can still share bucket locks). `--operations` is per worker.
+Read-only libcuckoo operations still acquire its internal spinlocks.
+
+For compiler regression checks, with LLVM 18 tools on PATH:
+
+```sh
+./scripts/test-hitm-analysis.py --build-dir build-llvm18
+```
+
+This runs the LLVM fixtures and compiles a real std::thread callback/lambda
+using list/vector members, including read-only and ambiguous-allocation controls.
+
 ## Validation and measurement
 
 Short runtime/compiler checks:

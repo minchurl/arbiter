@@ -3,6 +3,7 @@ add_llvm_library(ArbiterLLVM
   RewritePlan.cpp
   Passes.cpp
   hitm_seed/HITMRiskScoring.cpp
+  hitm_seed/ObjectAccessAnalysis.cpp
   hitm_seed/HITMSeedOptions.cpp
   hitm_seed/HITMSeedPasses.cpp
   ReportAllocationSites.cpp
@@ -10,6 +11,7 @@ add_llvm_library(ArbiterLLVM
   RewriteMMapAllocations.cpp
 
   LINK_COMPONENTS
+  Analysis
   Core
   Support
 )

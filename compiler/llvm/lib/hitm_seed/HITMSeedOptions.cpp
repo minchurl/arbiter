@@ -61,18 +61,18 @@ cl::opt<unsigned> HITMWeightSyncFile(
 
 cl::opt<unsigned> HITMWeightPublishedRMW(
     "arbiter-hitm-weight-published-rmw",
-    cl::desc("Point weight for a globally published allocation whose pointee "
-             "is used by atomic RMW or cmpxchg"),
+    cl::desc("Point weight for a published allocation whose pointee "
+             "is used by atomic RMW or cmpxchg through globals, fields or calls"),
     cl::init(0));
 
 cl::opt<unsigned> HITMWeightWorkerEntry(
     "arbiter-hitm-weight-worker-entry",
-    cl::desc("Point weight for allocations in a pthread worker entry"),
+    cl::desc("Point weight for allocations in a recognized thread worker entry"),
     cl::init(3));
 
 cl::opt<unsigned> HITMWeightWorkerReachable(
     "arbiter-hitm-weight-worker-reachable",
-    cl::desc("Point weight for allocations reachable from a pthread worker"),
+    cl::desc("Point weight for allocations reachable from a recognized thread worker"),
     cl::init(2));
 
 cl::opt<unsigned> HITMWeightSize(

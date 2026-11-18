@@ -11,7 +11,7 @@ Paths below are relative to the repository root.
 | Order | File or directory | Responsibility |
 |---|---|---|
 | 1 | `compiler/llvm/lib/AllocationSite.cpp` | Discover supported allocations and assign deterministic site IDs |
-| 2 | `compiler/llvm/lib/hitm_seed/HITMRiskScoring.cpp` | Score, filter and select sites |
+| 2 | `compiler/llvm/lib/hitm_seed/HITMRiskScoring.cpp` and `ObjectAccessAnalysis.cpp` | Trace object accesses; score, filter and select sites |
 | 3 | `compiler/llvm/lib/hitm_seed/HITMSeedOptions.cpp` and `HITMSeedPasses.cpp` | Policy options, CSV decisions and selected-site rewrite |
 | 4 | `compiler/llvm/lib/RewriteHeapAllocations.cpp` and `RewriteMMapAllocations.cpp` | Rewrite allocation/deallocation calls to the runtime ABI |
 | 5 | `runtime/include/arbiter_runtime_site.h` and `runtime/src/arbiter_runtime_site.cpp` | C/C++ allocation contracts, diagnostics and mmap |
@@ -32,11 +32,34 @@ oversized selection at compile time; it does not bound actual runtime memory.
 Report and rewrite repeat the same deterministic decision. Site IDs depend on
 source/compiler/optimization settings; automatic policies do not pin them.
 
-The published-RMW signal follows a globally published allocation pointer to
-RMW/CAS on its pointee. It selects the microbenchmark table while excluding
-read-only ballast. It is static evidence: it cannot prove runtime frequency,
-multiple writers, or a CXL speedup. B-tree uses unsupported `posix_memalign`,
-so its current automatic rewrite selects nothing.
+The existing published-RMW weight also covers allocation-linked RMW/CAS through
+object fields, function arguments/returns and resolved indirect calls. Direct
+global matches retain `published-pointee-atomic-rmw`; the extended analysis
+reports `object-pointee-atomic-rmw`. The weight is added once even when both
+paths match. No new policy options or workload-specific site IDs are introduced.
+
+`ObjectAccessAnalysis.cpp` tracks allocation origins and byte-offset fields,
+keeping finite field alternatives separate and widening array induction paths.
+Calls use one call-site of context. Pointer-sized scalar copies and constant-size
+memcpy/memmove are supported. A modeled RMW address must resolve to one allocation
+site before it earns the new signal; multi-origin/unknown-origin results do not.
+This is bounded, flow-insensitive evidence discovery, **not a sound whole-program
+alias analysis or proof of sharing**. Arbitrary external side effects, dynamic
+memory copies, pointer encoding and other C++ ABIs can hide accesses. Exceeding
+128 rounds or 2,048 contexts discards all partial new evidence with a diagnostic.
+
+Worker discovery handles direct `pthread_create` and the tested LLVM 18 /
+libstdc++ 11 `std::thread` ABI, following the actual state object's vtable to
+`_M_run`, then its callback/lambda. The only out-of-line container summary models
+libstdc++'s four `_List_node_base::_M_hook` pointer stores; no libcuckoo type names
+are matched. See GCC's [thread state](https://github.com/gcc-mirror/gcc/blob/releases/gcc-11.4.0/libstdc%2B%2B-v3/include/bits/std_thread.h)
+and [list insertion](https://github.com/gcc-mirror/gcc/blob/releases/gcc-11.4.0/libstdc%2B%2B-v3/src/c%2B%2B98/list.cc).
+Worker reasons are now named `thread-worker-entry` / `thread-worker-reachable`.
+
+This selects the microbenchmark table while excluding read-only ballast, and
+finds libcuckoo's separately allocated spinlock vector through its owning list.
+It cannot prove runtime frequency, multiple writers, or a CXL speedup. B-tree
+uses unsupported `posix_memalign`, so its automatic rewrite still selects nothing.
 
 For the retained XIndex build, raw-046/evidence-balanced/published-RMW select
 `68,71,74,90,97,98,99,100`; only `68,71,74` allocate during full YCSB-A.

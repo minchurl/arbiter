@@ -24,3 +24,6 @@ benchmark/**/*_log.txt
 benchmark/gups/gups
 benchmark/xindex/YCSB/xindex_dat/*.dat
 benchmark/xindex/YCSB/xindex_dat/*.tmp
+
+/benchmark/libcuckoo/libcuckoo-upstream/
+!tests/llvm/object-access.ll

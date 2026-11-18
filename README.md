@@ -50,6 +50,8 @@ one complete 400M-transaction pass per process. These are full runs, not smokes.
 Defaults use CPU/ordinary memory node 0 and CXL node 2.
 [B-tree and microbenchmark commands](docs/benchmarks.md#b-tree-and-coherence-microbenchmark)
 are separate because they use external source directories.
+[Libcuckoo](docs/benchmarks.md#libcuckoo) adds the upstream mixed workload and an
+existing-key contention driver, using the same automatic selection policy.
 
 ## Current status
 
