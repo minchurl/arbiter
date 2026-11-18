@@ -1,120 +1,62 @@
-# Retained XIndex HITM-Risk Seed Configs
+# Selection configs
 
-`candidates/` is a curated view of the 12 safe, runtime-active policies that retained the
-strongest signals in the completed full-scale sweep and still produce the same
-static seed fingerprint with the seed-only compiler. `raw-046.config` is the
-retained search winner: it reaches the high-throughput plateau with less CXL
-resident memory than the larger policies. The latest four-pair one-pass result
-is 26.287M local versus 50.324M CXL op/s, or +91.53% mean paired improvement.
+Choose by purpose; historical rankings are in [results](../../docs/results.md).
+All paths below are relative to this directory.
 
-| Config | Three-pair delta | Runtime sites | Static seeds |
-|---|---:|---|---:|
-| `raw-046` | +109.37% | `68+71+74` | 8 |
-| `raw-013` | +106.65% | `68+69+71` | 8 |
-| `raw-043` | +104.98% | `21+37+68+69+71+74` | 12 |
-| `raw-021` | +104.05% | `68+69+71+74` | 9 |
-| `raw-039` | +100.34% | `68+71+74` | 6 |
-| `raw-082` | +68.88% | `71` | 1 |
-| `raw-081` | +65.21% | `71+74` | 2 |
-| `raw-009` | +53.65% | `68+69` | 7 |
-| `raw-030` | +53.31% | `21+68+69` | 8 |
-| `raw-036` | +50.01% | `68` | 4 |
-| `raw-003` | +49.00% | `68` | 3 |
-| `raw-047` | +45.11% | `68+69` | 6 |
+| Config / directory | Use |
+|---|---|
+| `candidates/raw-046.config` | Default XIndex replay; historical broad-sweep winner with a smaller footprint than larger finalists |
+| `policy-candidates/evidence-balanced-size-tiebreaker.config` | A/F convenience runners; same XIndex sites with size reduced from +6 to +1 |
+| `policy-candidates/published-rmw-size-tiebreaker.config` | B-tree/micro default; selects the shared micro table, excludes ballast, preserves XIndex selection |
+| Other `policy-candidates/` | Automatic hypotheses for sensitivity/generalization, not additional proven winners |
+| `xindex-site68-buffer-ablation.config`, `xindex-site71-leaf-ablation.config`, `xindex-site68-71-ablation.config` | Explicitly pinned causal ablations, not general policies |
+| `candidates/` | 12 historically measured policies: 003, 009, 013, 021, 030, 036, 039, 043, 046, 047, 081, 082 (all `raw-*.config`) |
+| `search-spaces/xindex-broad-100/` | Frozen 100-input search space, not 100 validated policies |
 
-These values combine one 15-second screening pair and two 60-second
-confirmation pairs. The five finalists also have homogeneous four-pair,
-180-second results in [the YCSB-A result](../../docs/results/xindex-ycsb-a.md).
-Config names are historical identifiers, not manually pinned site IDs; every
-file leaves `ARBITER_HITM_SEED_SITE_IDS` empty.
+Automatic policies leave `ARBITER_HITM_SEED_SITE_IDS` empty. The retained
+raw-046/evidence-balanced/published-RMW XIndex selection is
+`68,71,74,90,97,98,99,100`; only `68,71,74` allocate in full A. IDs are specific
+to the measured build. Other benchmarks can select different sites or none.
 
-The exact 100-input parameter space used by the broad YCSB-A and YCSB-B sweeps
-is retained under `search-spaces/xindex-broad-100/`. Those inputs contain
-historical no-op keys and are intended for search reproduction, not as
-validated single-policy defaults. `candidates/` is the starting point for
-current runs.
-
-## Site 71 leaf-node ablation
-
-`xindex-site71-leaf-ablation.config` isolates the collision B-tree leaf-block
-allocation that accounted for 14.16 GiB (81.8%) of raw-046's CXL-assigned
-memory. The original `candidates/raw-046.config` remains unchanged.
-
-The ablation pins site 71 and sets the size weight to zero. This separates the
-runtime effect of placing the leaf blocks from the size-heavy heuristic that
-originally helped select them. It is a causal experiment, not a generalized
-automatic policy: the current static features give sites 71 and 74 the same
-feature vector, so lowering the size weight alone cannot distinguish the leaf
-and internal-node allocation paths.
-
-Run the same one-pass replay with the ablation config via:
-
-```bash
-ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/xindex-site71-leaf-ablation.config \
-HITM_SEED_BUILD_DIR=build/arbiter-bench/xindex-hitm-seed-site71 \
-./scripts/run-xindex-hitm-seed-replay.sh
+```sh
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config \
+  ./scripts/build-xindex-llvm.sh
+./scripts/run-xindex-site-ablation.sh --check
 ```
 
-Compare that result with `candidates/raw-046.config`. If site 71 retains the
-gain, the next step is to add a shared-write-sensitive feature that separates
-leaf updates from mostly read-only container/internal-node access, rather than
-using allocation size as a proxy.
+The ablation runner compares 68, 71, 68+71 and raw-046; default four pairs per
+policy, `--quick` one pair. General replay commands are in the
+[benchmark guide](../../docs/benchmarks.md#xindex-a-and-f).
 
-## Four-way site ablation
+## Parameters
 
-The four-way driver compares `68 only`, `68+71`, `71 only`, and the original
-`raw-046` under the same fixed-operation replay contract. The three explicit
-ablation configs set the size weight to zero; `raw-046` remains unchanged.
+Each `ARBITER_HITM_WEIGHT_*` signal contributes at most once per allocation.
 
-```bash
-./scripts/run-xindex-site-ablation.sh
-```
+| Suffix | Evidence |
+|---|---|
+| `ESCAPE_RETURN`, `ESCAPE_STORE`, `ESCAPE_CALL` | Derived pointer returned, stored or passed to a non-ignored call |
+| `SYNC_ATOMIC`, `SYNC_STORE`, `SYNC_INLINE_ASM`, `SYNC_FILE` | RMW/CAS, atomic/volatile store, lock-like assembly, or source-file mutation |
+| `PUBLISHED_RMW` | Globally published pointer's loaded pointee feeds RMW/CAS; default weight 0 |
+| `WORKER_ENTRY`, `WORKER_REACHABLE` | In/reachable from a pthread entry |
+| `SIZE` | Crosses `ARBITER_HITM_LARGE_ALLOCATION_THRESHOLD` |
 
-The default is four Local/CXL pairs per policy. Use `--quick` for one pair per
-policy or `--check` to validate the environment without starting a benchmark.
-The driver writes per-policy evidence under `runs/` and creates top-level
-`comparison.csv` and `comparison.md` files.
+`ARBITER_HITM_REQUIRE_ESCAPE`, `ARBITER_HITM_REQUIRE_SYNC` and
+`ARBITER_HITM_MIN_SCORE` gate automatic candidates; `ARBITER_HITM_SEED_LIMIT`
+caps the deterministic ranking. `ARBITER_HITM_INCLUDE_DYNAMIC_SIZE` allows
+non-constant requests. `ARBITER_HITM_SEED_DYNAMIC_SIZE_ESTIMATE` provides their
+static accounting size; `ARBITER_HITM_SEED_MAX_ESTIMATED_BYTES` aborts compilation
+if the selected sum exceeds a nonzero budget. These are not runtime byte limits.
 
-## General-policy candidates derived from sites 68 and 71
+Current jemalloc supports mixed sizes. Historical XIndex candidates still
+exclude dynamic sizes because of their validation history. An earlier zero-size-
+weight policy admitted helper allocations and crashed during training; it has
+not been revalidated on this runtime. Existing features also cannot distinguish
+sites 71 and 74, which share a feature vector. Static RMW evidence does not
+establish multiple runtime writers or predict a placement gain by itself.
 
-`policy-candidates/` contains automatic policies that select both of the
-runtime-important XIndex sites without pinning their IDs.  They are hypotheses
-to test on other benchmarks, not additional XIndex-specific winning claims.
-
-| Viable config | Size weight | XIndex static seeds | Main hypothesis |
-|---|---:|---|---|
-| `evidence-balanced-size-tiebreaker` | 1 | `68,71,74,90,97,98,99,100` | count independent evidence; give worker reachability one extra point |
-| `coherence-weighted-size-tiebreaker` | 1 | `68,71,74,90,97,98,99,100` | prioritize atomic RMW, cmpxchg, and lock-like updates |
-| `sharing-weighted-size-tiebreaker` | 1 | `68,71,74,90,97,98,99,100` | prioritize stored pointers and worker-thread reachability |
-| `balanced-size-tiebreaker` | 1 | `68,69,71,74,90,97,98,99,100` | retain size only as weak corroboration, instead of raw-046's dominant +6 |
-
-All four leave `ARBITER_HITM_SEED_SITE_IDS` empty and leave the expected seed
-count unset so that the same policy file can be compiled against another
-benchmark.  The seed limit remains 12 to preserve the broad-sweep safety cap.
-The XIndex fingerprints above were compiler-validated on 2026-10-20; they are
-static selections, not a claim that every selected site is runtime-active.
-The first three policies produce byte-identical rewritten XIndex bitcode and
-executables.  The recommended `evidence-balanced-size-tiebreaker` executable
-is also byte-identical to the raw-046 executable: both rewrite the same eight
-static sites, while the new policy replaces raw-046's dominant size weight
-with a weak +1 tie breaker.  On another benchmark their selections can differ.
-
-There are two current-analysis limits to keep explicit:
-
-1. Sites 71 and 74 expose the same static feature vector, so no existing
-   weight/threshold combination can select 71 while rejecting 74.  A future
-   shared-write or runtime-activity feature is required to separate them.
-2. Setting the size weight to zero admits dynamic helper allocations with the
-   same escape/sync/worker evidence as site 71.  An exploratory no-size policy
-   crashed during XIndex training after rewriting those helpers, so the unsafe
-   configs are not retained.  The viable policies use size only as a +1 tie
-   breaker rather than as raw-046's dominant +6 signal.
-
-For XIndex, compare one policy with raw-046 by passing it to the existing
-one-pass replay driver, for example:
-
-```bash
-ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config \
-HITM_SEED_BUILD_DIR=build/arbiter-bench/xindex-evidence-balanced-size-tiebreaker \
-./scripts/run-xindex-hitm-seed-replay.sh
-```
+The frozen broad search contains duplicates, empty selections and candidates
+rejected by the old fixed-slot runtime. Legacy expansion/member keys remain
+historical no-ops: the build wrapper forwards only its explicit seed-option
+allowlist. Check `configs.sha256` from that directory to verify the inputs.
+Use the source configs and compiler decision CSVs for exact weights; avoid
+copying evolving rankings into additional READMEs.
