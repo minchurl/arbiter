@@ -2,6 +2,7 @@
 """Compare matched native, selected-local and selected-CXL executables."""
 import argparse
 import csv
+import json
 import os
 from pathlib import Path
 import shutil
@@ -15,7 +16,9 @@ DEFAULT_BIN_DIR = ROOT / "build/arbiter-bench/btree-coherence"
 MODES = ("native", "local", "cxl")
 COLUMNS = ("benchmark", "round", "mode", "node", "operations", "seconds", "mops_per_s",
            "max_rss_kib", "arena_allocations", "arena_resident_bytes_at_exit", "swaps",
-           "live_sample_nodes", "checked_keys", "fallback_allocations", "page_query_errors")
+           "live_sample_nodes", "checked_keys", "fallback_allocations", "page_query_errors", "selected_sites")
+TARGETED_OBJECTS = {"btree": {"keys": 1, "pointers": 2}, "micro": {"table": 4}}
+OBJECT_BYTES = {"keys": 120, "pointers": 128, "table": 8192, "ballast": 8 << 30}
 
 
 def positive(value):
@@ -58,12 +61,15 @@ def measure(args, benchmark, mode, round_id):
                         "-o", str(stem.with_suffix(".time")), "numactl",
                         f"--cpunodebind={args.cpu_node}", f"--membind={args.local_node}",
                         *command], env=env, stdout=log_file, stderr=subprocess.STDOUT, check=True)
-    row = read_measurement(stem, benchmark, round_id, mode, node, args.local_node, args.duration)
+    objects = args.selected_objects[benchmark] if selected else {}
+    row = read_measurement(stem, benchmark, round_id, mode, node, args.local_node, args.duration, objects)
     print(f"  {float(row['mops_per_s']):.3f} Mops/s, RSS {row['max_rss_kib'] / 2**20:.2f} GiB", flush=True)
     return row
 
 
-def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration):
+def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration, selected_objects=None):
+    if selected_objects is None:
+        selected_objects = TARGETED_OBJECTS[benchmark] if mode != "native" else {}
     log = stem.with_suffix(".log").read_text()
     checked_keys = ""
     if benchmark == "btree":
@@ -72,7 +78,7 @@ def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration
         checked_keys = int(result["checked"])
         if ops != 600_000_000 or checked_keys != 4096:
             raise ValueError("B-tree sampled lookup validation failed")
-        expected = {"keys": node, "pointers": node, "payload": local_node}
+        expected = {"keys": local_node, "pointers": local_node, "payload": local_node}
     else:
         config = fields(output_line(log, "config: "))
         sizes = fields(output_line(log, "  table_size="))
@@ -83,7 +89,9 @@ def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration
         ops, seconds = int(result["total_ops"]), float(result["elapsed"].removesuffix("s"))
         if ops % 64 or abs(seconds - duration) > max(1, duration * 0.05):
             raise ValueError(f"unexpected microbenchmark count or duration: {result}")
-        expected = {"table": node, "ballast": local_node}
+        expected = {"table": local_node, "ballast": local_node}
+    for obj in selected_objects:
+        expected[obj] = node
     if ops <= 0 or seconds <= 0:
         raise ValueError("empty measurement")
 
@@ -96,7 +104,7 @@ def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration
         samples.append(f"{obj}={nodes}")
 
     allocations = resident = fallbacks = query_errors = ""
-    if mode != "native":
+    if selected_objects:
         summary = fields(output_line(log, "arbiter-arena-summary "))
         placement = fields(output_line(log, "arbiter-arena-residency "))
         allocations = int(summary["allocations"])
@@ -104,17 +112,20 @@ def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration
         fallbacks = int(summary["fallback_allocations"])
         query_errors = int(placement["query_error_pages"])
         sites = [fields(line) for line in log.splitlines() if line.startswith("arbiter-arena-site ")]
-        if benchmark == "btree":
-            shapes = {(int(s["site"]), int(s["object_bytes"])) for s in sites}
-            valid_sites = (len(sites) == 2 and shapes == {(1, 120), (2, 128)}
-                           and sites[0]["allocations"] == sites[1]["allocations"])
-        else:
-            valid_sites = len(sites) == 1 and int(sites[0]["object_bytes"]) == 8192 and allocations == 1
+        shapes = {(int(s["site"]), int(s["object_bytes"])) for s in sites}
+        expected_shapes = {(site, OBJECT_BYTES[obj]) for obj, site in selected_objects.items()}
+        counts = {int(s["allocations"]) for s in sites}
+        valid_sites = (len(sites) == len(selected_objects) and shapes == expected_shapes
+                       and len(counts) == 1 and sum(int(s["allocations"]) for s in sites) == allocations)
+        if benchmark == "micro":
+            valid_sites = valid_sites and counts == {1}
         if not (valid_sites and allocations > 0 and fallbacks == 0
                 and summary["node"] == str(node) and query_errors == 0
                 and placement["mincore_error_batches"] == "0"
                 and resident > 0 and placement.get(f"node{node}_pages") == placement["resident_pages"]):
             raise ValueError(f"incomplete or misplaced arena in {stem}.log")
+    elif "arbiter-arena-site " in log:
+        raise ValueError(f"unexpected selected allocations in {stem}.log")
     rss, swaps = map(int, stem.with_suffix(".time").read_text().split())
     if swaps:
         raise ValueError(f"swapped during {stem}")
@@ -122,7 +133,8 @@ def read_measurement(stem, benchmark, round_id, mode, node, local_node, duration
                 operations=ops, seconds=seconds, mops_per_s=f"{ops / seconds / 1e6:.6f}",
                 max_rss_kib=rss, arena_allocations=allocations, arena_resident_bytes_at_exit=resident,
                 swaps=swaps, live_sample_nodes=" ".join(samples), checked_keys=checked_keys,
-                fallback_allocations=fallbacks, page_query_errors=query_errors)
+                fallback_allocations=fallbacks, page_query_errors=query_errors,
+                selected_sites=",".join(str(site) for site in selected_objects.values()))
 
 
 def main():
@@ -140,10 +152,16 @@ def main():
     if args.local_node == args.cxl_node:
         parser.error("the two memory nodes must differ")
     args.bin_dir = args.bin_dir.resolve()
+    objects_path = args.bin_dir / "selected-objects.json"
+    args.selected_objects = json.loads(objects_path.read_text()) if objects_path.exists() else TARGETED_OBJECTS
     args.result_dir.mkdir(parents=True, exist_ok=False)
     print(f"Results: {args.result_dir}", flush=True)
     for artifact in ("inputs.sha256", "btree.hitm-seed-sites.csv", "micro.hitm-seed-sites.csv"):
         shutil.copyfile(args.bin_dir / artifact, args.result_dir / artifact)
+    if objects_path.exists():
+        shutil.copyfile(objects_path, args.result_dir / objects_path.name)
+    for report in args.bin_dir.glob("*-*.hitm-seed-sites.csv"):
+        shutil.copyfile(report, args.result_dir / report.name)
     benchmarks = ("btree", "micro") if args.benchmark == "both" else (args.benchmark,)
     csv_path = args.result_dir / "runs.csv"
     with csv_path.open("w", newline="") as stream:
@@ -159,6 +177,8 @@ def main():
     with csv_path.open() as stream:
         rows = list(csv.DictReader(stream))
     for benchmark in benchmarks:
+        if not args.selected_objects[benchmark]:
+            print(f"{benchmark} selected zero allocations. All modes used local memory.")
         rates = {mode: mean(float(row["mops_per_s"]) for row in rows
                             if row["benchmark"] == benchmark and row["mode"] == mode)
                  for mode in MODES}
