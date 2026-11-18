@@ -1,0 +1,43 @@
+case,build,victims,noise,noise_mode,table_size,ballast_mb,read_pct,entry_bytes,epoch_store,benchmark,round,mode,node,operations,seconds,mops_per_s,max_rss_kib,arena_allocations,arena_resident_bytes_at_exit,swaps,live_sample_nodes,checked_keys,fallback_allocations,page_query_errors,selected_sites
+supplied-corrected,corrected,32,0,none,256,8192,50,32,0,micro,1,local,0,1962094976,6.0,327.015829,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+supplied-corrected,corrected,32,0,none,256,8192,50,32,0,micro,1,cxl,2,2109946880,6.0,351.657813,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+supplied-store,epoch-store,32,0,none,256,8192,50,32,1,micro,1,local,0,2220636160,6.0,370.106027,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+supplied-store,epoch-store,32,0,none,256,8192,50,32,1,micro,1,cxl,2,2218175168,6.0,369.695861,8443648,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+supplied-padded,padded,32,0,none,256,8192,50,64,1,micro,1,local,0,3239905472,6.0,539.984245,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+supplied-padded,padded,32,0,none,256,8192,50,64,1,micro,1,cxl,2,3270020544,6.0,545.003424,8443648,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+read-0,epoch-store,32,0,none,256,8192,0,32,1,micro,1,local,0,2042223040,6.0,340.370507,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+read-0,epoch-store,32,0,none,256,8192,0,32,1,micro,1,cxl,2,2042388096,6.0,340.398016,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+read-10,epoch-store,32,0,none,256,8192,10,32,1,micro,1,local,0,1963543872,6.0,327.257312,8443648,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+read-10,epoch-store,32,0,none,256,8192,10,32,1,micro,1,cxl,2,1953022912,6.0,325.503819,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+read-90,epoch-store,32,0,none,256,8192,90,32,1,micro,1,local,0,3716077440,6.0,619.346240,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+read-90,epoch-store,32,0,none,256,8192,90,32,1,micro,1,cxl,2,3717330304,6.0,619.555051,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+read-100,epoch-store,32,0,none,256,8192,100,32,1,micro,1,local,0,5909433920,6.0,984.905653,8443648,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+read-100,epoch-store,32,0,none,256,8192,100,32,1,micro,1,cxl,2,5897176000,6.0,982.862667,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+no-ballast-read-0,epoch-store,32,0,none,256,0,0,32,1,micro,1,local,0,2417259456,6.0,402.876576,55040,1,45056,0,"table=0,0,0",,0,0,4
+no-ballast-read-0,epoch-store,32,0,none,256,0,0,32,1,micro,1,cxl,2,2417384704,6.0,402.897451,55040,1,45056,0,"table=2,2,2",,0,0,4
+no-ballast-read-50,epoch-store,32,0,none,256,0,50,32,1,micro,1,local,0,3203777664,6.0,533.962944,55040,1,45056,0,"table=0,0,0",,0,0,4
+no-ballast-read-50,epoch-store,32,0,none,256,0,50,32,1,micro,1,cxl,2,3221247936,6.0,536.874656,55040,1,45056,0,"table=2,2,2",,0,0,4
+no-ballast-read-90,epoch-store,32,0,none,256,0,90,32,1,micro,1,local,0,8397753984,6.0,1399.625664,54784,1,45056,0,"table=0,0,0",,0,0,4
+no-ballast-read-90,epoch-store,32,0,none,256,0,90,32,1,micro,1,cxl,2,8343163264,6.0,1390.527211,54784,1,45056,0,"table=2,2,2",,0,0,4
+table-16,epoch-store,32,0,none,16,8192,10,32,1,micro,1,local,0,144322752,6.0,24.053792,8443392,1,40960,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-16,epoch-store,32,0,none,16,8192,10,32,1,micro,1,cxl,2,144138880,6.0,24.023147,8443392,1,40960,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+table-64,epoch-store,32,0,none,64,8192,10,32,1,micro,1,local,0,880034112,6.0,146.672352,8443648,1,40960,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-64,epoch-store,32,0,none,64,8192,10,32,1,micro,1,cxl,2,881946496,6.0,146.991083,8443648,1,40960,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+table-1024,epoch-store,32,0,none,1024,8192,10,32,1,micro,1,local,0,3594823296,6.0,599.137216,8443392,1,73728,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-1024,epoch-store,32,0,none,1024,8192,10,32,1,micro,1,cxl,2,3589846528,6.0,598.307755,8443392,1,73728,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+table-4096,epoch-store,32,0,none,4096,8192,10,32,1,micro,1,local,0,4457230656,6.0,742.871776,8443392,1,172032,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-4096,epoch-store,32,0,none,4096,8192,10,32,1,micro,1,cxl,2,4465881664,6.0,744.313611,8443392,1,172032,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+table-65536,epoch-store,32,0,none,65536,8192,10,32,1,micro,1,local,0,4847105088,6.0,807.850848,8445440,1,2142208,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-65536,epoch-store,32,0,none,65536,8192,10,32,1,micro,1,cxl,2,4801769728,6.0,800.294955,8445440,1,2142208,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+table-1000000,epoch-store,32,0,none,1000000,8192,10,32,1,micro,1,local,0,4587159424,6.0,764.526571,8474624,1,40960,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+table-1000000,epoch-store,32,0,none,1000000,8192,10,32,1,micro,1,cxl,2,1568407680,6.0,261.401280,8474624,1,40960,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+noise-maint,epoch-store,30,2,maint,256,8192,10,32,1,micro,1,local,0,1919220160,6.0,319.870027,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+noise-maint,epoch-store,30,2,maint,256,8192,10,32,1,micro,1,cxl,2,1918873792,6.0,319.812299,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+noise-combined,epoch-store,29,2,combined,256,8192,10,32,1,micro,1,local,0,1891813376,6.0,315.302229,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+noise-combined,epoch-store,29,2,combined,256,8192,10,32,1,micro,1,cxl,2,1895201408,6.0,315.866901,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded-256-writes,padded,32,0,none,256,8192,10,64,1,micro,1,local,0,2904862912,6.0,484.143819,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+padded-256-writes,padded,32,0,none,256,8192,10,64,1,micro,1,cxl,2,2892360704,6.0,482.060117,8443392,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded-65536-writes,padded,32,0,none,65536,8192,10,64,1,micro,1,local,0,4821486464,6.0,803.581077,8447488,1,4239360,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+padded-65536-writes,padded,32,0,none,65536,8192,10,64,1,micro,1,cxl,2,4537109056,6.0,756.184843,8447488,1,4239360,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+16-workers,epoch-store,16,0,none,256,8192,10,32,1,micro,1,local,0,1539136384,6.0,256.522731,8443136,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+16-workers,epoch-store,16,0,none,256,8192,10,32,1,micro,1,cxl,2,1542517888,6.0,257.086315,8443136,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4

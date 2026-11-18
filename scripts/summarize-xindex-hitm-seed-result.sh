@@ -182,7 +182,7 @@ printf '\n'
 
 printf '## Runtime-Active CXL Sites\n\n'
 if [[ -n "${TARGET_LOG}" && -s "${TARGET_LOG}" ]]; then
-  printf 'The following selected sites actually allocated objects in target row `%s/r%s`. Their arena slabs were bound to the CXL target node.\n\n' "${TARGET_WORKLOAD}" "${TARGET_REPEAT}"
+  printf 'The following selected sites actually allocated objects in target row `%s/r%s`. Their arena memory was bound to the CXL target node.\n\n' "${TARGET_WORKLOAD}" "${TARGET_REPEAT}"
   printf '| Site | Function | Object | Allocations | Requested payload | Assigned arena |\n'
   printf '|---:|---|---:|---:|---:|---:|\n'
   awk -F, '
@@ -246,4 +246,4 @@ awk -F, 'NR > 1 && ($3 == "hitm-seed-local" || $3 == "hitm-seed-target") {
          ($32 == "" ? "-" : $32), ($29 == "" ? "-" : $29), \
          ($17 == "" ? "-" : $17)
 }' "${RUNS_CSV}"
-printf '\n`Resident` is the physical memory occupied by the selected-site arena. `Assigned arena` also includes slot padding and slab granularity, so it can exceed requested object payload. A trustworthy placement row should be `ok`, have majority node equal to requested node, and report zero fallbacks and swaps.\n'
+printf '\n`Resident` is the physical memory occupied by the selected-site arena. `Assigned arena` also includes allocation padding and unused arena capacity, so it can exceed requested object payload. A trustworthy placement row should be `ok`, have majority node equal to requested node, and report zero fallbacks and swaps.\n'
