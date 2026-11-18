@@ -110,4 +110,22 @@ define void @unknown_result(i1 %choose) {
   call void @touch(ptr %address)
   ret void
 }
+
+; Both owner fields can receive either allocation, including a value learned
+; through a call in a later fixed-point round. Neither RMW has a unique origin.
+define void @updated_aliases(i1 %choose) {
+  %a = call ptr @malloc(i64 64)
+  %b = call ptr @malloc(i64 64)
+  %owner1 = alloca ptr
+  %owner2 = alloca ptr
+  %destination = select i1 %choose, ptr %owner1, ptr %owner2
+  store ptr %a, ptr %destination
+  %first = load ptr, ptr %owner1
+  %x = atomicrmw add ptr %first, i64 1 monotonic
+  %later = call ptr @identity(ptr %b)
+  store ptr %later, ptr %destination
+  %second = load ptr, ptr %owner2
+  %y = atomicrmw add ptr %second, i64 1 monotonic
+  ret void
+}
 ; CHECK: 12,malloc,unknown_result,{{.*}}"{{[^"\n]*}}no-sync-mutable"

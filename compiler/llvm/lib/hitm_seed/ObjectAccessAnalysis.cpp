@@ -100,6 +100,10 @@ struct Cell {
 struct Context {
   const Function *function;
 };
+struct CachedLoad {
+  uint64_t version = 0;
+  Points contents;
+};
 
 class Analysis {
   Module &module;
@@ -110,6 +114,8 @@ class Analysis {
   std::vector<Key> objects;
   std::map<std::tuple<const Value *, unsigned, uint64_t>, Cell> memory;
   std::map<unsigned, SmallVector<Cell *, 4>> memoryByObject;
+  DenseMap<unsigned, uint64_t> memoryVersions;
+  std::map<std::tuple<unsigned, uint64_t, uint64_t>, CachedLoad> loadedFields;
   std::map<std::pair<const Function *, const CallBase *>, unsigned> contextIds;
   std::vector<Context> contexts;
   std::map<unsigned, Points> returns;
@@ -215,15 +221,20 @@ class Analysis {
     if (addresses.empty() || contents.empty())
       return;
     Cell &cell = memory[{origin, ctx, slot}];
-    changed |= merge(cell.addresses, addresses);
-    changed |= merge(cell.contents, contents);
-    for (const auto &address : addresses) {
+    bool updated = merge(cell.addresses, addresses);
+    updated |= merge(cell.contents, contents);
+    changed |= updated;
+    for (const auto &address : cell.addresses) {
       auto &cells = memoryByObject[address.first];
       if (::llvm::find(cells, &cell) == cells.end())
         cells.push_back(&cell);
+      // A cell's contents apply to every aliased destination, including
+      // destinations learned in earlier rounds.
+      if (updated)
+        ++memoryVersions[address.first];
     }
   }
-  Points load(const Points &addresses) const {
+  Points load(const Points &addresses) {
     Points result;
     for (auto [object, offset] : facts(addresses)) {
       if (offset.stride && offset.stride < layout.getPointerSize())
@@ -231,13 +242,20 @@ class Analysis {
       auto cells = memoryByObject.find(object);
       if (cells == memoryByObject.end())
         continue;
-      for (const Cell *cell : cells->second)
-        for (Offset at : cell->addresses.at(object))
-          if ((!at.stride || at.stride >= layout.getPointerSize()) &&
-              offset.overlaps(at)) {
-            merge(result, cell->contents);
-            break;
-          }
+      auto &cached = loadedFields[{object, offset.value, offset.stride}];
+      uint64_t version = memoryVersions.lookup(object);
+      if (cached.version != version) {
+        cached.contents.clear();
+        for (const Cell *cell : cells->second)
+          for (Offset at : cell->addresses.at(object))
+            if ((!at.stride || at.stride >= layout.getPointerSize()) &&
+                offset.overlaps(at)) {
+              merge(cached.contents, cell->contents);
+              break;
+            }
+        cached.version = version;
+      }
+      merge(result, cached.contents);
     }
     return result;
   }
