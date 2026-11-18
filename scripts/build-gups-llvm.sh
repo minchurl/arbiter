@@ -13,7 +13,7 @@ TARGET="${1:-gups}"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
-  DEFAULT_RUNTIME_LINK_LIBS="-lnuma -ljemalloc"
+  DEFAULT_RUNTIME_LINK_LIBS="-lnuma"
 fi
 RUNTIME_LINK_LIBS="${ARBITER_RUNTIME_LINK_LIBS:-${DEFAULT_RUNTIME_LINK_LIBS}}"
 

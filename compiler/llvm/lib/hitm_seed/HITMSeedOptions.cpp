@@ -59,12 +59,6 @@ cl::opt<unsigned> HITMWeightSyncFile(
     cl::desc("Point weight for synchronization mutation in the same debug file"),
     cl::init(1));
 
-cl::opt<unsigned> HITMWeightPublishedRMW(
-    "arbiter-hitm-weight-published-rmw",
-    cl::desc("Point weight for a globally published allocation whose pointee "
-             "is used by atomic RMW or cmpxchg"),
-    cl::init(0));
-
 cl::opt<unsigned> HITMWeightWorkerEntry(
     "arbiter-hitm-weight-worker-entry",
     cl::desc("Point weight for allocations in a pthread worker entry"),

@@ -1,7 +1,0 @@
-[
-  {"name": "corrected", "build": "final-corrected"},
-  {"name": "epoch-store", "build": "final-epoch-store"},
-  {"name": "padded", "build": "final-padded"},
-  {"name": "read-only", "build": "final-epoch-store", "read_pct": 100},
-  {"name": "large-table", "build": "final-epoch-store", "read_pct": 10, "table_size": 1000000}
-]

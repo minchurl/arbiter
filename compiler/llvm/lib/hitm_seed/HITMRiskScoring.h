@@ -24,7 +24,6 @@ struct HITMRiskPolicy {
   uint32_t weightSyncStore = 2;
   uint32_t weightSyncInlineAsm = 2;
   uint32_t weightSyncFile = 1;
-  uint32_t weightPublishedRMW = 0;
   uint32_t weightWorkerEntry = 3;
   uint32_t weightWorkerReachable = 2;
   uint32_t weightSize = 1;
