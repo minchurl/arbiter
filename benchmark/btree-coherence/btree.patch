@@ -1,42 +1,13 @@
 --- a/btree.c
 +++ b/btree.c
-@@ -138,4 +138,22 @@
+@@ -138,4 +138,6 @@
  	return memptr;
  }
 +
 +#include "page-sample.h"
-+#ifdef ARBITER_BTREE_NODE_ARRAYS
-+#include "arbiter_runtime_site.h"
-+// Only the two persistent arrays in make_node use the bound arena.
-+static void *allocate_node_array(size_t bytes, uint32_t site) {
-+    void *p = arbiter_calloc_site(1, bytes, 64, site, 0);
-+    if (!p) {
-+        fprintf(stderr, "B-tree arena allocation failed at site %u\n", site);
-+        exit(EXIT_FAILURE);
-+    }
-+    allocator_stat += bytes;
-+    return p;
-+}
-+#define free(ptr) arbiter_free_maybe(ptr)
-+#else
-+#define allocate_node_array(bytes, site) allocate_align64(bytes)
-+#endif
  
  // TYPES.
-@@ -719,10 +737,10 @@
- 		exit(EXIT_FAILURE);
- 	}
--	new_node->keys = allocate_align64((order - 1) * sizeof(uint64_t));
-+	new_node->keys = allocate_node_array((order - 1) * sizeof(uint64_t), 1);
- 	if (new_node->keys == NULL) {
- 		perror("New node keys array.");
- 		exit(EXIT_FAILURE);
- 	}
--	new_node->pointers = allocate_align64(order * sizeof(void *));
-+	new_node->pointers = allocate_node_array(order * sizeof(void *), 2);
- 	if (new_node->pointers == NULL) {
- 		perror("New node pointers array.");
-@@ -1605,4 +1623,24 @@
+@@ -1605,4 +1607,24 @@
  	}
  	gettimeofday(&end, NULL);
 +    double lookup_sec = (end.tv_sec - start.tv_sec) +

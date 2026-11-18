@@ -93,7 +93,8 @@ the target node, with zero query errors and allocator fallbacks.
 
 Reproduction commands and source-directory overrides are in the
 [project README](../../README.md#run-b-tree-and-the-coherence-microbenchmark).
-For these explicit-placement measurements, build with
+For these historical explicit-placement measurements, use
+[commit a2151db](https://github.com/minchurl/arbiter/tree/a2151db) and build with
 `ARBITER_BENCH_SELECTION=targeted` and
 `ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config`.
 The supplied B-tree checkout was based on `25b5ede` with local source edits.

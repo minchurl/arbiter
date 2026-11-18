@@ -20,9 +20,8 @@ CLANGXX="${CLANGXX:-${prefix}/bin/clang++}"
 OPT="${OPT:-${prefix}/bin/opt}"
 PLUGIN="${ARBITER_LLVM_PLUGIN:-${BUILD_DIR}/lib/ArbiterLLVMPlugin.so}"
 runtime="${BUILD_DIR}/runtime/libarbiter_runtime.a"
-selection="${ARBITER_BENCH_SELECTION:-policy}"
-if [[ "${selection}" != targeted && "${selection}" != policy ]]; then
-  echo "ARBITER_BENCH_SELECTION must be targeted or policy" >&2
+if [[ "${ARBITER_BENCH_SELECTION:-policy}" != policy ]]; then
+  echo "Manual placement is archived at a2151db; this build uses automatic selection" >&2
   exit 1
 fi
 ARBITER_HITM_SEED_CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config}"
@@ -35,48 +34,27 @@ ccflags=(-std=gnu99 -O3 -gline-tables-only -fopenmp)
 cxxflags=(-std=c++17 -O2 -gline-tables-only -march=native -pthread)
 entry_bytes="${ARBITER_MICRO_ENTRY_BYTES:-32}"
 epoch_store="${ARBITER_MICRO_EPOCH_STORE:-1}"
-fast_index="${ARBITER_MICRO_FAST_INDEX:-0}"
-if [[ ! "$entry_bytes" =~ ^(32|64)$ || ! "$epoch_store" =~ ^[01]$ || ! "$fast_index" =~ ^[01]$ ]]; then
-  echo "ARBITER_MICRO_ENTRY_BYTES must be 32 or 64; EPOCH_STORE and FAST_INDEX must be 0 or 1" >&2
+if [[ ! "$entry_bytes" =~ ^(32|64)$ || ! "$epoch_store" =~ ^[01]$ ]]; then
+  echo "ARBITER_MICRO_ENTRY_BYTES must be 32 or 64; ARBITER_MICRO_EPOCH_STORE must be 0 or 1" >&2
   exit 1
 fi
 cxxflags+=(-DARBITER_MICRO_ENTRY_BYTES="$entry_bytes" -DARBITER_MICRO_EPOCH_STORE="$epoch_store")
-cxxflags+=(-DARBITER_MICRO_FAST_INDEX="$fast_index")
 if [[ -d "${ROOT_DIR}/.tools/libstdcxx" && "${prefix}" == "${ROOT_DIR}/.tools/"* ]]; then
   cxxflags+=(--gcc-install-dir="$(dirname "$(gcc -print-libgcc-file-name)")")
 fi
 libs=(-Wl,--no-as-needed -ljemalloc -lnuma -pthread)
 omp=(-fopenmp "-Wl,-rpath,${prefix}/lib")
 
-# Run the deployed selection policy on the supplied sources, before adding probes.
-"${CLANG}" "${ccflags[@]}" -emit-llvm -c "${btree}/btree/btree.c" -o "${OUT_DIR}/btree.bc"
-"${CLANGXX}" "${cxxflags[@]}" -emit-llvm -c "${micro}/coherence_noise.cpp" -o "${OUT_DIR}/micro.bc"
-for name in btree micro; do
-  configure_hitm_seed_experiment "${name}"
-  "${OPT}" -load-pass-plugin "${PLUGIN}" -passes="${REWRITE_PASS}" "${REWRITE_ARGS[@]}" \
-    "${OUT_DIR}/${name}.bc" -o "${OUT_DIR}/${name}.auto.bc"
-done
-
 # Both matched controls and placement builds include the same post-timing checks.
 patch --batch --forward --fuzz=0 -o "${OUT_DIR}/btree.c" "${btree}/btree/btree.c" "${adapters}/btree.patch"
 patch --batch --forward --fuzz=0 -o "${OUT_DIR}/coherence_noise.cpp" "${micro}/coherence_noise.cpp" "${adapters}/coherence-noise.patch"
 "${CLANG}" -O3 -march=native -fopenmp -DDISABLE_SIGNAL_IN_MAIN -c "${btree}/common/main-mt.c" -o "${OUT_DIR}/driver.o"
+"${CLANG}" "${ccflags[@]}" -I"${adapters}" -emit-llvm -c "${OUT_DIR}/btree.c" -o "${OUT_DIR}/btree-native.bc"
+configure_hitm_seed_experiment btree-native
+"${OPT}" -load-pass-plugin "${PLUGIN}" -passes="${REWRITE_PASS}" "${REWRITE_ARGS[@]}" \
+  "${OUT_DIR}/btree-native.bc" -o "${OUT_DIR}/btree-placed.bc"
 for mode in native placed; do
-  extra=()
-  if [[ "${selection}" == policy ]]; then
-    if [[ "${mode}" == native ]]; then
-      "${CLANG}" "${ccflags[@]}" -I"${adapters}" -emit-llvm -c "${OUT_DIR}/btree.c" -o "${OUT_DIR}/btree-native.bc"
-    else
-      configure_hitm_seed_experiment btree-native
-      "${OPT}" -load-pass-plugin "${PLUGIN}" -passes="${REWRITE_PASS}" "${REWRITE_ARGS[@]}" \
-        "${OUT_DIR}/btree-native.bc" -o "${OUT_DIR}/btree-placed.bc"
-    fi
-    "${CLANG}" -O3 -c "${OUT_DIR}/btree-${mode}.bc" -o "${OUT_DIR}/btree-${mode}.o"
-  else
-    if [[ "${mode}" == placed ]]; then extra+=(-DARBITER_BTREE_NODE_ARRAYS); fi
-    "${CLANG}" "${ccflags[@]}" "${extra[@]}" -I"${adapters}" -I"${ROOT_DIR}/runtime/include" \
-      -c "${OUT_DIR}/btree.c" -o "${OUT_DIR}/btree-${mode}.o"
-  fi
+  "${CLANG}" -O3 -c "${OUT_DIR}/btree-${mode}.bc" -o "${OUT_DIR}/btree-${mode}.o"
   "${CLANGXX}" "${OUT_DIR}/driver.o" "${OUT_DIR}/btree-${mode}.o" "${runtime}" \
     "${omp[@]}" "${libs[@]}" -o "${OUT_DIR}/btree-${mode}"
 done
@@ -84,65 +62,45 @@ done
 "${CLANGXX}" "${cxxflags[@]}" -I"${adapters}" -emit-llvm -c "${OUT_DIR}/coherence_noise.cpp" -o "${OUT_DIR}/micro-native.bc"
 "${OPT}" -load-pass-plugin "${PLUGIN}" -passes=arbiter-report-sites \
   -arbiter-report-path="${OUT_DIR}/micro-sites.csv" -disable-output "${OUT_DIR}/micro-native.bc"
-# Resolve the entry-table allocation from this build's debug location. Ballast
-# is a second new[] in the same function and must stay on the local node.
-table_site="$(python3 - "${OUT_DIR}" <<'PY'
-import csv
-import sys
-from pathlib import Path
-out = Path(sys.argv[1])
-source = out / "coherence_noise.cpp"
-lines = {i for i, line in enumerate(source.read_text().splitlines(), 1)
-         if "g_table = new Entry[" in line}
-with (out / "micro-sites.csv").open() as stream:
-    ids = [row["site_id"] for row in csv.DictReader(stream)
-           if row["kind"] == "cxx-new-array" and Path(row["file"]).resolve() == source.resolve()
-           and int(row["line"]) in lines]
-if len(ids) != 1:
-    sys.exit(f"expected exactly one entry table new[], found {ids}")
-print(ids[0])
-PY
-)"
-REWRITE_ARGS=(-arbiter-hitm-seed-site-ids="${table_site}")
-if [[ "${selection}" == policy ]]; then
-  configure_hitm_seed_experiment micro-native
-fi
+configure_hitm_seed_experiment micro-native
 "${OPT}" -load-pass-plugin "${PLUGIN}" -passes=arbiter-experiment-hitm-seed-rewrite \
   "${REWRITE_ARGS[@]}" "${OUT_DIR}/micro-native.bc" -o "${OUT_DIR}/micro-placed.bc"
 for mode in native placed; do
   "${CLANGXX}" "${cxxflags[@]}" "${OUT_DIR}/micro-${mode}.bc" "${runtime}" "${libs[@]}" -o "${OUT_DIR}/micro-${mode}"
 done
-python3 - "${OUT_DIR}" "${selection}" "${table_site}" <<'PY'
+python3 - "${OUT_DIR}" <<'PYTHON'
 import csv
 import json
 import sys
 from pathlib import Path
 out = Path(sys.argv[1])
-objects = {"btree": {"keys": 1, "pointers": 2}, "micro": {"table": int(sys.argv[3])}}
-if sys.argv[2] == "policy":
-    def selected(stem):
-        with (out / f"{stem}.hitm-seed-sites.csv").open() as stream:
-            return {int(row["site_id"]) for row in csv.DictReader(stream) if row["selected"] == "yes"}
-    if selected("btree-native"):
-        sys.exit("B-tree validation needs a page probe for the newly selected allocation")
-    objects["btree"] = {}
-    chosen = selected("micro-native")
-    lines = (out / "coherence_noise.cpp").read_text().splitlines()
-    with (out / "micro-sites.csv").open() as stream:
-        ballast = [int(row["site_id"]) for row in csv.DictReader(stream)
-                   if Path(row["file"]).resolve() == (out / "coherence_noise.cpp").resolve()
-                   and "g_ballast = new uint64_t[" in lines[int(row["line"]) - 1]]
-    if len(ballast) != 1:
-        sys.exit(f"expected exactly one ballast new[], found {ballast}")
-    known = {"table": int(sys.argv[3]), "ballast": ballast[0]}
-    if chosen - set(known.values()):
-        sys.exit("Microbenchmark validation needs a page probe for the newly selected allocation")
-    objects["micro"] = {name: site for name, site in known.items() if site in chosen}
+def selected(stem):
+    with (out / f"{stem}-native.hitm-seed-sites.csv").open() as stream:
+        return {int(row["site_id"]) for row in csv.DictReader(stream) if row["selected"] == "yes"}
+if selected("btree"):
+    sys.exit("B-tree validation needs a page probe for the newly selected allocation")
+source = out / "coherence_noise.cpp"
+lines = source.read_text().splitlines()
+known = {}
+with (out / "micro-sites.csv").open() as stream:
+    for row in csv.DictReader(stream):
+        if Path(row["file"]).resolve() != source.resolve() or row["kind"] != "cxx-new-array":
+            continue
+        line = lines[int(row["line"]) - 1]
+        for name, allocation in (("table", "g_table = new Entry["), ("ballast", "g_ballast = new uint64_t[")):
+            if allocation in line:
+                if name in known:
+                    sys.exit(f"ambiguous allocation site for {name}")
+                known[name] = int(row["site_id"])
+chosen = selected("micro")
+if set(known) != {"table", "ballast"} or chosen - set(known.values()):
+    sys.exit("Microbenchmark validation needs a page probe for the newly selected allocation")
+objects = {"btree": {}, "micro": {name: site for name, site in known.items() if site in chosen}}
 (out / "selected-objects.json").write_text(json.dumps(objects, indent=2) + "\n")
-PY
+PYTHON
 sha256sum "${btree}/btree/btree.c" "${btree}/common/main-mt.c" "${micro}/coherence_noise.cpp" \
   "${ARBITER_HITM_SEED_CONFIG}" "${PLUGIN}" "${runtime}" "${OUT_DIR}/selected-objects.json" \
   "${adapters}/coherence-noise.patch" "${adapters}/perf-window.h" "${OUT_DIR}/coherence_noise.cpp" \
   "${OUT_DIR}"/{btree,micro}-{native,placed} >"${OUT_DIR}/inputs.sha256"
-printf '{"entry_bytes":%s,"epoch_store":%s,"fast_index":%s}\n' "$entry_bytes" "$epoch_store" "$fast_index" >"${OUT_DIR}/micro-layout.json"
-printf 'Built B-tree and coherence_noise in %s (%s selection)\n' "${OUT_DIR}" "${selection}"
+printf '{"entry_bytes":%s,"epoch_store":%s}\n' "$entry_bytes" "$epoch_store" >"${OUT_DIR}/micro-layout.json"
+printf 'Built B-tree and coherence_noise in %s (automatic selection)\n' "${OUT_DIR}"

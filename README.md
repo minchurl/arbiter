@@ -90,7 +90,7 @@ when configuring CMake. These workloads also need Clang's OpenMP development pac
 The build reads the supplied sources from `~/vmitosis-workloads` and
 `~/microbench`. Set `VMITOSIS_DIR`, `MICROBENCH_DIR`, or `ARBITER_BUILD_DIR`
 to use different locations. It applies the published-RMW selection policy
-to both originals and builds matched native and automatically selected binaries.
+to the patched copies and builds matched native and automatically selected binaries.
 
 The runner uses 32 workers and three rounds of native, selected-local, and
 selected-CXL placement. CPU and local memory default to node 0 and CXL to
@@ -99,20 +99,9 @@ topology, or `--benchmark btree` / `--benchmark micro` to run just one workload.
 Each run records throughput, peak RSS and live page locations under
 `build/arbiter-bench/`. See the [results and methodology](docs/results/btree-coherence.md).
 
-The published-RMW candidate adds object-level atomic evidence
-to distinguish the microbenchmark's table from its ballast. Rebuild the LLVM
-plugin with this checkout before using the candidate on XIndex.
-
-```sh
-export ARBITER_HITM_SEED_CONFIG="$PWD/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config"
-export ARBITER_BENCH_BUILD_DIR="$PWD/build/arbiter-bench/published-rmw"
-./scripts/build-btree-coherence.sh
-./scripts/run-btree-coherence.py
-```
-
-The runner reads the selected objects from the build manifest, including
-policies that select zero objects. Set `ARBITER_BENCH_SELECTION=targeted`
-when building to reproduce explicit node-array/table placement.
+The published-RMW policy distinguishes the shared table from its read-only
+ballast. `ARBITER_HITM_SEED_CONFIG` overrides the policy; the build manifest
+records the automatically selected objects, including zero selections.
 See the [policy evaluation](docs/results/published-rmw-policy.md).
 
 The microbenchmark adapter now validates writes and fixes the supplied
@@ -135,11 +124,7 @@ original adjacent-entry false sharing. Both layouts select the same table
 allocation and keep ballast local. The 64-byte experiment verifies table
 alignment at runtime. Larger tables may require `--arena-chunk-bytes` of at
 least twice the allocation size, rounded up to a power of two.
-`ARBITER_MICRO_FAST_INDEX=1` additionally caches immutable table/ballast
-metadata and replaces modulo with equivalent masks for power-of-two sizes;
-other sizes retain modulo. Its default is zero for separate comparison.
-The measured throughput preset below enables padding and epoch stores, and
-keeps fast indexing disabled because it regressed in the confirmation runs.
+The throughput preset below enables padding and epoch stores.
 
 ```sh
 . configs/benchmarks/coherence-throughput.config
@@ -152,8 +137,7 @@ python3 scripts/test-coherence-adapter.py "$ARBITER_BENCH_BUILD_DIR"
 Use `--perf /path/to/perf` on a microbenchmark run to count cycles,
 instructions, L3 HitM loads, L3 misses and locked loads only during the
 measurement window. This event list targets the measured Intel host.
-`scripts/run-coherence-sweep.py` runs explicit JSON cases, alternating
-placement and case order. See the [microbenchmark tuning results](docs/results/coherence-tuning.md)
+See the [microbenchmark tuning results](docs/results/coherence-tuning.md)
 for the allocation analysis, measured gains, full cases and reproduction.
 
 ## Run the XIndex Experiment

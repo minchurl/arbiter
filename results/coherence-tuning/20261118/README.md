@@ -9,8 +9,8 @@ roles, methodology, comparisons, validation and reproduction.
 - `profile.csv` / `counters.csv`: ten 15-second hot-phase counter runs.
 - `hitm-samples.csv`: address attribution from five ten-second sampling runs.
 - `validation.csv`: actual reads, writes and summed entry versions for all 88 rows.
-- `*-cases.json`: input cases for the reusable sweep runner.
-- `*-decisions.csv`: compiler reports; only the table is selected in each build.
+- `*-cases.json`: input cases for the historical sweep runner at `9ed6717`.
+- `*-decisions.csv`: epoch-store/padded compiler reports; only the table is selected.
 - `inputs.sha256`: supplied inputs, adapted sources, runtime/plugin and binary hashes.
 - `tsan.log`: concurrency sanitizer check; `btree-help.txt`: supplied driver options.
 
