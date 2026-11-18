@@ -62,11 +62,9 @@ unchanged. Both native and placed executables receive the same changes.
   alignment at runtime. Default 32-byte entries retain the original false
   sharing experiment. Padding retains same-entry sharing and doubles table
   bytes, while leaving the logical workload unchanged.
-- Offer `ARBITER_MICRO_FAST_INDEX=1`: snapshot immutable table/ballast
-  pointers and sizes, and use masks for power-of-two lengths. Non-power-of-two
-  lengths still use modulo. Every PRNG draw and resulting random index is
-  preserved. This option defaults to zero so its effect can be measured
-  separately.
+- Tested cached metadata and power-of-two indexing; it regressed performance.
+  That disabled experimental path was removed during review cleanup. The
+  measured code remains at commit `9ed6717`.
 
 The previous published measurements used the supplied synchronization
 implementation. They remain historical evidence, not a correctness baseline
@@ -114,8 +112,8 @@ and the table remained the only selected allocation.
 `fast-index` enables cached metadata and power-of-two indexing with 64-byte
 entries. `fast-packed` enables that indexing with 32-byte entries. Fast
 indexing regressed the padded control by 10.73%
-local and 9.29% CXL. It remains off in the recommended preset and
-is retained only as an explicit experimental comparison. The experiment does
+local and 9.29% CXL. Its implementation was removed during review cleanup; the measurements
+remain here and the original code is retained at commit `9ed6717`. The experiment does
 not identify which generated-code or contention change causes that regression.
 [All 18 arithmetic-comparison rows](../../results/coherence-tuning/20261118/fast.csv)
 
@@ -202,34 +200,17 @@ For the recommended settings, source the preset from the repository root:
 ```
 
 This preset enables 64-byte entries and epoch stores, retains the published-RMW
-allocation policy and leaves fast indexing disabled. It improves workload
+allocation policy and uses the original modulo indexing. It improves workload
 throughput; it does not promise a CXL placement speedup.
 
-Build the three main variants separately, using a Release compiler/runtime
-build. Default source locations are `~/microbench` and `~/vmitosis-workloads`.
-
-```sh
-for variant in corrected epoch-store padded; do
-  bytes=32
-  store=1
-  if [ "$variant" = corrected ]; then store=0; fi
-  if [ "$variant" = padded ]; then bytes=64; fi
-  ARBITER_BUILD_DIR=build-release \
-    ARBITER_BENCH_BUILD_DIR="build/micro-tuning/final-$variant" \
-    ARBITER_MICRO_ENTRY_BYTES="$bytes" ARBITER_MICRO_EPOCH_STORE="$store" \
-    ./scripts/build-btree-coherence.sh
-done
-python3 scripts/run-coherence-sweep.py \
-  results/coherence-tuning/20261118/confirm-cases.json \
-  --build-root build/micro-tuning --result-dir build/my-confirmation \
-  --rounds 3 --duration 30
-```
-
-For the additional arithmetic optimization, build `fast-control` with 64-byte
-entries and fast indexing disabled, `fast-index` with 64-byte entries and
-fast indexing enabled, and `fast-packed` with 32-byte entries and fast indexing
-enabled. All three use epoch stores. Run the retained `fast-cases.json` with
-three rounds of 20 seconds.
+The historical three-variant sweep, fast-indexing experiment and original
+case runner are available at
+[commit 9ed6717](https://github.com/minchurl/arbiter/tree/9ed6717).
+Their JSON cases and results remain in `results/coherence-tuning/20261118/`.
+For a current single-variant comparison, use the runner above with
+`--rounds 3 --duration 30`. Set `ARBITER_MICRO_ENTRY_BYTES=32` and
+`ARBITER_MICRO_EPOCH_STORE=0` when building the corrected control; use 32/1
+for epoch stores alone, or the 64/1 preset for padding plus stores.
 
 To run the original size/mix with heavier writes:
 
@@ -244,7 +225,7 @@ exploratory; changing the read mix, table size or ballast changes the workload,
 so a higher rate in those rows is not a speedup on the supplied workload.
 The raw cases and every successful row are retained in the linked results.
 
-Use `--perf /path/to/perf` with the sweep or microbenchmark runner to capture
+Use `--perf /path/to/perf` with the microbenchmark runner to capture
 only the measurement window. The build copy sends acknowledged enable/disable
 commands over FIFOs, outside timing. Both the 4-byte and NUL-terminated perf
 acknowledgement formats are accepted. The original host's `/usr/bin/perf`
@@ -275,3 +256,19 @@ All changes are benchmark adapters, runners, tests, and documentation. The
 XIndex binary and allocation policy are unaffected; the previous four-pair
 YCSB-A preservation result remains the relevant XIndex evidence.
 [Previous XIndex confirmation](published-rmw-policy.md#xindexycsb-a-preservation)
+
+## Review cleanup
+
+The failed fast-index path, manual placement mode and one-off sweep runner
+were removed from the active code. Reproduction of those historical experiments
+uses the linked `9ed6717` or `a2151db` snapshots. All measured result rows remain;
+duplicate decision reports were removed, identical manifest lines deduplicated,
+and case JSON compacted without changing values.
+
+The reduced default and padded builds passed correctness and native/local/CXL
+smokes, including measurement-window perf control. The new reader accepted all
+88 historical rows. Microbenchmark victim LLVM instructions matched the measured
+preset exactly; B-tree IR differed only in filenames and OpenMP source-location
+records. Two short 15-second pairs measured 523.40/544.93 and 544.12/540.17 Mops/s
+(local/CXL), consistent with the previous padded results and a slower first
+local run. These are cleanup checks, not a new placement-speedup claim.

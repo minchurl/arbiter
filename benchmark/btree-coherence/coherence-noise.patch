@@ -21,15 +21,12 @@
  #include <chrono>
  #include <cstdint>
  #include <cstdio>
-@@ -24,6 +29,23 @@
+@@ -24,6 +29,20 @@
  #include <vector>
  
  static constexpr int MAX_VICTIMS = 256;
 +#ifndef ARBITER_MICRO_ENTRY_BYTES
 +#define ARBITER_MICRO_ENTRY_BYTES 32
-+#endif
-+#ifndef ARBITER_MICRO_FAST_INDEX
-+#define ARBITER_MICRO_FAST_INDEX 0
 +#endif
 +#ifndef ARBITER_MICRO_EPOCH_STORE
 +#define ARBITER_MICRO_EPOCH_STORE 1
@@ -45,7 +42,7 @@
  
  enum class NoiseMode { NONE, SPIN, MAINT, COMBINED };
  
-@@ -55,20 +77,21 @@
+@@ -55,20 +74,21 @@
  alignas(64) static std::atomic<bool> g_stop{false};
  alignas(64) static std::atomic<int>  g_ready{0};
  
@@ -73,7 +70,7 @@
  
  static Entry*  g_table      = nullptr;
  static size_t  g_table_size = 0;
-@@ -105,7 +128,7 @@
+@@ -105,7 +125,7 @@
          g_table[i].key    = rng.next();
          g_table[i].value  = rng.next();
          g_table[i].status = 0;
@@ -82,7 +79,7 @@
      }
  
      // Allocate ballast region and touch every page to ensure RSS.
-@@ -127,64 +150,109 @@
+@@ -127,23 +147,25 @@
  
  // ---- victim thread ----
  // Each op: pick random entry → read (version-checked) or write (CAS-locked).
@@ -101,16 +98,6 @@
      Xorshift64 rng(0xCAFEBABEULL ^ ((uint64_t)id * 0x9E3779B97F4A7C15ULL));
 -    const uint32_t read_thresh = (uint32_t)(((uint64_t)cfg.read_pct << 32) / 100);
 +    const uint64_t read_thresh = ((uint64_t)cfg.read_pct << 32) / 100;
-+#if ARBITER_MICRO_FAST_INDEX
-+    // Immutable after initialization. For power-of-two sizes, masking gives
-+    // exactly the same index as modulo for every PRNG value.
-+    Entry* const table = g_table;
-+    const size_t table_size = g_table_size;
-+    const bool table_power_two = (table_size & (table_size - 1)) == 0;
-+    const uint64_t* const ballast = g_ballast;
-+    const size_t ballast_elems = g_ballast_elems;
-+    const bool ballast_power_two = (ballast_elems & (ballast_elems - 1)) == 0;
-+#endif
  
      g_ready.fetch_add(1, std::memory_order_acq_rel);
      while (!g_start.load(std::memory_order_acquire)) { }
@@ -121,16 +108,7 @@
  
      while (!g_stop.load(std::memory_order_relaxed)) {
          for (int k = 0; k < 64; ++k) {
-             // Pick a random entry.
-+#if ARBITER_MICRO_FAST_INDEX
-+            uint64_t choice = rng.next();
-+            size_t idx = table_power_two ? choice & (table_size - 1) : choice % table_size;
-+            Entry* e = &table[idx];
-+#else
-             size_t idx = rng.next() % g_table_size;
-             Entry* e = &g_table[idx];
-+#endif
- 
+@@ -154,20 +176,32 @@
              // Read or write, matching XIndex-H's AtomicVal protocol:
              uint32_t coin = (uint32_t)(rng.next() >> 32);
              if (coin < read_thresh) {
@@ -174,19 +152,8 @@
              }
  
              // Random read from ballast region — generates DRAM cache misses
-             // between contention ops, simulating XIndex-H's large working set.
-+#if ARBITER_MICRO_FAST_INDEX
-+            if (ballast_elems > 0) {
-+                uint64_t choice = rng.next();
-+                size_t bidx = ballast_power_two ? choice & (ballast_elems - 1) : choice % ballast_elems;
-+                checksum += ballast[bidx];
-+            }
-+#else
-             if (g_ballast_elems > 0) {
-                 size_t bidx = rng.next() % g_ballast_elems;
-                 checksum += g_ballast[bidx];
+@@ -178,13 +212,20 @@
              }
-+#endif
  
              // rcu_progress: per-op epoch increment (matches XIndex-H)
 +#if ARBITER_MICRO_EPOCH_STORE
@@ -206,7 +173,7 @@
  }
  
  // ---- noise threads ----
-@@ -192,7 +260,7 @@
+@@ -192,7 +233,7 @@
  static void noise_spin_thread() {
      g_ready.fetch_add(1, std::memory_order_acq_rel);
      while (!g_start.load(std::memory_order_acquire)) { }
@@ -215,7 +182,7 @@
  }
  
  // Maintenance: full table scan + rcu_barrier + sleep(1).
-@@ -204,7 +272,7 @@
+@@ -204,7 +245,7 @@
          // Phase 1: full scan — read every entry's value.
          volatile uint64_t acc = 0;
          for (size_t i = 0; i < g_table_size; ++i) {
@@ -224,7 +191,7 @@
          }
  
          // Phase 2: rcu_barrier — spin-wait for every victim to advance.
-@@ -237,6 +305,22 @@
+@@ -237,6 +278,22 @@
          prog);
  }
  
@@ -247,7 +214,7 @@
  int main(int argc, char** argv) {
      Config cfg;
  
-@@ -246,12 +330,12 @@
+@@ -246,12 +303,12 @@
              if (i + 1 >= argc) { usage(argv[0]); std::exit(1); }
              return argv[++i];
          };
@@ -266,7 +233,7 @@
          else if (a == "--mode") {
              std::string m = next_arg();
              if      (m == "none")     cfg.mode = NoiseMode::NONE;
-@@ -264,6 +348,13 @@
+@@ -264,6 +321,13 @@
          else { usage(argv[0]); return 1; }
      }
  
@@ -280,7 +247,7 @@
      if (cfg.n_victims > MAX_VICTIMS) {
          fprintf(stderr, "error: max %d victims\n", MAX_VICTIMS);
          return 1;
-@@ -271,6 +362,9 @@
+@@ -271,6 +335,9 @@
      if (cfg.mode == NoiseMode::NONE) cfg.n_noise = 0;
  
      init_table(cfg);
@@ -290,12 +257,12 @@
  
      size_t table_mb = (g_table_size * sizeof(Entry)) >> 20;
  
-@@ -289,6 +383,13 @@
+@@ -289,6 +356,13 @@
             mode_name(cfg.mode), cfg.duration_sec,
             g_table_size, table_mb, cfg.ballast_mb, cfg.read_pct);
  
-+    printf("layout: entry_bytes=%zu epoch_store=%d fast_index=%d table_alignment=%zu\n",
-+           sizeof(Entry), ARBITER_MICRO_EPOCH_STORE, ARBITER_MICRO_FAST_INDEX, (uintptr_t)g_table % 64);
++    printf("layout: entry_bytes=%zu epoch_store=%d table_alignment=%zu\n",
++           sizeof(Entry), ARBITER_MICRO_EPOCH_STORE, (uintptr_t)g_table % 64);
 +    if (ARBITER_MICRO_ENTRY_BYTES == 64 && (uintptr_t)g_table % 64) {
 +        fprintf(stderr, "64-byte entry experiment requires a cache-line-aligned table\n");
 +        return 2;
@@ -304,7 +271,7 @@
      std::vector<VictimResult> results(cfg.n_victims);
      std::vector<std::thread>  victims, noises;
  
-@@ -307,31 +408,53 @@
+@@ -307,31 +381,53 @@
          std::this_thread::sleep_for(std::chrono::milliseconds(10));
      }
  

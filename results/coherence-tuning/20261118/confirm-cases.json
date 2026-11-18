@@ -1,14 +1,5 @@
 [
-  {
-    "name": "corrected",
-    "build": "final-corrected"
-  },
-  {
-    "name": "epoch-store",
-    "build": "final-epoch-store"
-  },
-  {
-    "name": "padded",
-    "build": "final-padded"
-  }
+  {"name": "corrected", "build": "final-corrected"},
+  {"name": "epoch-store", "build": "final-epoch-store"},
+  {"name": "padded", "build": "final-padded"}
 ]

@@ -111,7 +111,8 @@ node. The runtime allocated the same objects at sites 68, 71 and 74.
 
 Use the [automatic benchmark build and run commands](../../README.md#run-b-tree-and-the-coherence-microbenchmark).
 The generated `selected-objects.json` connects policy decisions to the runner's
-live page checks. The original targeted-placement build is also available.
+live page checks. The original manual-placement build is archived at
+[commit a2151db](https://github.com/minchurl/arbiter/tree/a2151db).
 
 To compare YCSB-A with this candidate after rebuilding the LLVM plugin, use
 the existing full-trace runner with validation enabled.
