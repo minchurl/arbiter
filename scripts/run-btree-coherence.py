@@ -53,8 +53,8 @@ def measure(args, benchmark, mode, round_id):
     env.update(OMP_NUM_THREADS="32", OMP_DYNAMIC="FALSE")
     if selected:
         env.update(ARBITER_HEAP_BACKEND="arena", ARBITER_TARGET_NODE=str(node),
-                   ARBITER_ARENA_RESERVE_BYTES=str(24 << 30), ARBITER_ARENA_STRICT="1",
-                   ARBITER_ARENA_SLAB_BYTES=str(args.arena_chunk_bytes), ARBITER_ARENA_REPORT="1")
+                   ARBITER_ARENA_STRICT="1",
+                   ARBITER_ARENA_REPORT="1")
     fifos = []
     if getattr(args, "perf", None):
         if benchmark != "micro":
@@ -189,7 +189,6 @@ def main():
     parser.add_argument("--table-size", type=positive, default=256)
     parser.add_argument("--ballast-mb", type=int, default=8192)
     parser.add_argument("--read-pct", type=int, choices=range(101), metavar="0..100", default=50)
-    parser.add_argument("--arena-chunk-bytes", type=positive, default=2 << 20)
     parser.add_argument("--modes", choices=MODES, nargs="+", default=list(MODES))
     parser.add_argument("--perf", type=Path, help="perf binary; count only the microbenchmark measurement window")
     parser.add_argument("--cpu-node", type=int, default=0)

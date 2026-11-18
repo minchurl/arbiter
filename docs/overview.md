@@ -59,18 +59,42 @@ Selected heap calls lower to the site-aware ABI declared in
 `runtime/include/arbiter_runtime_site.h`. Deallocation sites use `*_maybe`
 functions, so ordinary pointers still fall back to normal `free`/`delete`.
 
-The runtime supports two allocation backends.
-
-- `direct` uses per-object NUMA allocation and a sharded ownership side table.
-- `arena` uses a private jemalloc arena for each active site. All sites draw
-  extents from one bounded mapping on the requested NUMA node.
+The only heap backend is a strict, NUMA-bound jemalloc arena for each active
+site. Extent hooks obtain aligned anonymous mappings on demand and bind each
+to the requested NUMA node before returning it to jemalloc. Selected allocation
+requires `ARBITER_TARGET_NODE`; there is no direct backend or retry on a different backend.
+Legacy `ARBITER_HEAP_BACKEND=arena` and `ARBITER_ARENA_STRICT=1` are accepted,
+but other values reject allocation with a diagnostic.
 
 Rewritten allocations call `mallocx` with the site's arena, alignment and
 thread-cache bypass flags. jemalloc owns size classes, free lists and reuse.
-The runtime recognizes ordinary pointers by range and checks arena pointers
-against a bitmap of live allocation starts before calling `dallocx`. One site
-ID per page attributes frees without a per-object hash table. Strict mode
-returns allocation failure on a shape mismatch or exhausted reserve.
+An extent-range registry distinguishes arena pointers from ordinary pointers
+before calling `dallocx`. jemalloc supplies allocation/free statistics; there
+is no object bitmap, page-owner table, fixed-size-per-site rule or pre-reserved
+pool. As with ordinary `free`, invalid/interior/double frees are undefined;
+the runtime no longer diagnoses them itself. The runtime returns allocation
+failure if mapping, NUMA binding or allocation fails. Process memory limits
+replace the old pool capacity. Freed space remains available for jemalloc
+reuse; retained mappings and hooks live until process exit.
+
+Selected private anonymous `mmap` calls use real `mmap` followed by strict
+`mbind`. Protections are preserved; populated pages must migrate to the target
+node or the mapping is released and fails. `munmap` forwards to the kernel,
+including partial unmaps. No per-pointer side table remains. Shared, file-backed
+and fixed-address mappings are outside this selected-mapping contract and fail;
+ordinary unselected mappings are unchanged. Arena reports cover heap extents.
+
+Allocation failures emit `arbiter-allocation-failure` with API family, site,
+requested bytes/alignment, configured node, failure stage and errno. `malloc`
+and `calloc` return NULL with errno; ordinary `new`/`new[]` honor `new_handler`
+and throw `bad_alloc` when no handler remains. Nothrow new catches exceptions
+and returns NULL. A handler may retry only the same NUMA arena, never another
+backend. Zero-size heap requests receive a freeable allocation. `mmap` returns
+MAP_FAILED and preserves the syscall error. `free` preserves errno.
+
+The heap rewriter chooses the C, throwing-new or nothrow-new helper and retains
+`invoke` unwind destinations, so a caller's catch block still receives failures.
+Placement and unsupported new overload signatures are left unchanged.
 
 ## Benchmark Code
 

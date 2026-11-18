@@ -5,23 +5,16 @@
 
 namespace arbiter::runtime {
 
-enum class ArenaFailure : uint8_t {
-  None,
-  Unavailable,
-  Unsupported,
-  Exhausted,
+struct AllocationError {
+  const char *stage;
+  int code;
 };
+AllocationError arenaError();
 
-enum class ArenaDeallocation : uint8_t {
-  NotOwned,
-  Released,
-  Invalid,
-};
-
-void *arenaAllocate(uint64_t size, uint64_t align, uint32_t siteId,
-                    int32_t node, ArenaFailure &failure);
-ArenaDeallocation arenaDeallocate(void *ptr);
-void arenaRecordFallback(ArenaFailure failure);
+void *arenaAllocate(uint64_t size, uint64_t align, uint32_t siteId);
+// Returns false for ordinary pointers, whose original free/delete must run.
+bool arenaDeallocate(void *ptr);
+void *arenaMap(uint64_t size, int prot, int flags);
 
 } // namespace arbiter::runtime
 

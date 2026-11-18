@@ -1,0 +1,21 @@
+{
+  "base_commit": "9d9096491b883ecf11a57b96159a9aed1f7506a3",
+  "load_records": 100000000,
+  "operations": 400000000,
+  "fg": 31,
+  "bg": 1,
+  "cpu_node": 0,
+  "ordinary_memory_node": 0,
+  "memory_max": "64G",
+  "swap_max": 0,
+  "bitcode_sha256": "874a18c747b452d48566dd61b750f3811edfd7868cefdb8c3a037210606fb59e",
+  "policy": "configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config",
+  "binaries": {
+    "baseline": "e94972432898885a4904acd571ea5bbe7fef478773e14a4705576d75695dffc7",
+    "candidate": "6ea1254edb7b7a17b4be83316aa911d25ae9ba3a80453346350cca76fb0051b6"
+  },
+  "sources": {
+    "baseline": "51100735e83351f5750544ffad00acd2c766df96d7ff601b134c9c2a918e822e",
+    "candidate": "9a1bf01bb20f1acd7b21d29b5de1c163d963002f2265e1381d19ca994d82d849"
+  }
+}

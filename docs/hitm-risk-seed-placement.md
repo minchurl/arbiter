@@ -47,36 +47,69 @@ the actual arena footprint and must be read from the arena report.
 
 The original slab packed many small allocations on each NUMA-bound page. For
 357,388 live 96-byte objects, it used 43.63 MiB of resident memory. Individually
-binding one 4 KiB page per object would require 1.36 GiB. The direct backend
-also records each pointer in an ownership hash table.
+binding one 4 KiB page per object would require 1.36 GiB. The former direct backend
+also recorded each pointer in an ownership hash table; both are now removed.
 [Site-99 measurements](history/hotset-results.md)
 
-The jemalloc backend keeps that packing and placement contract. It binds one
-anonymous reservation with `mbind(MPOL_BIND)` before any page is touched. Each
-active site gets an explicit jemalloc arena whose extent hooks supply memory
-only from the reservation. jemalloc splits, merges and reuses extents. Both
+The jemalloc backend keeps that packing and placement contract. Each active
+site gets an explicit jemalloc arena. Its extent hook obtains an aligned
+anonymous mapping with `mmap` and applies `mbind(MPOL_BIND)` before returning
+it to jemalloc. There is no up-front reservation. jemalloc splits, merges and
+reuses extents, growing its backing mappings on demand. Both
 allocation and deallocation bypass the thread cache to preserve placement
 across sites and ordinary heap traffic. [jemalloc arena API](https://jemalloc.net/jemalloc.3.html)
 
 | Runtime variable | Replay value | Meaning |
 |---|---:|---|
-| `ARBITER_HEAP_BACKEND` | `arena` | NUMA-bound jemalloc arenas |
-| `ARBITER_ARENA_SLAB_BYTES` | 2097152 | reserve rounding unit and retained-growth limit. Maximum alignment-rounded request is half this value |
-| `ARBITER_ARENA_RESERVE_BYTES` | 25769803776 | 24GiB virtual capacity |
+| `ARBITER_TARGET_NODE` | 0 or 2 | required NUMA node |
+| `ARBITER_HEAP_BACKEND` | `arena` | optional compatibility setting; only arena is accepted |
 | `ARBITER_ARENA_SLOT_ALIGNMENT` | 64 | minimum slot alignment |
-| `ARBITER_ARENA_STRICT` | 1 | prohibit direct fallback |
+| `ARBITER_ARENA_STRICT` | 1 | optional compatibility setting; only 1 is accepted |
 | `ARBITER_ARENA_REPORT` | 1 | emit allocation and residency counters |
 
-The reserve caps virtual extent space across all sites, including jemalloc
-arena metadata, retained capacity and alignment gaps. Small reserves can fill
-before the requested payload reaches the cap. Untouched virtual pages consume
-no arena RSS. `slot_bytes` is jemalloc's usable size for the aligned request.
-`assigned_bytes` sums bytes handed to jemalloc by the extent hooks.
-`resident_bytes` measures physical pages with `mincore` and the per-node counts
-come from `move_pages`. The runtime's ownership bitmap and page-to-site table
-live outside the bound range and contribute to process RSS. A valid comparison
-requires zero fallbacks and query errors and the expected majority node for
-both local and CXL rows.
+Selected heap allocation always uses jemalloc and returns failure without
+retrying another backend. Ordinary pointers still use their original
+`free`/`delete` ABI. Legacy `direct` or `strict=0` settings reject selected
+allocation with a diagnostic. Configuration is read once per process.
+
+Failure diagnostics identify API family, site, request size/alignment, configured
+node, stage and errno (for example `stage=mbind errno=1`). C allocations return
+NULL with errno; throwing C++ new honors `new_handler` and ultimately throws
+`bad_alloc`; nothrow new returns NULL if the throwing path fails. Handler retries
+stay on the same arena. mmap returns MAP_FAILED with its failure code. Zero-size
+heap requests receive a freeable allocation. For calloc multiplication overflow,
+`stage=size-overflow` and `bytes=0` indicate that no total size is representable.
+The `new` diagnostic family also covers array/aligned/nothrow variants.
+
+`ARBITER_ARENA_RESERVE_BYTES` and `ARBITER_ARENA_SLAB_BYTES` are obsolete and
+ignored with a warning. Use a process/cgroup memory limit; canonical full
+replays retain `MemoryMax=64G` and `MemorySwapMax=0`. A site may allocate mixed
+sizes and alignments, and requests are no longer limited to half a chunk.
+
+jemalloc statistics supply allocation/free/live counts and current usable
+`allocated_bytes` (requires jemalloc's stats-enabled build when reporting).
+`object_bytes` is the first requested size, or zero if that site saw mixed
+sizes. `assigned_bytes` counts mappings obtained through the extent hooks,
+including retained capacity and arena metadata, not RSS. Historical
+`peak_live`, cumulative requested/slot bytes and failure-category counters
+are no longer emitted; legacy CSV capacity/peak columns are left empty.
+`fallback_allocations=0` is retained for report compatibility: allocation
+fallback no longer exists, and this field is not a failed-allocation counter.
+
+`resident_bytes` and per-node counts include private resident pages located
+by `move_pages` after `mincore` filtering. Read-only kernel zero pages return
+`-EFAULT`; after confirming the mapping still exists, the report counts them
+separately as `zero_pages`, not as private NUMA memory. Other query failures
+remain errors. A valid comparison requires zero fallbacks/query errors and
+all located pages on the requested node. Live-object tests independently
+write and verify object pages on both Local and CXL nodes.
+
+Only extent ranges are tracked for ownership. The per-object live bitmap and
+page-owner table are removed. Invalid/interior/double frees now have the same
+undefined behavior as ordinary `free`; use allocator/sanitizer diagnostics.
+Extents remain mapped for jemalloc reuse until process exit, although purging
+can release their physical pages. This also keeps ownership lookup safe from
+unmap/reuse races during rewritten static destructors.
 
 ## Build and Inspect
 

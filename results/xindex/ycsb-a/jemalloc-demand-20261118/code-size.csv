@@ -1,0 +1,8 @@
+path,baseline_lines,candidate_lines,reduction
+runtime/include/arbiter_runtime_site.h,33,33,0
+runtime/src/arbiter_jemalloc_arena.cpp,642,356,286
+runtime/src/arbiter_jemalloc_arena.h,28,27,1
+runtime/src/arbiter_runtime_site.cpp,496,491,5
+runtime/src/arbiter_side_table.cpp,63,63,0
+runtime/src/arbiter_side_table.h,32,32,0
+TOTAL,1294,1002,292

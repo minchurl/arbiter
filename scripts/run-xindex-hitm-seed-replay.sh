@@ -209,7 +209,7 @@ XIndex HITM-risk seed replay settings:
   target node CPUs:   ${TARGET_CPUS:-none}
   target memory:      ${TARGET_MEMORY_KB} KiB
   memory / swap cap:  64G / 0
-  arena capacity:     25769803776 bytes
+  arena backing:      on-demand NUMA-bound extents (no fixed reserve)
   rebuild / clang++:  ${REBUILD} / ${CLANGXX_TOOL:-not required}
   opt:                ${OPT_TOOL:-not required}
   result:             ${RESULT_DIR}
@@ -256,8 +256,6 @@ mkdir -p "${RESULT_DIR}"
   echo "target_memory_node=${TARGET_NODE}"
   echo "memory_max=64G"
   echo "memory_swap_max=0"
-  echo "arena_slab_bytes=2097152"
-  echo "arena_reserve_bytes=25769803776"
   echo "arena_slot_alignment=64"
   echo "build_benchmarks=${REBUILD}"
   echo "clangxx=${CLANGXX_TOOL:-not required}"
@@ -287,8 +285,6 @@ exec env \
   ARBITER_TARGET_NODE="${TARGET_NODE}" \
   ARBITER_HITM_SEED_CONFIG="${CONFIG}" \
   ARBITER_HEAP_BACKEND=arena \
-  ARBITER_ARENA_SLAB_BYTES=2097152 \
-  ARBITER_ARENA_RESERVE_BYTES=25769803776 \
   ARBITER_ARENA_SLOT_ALIGNMENT=64 \
   ARBITER_ARENA_STRICT=1 \
   ARBITER_ARENA_REPORT=1 \

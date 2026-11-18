@@ -122,8 +122,8 @@ To compare a cache-line-sized entry layout, build separately with
 `ARBITER_MICRO_ENTRY_BYTES=64`. The default remains 32 bytes to retain the
 original adjacent-entry false sharing. Both layouts select the same table
 allocation and keep ballast local. The 64-byte experiment verifies table
-alignment at runtime. Larger tables may require `--arena-chunk-bytes` of at
-least twice the allocation size, rounded up to a power of two.
+alignment at runtime. Backing memory grows on demand; larger tables do not
+require configuring a pool or chunk size.
 The throughput preset below enables padding and epoch stores.
 
 ```sh
@@ -225,6 +225,12 @@ With the original slab allocator, four one-pass pairs of `raw-046` averaged
 [the YCSB-A result](docs/results/xindex-ycsb-a.md) for pairwise results, safety
 counters, and the earlier cyclic-replay history. Both runtimes were also compared on the
 same host for throughput, memory use and allocation time. [Jemalloc comparison](docs/results/xindex-jemalloc.md)
+The runtime now obtains NUMA-bound jemalloc extents on demand, without a large
+pre-reserved pool. Heap allocation is always strict jemalloc and requires
+`ARBITER_TARGET_NODE`; direct allocation and fallback are removed. The final
+runtime preserves C/C++ allocation failure behavior and logs failure causes. Results distinguish the earlier repeated comparison and a final single
+Local/CXL pair.
+[Code reduction and YCSB-A comparison](docs/results/xindex-jemalloc-demand.md)
 
 ## Build Another Retained Policy
 
@@ -241,9 +247,8 @@ The 12 retained policies and their measured runtime fingerprints are listed in
 ```sh
 cmake --build build-llvm18
 ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
-build-llvm18/bin/arbiter-runtime-smoke
-ARBITER_HEAP_BACKEND=arena ARBITER_TARGET_NODE=0 \
-  ARBITER_ARENA_STRICT=1 ARBITER_ARENA_REPORT=1 \
+ARBITER_TARGET_NODE=0 build-llvm18/bin/arbiter-runtime-smoke
+ARBITER_TARGET_NODE=0 ARBITER_ARENA_REPORT=1 \
   ARBITER_TEST_OBJECTS=40000 build-llvm18/bin/arbiter-slab-arena-smoke
 ```
 

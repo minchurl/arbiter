@@ -1,0 +1,59 @@
+Strict-only cleanup: build and short runtime tests passed.
+No performance reruns. Earlier benchmark rows describe the previous runtime.
+Node 0/2: heap ABI, calloc, alignment, concurrent reuse, mmap/partial munmap,
+static destruction, injected mbind failure, and incompatible settings checked.
+Each test process exited 0.
+
+[arbiter-runtime-smoke-node0.log]
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=37748736 allocations=24 frees=24 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=84 resident_bytes=344064 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=18 node0_pages=84
+
+[arbiter-runtime-smoke-node2.log]
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=37748736 allocations=24 frees=24 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=84 resident_bytes=344064 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=18 node2_pages=84
+
+[arbiter-slab-arena-boundary-smoke-node0.log]
+arbiter-arena: RESERVE_BYTES/SLAB_BYTES are obsolete; extents grow on demand (use a process memory limit)
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=14680064 allocations=10005 frees=10004 live=1 fallback_allocations=0
+arbiter-arena-residency resident_pages=1046 resident_bytes=4284416 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=3 node0_pages=1046
+arbiter-arena-boundary-smoke: dynamic sizes, alignment, placement, reuse and ownership passed
+
+[arbiter-slab-arena-boundary-smoke-node2.log]
+arbiter-arena: RESERVE_BYTES/SLAB_BYTES are obsolete; extents grow on demand (use a process memory limit)
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=14680064 allocations=10005 frees=10004 live=1 fallback_allocations=0
+arbiter-arena-residency resident_pages=1046 resident_bytes=4284416 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=3 node2_pages=1046
+arbiter-arena-boundary-smoke: dynamic sizes, alignment, placement, reuse and ownership passed
+
+[arbiter-slab-arena-smoke-node0.log]
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=6815744 allocations=40000 frees=40000 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=653 resident_bytes=2674688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=2 node0_pages=653
+arbiter-slab-arena-smoke: objects=20000 threads=8 resident_pages=625 node0=625 majority=node0
+
+[arbiter-slab-arena-smoke-node2.log]
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=6815744 allocations=40000 frees=40000 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=653 resident_bytes=2674688 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=2 node2_pages=653
+arbiter-slab-arena-smoke: objects=20000 threads=8 resident_pages=625 node2=625 majority=node2
+
+[compat.log]
+
+[direct.log]
+arbiter-runtime: only jemalloc arena with strict placement is supported (arena / strict=1)
+
+[fail-bind-node0.log]
+
+[fail-bind-node2.log]
+
+[invalid.log]
+arbiter-runtime: ARBITER_TARGET_NODE must name a valid NUMA node
+
+[missing.log]
+arbiter-runtime: ARBITER_TARGET_NODE must name a valid NUMA node
+
+[nonstrict.log]
+arbiter-runtime: only jemalloc arena with strict placement is supported (arena / strict=1)
+
+Source SHA-256:
+dc8474dcc7234c6bf10532aa4ee14e1e367cc67f3bc5946b26f74d9d2dc64029  runtime/include/arbiter_runtime_site.h
+d10d8e65c4bb19dbb20403fff4a19bd3d6957220a5cb8d5125f27ce11a71b99b  runtime/src/arbiter_jemalloc_arena.cpp
+2954db87217b16e7bc32821741d29ae41fef045d14a36e0e9b3e1d303d89242e  runtime/src/arbiter_jemalloc_arena.h
+6bcc18dceecbb9cf0a3ce16f8e0eb82e5c463281a4667a4f25787ef5d864c490  runtime/src/arbiter_runtime_site.cpp

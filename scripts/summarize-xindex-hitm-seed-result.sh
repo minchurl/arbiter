@@ -183,7 +183,7 @@ printf '\n'
 printf '## Runtime-Active CXL Sites\n\n'
 if [[ -n "${TARGET_LOG}" && -s "${TARGET_LOG}" ]]; then
   printf 'The following selected sites actually allocated objects in target row `%s/r%s`. Their arena memory was bound to the CXL target node.\n\n' "${TARGET_WORKLOAD}" "${TARGET_REPEAT}"
-  printf '| Site | Function | Object | Allocations | Requested payload | Assigned arena |\n'
+  printf '| Site | Function | Object | Allocations | Live allocated | Assigned arena |\n'
   printf '|---:|---|---:|---:|---:|---:|\n'
   awk -F, '
     FNR == NR {
@@ -200,7 +200,7 @@ if [[ -n "${TARGET_LOG}" && -s "${TARGET_LOG}" ]]; then
       site = value["site"]
       printf "| %s | `%s` | %sB | %s | %.3fGiB | %.3fGiB |\n", \
              site, function_name[site], value["object_bytes"], \
-             value["allocations"], value["requested_bytes_total"] / 1073741824, \
+             value["allocations"], (("allocated_bytes" in value) ? value["allocated_bytes"] : value["slot_bytes"] * value["live"]) / 1073741824, \
              value["assigned_bytes"] / 1073741824
     }
   ' "${SITES_CSV}" "${TARGET_LOG}"

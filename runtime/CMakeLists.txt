@@ -1,7 +1,6 @@
 add_library(arbiter_runtime STATIC
   src/arbiter_runtime_site.cpp
   src/arbiter_jemalloc_arena.cpp
-  src/arbiter_side_table.cpp
 )
 
 target_include_directories(arbiter_runtime
@@ -13,14 +12,6 @@ find_path(NUMA_INCLUDE_DIR numa.h)
 find_path(NUMAIF_INCLUDE_DIR numaif.h)
 find_library(NUMA_LIBRARY numa)
 
-if(NUMA_INCLUDE_DIR AND NUMA_LIBRARY)
-  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA=1)
-  target_include_directories(arbiter_runtime PRIVATE ${NUMA_INCLUDE_DIR})
-  target_link_libraries(arbiter_runtime PUBLIC ${NUMA_LIBRARY})
-else()
-  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA=0)
-endif()
-
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
    NUMAIF_INCLUDE_DIR AND NUMA_LIBRARY)
   find_path(JEMALLOC_INCLUDE_DIR jemalloc/jemalloc.h REQUIRED)
@@ -28,12 +19,10 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
   target_include_directories(arbiter_runtime PRIVATE ${JEMALLOC_INCLUDE_DIR})
   target_link_libraries(arbiter_runtime PUBLIC ${JEMALLOC_LIBRARY})
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA_ARENA=1)
-  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_MOVE_PAGES=1)
   target_include_directories(arbiter_runtime PRIVATE ${NUMAIF_INCLUDE_DIR})
   target_link_libraries(arbiter_runtime PUBLIC ${NUMA_LIBRARY})
 else()
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA_ARENA=0)
-  target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_MOVE_PAGES=0)
 endif()
 
 add_executable(arbiter-runtime-smoke

@@ -1,0 +1,13 @@
+order,round,variant,node,wall_s,max_rss_kib,swaps
+1,1,baseline,0,6.88,340260,0
+2,1,candidate,0,6.96,363404,0
+3,1,candidate,2,6.80,339252,0
+4,1,baseline,2,5.69,345512,0
+5,2,candidate,0,5.51,336308,0
+6,2,baseline,0,4.92,348556,0
+7,2,baseline,2,5.26,338492,0
+8,2,candidate,2,4.98,361732,0
+9,3,baseline,0,4.73,394784,0
+10,3,candidate,0,4.57,340316,0
+11,3,candidate,2,5.11,373752,0
+12,3,baseline,2,5.07,383344,0
