@@ -1,0 +1,28 @@
+smoke: compile llvm ir
+smoke: report sites
+site_id,kind,function,file,line,callee,size_expr
+1,malloc,smoke_heap,/tmp/tmp.hJDUmSzO4A/smoke.c,7,malloc,16
+2,free,smoke_heap,/tmp/tmp.hJDUmSzO4A/smoke.c,8,free,
+3,mmap,smoke_mmap,/tmp/tmp.hJDUmSzO4A/smoke.c,12,mmap,4096
+4,munmap,smoke_mmap,/tmp/tmp.hJDUmSzO4A/smoke.c,13,munmap,4096
+smoke: report HITM-risk seeds
+smoke: rewrite HITM-risk seed allocations
+smoke: rewrite allocations
+smoke: preserve C++ delete ABIs
+smoke: allocation failure contracts and exception handlers
+arbiter-allocation-failure api=malloc site=1 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=calloc site=2 bytes=0 alignment=64 target_node=0 stage=size-overflow errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=3 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=4 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=5 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=6 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=7 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=8 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=9 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=10 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=12 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=19 bytes=128 alignment=4096 target_node=0 stage=mbind errno=1 (Operation not permitted)
+smoke: strict arena and ordinary-pointer deallocation
+smoke: ok

@@ -1,0 +1,5 @@
+arbiter-arena-site site=26 object_bytes=4194304 allocations=1 frees=1 live=0 allocated_bytes=0 assigned_bytes=7340032
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=7340032 allocations=1 frees=1 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=1035 resident_bytes=4239360 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=1 node0_pages=1035
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 1.478 MB /home/shin/arbiter/build/libcuckoo-rmw/lock-profiles/samples-baseline-local.data (27056 samples) ]

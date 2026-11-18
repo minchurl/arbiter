@@ -1,0 +1,8 @@
+objects: table=0x7f282aa2ab00 table_bytes=16384 ballast=0x7f25aa400e00 ballast_bytes=8589934592 epochs=0x5567a2d752c0 epochs_bytes=16384
+config: victims=32 noise=0(maint=0,spin=0) mode=none duration=30s
+  table_size=256 entries (0MB) ballast=8192MB read_pct=50
+layout: entry_bytes=64 epoch_store=1 table_alignment=0
+result: total_ops=16317560640 elapsed=30.000059s throughput=543.92 Mops/s per_victim=17.00 Mops/s checksum=0x312b4b7d2ee0d928
+validation: reads=8158744244 writes=8158816396 versions=8158816396 status=ok
+placement object=table nodes=0,0,0
+placement object=ballast nodes=0,0,0

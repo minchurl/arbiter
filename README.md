@@ -64,6 +64,11 @@ microbenchmark improves through layout and epoch-store changes, with no useful
 CXL gain. B-tree's automatic policy selects no objects. See the
 [results](docs/results.md) for versions, negative findings and measurement limits.
 
+Libcuckoo's lock storage is now discovered through `std::thread` and object-field
+accesses without new selection parameters. Its placement results show no
+consistent CXL gain; separate TTAS experiments improve highly contended cases.
+XIndex and microbenchmark selection and rewritten bitcode remain unchanged.
+
 Keep current behavior in the architecture guide, commands in the benchmark
 guide, and conclusions in the results guide. Add experiment data to `results/`
 and index it there instead of adding another narrative report.

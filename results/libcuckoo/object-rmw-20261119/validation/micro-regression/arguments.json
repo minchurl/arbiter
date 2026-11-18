@@ -1,0 +1,29 @@
+{
+  "benchmark": "micro",
+  "rounds": 3,
+  "duration": 30,
+  "victims": 32,
+  "noise": 0,
+  "noise_mode": "none",
+  "table_size": 256,
+  "ballast_mb": 8192,
+  "read_pct": 50,
+  "modes": [
+    "native",
+    "local",
+    "cxl"
+  ],
+  "perf": null,
+  "cpu_node": 0,
+  "local_node": 0,
+  "cxl_node": 2,
+  "bin_dir": "/home/shin/arbiter/build/libcuckoo-rmw/micro",
+  "result_dir": "/home/shin/arbiter/build/libcuckoo-rmw/micro-regression",
+  "entry_bytes": 64,
+  "selected_objects": {
+    "btree": {},
+    "micro": {
+      "table": 4
+    }
+  }
+}

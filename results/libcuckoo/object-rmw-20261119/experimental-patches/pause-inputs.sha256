@@ -1,0 +1,4 @@
+fd52c54ff6f441fce3fcc3f4d33822a9e82460600fb50ee2b7664d8dd3b94af8  /home/shin/arbiter/build/libcuckoo-rmw/variant-pause/contention-native
+f50a20a5bd16eeaf8eed439f346cf5d56583668938ee86aa02362c38c9bbf477  /home/shin/arbiter/build/libcuckoo-rmw/variant-pause/contention-placed
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  /home/shin/arbiter/build/libcuckoo-rmw/variant-pause/bucket.patch
+bcf882eb824b36fdb97329e4b01bd142f46bdc0c8eed601ac653e309b7cea2dd  /home/shin/arbiter/build/libcuckoo-rmw/variant-pause/lock.patch

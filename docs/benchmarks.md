@@ -155,7 +155,12 @@ Every successful update increments a value; after timing, all keys and the
 complete value sum are checked against the executed updates. `--hot` controls
 the common key set; `--partitioned` splits it among workers (keys are disjoint,
 but different keys can still share bucket locks). `--operations` is per worker.
-Read-only libcuckoo operations still acquire its internal spinlocks.
+Keys are a contiguous prefix with the standard integer hash, so changing
+`--hot` changes spatial locality as well as contention. Setup and validation
+are outside timing; releasing the start barrier through joining workers is
+timed. Read-only libcuckoo operations still acquire its internal spinlocks.
+The example counts are quick checks: for performance comparisons, increase
+the fixed count to obtain multi-second runs and keep it identical across modes.
 
 For compiler regression checks, with LLVM 18 tools on PATH:
 

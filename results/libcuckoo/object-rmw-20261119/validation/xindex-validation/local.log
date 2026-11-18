@@ -1,0 +1,36 @@
+fg_n: 4
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=a throughput_unit=logical-transactions/s update_mapping=update
+exist_keys.size() : 200000, item_num : 200000
+load number : 200000
+  read: 500000
+insert: 0
+update: 500000
+   rmw: 0
+remove: 0
+operation count: 1000000
+exist_keys.size(): 200000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.332605, mean error: 8.23881
+table: 0x7f462ce34000
+training done
+[ycsb] prepare data ...
+[ycsb] Worker2 Ready.
+[ycsb] Worker0 Ready.
+[ycsb] Worker1 Ready.
+[ycsb] Worker3 Ready.
+hash resize group cnt: 0
+xindex-operation-count executed=1000000
+[ycsb] Time(sec) : 0.129806
+[ycsb] Throughput(op/s): 7.70382e+06
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x9d30d99a719185fa
+hash resize group cnt: 0
+arbiter-arena-site site=68 object_bytes=96 allocations=51462 frees=0 live=51462 allocated_bytes=6587136 assigned_bytes=9961472
+arbiter-arena-site site=71 object_bytes=520 allocations=51480 frees=0 live=51480 allocated_bytes=32947200 assigned_bytes=36700160
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=46661632 allocations=102942 frees=0 live=102942 fallback_allocations=0
+arbiter-arena-residency resident_pages=9771 resident_bytes=40022016 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=4 node0_pages=9771

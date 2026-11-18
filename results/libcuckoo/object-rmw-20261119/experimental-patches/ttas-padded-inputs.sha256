@@ -1,0 +1,4 @@
+9ae478aad1570821e17069041e189cd07a56e8690321209311f9325e0fe34a16  /home/shin/arbiter/build/libcuckoo-rmw/variant-ttas-padded/contention-native
+45dbe7165a62ea78acf1f77ab8ea21ecb01a86d8a9e780a325460d02337baa6d  /home/shin/arbiter/build/libcuckoo-rmw/variant-ttas-padded/contention-placed
+65340e75406cbf4f5cf19c7050c1bda23b0efccfbe1faf8f02b938de837c6126  /home/shin/arbiter/build/libcuckoo-rmw/variant-ttas-padded/bucket.patch
+9cb5959b63efdfdf15b354395dca2b934ed1491d87c7c1543d265857dfe05715  /home/shin/arbiter/build/libcuckoo-rmw/variant-ttas-padded/lock.patch

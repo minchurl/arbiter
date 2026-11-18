@@ -1,0 +1,199 @@
+[validation] result_dir=/home/shin/arbiter/build/libcuckoo-rmw/xindex-validation
+[validation] config=/home/shin/arbiter/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config local_node=0 cxl_node=2 cpus=0-3
+ninja: no work to do.
+smoke: compile llvm ir
+smoke: report sites
+site_id,kind,function,file,line,callee,size_expr
+1,malloc,smoke_heap,/tmp/tmp.5ggRFJkh8l/smoke.c,7,malloc,16
+2,free,smoke_heap,/tmp/tmp.5ggRFJkh8l/smoke.c,8,free,
+3,mmap,smoke_mmap,/tmp/tmp.5ggRFJkh8l/smoke.c,12,mmap,4096
+4,munmap,smoke_mmap,/tmp/tmp.5ggRFJkh8l/smoke.c,13,munmap,4096
+smoke: report HITM-risk seeds
+smoke: rewrite HITM-risk seed allocations
+smoke: rewrite allocations
+smoke: preserve C++ delete ABIs
+smoke: allocation failure contracts and exception handlers
+arbiter-allocation-failure api=malloc site=1 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=calloc site=2 bytes=0 alignment=64 target_node=0 stage=size-overflow errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=3 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=4 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=5 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=6 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=7 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=8 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=9 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=10 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=12 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=19 bytes=128 alignment=4096 target_node=0 stage=mbind errno=1 (Operation not permitted)
+smoke: strict arena and ordinary-pointer deallocation
+smoke: ok
+arbiter-slab-arena-smoke: objects=20000 threads=8 resident_pages=625 node0=625 majority=node0
+arbiter-arena: RESERVE_BYTES/SLAB_BYTES are obsolete; extents grow on demand (use a process memory limit)
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=3 target_node=0 stage=alignment errno=22 (Invalid argument)
+arbiter-allocation-failure api=malloc site=200 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=mmap site=202 bytes=4096 alignment=0 target_node=0 stage=mmap-arguments errno=22 (Invalid argument)
+arbiter-arena-boundary-smoke: dynamic sizes, alignment, placement, reuse and ownership passed
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=64 target_node=0 stage=mbind errno=1 (Operation not permitted)
+arbiter-allocation-failure api=mmap site=200 bytes=4096 alignment=0 target_node=0 stage=mbind errno=1 (Operation not permitted)
+arbiter-slab-arena-smoke: objects=20000 threads=8 resident_pages=625 node2=625 majority=node2
+arbiter-arena: RESERVE_BYTES/SLAB_BYTES are obsolete; extents grow on demand (use a process memory limit)
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=3 target_node=2 stage=alignment errno=22 (Invalid argument)
+arbiter-allocation-failure api=malloc site=200 bytes=18446744073709551615 alignment=64 target_node=2 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=mmap site=202 bytes=4096 alignment=0 target_node=2 stage=mmap-arguments errno=22 (Invalid argument)
+arbiter-arena-boundary-smoke: dynamic sizes, alignment, placement, reuse and ownership passed
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=64 target_node=2 stage=mbind errno=1 (Operation not permitted)
+arbiter-allocation-failure api=mmap site=200 bytes=4096 alignment=0 target_node=2 stage=mbind errno=1 (Operation not permitted)
+correctness_load=/home/shin/arbiter/build/arbiter-bench/xindex-correctness-data/xindex_load_ycsb_a.correctness.dat records=200000
+correctness_tx=/home/shin/arbiter/build/arbiter-bench/xindex-correctness-data/xindex_transaction_ycsb_a.correctness.dat operations=1000000 read_ratio=0.5 update_ratio=0.5
+clang++: warning: argument unused during compilation: '-fmax-errors=5' [-Wunused-command-line-argument]
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:41:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_impl.h:21:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex.h:24:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_root.h:23:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_group.h:25:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_buffer.h:20:
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+   89 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  104 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:199:3: note: in instantiation of function template specialization 'run_benchmark<xindex::XIndex<Key, unsigned long>>' requested here
+  199 |   run_benchmark(tab_hi, duration_seconds);
+      |   ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+  571 |   pthread_t threads[fg_n];
+      |                     ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+7 warnings generated.
+clang++: warning: argument unused during compilation: '-fmax-errors=5' [-Wunused-command-line-argument]
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:41:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_impl.h:21:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex.h:24:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_root.h:23:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_group.h:25:
+In file included from /home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_buffer.h:20:
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+   89 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:89:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  104 |   int64_t prev_status[config.worker_n];
+      |                       ^~~~~~~~~~~~~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:104:23: note: read of non-constexpr variable 'config' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/xindex_util.h:67:16: note: declared here
+   67 | index_config_t config;
+      |                ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  571 |   pthread_t threads[fg_n];
+      |                     ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:199:3: note: in instantiation of function template specialization 'run_benchmark<xindex::XIndex<Key, unsigned long>>' requested here
+  199 |   run_benchmark(tab_hi, duration_seconds);
+      |   ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:571:21: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+  571 |   pthread_t threads[fg_n];
+      |                     ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: warning: variable length arrays in C++ are a Clang extension [-Wvla-cxx-extension]
+  572 |   fg_param_t fg_params[fg_n];
+      |                        ^~~~
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:572:24: note: read of non-const variable 'fg_n' is not allowed in a constant expression
+/home/shin/arbiter/benchmark/xindex/XIndex-H/ycsb_bench.cpp:98:8: note: declared here
+   98 | size_t fg_n = 1;
+      |        ^
+7 warnings generated.
+wrote /home/shin/arbiter/build/libcuckoo-rmw/xindex-short/ycsb_bench-arbiter
+wrote /home/shin/arbiter/build/libcuckoo-rmw/xindex-short/ycsb_bench-native
+wrote /home/shin/arbiter/build/libcuckoo-rmw/xindex-short/ycsb_bench.sites.csv
+wrote /home/shin/arbiter/build/libcuckoo-rmw/xindex-short/ycsb_bench.hitm-seed-sites.csv
+wrote /home/shin/arbiter/build/libcuckoo-rmw/xindex-short/ycsb_bench.hitm-seed-effective.opt-args
+[validation] run=native
+xindex-operation-count executed=1000000
+[ycsb] Throughput(op/s): 9.21296e+06
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x9d30d99a719185fa
+[validation] run=local target_node=0
+xindex-operation-count executed=1000000
+[ycsb] Throughput(op/s): 7.70382e+06
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x9d30d99a719185fa
+arbiter-arena-site site=68 object_bytes=96 allocations=51462 frees=0 live=51462 allocated_bytes=6587136 assigned_bytes=9961472
+arbiter-arena-site site=71 object_bytes=520 allocations=51480 frees=0 live=51480 allocated_bytes=32947200 assigned_bytes=36700160
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=46661632 allocations=102942 frees=0 live=102942 fallback_allocations=0
+arbiter-arena-residency resident_pages=9771 resident_bytes=40022016 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=4 node0_pages=9771
+[validation] run=cxl target_node=2
+xindex-operation-count executed=1000000
+[ycsb] Throughput(op/s): 5.25585e+06
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x9d30d99a719185fa
+arbiter-arena-site site=68 object_bytes=96 allocations=51462 frees=0 live=51462 allocated_bytes=6587136 assigned_bytes=9961472
+arbiter-arena-site site=71 object_bytes=520 allocations=51480 frees=0 live=51480 allocated_bytes=32947200 assigned_bytes=36700160
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=46661632 allocations=102942 frees=0 live=102942 fallback_allocations=0
+arbiter-arena-residency resident_pages=9771 resident_bytes=40022016 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=4 node2_pages=9771
+[validation] PASS digest=0x9d30d99a719185fa result_dir=/home/shin/arbiter/build/libcuckoo-rmw/xindex-validation

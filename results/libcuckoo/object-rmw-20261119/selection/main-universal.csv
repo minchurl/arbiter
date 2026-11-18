@@ -1,0 +1,64 @@
+site_id,kind,function,file,line,callee,size_expr,estimated_bytes,score,role,group_id,selected,reasons
+1,cxx-delete,"generateKey<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+2,cxx-delete,"generateKey<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+3,cxx-delete,check_percentage,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+4,cxx-delete,mix,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+5,cxx-delete,mix,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+6,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+7,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+8,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%335,4096,3,rejected,0,no,"escapes-store;escapes-call;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+9,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%356,4096,3,rejected,0,no,"escapes-store;escapes-call;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+10,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%433,4096,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+11,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,143,_Znwm,32,32,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function"
+12,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%536,4096,3,rejected,0,no,"escapes-store;escapes-call;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+13,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,143,_Znwm,40,40,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function"
+14,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%619,4096,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+15,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%636,4096,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+16,cxx-new,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,143,_Znwm,80,80,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function"
+17,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+18,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+19,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+20,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+21,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+22,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+23,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+24,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+25,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+26,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+27,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+28,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+29,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+30,cxx-delete,main,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+31,cxx-delete,main,/home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/tests/universal-benchmark/universal_benchmark.cc,399,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+32,cxx-delete,~vector,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+33,cxx-delete,~vector,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+34,cxx-delete,~vector,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+35,cxx-new,operator=,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%10,4096,1,rejected,0,no,"escapes-store;dynamic-size-excluded;no-sync-mutable"
+36,cxx-delete,operator=,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+37,cxx-new,cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%23,4096,1,rejected,0,no,"escapes-store;dynamic-size-excluded;no-sync-mutable"
+38,cxx-new,cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%47,4096,1,rejected,0,no,"escapes-store;dynamic-size-excluded;no-sync-mutable"
+39,cxx-new,cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,40,40,1,rejected,0,no,"escapes-call;no-sync-mutable"
+40,cxx-delete,~_List_base,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,137,_ZdlPvSt11align_val_t,,0,0,rejected,0,no,not-supported-allocation
+41,cxx-delete,~_List_base,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+42,cxx-delete,~bucket_container,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+43,cxx-new,_M_default_append,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,124,_ZnwmSt11align_val_t,%77,4096,2,rejected,0,no,"escapes-store;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+44,cxx-delete,_M_default_append,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,137,_ZdlPvSt11align_val_t,,0,0,rejected,0,no,not-supported-allocation
+45,cxx-delete,~cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,137,_ZdlPvSt11align_val_t,,0,0,rejected,0,no,not-supported-allocation
+46,cxx-delete,~cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+47,cxx-delete,~cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+48,cxx-delete,~cuckoohash_map,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+49,cxx-delete,rehash_lock<true>,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+50,cxx-delete,"cuckoo_fast_double<std::integral_constant<bool, false>, std::integral_constant<bool, true> >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+51,cxx-new,"cuckoo_fast_double<std::integral_constant<bool, false>, std::integral_constant<bool, true> >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%141,4096,3,rejected,0,no,"escapes-store;sync-atomic-rmw-or-cmpxchg-same-function;sync-atomic-or-volatile-store-same-function;dynamic-size-excluded"
+52,cxx-delete,"cuckoo_fast_double<std::integral_constant<bool, false>, std::integral_constant<bool, true> >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+53,cxx-delete,"cuckoo_fast_double<std::integral_constant<bool, false>, std::integral_constant<bool, true> >",/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+54,cxx-new,maybe_resize_locks,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,40,40,2,rejected,0,no,"escapes-call;sync-atomic-rmw-or-cmpxchg-same-function"
+55,cxx-delete,maybe_resize_locks,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,137,_ZdlPvSt11align_val_t,,0,0,rejected,0,no,not-supported-allocation
+56,cxx-delete,maybe_resize_locks,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,137,_ZdlPvSt11align_val_t,,0,0,rejected,0,no,not-supported-allocation
+57,cxx-delete,~maximum_hashpower_exceeded,/home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/cuckoohash_util.hh,107,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+58,cxx-delete,~load_factor_too_low,/home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/cuckoohash_util.hh,76,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+59,cxx-new,_M_default_append,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,127,_Znwm,%37,4096,1,rejected,0,no,"escapes-store;dynamic-size-excluded;no-sync-mutable"
+60,cxx-delete,_M_default_append,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/ext/new_allocator.h,145,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+61,cxx-delete,~_State_impl,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,201,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+62,cxx-delete,~_State_impl,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,201,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation
+63,cxx-delete,~_State_impl,/usr/lib/gcc/x86_64-linux-gnu/11/../../../../include/c++/11/bits/std_thread.h,201,_ZdlPv,,0,0,rejected,0,no,not-supported-allocation

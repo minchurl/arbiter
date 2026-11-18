@@ -1,0 +1,3 @@
+clang++ 18.1.8 -std=c++17 -O1 -gline-tables-only -pthread -fsanitize=thread -Ibuild/libcuckoo-rmw/variant-ttas/include benchmark/libcuckoo/contention.cpp -o build/libcuckoo-rmw/sanitizers/contention-ttas-tsan
+TSAN_OPTIONS=halt_on_error=1 build/libcuckoo-rmw/sanitizers/contention-ttas-tsan --keys 4096 --hot 64 --threads 4 --operations 100000 --reads 50
+Exit 0; empty stderr. This is a short native TTAS race check, not a complete library race proof.

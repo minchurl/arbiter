@@ -1,0 +1,8 @@
+# started on Thu Nov 19 02:50:44 2026
+
+489985502942,,cycles:u,140733798633,100.00,,
+89411558489,,instructions:u,140733798633,100.00,0.18,insn per cycle
+893558762,,mem_inst_retired.lock_loads:u,140733798633,100.00,,
+701427322,,mem_load_l3_hit_retired.xsnp_fwd:u,140733798633,100.00,,
+446272669,,ocr.demand_rfo.l3_hit.snoop_hitm:u,140733798633,100.00,,
+1230304441,,ocr.demand_rfo.any_response:u,140733798633,100.00,,

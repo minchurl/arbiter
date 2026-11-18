@@ -1,0 +1,7 @@
+Generating keys
+Pre-filling table
+Running operations
+arbiter-arena-site site=43 object_bytes=0 allocations=7 frees=7 live=0 allocated_bytes=0 assigned_bytes=12058624
+arbiter-arena-site site=51 object_bytes=0 allocations=7 frees=7 live=0 allocated_bytes=0 assigned_bytes=28835840
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=40894464 allocations=14 frees=14 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=4333 resident_bytes=17747968 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=2 node2_pages=4333

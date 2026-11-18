@@ -4,6 +4,9 @@ benchmark/xindex/YCSB/xindex_dat/github-parts/MANIFEST.sha256 text eol=lf
 # Preserve archived raw experiment output byte-for-byte.
 docs/experiments/artifacts/** -whitespace
 results/xindex/ycsb-f/**/replay-manifest.txt -whitespace
+results/libcuckoo/**/xindex-replay-manifest.txt -whitespace
+results/libcuckoo/**/validation/upstream-unit-tests/*/configure.log -whitespace
 
 # Unified diffs retain the supplied sources' indentation on context lines.
 benchmark/btree-coherence/*.patch -whitespace
+results/libcuckoo/**/*.patch -whitespace

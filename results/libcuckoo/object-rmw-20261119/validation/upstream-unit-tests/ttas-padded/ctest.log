@@ -1,0 +1,102 @@
+Internal ctest changing into directory: /home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas-padded/build
+UpdateCTestConfiguration  from :/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas-padded/build/DartConfiguration.tcl
+UpdateCTestConfiguration  from :/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas-padded/build/DartConfiguration.tcl
+Test project /home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas-padded/build
+Constructing a list of tests
+Done constructing a list of tests
+Updating test list for fixtures
+Added 0 tests to meet fixture requirements
+Checking test dependency graph...
+Checking test dependency graph end
+test 1
+    Start 1: unit_tests
+
+1: Test command: /home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas-padded/build/tests/unit-tests/unit_tests
+1: Test timeout computed to be: 10000000
+1: Test test_bucket_container_default_constructor... [ OK ]
+1: Test test_bucket_container_simple_stateful_allocator... [ OK ]
+1: Test test_bucket_container_copy_construction... [ OK ]
+1: Test test_bucket_container_move_construction... [ OK ]
+1: Test test_bucket_container_copy_assignment_with_propagate... [ OK ]
+1: Test test_bucket_container_copy_assignment_no_propagate... [ OK ]
+1: Test test_bucket_container_move_assignment_with_propagate... [ OK ]
+1: Test test_bucket_container_move_assignment_no_propagate_equal... [ OK ]
+1: Test test_bucket_container_move_assignment_no_propagate_unequal... [ OK ]
+1: Test test_bucket_container_swap_no_propagate... [ OK ]
+1: Test test_bucket_container_swap_propagate...    [ OK ]
+1: Test test_bucket_container_setKV_with_throwing_type_maintains_strong_guarantee... [ OK ]
+1: Test test_bucket_container_copy_assignment_with_throwing_type_is_destroyed_properly... [ OK ]
+1: Test test_bucket_container_copy_destroyed_buckets_container... [ OK ]
+1: Test test_c_interface_basic...                  [ OK ]
+1: Test test_c_interface_locked_table...           [ OK ]
+1: Test test_constructor_default_size...           [ OK ]
+1: Test test_constructor_given_size...             [ OK ]
+1: Test test_constructor_frees_even_with_exceptions... [ OK ]
+1: Test test_constructor_stateful_components...    [ OK ]
+1: Test test_constructor_range_constructor...      [ OK ]
+1: Test test_constructor_copy_constructor...       [ OK ]
+1: Test test_constructor_copy_constructor_other_allocator... [ OK ]
+1: Test test_constructor_move_constructor...       [ OK ]
+1: Test test_constructor_move_constructor_different_allocator... [ OK ]
+1: Test test_constructor_initializer_list_constructor... [ OK ]
+1: Test test_constructor_swap_maps...              [ OK ]
+1: Test test_constructor_copy_assign_different_allocators... [ OK ]
+1: Test test_constructor_move_assign_different_allocators... [ OK ]
+1: Test test_constructor_move_assign_same_allocators... [ OK ]
+1: Test test_constructor_initializer_list_assignment... [ OK ]
+1: Test test_hash_properties_int_alt_index_works_correctly... [ OK ]
+1: Test test_hash_properties_string_alt_index_works_correctly... [ OK ]
+1: Test test_hash_properties_hash_with_larger_hashpower_only_adds_top_bits... [ OK ]
+1: Test test_heterogeneous_compare...              [ OK ]
+1: Test test_iterator_types...                     [ OK ]
+1: Test test_iterator_empty_table_iteration...     [ OK ]
+1: Test test_iterator_walkthrough...               [ OK ]
+1: Test test_iterator_modification...              [ OK ]
+1: Test test_iterator_lock_table_blocks_inserts... [ OK ]
+1: Test test_iterator_cast_iterator_to_const_iterator... [ OK ]
+1: Test test_locked_table_typedefs...              [ OK ]
+1: Test test_locked_table_move...                  [ OK ]
+1: Test test_locked_table_unlock...                [ OK ]
+1: Test test_locked_table_info...                  [ OK ]
+1: Test test_locked_table_clear...                 [ OK ]
+1: Test test_locked_table_insert_duplicate...      [ OK ]
+1: Test test_locked_table_insert_new_key...        [ OK ]
+1: Test test_locked_table_insert_lifetime...       [ OK ]
+1: Test test_locked_table_erase...                 [ OK ]
+1: Test test_locked_table_find...                  [ OK ]
+1: Test test_locked_table_at...                    [ OK ]
+1: Test test_locked_table_operator_brackets...     [ OK ]
+1: Test test_locked_table_count...                 [ OK ]
+1: Test test_locked_table_equal_range...           [ OK ]
+1: Test test_locked_table_rehash...                [ OK ]
+1: Test test_locked_table_reserve...               [ OK ]
+1: Test test_locked_table_equality...              [ OK ]
+1: Test test_locked_table_holds_locks_after_resize... [ OK ]
+1: Test test_locked_table_io...                    [ OK ]
+1: Test test_empty_locked_table_io...              [ OK ]
+1: Test test_maximum_hashpower_initialized_to_default... [ OK ]
+1: Test test_maximum_hashpower_caps_any_expansion... [ OK ]
+1: Test test_maximum_hash_power_none...            [ OK ]
+1: Test test_minimum_load_factor_initialized_to_default... [ OK ]
+1: Test test_minimum_load_factor_caps_automatic_expansion... [ OK ]
+1: Test test_minimum_load_factor_invalid...        [ OK ]
+1: Test test_noncopyable_types_insert_and_update... [ OK ]
+1: Test test_noncopyable_types_insert_or_assign... [ OK ]
+1: Test test_noncopyable_types_upsert...           [ OK ]
+1: Test test_noncopyable_types_iteration...        [ OK ]
+1: Test test_noncopyable_types_nested_table...     [ OK ]
+1: Test test_noncopyable_types_insert_lifetime...  [ OK ]
+1: Test test_noncopyable_types_erase_fn...         [ OK ]
+1: Test test_noncopyable_types_uprase_fn...        [ OK ]
+1: Test test_resize_rehash_empty_table...          [ OK ]
+1: Test test_resize_reserve_empty_table...         [ OK ]
+1: Test test_resize_reserve_calc...                [ OK ]
+1: Test test_resize_number_of_frees...             [ OK ]
+1: Test test_resize_on_non_relocatable_type...     [ OK ]
+1: Test test_user_exceptions...                    [ OK ]
+1: SUCCESS: No unit tests have failed.
+1/1 Test #1: unit_tests .......................   Passed    0.75 sec
+
+100% tests passed, 0 tests failed out of 1
+
+Total Test time (real) =   0.76 sec

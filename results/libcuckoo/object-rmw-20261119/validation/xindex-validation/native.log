@@ -1,0 +1,32 @@
+fg_n: 4
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=a throughput_unit=logical-transactions/s update_mapping=update
+exist_keys.size() : 200000, item_num : 200000
+load number : 200000
+  read: 500000
+insert: 0
+update: 500000
+   rmw: 0
+remove: 0
+operation count: 1000000
+exist_keys.size(): 200000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.332605, mean error: 8.23881
+table: 0x7f8e12a34000
+training done
+[ycsb] prepare data ...
+[ycsb] Worker0 Ready.
+[ycsb] Worker2 Ready.
+[ycsb] Worker3 Ready.
+[ycsb] Worker1 Ready.
+hash resize group cnt: 0
+xindex-operation-count executed=1000000
+[ycsb] Time(sec) : 0.108543
+[ycsb] Throughput(op/s): 9.21296e+06
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x9d30d99a719185fa
+hash resize group cnt: 0

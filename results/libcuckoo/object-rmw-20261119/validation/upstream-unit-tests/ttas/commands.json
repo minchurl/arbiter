@@ -1,0 +1,45 @@
+{
+  "variant": "ttas",
+  "commands": [
+    [
+      "cmake",
+      "-S",
+      "/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas/source",
+      "-B",
+      "/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas/build",
+      "-G",
+      "Ninja",
+      "-DCMAKE_CXX_COMPILER=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+      "-DCMAKE_CXX_FLAGS=--gcc-install-dir=/usr/lib/gcc/x86_64-linux-gnu/11",
+      "-DCMAKE_CXX_STANDARD=17",
+      "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+      "-DBUILD_UNIT_TESTS=ON",
+      "-DBUILD_TESTS=OFF",
+      "-DBUILD_STRESS_TESTS=OFF",
+      "-DBUILD_UNIVERSAL_BENCHMARK=OFF",
+      "-DBUILD_EXAMPLES=OFF"
+    ],
+    [
+      "cmake",
+      "--build",
+      "/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas/build",
+      "-j",
+      "4",
+      "--target",
+      "unit_tests"
+    ],
+    [
+      "ctest",
+      "--test-dir",
+      "/home/shin/arbiter/build/libcuckoo-rmw/upstream-unit-validation/ttas/build",
+      "--output-on-failure",
+      "-V"
+    ]
+  ],
+  "headers_sha256": {
+    "bucket_container.hh": "5deae15fbd5b971ed6346fec90522b72ca848f1fb1261f1ce29b36e2898c710d",
+    "cuckoohash_config.hh": "1f4fdb4ad8782a1ea94c95315ab5c55590b6da78c97a4bcd857eef6ab893b00a",
+    "cuckoohash_map.hh": "73ef0e999b2f05246e09172bbea8160eb23b87b6c4d718adf660aa31d2869500",
+    "cuckoohash_util.hh": "3486ec2dfa8281f76be6c74b71c49ce0bcbdc953f68572ed32d7ad189444b10c"
+  }
+}

@@ -1,0 +1,47 @@
+--- /home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/cuckoohash_map.hh	2026-10-20 22:31:46.569766645 +0900
++++ /home/shin/arbiter/build/libcuckoo-rmw/variant-ttas-padded/include/libcuckoo/cuckoohash_map.hh	2026-11-19 01:07:25.162586781 +0900
+@@ -821,12 +821,12 @@
+   LIBCUCKOO_SQUELCH_PADDING_WARNING
+   class LIBCUCKOO_ALIGNAS(64) spinlock {
+   public:
+-    spinlock() : elem_counter_(0), is_migrated_(true) { lock_.clear(); }
++    spinlock() : elem_counter_(0), is_migrated_(true) { lock_.store(false, std::memory_order_relaxed); }
+ 
+     spinlock(const spinlock &other) noexcept
+         : elem_counter_(other.elem_counter()),
+           is_migrated_(other.is_migrated()) {
+-      lock_.clear();
++      lock_.store(false, std::memory_order_relaxed);
+     }
+ 
+     spinlock &operator=(const spinlock &other) noexcept {
+@@ -836,14 +836,16 @@
+     }
+ 
+     void lock() noexcept {
+-      while (lock_.test_and_set(std::memory_order_acquire))
+-        ;
++      while (lock_.exchange(true, std::memory_order_acquire)) {
++        while (lock_.load(std::memory_order_relaxed))
++          __builtin_ia32_pause();
++      }
+     }
+ 
+-    void unlock() noexcept { lock_.clear(std::memory_order_release); }
++    void unlock() noexcept { lock_.store(false, std::memory_order_release); }
+ 
+     bool try_lock() noexcept {
+-      return !lock_.test_and_set(std::memory_order_acquire);
++      return !lock_.exchange(true, std::memory_order_acquire);
+     }
+ 
+     counter_type &elem_counter() noexcept { return elem_counter_; }
+@@ -853,7 +855,7 @@
+     bool is_migrated() const noexcept { return is_migrated_; }
+ 
+   private:
+-    std::atomic_flag lock_;
++    std::atomic<bool> lock_;
+     counter_type elem_counter_;
+     bool is_migrated_;
+   };

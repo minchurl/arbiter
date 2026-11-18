@@ -1,0 +1,1 @@
+{"keys":4096,"hot":64,"threads":4,"read_pct":50,"partitioned":0,"seed":1729,"reads":199845,"updates":200155,"failures":0,"value_sum":200155,"read_checksum":313219749,"seconds":0.273772,"mops":1.46107,"valid":true}

@@ -1,0 +1,9 @@
+variant,mode,event,samples,in_arena,outside_arena,zero_address,arena_pct,reported_lost_events,scope
+baseline,local,mem_inst_retired.lock_loads:upp,19427,19427,0,0,100.0,0,whole_process_selected_arena_extents
+baseline,local,mem_load_l3_hit_retired.xsnp_fwd:upp,7629,6028,1600,1,79.02464604090194,0,whole_process_selected_arena_extents
+baseline,cxl,mem_inst_retired.lock_loads:upp,19341,19341,0,0,100.0,0,whole_process_selected_arena_extents
+baseline,cxl,mem_load_l3_hit_retired.xsnp_fwd:upp,7608,6071,1537,0,79.79758149316508,0,whole_process_selected_arena_extents
+ttas,local,mem_inst_retired.lock_loads:upp,8905,8905,0,0,100.0,0,whole_process_selected_arena_extents
+ttas,local,mem_load_l3_hit_retired.xsnp_fwd:upp,6986,5799,1187,0,83.00887489264242,0,whole_process_selected_arena_extents
+ttas,cxl,mem_inst_retired.lock_loads:upp,8914,8914,0,0,100.0,0,whole_process_selected_arena_extents
+ttas,cxl,mem_load_l3_hit_retired.xsnp_fwd:upp,6997,5854,1141,2,83.68834882058613,0,whole_process_selected_arena_extents

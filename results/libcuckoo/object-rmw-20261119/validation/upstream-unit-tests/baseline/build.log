@@ -1,0 +1,17 @@
+[1/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_c_interface.cc.o
+[2/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_hash_properties.cc.o
+[3/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_bucket_container.cc.o
+[4/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_constructor.cc.o
+[5/17] Building CXX object tests/unit-tests/CMakeFiles/int_int_table.dir/int_int_table.cc.o
+[6/17] Linking CXX static library tests/unit-tests/libint_int_table.a
+[7/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_heterogeneous_compare.cc.o
+[8/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_iterator.cc.o
+[9/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_minimum_load_factor.cc.o
+[10/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_maximum_hashpower.cc.o
+[11/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_user_exceptions.cc.o
+[12/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_noncopyable_types.cc.o
+[13/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_locked_table.cc.o
+[14/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_runner.cc.o
+[15/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/unit_test_util.cc.o
+[16/17] Building CXX object tests/unit-tests/CMakeFiles/unit_tests.dir/test_resize.cc.o
+[17/17] Linking CXX executable tests/unit-tests/unit_tests

@@ -1,0 +1,11 @@
+--- /home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/bucket_container.hh	2026-10-20 22:31:46.569766645 +0900
++++ /home/shin/arbiter/build/libcuckoo-rmw/variant-padded/include/libcuckoo/bucket_container.hh	2026-11-19 01:07:18.542643267 +0900
+@@ -56,7 +56,7 @@
+    * It is the user's responsibility to confirm whether the data they are
+    * accessing is live or not.
+    */
+-  class bucket {
++  class alignas(64) bucket {
+   public:
+     bucket() noexcept : occupied_() {}
+ 

@@ -1,0 +1,11 @@
+arbiter-arena-site site=4 object_bytes=16384 allocations=1 frees=1 live=0 allocated_bytes=0 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=4194304 allocations=1 frees=1 live=0 fallback_allocations=0
+arbiter-arena-residency resident_pages=14 resident_bytes=57344 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=2 node2_pages=14
+objects: table=0x7f508de00080 table_bytes=16384 ballast=0x7f4e0da001c0 ballast_bytes=8589934592 epochs=0x563cccf5d440 epochs_bytes=16384
+config: victims=32 noise=0(maint=0,spin=0) mode=none duration=30s
+  table_size=256 entries (0MB) ballast=8192MB read_pct=50
+layout: entry_bytes=64 epoch_store=1 table_alignment=0
+result: total_ops=15902613760 elapsed=30.000059s throughput=530.09 Mops/s per_victim=16.57 Mops/s checksum=0x5960504186bb2864
+validation: reads=7951292463 writes=7951321297 versions=7951321297 status=ok
+placement object=table nodes=2,2,2
+placement object=ballast nodes=0,0,0

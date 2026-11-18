@@ -1,0 +1,10 @@
+benchmark,round,mode,node,operations,seconds,mops_per_s,max_rss_kib,arena_allocations,arena_resident_bytes_at_exit,swaps,live_sample_nodes,checked_keys,fallback_allocations,page_query_errors,selected_sites
+micro,1,native,0,15781815424,30.000059,526.059480,8392960,,,0,"table=0,0,0 ballast=0,0,0",,,,
+micro,1,local,0,16171298560,30.000058,539.042243,8394496,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+micro,1,cxl,2,16383412032,30.000059,546.112660,8394240,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+micro,2,local,0,16166243008,30.000058,538.873725,8394496,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+micro,2,cxl,2,15902613760,30.000059,530.086083,8394240,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+micro,2,native,0,16317560640,30.000059,543.917618,8392960,,,0,"table=0,0,0 ballast=0,0,0",,,,
+micro,3,cxl,2,16088528000,30.000058,536.283230,8394240,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+micro,3,native,0,16271662464,30.000059,542.387682,8392960,,,0,"table=0,0,0 ballast=0,0,0",,,,
+micro,3,local,0,16256961920,30.000059,541.897665,8394240,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4

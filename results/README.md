@@ -9,12 +9,45 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [object-rmw-20261119](libcuckoo/object-rmw-20261119/) | Object/member RMW and std::thread extension; full XIndex A and micro regressions; original libcuckoo placement comparisons and isolated TTAS/padding experiments. `placement-summary.csv`, `algorithm-summary.csv`, `regression-validation.json`, `manifest.json`. |
 | [jemalloc-strict-20261119](xindex/ycsb-a/jemalloc-strict-20261119/) | Final 650-line runtime: one full A Local/CXL pair, no fresh controls. `runs.csv`, `manifest.json`, `validation.txt`, `checks.txt`, `code-size.csv`, `selected-sites.csv`. |
 | [jemalloc-demand-20261118](xindex/ycsb-a/jemalloc-demand-20261118/) | Bounded vs initial 1,002-line demand runtime: four runs per allocator/placement, 16 total. `runs.csv`, `lifecycle.csv`, hashes/environment, code counts. Intermediate strict-only checks are not performance rows. |
 | [jemalloc-20261117](xindex/ycsb-a/jemalloc-20261117/) | Custom slab vs bounded jemalloc: eight full A rows in `runs.csv`; five processes per cell in `arena-smoke.csv`. |
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+For object-RMW/libcuckoo, `libcuckoo-runs.csv` labels every screen, confirmation
+and control; `libcuckoo-raw.jsonl` retains stdout/stderr and commands, and
+`experiments.jsonl` retains workload settings and binary hashes. Do not pool
+short screens with confirmations. `selection/` and the rewrite-equivalence JSON
+files compare the clean main baseline, initial extension and cached final
+analysis. `validation/` holds state, placement, operation and sanitizer evidence.
+`experimental-patches/` describes isolated library copies; the default builder
+uses pristine upstream source.
+
+This archive contains 501 uninstrumented libcuckoo rows: 303 confirmations and
+controls, and 198 exploratory/smoke rows. The nine full XIndex and nine micro
+regression rows are separate. `counters.csv`, `address-samples.csv` and
+`profiles/` hold whole-process diagnostics, including compressed decoded
+address samples and successful `mbind` ranges. They are excluded from throughput
+means. `performance.png` / `.svg` plot the retained comparisons.
+
+Use the current builder/runner from the benchmark guide for new libcuckoo runs.
+The archive's `scripts/summarize.py` and `scripts/plot-results.py` regenerate
+tables and the figure from retained CSVs when run from the repository root
+(the plot requires Matplotlib). Other archived scripts preserve the measured
+host's build layout and tool paths. `build-variants.sh` expects the plugin/runtime
+in `build/libcuckoo-rmw/compiler/`, pristine upstream headers and the archived
+`tool-env` at `build/jemalloc-comparison/tool-env`; it modifies build copies only.
+`prepare-followup.py` expects the original binaries in `bench-final/` and the
+variant binaries in `variant-*/`, interleaves implementations, then runs controls,
+universal repetitions and `profile-locks.py`. Copy the latter script into
+`build/libcuckoo-rmw/` before use. These drivers refuse existing result directories;
+use a fresh build layout to reproduce an experiment. `experiments.jsonl` and
+the raw command records specify the initial confirmations and all other runs.
+The XIndex replay manifest preserves the dirty working tree at run start;
+the root manifest explains its relation to the later implementation commits.
 
 For allocator reproduction, build baseline `9d90964` and freeze matching
 rewritten XIndex bitcode, libraries and binaries. The retained `compare.py`

@@ -1,0 +1,11 @@
+--- /home/shin/arbiter/benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/cuckoohash_map.hh	2026-10-20 22:31:46.569766645 +0900
++++ /home/shin/arbiter/build/libcuckoo-rmw/variant-pause/include/libcuckoo/cuckoohash_map.hh	2026-11-19 01:07:20.754624441 +0900
+@@ -837,7 +837,7 @@
+ 
+     void lock() noexcept {
+       while (lock_.test_and_set(std::memory_order_acquire))
+-        ;
++        __builtin_ia32_pause();
+     }
+ 
+     void unlock() noexcept { lock_.clear(std::memory_order_release); }

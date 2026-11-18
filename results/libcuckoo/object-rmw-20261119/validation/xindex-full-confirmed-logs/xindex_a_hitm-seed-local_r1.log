@@ -1,0 +1,70 @@
+fg_n: 31
+bg_n: 1
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=a throughput_unit=logical-transactions/s update_mapping=update
+exist_keys.size() : 100000000, item_num : 100000000
+load number : 100000000
+  read: 199993860
+insert: 0
+update: 200006140
+   rmw: 0
+remove: 0
+operation count: 400000000
+exist_keys.size(): 100000000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.326569, mean error: 39.8777
+table: 0x7f47d7e40000
+training done
+[ycsb] Worker0 Ready.
+[ycsb] Worker[ycsb] Worker3 Ready.
+[ycsb] Worker[ycsb] Worker21 Ready. Ready.
+[ycsb] Worker5 Ready.
+[ycsb] Worker[ycsb] Worker7 Ready.6
+4 Ready. Ready.
+[ycsb] Worker[ycsb] Worker1211 Ready.
+[ycsb] Worker[ycsb] Worker9 Ready.
+
+[ycsb] prepare data ...
+[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker Ready.2124 Ready.222010 Ready.
+
+ Ready. Ready.
+13[ycsb] Worker[ycsb] Worker[ycsb] Worker Ready.
+28[ycsb] Worker[ycsb] Worker19 Ready.
+[ycsb] Worker27 Ready.
+
+
+[ycsb] Worker30 Ready.
+[ycsb] Worker15 Ready.
+
+ Ready.
+29 Ready.
+[ycsb] Worker18 Ready.
+16 Ready.
+[ycsb] Worker14 Ready.
+17 Ready.
+[ycsb] Worker23 Ready.
+ Ready.
+8 Ready.
+[ycsb] Worker26 Ready.
+[ycsb] Worker25 Ready.
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+hash resize group cnt: 0
+xindex-operation-count executed=400000000
+[ycsb] Time(sec) : 15.314
+[ycsb] Throughput(op/s): 2.61198e+07
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+hash resize group cnt: 0
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node0_pages=5000778

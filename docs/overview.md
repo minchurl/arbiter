@@ -38,11 +38,13 @@ global matches retain `published-pointee-atomic-rmw`; the extended analysis
 reports `object-pointee-atomic-rmw`. The weight is added once even when both
 paths match. No new policy options or workload-specific site IDs are introduced.
 
-`ObjectAccessAnalysis.cpp` tracks allocation origins and byte-offset fields,
+`ObjectAccessAnalysis.cpp` tracks heap-allocation origins and byte-offset fields,
 keeping finite field alternatives separate and widening array induction paths.
-Calls use one call-site of context. Pointer-sized scalar copies and constant-size
-memcpy/memmove are supported. A modeled RMW address must resolve to one allocation
-site before it earns the new signal; multi-origin/unknown-origin results do not.
+Field-load caches are versioned per object; stores invalidate every aliased
+destination. Calls use one call-site of context. Pointer-sized scalar copies and
+constant-size memcpy/memmove are supported. A modeled RMW address must resolve
+to one allocation site before it earns the new signal; multi-origin/unknown-origin
+results do not.
 This is bounded, flow-insensitive evidence discovery, **not a sound whole-program
 alias analysis or proof of sharing**. Arbitrary external side effects, dynamic
 memory copies, pointer encoding and other C++ ABIs can hide accesses. Exceeding

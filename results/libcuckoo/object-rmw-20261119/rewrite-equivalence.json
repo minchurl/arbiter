@@ -1,0 +1,20 @@
+[
+  {
+    "workload": "xindex",
+    "identical_bitcode": true,
+    "baseline_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f",
+    "current_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f"
+  },
+  {
+    "workload": "micro32",
+    "identical_bitcode": true,
+    "baseline_sha256": "5bd3bee7ad5c0009f8d36cb2e282dc00e70084fd15d3e115ffe3546297968fbc",
+    "current_sha256": "5bd3bee7ad5c0009f8d36cb2e282dc00e70084fd15d3e115ffe3546297968fbc"
+  },
+  {
+    "workload": "micro64",
+    "identical_bitcode": true,
+    "baseline_sha256": "5815a7e4ad49958e717c7db034ecfec426fc0ea78d605dadc9eb022707e5014d",
+    "current_sha256": "5815a7e4ad49958e717c7db034ecfec426fc0ea78d605dadc9eb022707e5014d"
+  }
+]

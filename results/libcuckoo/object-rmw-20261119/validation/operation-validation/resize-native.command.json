@@ -1,0 +1,1 @@
+["systemd-run", "--user", "--scope", "--quiet", "-p", "MemoryMax=64G", "-p", "MemorySwapMax=0", "--", "timeout", "--kill-after=10", "120", "numactl", "--cpunodebind=0", "--membind=0", "/home/shin/arbiter/build/libcuckoo-rmw/bench-final/universal-native", "--inserts", "100", "--initial-capacity", "4", "--total-ops", "13107200", "--num-threads", "4", "--seed", "1729"]
