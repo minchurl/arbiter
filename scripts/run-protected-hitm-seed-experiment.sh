@@ -40,8 +40,6 @@ ALTERNATE_PLACEMENT_ORDER="${ALTERNATE_PLACEMENT_ORDER:-0}"
 FIRST_PLACEMENT="${FIRST_PLACEMENT:-local}"
 COOLDOWN_SECONDS="${COOLDOWN_SECONDS:-0}"
 HEAP_BACKEND="${ARBITER_HEAP_BACKEND:-arena}"
-ARENA_SLAB_BYTES="${ARBITER_ARENA_SLAB_BYTES:-2097152}"
-ARENA_RESERVE_BYTES="${ARBITER_ARENA_RESERVE_BYTES:-4294967296}"
 ARENA_SLOT_ALIGNMENT="${ARBITER_ARENA_SLOT_ALIGNMENT:-64}"
 ARENA_STRICT="${ARBITER_ARENA_STRICT:-1}"
 ARENA_REPORT="${ARBITER_ARENA_REPORT:-1}"
@@ -95,13 +93,10 @@ Useful environment:
   COOLDOWN_SECONDS        default: 0; pause after every measured row
   ALTERNATE_PLACEMENT_ORDER
                            default: 0; alternate local/target order by repeat
-  ARBITER_HEAP_BACKEND     direct or arena; default: arena
-  ARBITER_ARENA_SLAB_BYTES default: 2097152 (2 MiB)
-  ARBITER_ARENA_RESERVE_BYTES
-                           default: 4294967296 (4 GiB hard arena capacity)
+  ARBITER_HEAP_BACKEND     arena only (compatibility setting)
   ARBITER_ARENA_SLOT_ALIGNMENT
                            default: 64
-  ARBITER_ARENA_STRICT     default: 1 (no direct-allocation fallback)
+  ARBITER_ARENA_STRICT     1 only (compatibility setting)
   ARBITER_ARENA_REPORT     default: 1
   RUN_NATIVE               default: 1
   RUN_LOCAL                default: 1
@@ -157,8 +152,6 @@ require_positive_integer XINDEX_ITERATION "${XINDEX_ITERATION}"
 require_nonnegative_integer XINDEX_DURATION_SECONDS "${XINDEX_DURATION_SECONDS}"
 require_nonnegative_integer XINDEX_THROUGHPUT_SAMPLE_SECONDS "${XINDEX_THROUGHPUT_SAMPLE_SECONDS}"
 require_nonnegative_integer COOLDOWN_SECONDS "${COOLDOWN_SECONDS}"
-require_positive_integer ARBITER_ARENA_SLAB_BYTES "${ARENA_SLAB_BYTES}"
-require_positive_integer ARBITER_ARENA_RESERVE_BYTES "${ARENA_RESERVE_BYTES}"
 require_positive_integer ARBITER_ARENA_SLOT_ALIGNMENT "${ARENA_SLOT_ALIGNMENT}"
 require_toggle RUN_NATIVE "${RUN_NATIVE}"
 require_toggle RUN_LOCAL "${RUN_LOCAL}"
@@ -181,16 +174,16 @@ if [[ "${FIRST_PLACEMENT}" != "local" && "${FIRST_PLACEMENT}" != "target" ]]; th
   exit 1
 fi
 
-if [[ "${HEAP_BACKEND}" != "direct" && "${HEAP_BACKEND}" != "arena" ]]; then
-  echo "ARBITER_HEAP_BACKEND must be direct or arena: ${HEAP_BACKEND}" >&2
+if [[ "${HEAP_BACKEND}" != "arena" ]]; then
+  echo "ARBITER_HEAP_BACKEND must be arena: ${HEAP_BACKEND}" >&2
   exit 1
 fi
 
-if [[ "${HEAP_BACKEND}" == "arena" && "${ARENA_STRICT}" != "1" ]]; then
+if [[ "${ARENA_STRICT}" != "1" ]]; then
   echo "the protected arena comparison requires ARBITER_ARENA_STRICT=1" >&2
   exit 1
 fi
-if [[ "${HEAP_BACKEND}" == "arena" && "${ARENA_REPORT}" != "1" ]]; then
+if [[ "${ARENA_REPORT}" != "1" ]]; then
   echo "the protected arena comparison requires ARBITER_ARENA_REPORT=1" >&2
   exit 1
 fi
@@ -242,8 +235,6 @@ Starting protected HITM-risk seed scope:
   config=${HITM_SEED_CONFIG_PATH}
   target_node=${TARGET_NODE:-disabled}
   heap_backend=${HEAP_BACKEND}
-  arena_slab_bytes=${ARENA_SLAB_BYTES}
-  arena_reserve_bytes=${ARENA_RESERVE_BYTES}
   duration_seconds=${XINDEX_DURATION_SECONDS}
   result=${RESULT_DIR}
 EOF
@@ -284,8 +275,6 @@ EOF
       FIRST_PLACEMENT="${FIRST_PLACEMENT}" \
       COOLDOWN_SECONDS="${COOLDOWN_SECONDS}" \
       ARBITER_HEAP_BACKEND="${HEAP_BACKEND}" \
-      ARBITER_ARENA_SLAB_BYTES="${ARENA_SLAB_BYTES}" \
-      ARBITER_ARENA_RESERVE_BYTES="${ARENA_RESERVE_BYTES}" \
       ARBITER_ARENA_SLOT_ALIGNMENT="${ARENA_SLOT_ALIGNMENT}" \
       ARBITER_ARENA_STRICT="${ARENA_STRICT}" \
       ARBITER_ARENA_REPORT="${ARENA_REPORT}" \
@@ -385,6 +374,7 @@ sha256sum \
   > "${RESULT_DIR}/binaries.sha256"
 
 RUNS_CSV="${RESULT_DIR}/runs.csv"
+# Preserve the historical column order; removed pool/peak counters stay empty.
 printf 'benchmark,workload,config,repeat,mode,binary,target_node,cpu_node,mem_node,threads,iteration,config_sha256,time_sec,throughput,max_rss_kb,wall_time,swaps,log,time_log,status,heap_backend,allocation_node,arena_slab_bytes,arena_reserve_bytes,arena_slot_alignment,arena_allocations,arena_peak_live,arena_assigned_bytes,arena_fallbacks,duration_seconds,arena_resident_bytes,arena_majority_node,arena_query_error_pages,throughput_sample_seconds\n' > "${RUNS_CSV}"
 SAMPLES_CSV="${RESULT_DIR}/throughput-samples.csv"
 printf 'benchmark,workload,config,repeat,mode,elapsed_sec,interval_sec,interval_ops,interval_ops_per_sec,cumulative_ops,cumulative_ops_per_sec,final,log\n' > "${SAMPLES_CSV}"
@@ -436,8 +426,6 @@ run_one() {
     env_args+=(
       "ARBITER_XINDEX_BIN=${binary}"
       "ARBITER_HEAP_BACKEND=${HEAP_BACKEND}"
-      "ARBITER_ARENA_SLAB_BYTES=${ARENA_SLAB_BYTES}"
-      "ARBITER_ARENA_RESERVE_BYTES=${ARENA_RESERVE_BYTES}"
       "ARBITER_ARENA_SLOT_ALIGNMENT=${ARENA_SLOT_ALIGNMENT}"
       "ARBITER_ARENA_STRICT=${ARENA_STRICT}"
       "ARBITER_ARENA_REPORT=${ARENA_REPORT}"
@@ -490,22 +478,22 @@ run_one() {
     status="failed:${rc}"
   elif [[ -z "${time_sec}" || -z "${throughput}" || -z "${max_rss}" ]]; then
     status=parse-failed
-  elif [[ "${mode}" != "native" && "${HEAP_BACKEND}" == "arena" && \
+  elif [[ "${mode}" != "native" && \
           ( -z "${arena_report_node}" || -z "${arena_allocations}" || \
             -z "${arena_fallbacks}" || -z "${arena_resident_bytes}" || \
             -z "${arena_majority_node}" || \
             -z "${arena_query_error_pages}" ) ]]; then
     status=arena-report-missing
-  elif [[ "${mode}" != "native" && "${HEAP_BACKEND}" == "arena" && \
+  elif [[ "${mode}" != "native" && \
           "${arena_report_node}" != "${allocation_node}" ]]; then
     status="arena-node-mismatch:${arena_report_node}"
-  elif [[ "${mode}" != "native" && "${HEAP_BACKEND}" == "arena" && \
+  elif [[ "${mode}" != "native" && \
           "${arena_fallbacks}" != "0" ]]; then
     status="arena-fallback:${arena_fallbacks}"
-  elif [[ "${mode}" != "native" && "${HEAP_BACKEND}" == "arena" && \
+  elif [[ "${mode}" != "native" && \
           "${arena_query_error_pages}" != "0" ]]; then
     status="arena-placement-query-error:${arena_query_error_pages}"
-  elif [[ "${mode}" != "native" && "${HEAP_BACKEND}" == "arena" && \
+  elif [[ "${mode}" != "native" && \
           "${arena_majority_node}" != "${allocation_node}" ]]; then
     status="arena-residency-node-mismatch:${arena_majority_node}"
   fi
@@ -515,8 +503,8 @@ run_one() {
     "${TARGET_NODE}" "${CPU_NODE}" "${MEM_NODE}" "${XINDEX_FG}" \
     "${XINDEX_ITERATION}" "${CONFIG_SHA256}" "${time_sec}" "${throughput}" \
     "${max_rss}" "${wall_time}" "${swaps}" "${log}" "${time_log}" "${status}" \
-    "${allocator}" "${allocation_node}" "${ARENA_SLAB_BYTES}" \
-    "${ARENA_RESERVE_BYTES}" "${ARENA_SLOT_ALIGNMENT}" \
+    "${allocator}" "${allocation_node}" "" \
+    "" "${ARENA_SLOT_ALIGNMENT}" \
     "${arena_allocations}" "${arena_peak_live}" "${arena_assigned_bytes}" \
     "${arena_fallbacks}" "${XINDEX_DURATION_SECONDS}" \
     "${arena_resident_bytes}" "${arena_majority_node}" \
@@ -637,8 +625,6 @@ SUMMARY_MD="${RESULT_DIR}/summary.md"
   echo "- Target memory node: ${TARGET_NODE:-disabled}"
   echo "- HITM-risk seed heap backend: ${HEAP_BACKEND}"
   if [[ "${HEAP_BACKEND}" == "arena" ]]; then
-    echo "- Arena slab bytes: ${ARENA_SLAB_BYTES}"
-    echo "- Arena reserve/capacity bytes: ${ARENA_RESERVE_BYTES}"
     echo "- Arena slot alignment: ${ARENA_SLOT_ALIGNMENT}"
     echo "- Arena strict/no-fallback: ${ARENA_STRICT}"
   fi

@@ -33,13 +33,12 @@ Value *alignmentForCall(IRBuilder<> &builder, CallBase &call) {
   return defaultAlignment(builder);
 }
 
-FunctionCallee getAllocSiteFn(Module &module) {
+FunctionCallee getAllocSiteFn(Module &module, StringRef name) {
   LLVMContext &context = module.getContext();
   Type *ptrTy = PointerType::getUnqual(context);
   Type *i64Ty = Type::getInt64Ty(context);
   Type *i32Ty = Type::getInt32Ty(context);
-  return module.getOrInsertFunction("arbiter_alloc_site", ptrTy, i64Ty, i64Ty,
-                                    i32Ty, i32Ty);
+  return module.getOrInsertFunction(name, ptrTy, i64Ty, i64Ty, i32Ty, i32Ty);
 }
 
 FunctionCallee getCallocSiteFn(Module &module) {
@@ -74,9 +73,26 @@ FunctionCallee getVoidPtrI64I64RuntimeFn(Module &module, StringRef name) {
   return module.getOrInsertFunction(name, voidTy, ptrTy, i64Ty, i64Ty);
 }
 
+bool replaceAllocationCall(IRBuilder<> &builder, CallBase &call,
+                           FunctionCallee target, ArrayRef<Value *> args) {
+  SmallVector<OperandBundleDef, 1> bundles;
+  call.getOperandBundlesAsDefs(bundles);
+  CallBase *replacement;
+  if (auto *invoke = dyn_cast<InvokeInst>(&call))
+    replacement = builder.CreateInvoke(target, invoke->getNormalDest(),
+                                       invoke->getUnwindDest(), args, bundles);
+  else
+    replacement = builder.CreateCall(target, args, bundles);
+  replacement->setDebugLoc(call.getDebugLoc());
+  replacement->takeName(&call);
+  call.replaceAllUsesWith(replacement);
+  call.eraseFromParent();
+  return true;
+}
+
 bool rewriteAllocation(Module &module, const AllocationSite &site) {
-  auto *call = dyn_cast<CallInst>(site.call);
-  if (!call)
+  CallBase *call = site.call;
+  if (!isa<CallInst>(call) && !isa<InvokeInst>(call))
     return false;
 
   IRBuilder<> builder(call);
@@ -90,26 +106,28 @@ bool rewriteAllocation(Module &module, const AllocationSite &site) {
     Value *count = castInteger(builder, call->getArgOperand(0), i64Ty);
     Value *elemSize = castInteger(builder, call->getArgOperand(1), i64Ty);
     Value *align = defaultAlignment(builder);
-    CallInst *replacement = builder.CreateCall(
-        getCallocSiteFn(module), {count, elemSize, align, siteId, reserved});
-    replacement->takeName(call);
-    call->replaceAllUsesWith(replacement);
-    call->eraseFromParent();
-    return true;
+    return replaceAllocationCall(builder, *call, getCallocSiteFn(module),
+                                 {count, elemSize, align, siteId, reserved});
   }
 
   if (call->arg_size() < 1)
     return false;
-
+  StringRef helper = "arbiter_alloc_site";
+  if (site.kind == AllocationKind::CxxNew ||
+      site.kind == AllocationKind::CxxNewArray) {
+    // Preserve custom/placement overloads; only standard Itanium new forms
+    // have the size/alignment and failure contracts understood by the runtime.
+    StringRef suffix = StringRef(site.callee).drop_front(5);
+    if (!suffix.empty() && suffix != "St11align_val_t" &&
+        suffix != "RKSt9nothrow_t" && suffix != "St11align_val_tRKSt9nothrow_t")
+      return false;
+    helper = suffix.contains("nothrow_t") ? "arbiter_new_nothrow_site"
+                                          : "arbiter_new_site";
+  }
   Value *size = castInteger(builder, call->getArgOperand(0), i64Ty);
   Value *align = alignmentForCall(builder, *call);
-  CallInst *replacement =
-      builder.CreateCall(getAllocSiteFn(module),
-                         {size, align, siteId, reserved});
-  replacement->takeName(call);
-  call->replaceAllUsesWith(replacement);
-  call->eraseFromParent();
-  return true;
+  return replaceAllocationCall(builder, *call, getAllocSiteFn(module, helper),
+                               {size, align, siteId, reserved});
 }
 
 bool rewriteDeallocation(Module &module, const AllocationSite &site) {

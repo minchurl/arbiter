@@ -1,22 +1,15 @@
 #include "arbiter_runtime_site.h"
-
-#include "arbiter_side_table.h"
 #include "arbiter_jemalloc_arena.h"
 
 #include <cerrno>
+#include <cinttypes>
 #include <cstddef>
-#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <limits>
 #include <new>
 #include <sys/mman.h>
-#include <unistd.h>
-
-#if ARBITER_HAS_NUMA
-#include <numa.h>
-#endif
 
 // libstdc++ hides the sized deallocation declarations unless the translation
 // unit is compiled with -fsized-deallocation. The ABI symbols still exist and
@@ -24,473 +17,152 @@
 extern "C" void arbiter_abi_delete_sized(void *, size_t) noexcept
     __asm__("_ZdlPvm");
 extern "C" void arbiter_abi_delete_sized_aligned(void *, size_t,
-                                                  std::align_val_t) noexcept
+                                                 std::align_val_t) noexcept
     __asm__("_ZdlPvmSt11align_val_t");
 extern "C" void arbiter_abi_delete_array_sized(void *, size_t) noexcept
     __asm__("_ZdaPvm");
-extern "C" void arbiter_abi_delete_array_sized_aligned(
-    void *, size_t, std::align_val_t) noexcept
+extern "C" void
+arbiter_abi_delete_array_sized_aligned(void *, size_t,
+                                       std::align_val_t) noexcept
     __asm__("_ZdaPvmSt11align_val_t");
 
 namespace {
-
-using arbiter::runtime::SideTableBackend;
-using arbiter::runtime::SideTableEntry;
-using arbiter::runtime::SideTableKind;
-
-constexpr int32_t kNoTargetNode = -1;
-
-struct RuntimeConfig {
-  enum class HeapBackend : uint8_t {
-    Direct,
-    Arena,
-  };
-
-  bool valid;
-  bool hasTargetNode;
-  int32_t targetNode;
-  HeapBackend heapBackend;
-  bool arenaStrict;
-};
-
-struct BackendAllocation {
-  void *ptr;
-  SideTableBackend backend;
-  int32_t node;
-};
-
-bool checkedMul(uint64_t lhs, uint64_t rhs, uint64_t &result) {
-  if (rhs != 0 && lhs > std::numeric_limits<uint64_t>::max() / rhs)
-    return false;
-  result = lhs * rhs;
-  return true;
-}
-
-bool fitsSizeT(uint64_t size) {
-  return size <= std::numeric_limits<size_t>::max();
-}
-
-bool parseTargetNode(int32_t &node) {
-  const char *value = std::getenv("ARBITER_TARGET_NODE");
-  if (!value || value[0] == '\0')
-    return false;
-
-  errno = 0;
-  char *end = nullptr;
-  long long parsed = std::strtoll(value, &end, 10);
-  if (errno != 0 || end == value || *end != '\0' || parsed < 0 ||
-      parsed > std::numeric_limits<int32_t>::max())
-    return false;
-
-  node = static_cast<int32_t>(parsed);
-  return true;
-}
-
-bool parseToggle(const char *name, bool defaultValue, bool &result) {
-  const char *value = std::getenv(name);
-  if (!value || value[0] == '\0') {
-    result = defaultValue;
-    return true;
-  }
-  if (std::strcmp(value, "0") == 0) {
-    result = false;
-    return true;
-  }
-  if (std::strcmp(value, "1") == 0) {
-    result = true;
-    return true;
-  }
-
-  std::fprintf(stderr, "arbiter-runtime: %s must be 0 or 1: %s\n", name,
-               value);
-  return false;
-}
-
-bool parseHeapBackend(RuntimeConfig::HeapBackend &backend) {
-  const char *value = std::getenv("ARBITER_HEAP_BACKEND");
-  if (!value || value[0] == '\0' || std::strcmp(value, "direct") == 0) {
-    backend = RuntimeConfig::HeapBackend::Direct;
-    return true;
-  }
-  if (std::strcmp(value, "arena") == 0) {
-    backend = RuntimeConfig::HeapBackend::Arena;
-    return true;
-  }
-
+void diagnose(const char *api, uint64_t size, uint64_t align, uint32_t site,
+              arbiter::runtime::AllocationError error) {
+  const char *node = std::getenv("ARBITER_TARGET_NODE");
   std::fprintf(stderr,
-               "arbiter-runtime: ARBITER_HEAP_BACKEND must be direct or "
-               "arena: %s\n",
-               value);
-  return false;
+               "arbiter-allocation-failure api=%s site=%u bytes=%" PRIu64
+               " alignment=%" PRIu64 " target_node=%s stage=%s errno=%d (%s)\n",
+               api, site, size, align, node ? node : "unset", error.stage,
+               error.code, std::strerror(error.code));
+  errno = error.code;
 }
 
-RuntimeConfig loadRuntimeConfig() {
-  RuntimeConfig config{true, false, kNoTargetNode,
-                       RuntimeConfig::HeapBackend::Direct, true};
-  config.hasTargetNode = parseTargetNode(config.targetNode);
-  config.valid = parseHeapBackend(config.heapBackend) &&
-                 parseToggle("ARBITER_ARENA_STRICT", true,
-                             config.arenaStrict);
-  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena &&
-      !config.hasTargetNode) {
-    std::fprintf(stderr,
-                 "arbiter-runtime: ARBITER_TARGET_NODE is required when "
-                 "ARBITER_HEAP_BACKEND=arena\n");
-    config.valid = false;
-  }
-  return config;
-}
-
-const RuntimeConfig &getRuntimeConfig() {
-  static const RuntimeConfig config = loadRuntimeConfig();
-  return config;
-}
-
-#if ARBITER_HAS_NUMA
-bool isNumaAvailable() {
-  static const bool available = numa_available() >= 0;
-  return available;
-}
-#endif
-
-bool isPowerOfTwo(uint64_t value) {
-  return value != 0 && (value & (value - 1)) == 0;
-}
-
-bool normalizeAlignment(uint64_t requested, size_t &alignment) {
-  if (requested == 0)
-    requested = alignof(std::max_align_t);
-  if (!fitsSizeT(requested) || !isPowerOfTwo(requested))
-    return false;
-
-  alignment = static_cast<size_t>(requested);
-  return true;
-}
-
-void *allocateAlignedMalloc(uint64_t size, size_t alignment) {
-  if (!fitsSizeT(size))
-    return nullptr;
-  if (alignment <= alignof(std::max_align_t))
-    return std::malloc(static_cast<size_t>(size));
-
-  // posix_memalign requires at least sizeof(void *) alignment. All larger
-  // power-of-two values accepted by normalizeAlignment satisfy that rule.
-  void *ptr = nullptr;
-  if (posix_memalign(&ptr, alignment, static_cast<size_t>(size)) != 0)
-    return nullptr;
+void *allocate(const char *api, uint64_t size, uint64_t align, uint32_t site) {
+  void *ptr = arbiter::runtime::arenaAllocate(size, align, site);
+  if (!ptr)
+    diagnose(api, size, align, site, arbiter::runtime::arenaError());
   return ptr;
 }
-
-void *allocateNuma(uint64_t size, int32_t node) {
-#if ARBITER_HAS_NUMA
-  if (!fitsSizeT(size))
-    return nullptr;
-  if (!isNumaAvailable() || node < 0 || node > numa_max_node())
-    return nullptr;
-  return numa_alloc_onnode(static_cast<size_t>(size), node);
-#else
-  (void)size;
-  (void)node;
-  return nullptr;
-#endif
-}
-
-BackendAllocation tryAllocateOnTargetNode(uint64_t size, size_t alignment) {
-  const RuntimeConfig &config = getRuntimeConfig();
-  if (!config.hasTargetNode)
-    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
-
-  const long pageSize = sysconf(_SC_PAGESIZE);
-  if (pageSize <= 0 || alignment > static_cast<size_t>(pageSize))
-    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
-
-  void *ptr = allocateNuma(size, config.targetNode);
-  if (!ptr)
-    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
-
-  return {ptr, SideTableBackend::Numa, config.targetNode};
-}
-
-BackendAllocation allocateHeap(uint64_t size, uint64_t requestedAlignment) {
-  size_t alignment = 0;
-  if (!normalizeAlignment(requestedAlignment, alignment))
-    return {nullptr, SideTableBackend::Malloc, kNoTargetNode};
-
-  BackendAllocation allocation = tryAllocateOnTargetNode(size, alignment);
-  if (allocation.ptr)
-    return allocation;
-
-  return {allocateAlignedMalloc(size, alignment), SideTableBackend::Malloc,
-          kNoTargetNode};
-}
-
-void freeNuma(void *ptr, uint64_t size) {
-#if ARBITER_HAS_NUMA
-  numa_free(ptr, static_cast<size_t>(size));
-#else
-  (void)size;
-  std::free(ptr);
-#endif
-}
-
-int unmapRaw(void *ptr, uint64_t size) {
-  if (!fitsSizeT(size))
-    return -1;
-  return munmap(ptr, static_cast<size_t>(size));
-}
-
-void releaseTrackedAllocation(void *ptr, const SideTableEntry &entry) {
-  switch (entry.backend) {
-  case SideTableBackend::Malloc:
-    std::free(ptr);
-    return;
-  case SideTableBackend::Numa:
-    freeNuma(ptr, entry.size);
-    return;
-  case SideTableBackend::MMap:
-    unmapRaw(ptr, entry.size);
-    return;
-  }
-}
-
-bool releaseIfTracked(void *ptr) {
-  SideTableEntry entry{};
-  if (!arbiter::runtime::sideTableTake(ptr, entry))
-    return false;
-
-  releaseTrackedAllocation(ptr, entry);
-  return true;
-}
-
-bool releaseHeapAllocation(void *ptr) {
-  const RuntimeConfig &config = getRuntimeConfig();
-  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
-    switch (arbiter::runtime::arenaDeallocate(ptr)) {
-    case arbiter::runtime::ArenaDeallocation::Released:
-      return true;
-    case arbiter::runtime::ArenaDeallocation::Invalid:
-      std::fprintf(stderr,
-                   "arbiter-runtime: invalid or duplicate free inside the "
-                   "jemalloc arena\n");
-      std::abort();
-    case arbiter::runtime::ArenaDeallocation::NotOwned:
-      break;
-    }
-
-    // Strict arena mode never falls back to individually tracked heap
-    // allocations. Avoid a mutex/hash lookup for every ordinary free/delete.
-    if (config.arenaStrict)
-      return false;
-  }
-
-  return releaseIfTracked(ptr);
-}
-
-SideTableEntry makeEntry(SideTableKind kind,
-                         const BackendAllocation &allocation, uint64_t size,
-                         uint32_t siteId) {
-  SideTableEntry entry{};
-  entry.kind = kind;
-  entry.backend = allocation.backend;
-  entry.size = size;
-  entry.siteId = siteId;
-  entry.node = allocation.node;
-  return entry;
-}
-
-bool trackOrRelease(void *ptr, const SideTableEntry &entry) {
-  if (arbiter::runtime::sideTableInsert(ptr, entry))
-    return true;
-
-  releaseTrackedAllocation(ptr, entry);
-  return false;
-}
-
 } // namespace
 
 extern "C" void *arbiter_alloc_site(uint64_t size, uint64_t align,
                                     uint32_t site_id, uint32_t reserved) {
   (void)reserved;
+  return allocate("malloc", size, align, site_id);
+}
 
-  const RuntimeConfig &config = getRuntimeConfig();
-  if (!config.valid || !fitsSizeT(size))
-    return nullptr;
-
-  if (config.heapBackend == RuntimeConfig::HeapBackend::Arena) {
-    arbiter::runtime::ArenaFailure failure =
-        arbiter::runtime::ArenaFailure::None;
-    void *ptr = arbiter::runtime::arenaAllocate(
-        size, align, site_id, config.targetNode, failure);
-    if (ptr)
+extern "C" void *arbiter_new_site(uint64_t size, uint64_t align,
+                                  uint32_t site_id, uint32_t reserved) {
+  (void)reserved;
+  for (;;) {
+    if (void *ptr = allocate("new", size, align, site_id))
       return ptr;
-
-    arbiter::runtime::arenaRecordFallback(failure);
-    if (config.arenaStrict)
-      return nullptr;
+    std::new_handler handler = std::get_new_handler();
+    if (!handler)
+      throw std::bad_alloc();
+    handler(); // May release memory, throw, or terminate; retry the same arena.
   }
+}
 
-  BackendAllocation allocation = allocateHeap(size, align);
-  if (!allocation.ptr)
+extern "C" void *arbiter_new_nothrow_site(uint64_t size, uint64_t align,
+                                          uint32_t site_id, uint32_t reserved) {
+  try {
+    return arbiter_new_site(size, align, site_id, reserved);
+  } catch (...) {
     return nullptr;
-
-  SideTableEntry entry = makeEntry(SideTableKind::Heap, allocation, size,
-                                   site_id);
-  if (!trackOrRelease(allocation.ptr, entry))
-    return nullptr;
-
-  return allocation.ptr;
+  }
 }
 
 extern "C" void *arbiter_calloc_site(uint64_t count, uint64_t elem_size,
                                      uint64_t align, uint32_t site_id,
                                      uint32_t reserved) {
-  uint64_t size = 0;
-  if (!checkedMul(count, elem_size, size))
+  (void)reserved;
+  if (elem_size && count > std::numeric_limits<size_t>::max() / elem_size) {
+    diagnose("calloc", 0, align, site_id, {"size-overflow", ENOMEM});
     return nullptr;
-  if (!fitsSizeT(size))
-    return nullptr;
-
-  void *ptr = arbiter_alloc_site(size, align, site_id, reserved);
-  if (!ptr)
-    return nullptr;
-
-  std::memset(ptr, 0, static_cast<size_t>(size));
+  }
+  uint64_t size = count * elem_size;
+  void *ptr = allocate("calloc", size, align, site_id);
+  if (ptr)
+    std::memset(ptr, 0, static_cast<size_t>(size));
   return ptr;
 }
 
 extern "C" void *arbiter_mmap_site(uint64_t size, int prot, int mmap_flags,
                                    uint32_t site_id, uint32_t reserved) {
   (void)reserved;
-  if (size == 0 || !fitsSizeT(size))
-    return MAP_FAILED;
-
-  BackendAllocation target =
-      tryAllocateOnTargetNode(size, alignof(std::max_align_t));
-  if (target.ptr) {
-    std::memset(target.ptr, 0, static_cast<size_t>(size));
-    SideTableEntry entry =
-        makeEntry(SideTableKind::MMap, target, size, site_id);
-    if (trackOrRelease(target.ptr, entry))
-      return target.ptr;
-    return MAP_FAILED;
-  }
-
-  void *ptr = mmap(nullptr, static_cast<size_t>(size), prot, mmap_flags, -1, 0);
+  void *ptr = arbiter::runtime::arenaMap(size, prot, mmap_flags);
   if (ptr == MAP_FAILED)
-    return MAP_FAILED;
-
-  BackendAllocation allocation{ptr, SideTableBackend::MMap, kNoTargetNode};
-  SideTableEntry entry =
-      makeEntry(SideTableKind::MMap, allocation, size, site_id);
-  if (trackOrRelease(ptr, entry))
-    return ptr;
-
-  return MAP_FAILED;
+    diagnose("mmap", size, 0, site_id, arbiter::runtime::arenaError());
+  return ptr;
 }
 
 extern "C" void arbiter_free_maybe(void *ptr) {
-  if (!ptr)
-    return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
-  std::free(ptr);
+  int saved = errno;
+  if (ptr && !arbiter::runtime::arenaDeallocate(ptr))
+    std::free(ptr);
+  errno = saved;
 }
 
 extern "C" void arbiter_cxx_delete_maybe(void *ptr) {
-  if (!ptr)
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   ::operator delete(ptr);
 }
 
 extern "C" void arbiter_cxx_delete_sized_maybe(void *ptr, uint64_t size) {
-  if (!ptr)
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   arbiter_abi_delete_sized(ptr, static_cast<size_t>(size));
 }
 
 extern "C" void arbiter_cxx_delete_aligned_maybe(void *ptr, uint64_t align) {
-  if (!ptr)
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   ::operator delete(ptr, static_cast<std::align_val_t>(align));
 }
 
-extern "C" void arbiter_cxx_delete_sized_aligned_maybe(void *ptr,
-                                                         uint64_t size,
-                                                         uint64_t align) {
-  if (!ptr)
+extern "C" void arbiter_cxx_delete_sized_aligned_maybe(void *ptr, uint64_t size,
+                                                       uint64_t align) {
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   arbiter_abi_delete_sized_aligned(ptr, static_cast<size_t>(size),
                                    static_cast<std::align_val_t>(align));
 }
 
 extern "C" void arbiter_cxx_delete_array_maybe(void *ptr) {
-  if (!ptr)
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   ::operator delete[](ptr);
 }
 
-extern "C" void arbiter_cxx_delete_array_sized_maybe(void *ptr,
-                                                       uint64_t size) {
-  if (!ptr)
+extern "C" void arbiter_cxx_delete_array_sized_maybe(void *ptr, uint64_t size) {
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   arbiter_abi_delete_array_sized(ptr, static_cast<size_t>(size));
 }
 
 extern "C" void arbiter_cxx_delete_array_aligned_maybe(void *ptr,
-                                                         uint64_t align) {
-  if (!ptr)
+                                                       uint64_t align) {
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
   ::operator delete[](ptr, static_cast<std::align_val_t>(align));
 }
 
-extern "C" void arbiter_cxx_delete_array_sized_aligned_maybe(
-    void *ptr, uint64_t size, uint64_t align) {
-  if (!ptr)
+extern "C" void arbiter_cxx_delete_array_sized_aligned_maybe(void *ptr,
+                                                             uint64_t size,
+                                                             uint64_t align) {
+  if (!ptr || arbiter::runtime::arenaDeallocate(ptr))
     return;
-
-  if (releaseHeapAllocation(ptr))
-    return;
-
-  arbiter_abi_delete_array_sized_aligned(
-      ptr, static_cast<size_t>(size), static_cast<std::align_val_t>(align));
+  arbiter_abi_delete_array_sized_aligned(ptr, static_cast<size_t>(size),
+                                         static_cast<std::align_val_t>(align));
 }
 
 extern "C" int arbiter_munmap_maybe(void *ptr, uint64_t size) {
-  if (!ptr)
-    return unmapRaw(ptr, size);
-
-  if (releaseIfTracked(ptr))
-    return 0;
-
-  return unmapRaw(ptr, size);
+  if (size > std::numeric_limits<size_t>::max()) {
+    errno = EINVAL;
+    return -1;
+  }
+  return munmap(ptr, static_cast<size_t>(size));
 }

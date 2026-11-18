@@ -1,0 +1,31 @@
+Compiler/runtime smoke + 200K/1M XIndex validation: PASS (validation.log)
+Boundary/static-destruction tests on node 0 and 2: PASS (final-checks.log)
+Injected mbind failure on node 0 and 2: PASS, returned allocation failure
+
+Protected runner native: PASS, CSV schema and state digest verified
+Protected runner local: PASS, CSV schema and state digest verified
+Protected runner remote: PASS, CSV schema and state digest verified
+Summary parser: PASS (runner-summary.md)
+
+native: operation mix, version totals, epoch totals, contention and invalid CLI passed
+placed: operation mix, version totals, epoch totals, contention and invalid CLI passed
+Micro runner native: PASS, table=0,0,0 ballast=0,0,0
+Micro runner local: PASS, table=0,0,0 ballast=0,0,0
+Micro runner cxl: PASS, table=2,2,2 ballast=0,0,0
+
+Lifecycle: all 12 processes exited successfully, all queried object pages on requested node
+01-baseline-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+02-candidate-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+03-candidate-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+04-baseline-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+05-candidate-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+06-baseline-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+07-baseline-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+08-candidate-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+09-baseline-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+10-candidate-node0.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node0=62500 majority=node0
+11-candidate-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+12-baseline-node2.log: arbiter-slab-arena-smoke: objects=2000000 threads=8 resident_pages=62500 node2=62500 majority=node2
+
+Changed Python/bash script syntax: PASS
+git diff --check: PASS

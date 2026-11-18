@@ -3,6 +3,10 @@
 The historical XIndex A and F results below used the original NUMA-bound slab
 allocator. A separate YCSB-A experiment compares jemalloc and the slab with
 the same seed placement policy. [Allocator comparison](xindex-jemalloc.md)
+A subsequent experiment removes the fixed pool beneath jemalloc while preserving
+NUMA placement. Results include the initial repeated comparison and a final single
+Local/CXL pair after strict-only cleanup and failure-contract fixes.
+[Runtime simplification and YCSB-A comparison](xindex-jemalloc-demand.md)
 
 The B-tree and coherence_noise experiments measure selective local and CXL
 placement under the same jemalloc runtime. [Benchmark results](btree-coherence.md)

@@ -1,0 +1,40 @@
+Build + compiler/runtime smoke: PASS; no full benchmark repeats.
+Compiled and rewritten failure fixture: catch/invoke, all eight new forms,
+new_handler retries/recovery/exceptions, zero sizes, calloc overflow and free errno.
+
+[errors-smoke.log]
+smoke: compile llvm ir
+smoke: report sites
+smoke: report HITM-risk seeds
+smoke: rewrite HITM-risk seed allocations
+smoke: rewrite allocations
+smoke: preserve C++ delete ABIs
+smoke: allocation failure contracts and exception handlers
+arbiter-allocation-failure api=malloc site=1 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=calloc site=2 bytes=0 alignment=64 target_node=0 stage=size-overflow errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=3 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=4 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=5 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=6 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=7 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=8 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=9 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=10 bytes=18446744073709551615 alignment=4096 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=11 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=12 bytes=18446744073709551615 alignment=64 target_node=0 stage=size errno=12 (Cannot allocate memory)
+arbiter-allocation-failure api=new site=19 bytes=128 alignment=4096 target_node=0 stage=mbind errno=1 (Operation not permitted)
+smoke: strict arena and ordinary-pointer deallocation
+smoke: ok
+
+[errors-bind-node0.log]
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=64 target_node=0 stage=mbind errno=1 (Operation not permitted)
+arbiter-allocation-failure api=mmap site=200 bytes=4096 alignment=0 target_node=0 stage=mbind errno=1 (Operation not permitted)
+
+[errors-bind-node2.log]
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=64 target_node=2 stage=mbind errno=1 (Operation not permitted)
+arbiter-allocation-failure api=mmap site=200 bytes=4096 alignment=0 target_node=2 stage=mbind errno=1 (Operation not permitted)
+
+[errors-config.log]
+arbiter-allocation-failure api=malloc site=200 bytes=96 alignment=64 target_node=unset stage=config-target-node errno=22 (Invalid argument)
+arbiter-allocation-failure api=mmap site=200 bytes=4096 alignment=0 target_node=unset stage=config-target-node errno=22 (Invalid argument)

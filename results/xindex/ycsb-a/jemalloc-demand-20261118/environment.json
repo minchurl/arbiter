@@ -1,0 +1,15 @@
+{
+  "kernel": "6.6.92+",
+  "cpu": {
+    "CPU(s)": "64",
+    "Model name": "INTEL(R) XEON(R) GOLD 6548Y+",
+    "Thread(s) per core": "1",
+    "Core(s) per socket": "32",
+    "Socket(s)": "1"
+  },
+  "page_bytes": 4096,
+  "jemalloc_package": "5.2.1-4ubuntu1",
+  "transparent_hugepage": "always [madvise] never",
+  "overcommit": "0",
+  "malloc_conf": ""
+}

@@ -166,7 +166,19 @@ for helper in \
   grep -q "${helper}" "${tmpdir}/delete-variants.arbiter.ll"
 done
 
-printf "smoke: runtime fallback\n"
-"${RUNTIME_SMOKE}"
+printf "smoke: allocation failure contracts and exception handlers\n"
+"${CLANGXX}" -std=c++17 -O0 -emit-llvm -c \
+  "${ROOT_DIR}/tests/llvm/allocation-failure-smoke.cpp" -o "${tmpdir}/failure.bc"
+"${OPT}" -load-pass-plugin "${PLUGIN}" -passes=arbiter-experiment-all-rewrite \
+  "${tmpdir}/failure.bc" -o "${tmpdir}/failure.arbiter.bc"
+"${LLVM_DIS}" "${tmpdir}/failure.arbiter.bc" -o "${tmpdir}/failure.arbiter.ll"
+grep -q 'invoke ptr @arbiter_new_site' "${tmpdir}/failure.arbiter.ll"
+grep -q 'call ptr @arbiter_new_nothrow_site' "${tmpdir}/failure.arbiter.ll"
+"${CLANGXX}" "${tmpdir}/failure.arbiter.bc" "${BUILD_DIR}/runtime/libarbiter_runtime.a" \
+  -lnuma -ljemalloc -pthread -o "${tmpdir}/failure"
+ARBITER_TARGET_NODE="${ARBITER_TARGET_NODE:-0}" "${tmpdir}/failure"
+
+printf "smoke: strict arena and ordinary-pointer deallocation\n"
+ARBITER_TARGET_NODE="${ARBITER_TARGET_NODE:-0}" "${RUNTIME_SMOKE}"
 
 printf "smoke: ok\n"

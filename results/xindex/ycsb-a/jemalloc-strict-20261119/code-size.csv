@@ -1,0 +1,8 @@
+path,main_lines,pool_removal_lines,strict_only_lines,final_lines
+runtime/include/arbiter_runtime_site.h,33,33,33,37
+runtime/src/arbiter_jemalloc_arena.cpp,642,356,386,424
+runtime/src/arbiter_jemalloc_arena.h,28,27,15,21
+runtime/src/arbiter_runtime_site.cpp,496,491,118,168
+runtime/src/arbiter_side_table.cpp,63,63,0,0
+runtime/src/arbiter_side_table.h,32,32,0,0
+TOTAL,1294,1002,552,650

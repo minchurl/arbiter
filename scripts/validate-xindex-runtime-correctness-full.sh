@@ -24,7 +24,7 @@ RUN_NATIVE=1 includes a native baseline. The default is one Local/CXL pair;
 --four-pairs runs the alternating four-pair confirmation.
 
 Run scripts/validate-xindex-runtime-correctness.sh first to pass the ABI,
-arena-boundary, and short native/Local/CXL gates.
+arena placement/failure, and short native/Local/CXL gates.
 EOF
       exit 0
       ;;

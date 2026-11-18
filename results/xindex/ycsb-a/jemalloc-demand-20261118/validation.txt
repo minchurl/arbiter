@@ -1,0 +1,143 @@
+[01-baseline-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=0 query_error_pages=0 mincore_error_batches=0 node0_pages=5001030
+
+[02-candidate-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node0_pages=5000778
+
+[03-candidate-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node2_pages=5000778
+
+[04-baseline-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=2 query_error_pages=0 mincore_error_batches=0 node2_pages=5001030
+
+[05-candidate-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node0_pages=5000778
+
+[06-baseline-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=0 query_error_pages=0 mincore_error_batches=0 node0_pages=5001030
+
+[07-baseline-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=2 query_error_pages=0 mincore_error_batches=0 node2_pages=5001030
+
+[08-candidate-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node2_pages=5000778
+
+[09-baseline-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=0 query_error_pages=0 mincore_error_batches=0 node0_pages=5001030
+
+[10-candidate-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node0_pages=5000778
+
+[11-candidate-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node2_pages=5000778
+
+[12-baseline-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=2 query_error_pages=0 mincore_error_batches=0 node2_pages=5001030
+
+[13-candidate-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node0_pages=5000778
+
+[14-baseline-node0.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=0 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=0 query_error_pages=0 mincore_error_batches=0 node0_pages=5001030
+
+[15-baseline-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 requested_alignment=64 effective_alignment=64 slot_bytes=128 allocations=26395417 frees=0 live=26395417 peak_live=26395417 requested_bytes_total=2533960032 slot_bytes_total=3378613376 assigned_extents=1622 assigned_bytes=3502243840
+arbiter-arena-site site=71 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=26395622 frees=0 live=26395622 peak_live=26395622 requested_bytes_total=13725723440 slot_bytes_total=16893198080 assigned_extents=8097 assigned_bytes=17081303040
+arbiter-arena-site site=74 object_bytes=520 requested_alignment=64 effective_alignment=64 slot_bytes=640 allocations=143 frees=0 live=143 peak_live=143 requested_bytes_total=74360 slot_bytes_total=91520 assigned_extents=2 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc reserve_bytes=25769803776 slab_bytes=2097152 slot_alignment=64 assigned_extents=9721 assigned_bytes=20587741184 allocations=52791182 frees=0 live=52791182 peak_live=52791182 requested_bytes_total=16259757832 slot_bytes_total=20271902976 fallback_allocations=0 fallback_unavailable=0 fallback_unsupported=0 fallback_exhausted=0
+arbiter-arena-residency resident_pages=5001030 resident_bytes=20484218880 majority_node=2 query_error_pages=0 mincore_error_batches=0 node2_pages=5001030
+
+[16-candidate-node2.log]
+xindex-operation-count executed=400000000
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-site site=71 object_bytes=520 allocations=26395622 frees=0 live=26395622 allocated_bytes=16893198080 assigned_bytes=19974324224
+arbiter-arena-site site=74 object_bytes=520 allocations=143 frees=0 live=143 allocated_bytes=91520 assigned_bytes=4194304
+arbiter-arena-summary node=2 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=23578279936 allocations=52791182 frees=0 live=52791182 fallback_allocations=0
+arbiter-arena-residency resident_pages=5000778 resident_bytes=20483186688 majority_node=2 query_error_pages=0 mincore_error_batches=0 zero_pages=6 node2_pages=5000778
