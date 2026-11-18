@@ -16,7 +16,7 @@ EXPERIMENT_CONFIG="${ROOT_DIR}/scripts/xindex-experiments/hitm-seed.sh"
 
 DEFAULT_RUNTIME_LINK_LIBS=""
 if [[ "$(uname -s)" == "Linux" ]]; then
-  DEFAULT_RUNTIME_LINK_LIBS="-lnuma -ljemalloc"
+  DEFAULT_RUNTIME_LINK_LIBS="-lnuma"
 fi
 RUNTIME_LINK_LIBS="${ARBITER_RUNTIME_LINK_LIBS:-${DEFAULT_RUNTIME_LINK_LIBS}}"
 
@@ -99,12 +99,12 @@ EXPERIMENT_REPORTS=()
 # shellcheck source=/dev/null
 source "${EXPERIMENT_CONFIG}"
 
-if ! declare -F configure_hitm_seed_experiment >/dev/null; then
+if ! declare -F configure_xindex_experiment >/dev/null; then
   echo "invalid XIndex experiment config: ${EXPERIMENT_CONFIG}" >&2
   exit 1
 fi
 
-configure_hitm_seed_experiment
+configure_xindex_experiment
 
 if [[ -z "${REWRITE_PASS}" ]]; then
   echo "XIndex HITM-risk seed setup did not set REWRITE_PASS" >&2

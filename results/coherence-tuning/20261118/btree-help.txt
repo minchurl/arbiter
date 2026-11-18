@@ -1,3 +1,0 @@
-/home/shin/vmitosis-workloads/bin/bench_btree_mt -h
-usage: /home/shin/vmitosis-workloads/bin/bench_btree_mt [-p N] [-d N] [-r N] [-m N] [-o FILE]
-p: pagetable node, d: datanode, r: runnode, m: memory in GB

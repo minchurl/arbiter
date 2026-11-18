@@ -1,5 +1,0 @@
-[
-  {"name": "fast-control", "build": "fast-control"},
-  {"name": "fast-index", "build": "fast-index"},
-  {"name": "fast-packed", "build": "fast-packed"}
-]

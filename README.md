@@ -6,7 +6,7 @@ current implementation is a single seed-only pipeline:
 
 ```text
 XIndex C++ -> LLVM IR -> HITM-risk seed selection -> allocation rewrite
-           -> NUMA-bound jemalloc arenas -> local/CXL comparison
+           -> fixed-size NUMA arena -> local/CXL comparison
 ```
 
 The compiler score is a static proxy built from pointer escape,
@@ -17,7 +17,7 @@ not migrate existing objects.
 ## Repository Map
 
 - `compiler/llvm/lib/hitm_seed/`: seed scoring, options, report, and rewrite
-- `runtime/src/arbiter_jemalloc_arena.cpp`: jemalloc arenas and NUMA extent hooks
+- `runtime/src/arbiter_slab_arena.cpp`: NUMA-bound slab allocator
 - `runtime/src/arbiter_runtime_site.cpp`: rewritten allocation ABI
 - `configs/hitm-seed/candidates/`: curated top 12 measured seed policies
 - `scripts/run-xindex-hitm-seed-replay.sh`: canonical full-scale one-pass runner
@@ -37,8 +37,8 @@ checked in under `configs/` and `results/`.
 
 - CMake 3.20+, Ninja, and a C++17 compiler
 - LLVM 18 development files and tools (`clang`, `opt`, `llvm-link`)
-- Linux `libnuma` and jemalloc 5 development files for the NUMA arena
-- Intel MKL for XIndex
+- Linux `libnuma`
+- Intel MKL and jemalloc for XIndex
 - `git-lfs` and `zstd` when restoring the packaged 26GB YCSB-A traces
 - systemd user scopes for the protected 64G benchmark limit
 
@@ -74,71 +74,6 @@ cmake --build build-llvm18 --target \
   ArbiterLLVMPlugin arbiter_runtime arbiter-runtime-smoke \
   arbiter-slab-arena-smoke
 ```
-
-## Run B-tree and the coherence microbenchmark
-
-Use the compiler/runtime build above on a host with local DRAM and a CXL
-memory node. For the measured configuration, add `-DCMAKE_BUILD_TYPE=Release`
-when configuring CMake. These workloads also need Clang's OpenMP development package
-(`libomp-18-dev` on Ubuntu), `patch`, GNU time, and Python 3.9+.
-
-```sh
-./scripts/build-btree-coherence.sh
-./scripts/run-btree-coherence.py
-```
-
-The build reads the supplied sources from `~/vmitosis-workloads` and
-`~/microbench`. Set `VMITOSIS_DIR`, `MICROBENCH_DIR`, or `ARBITER_BUILD_DIR`
-to use different locations. It applies the published-RMW selection policy
-to the patched copies and builds matched native and automatically selected binaries.
-
-The runner uses 32 workers and three rounds of native, selected-local, and
-selected-CXL placement. CPU and local memory default to node 0 and CXL to
-node 2. Use `--cpu-node`, `--local-node`, and `--cxl-node` on a different
-topology, or `--benchmark btree` / `--benchmark micro` to run just one workload.
-Each run records throughput, peak RSS and live page locations under
-`build/arbiter-bench/`. See the [results and methodology](docs/results/btree-coherence.md).
-
-The published-RMW policy distinguishes the shared table from its read-only
-ballast. `ARBITER_HITM_SEED_CONFIG` overrides the policy; the build manifest
-records the automatically selected objects, including zero selections.
-See the [policy evaluation](docs/results/published-rmw-policy.md).
-
-The microbenchmark adapter now validates writes and fixes the supplied
-100%-read threshold, lock ownership and non-atomic shared accesses. It also
-publishes each single-writer epoch with an atomic store. Set
-`ARBITER_MICRO_EPOCH_STORE=0` when building for the corrected locked-increment
-control. These changes apply to the build copy; the supplied source is untouched.
-
-The runner accepts `--read-pct`, `--table-size`, `--ballast-mb`, `--victims`,
-`--noise`, and `--noise-mode`. For example, a 90%-write workload is:
-
-```sh
-./scripts/run-btree-coherence.py --benchmark micro --read-pct 10 \
-  --modes local cxl --rounds 3 --duration 30
-```
-
-To compare a cache-line-sized entry layout, build separately with
-`ARBITER_MICRO_ENTRY_BYTES=64`. The default remains 32 bytes to retain the
-original adjacent-entry false sharing. Both layouts select the same table
-allocation and keep ballast local. The 64-byte experiment verifies table
-alignment at runtime. Larger tables may require `--arena-chunk-bytes` of at
-least twice the allocation size, rounded up to a power of two.
-The throughput preset below enables padding and epoch stores.
-
-```sh
-. configs/benchmarks/coherence-throughput.config
-./scripts/build-btree-coherence.sh
-./scripts/run-btree-coherence.py --benchmark micro --modes local cxl \
-  --bin-dir "$ARBITER_BENCH_BUILD_DIR"
-python3 scripts/test-coherence-adapter.py "$ARBITER_BENCH_BUILD_DIR"
-```
-
-Use `--perf /path/to/perf` on a microbenchmark run to count cycles,
-instructions, L3 HitM loads, L3 misses and locked loads only during the
-measurement window. This event list targets the measured Intel host.
-See the [microbenchmark tuning results](docs/results/coherence-tuning.md)
-for the allocation analysis, measured gains, full cases and reproduction.
 
 ## Run the XIndex Experiment
 
@@ -220,11 +155,10 @@ The canonical `raw-046` selection is automatic: sites
 the current YCSB-A trace. The report keeps this static-selection/runtime-use
 distinction explicit; no site ID is pinned in the config.
 
-With the original slab allocator, four one-pass pairs of `raw-046` averaged
-26.531M local versus 49.068M CXL op/s for a **+85.03% mean paired improvement**. See
+Across four one-pass pairs, `raw-046` averaged 26.531M local versus 49.068M
+CXL op/s: **+85.03% mean paired improvement**. See
 [the YCSB-A result](docs/results/xindex-ycsb-a.md) for pairwise results, safety
-counters, and the earlier cyclic-replay history. Both runtimes were also compared on the
-same host for throughput, memory use and allocation time. [Jemalloc comparison](docs/results/xindex-jemalloc.md)
+counters, and the earlier cyclic-replay history.
 
 ## Build Another Retained Policy
 
@@ -244,7 +178,7 @@ ARBITER_BUILD_DIR=build-llvm18 ./scripts/smoke.sh
 build-llvm18/bin/arbiter-runtime-smoke
 ARBITER_HEAP_BACKEND=arena ARBITER_TARGET_NODE=0 \
   ARBITER_ARENA_STRICT=1 ARBITER_ARENA_REPORT=1 \
-  ARBITER_TEST_OBJECTS=40000 build-llvm18/bin/arbiter-slab-arena-smoke
+  build-llvm18/bin/arbiter-slab-arena-smoke 40000
 ```
 
 ## Documentation

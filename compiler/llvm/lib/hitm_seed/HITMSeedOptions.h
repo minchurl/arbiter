@@ -19,7 +19,6 @@ extern ::llvm::cl::opt<unsigned> HITMWeightSyncAtomic;
 extern ::llvm::cl::opt<unsigned> HITMWeightSyncStore;
 extern ::llvm::cl::opt<unsigned> HITMWeightSyncInlineAsm;
 extern ::llvm::cl::opt<unsigned> HITMWeightSyncFile;
-extern ::llvm::cl::opt<unsigned> HITMWeightPublishedRMW;
 extern ::llvm::cl::opt<unsigned> HITMWeightWorkerEntry;
 extern ::llvm::cl::opt<unsigned> HITMWeightWorkerReachable;
 extern ::llvm::cl::opt<unsigned> HITMWeightSize;

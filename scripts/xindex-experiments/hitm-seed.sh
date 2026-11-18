@@ -1,5 +1,4 @@
-configure_hitm_seed_experiment() {
-  local stem="${1:-ycsb_bench}"
+configure_xindex_experiment() {
   local config_path="${ARBITER_HITM_SEED_CONFIG:-}"
   local settings=(
     ARBITER_HITM_MIN_SCORE=6
@@ -12,7 +11,6 @@ configure_hitm_seed_experiment() {
     ARBITER_HITM_WEIGHT_SYNC_STORE=2
     ARBITER_HITM_WEIGHT_SYNC_INLINE_ASM=2
     ARBITER_HITM_WEIGHT_SYNC_FILE=1
-    ARBITER_HITM_WEIGHT_PUBLISHED_RMW=0
     ARBITER_HITM_WEIGHT_WORKER_ENTRY=3
     ARBITER_HITM_WEIGHT_WORKER_REACHABLE=2
     ARBITER_HITM_WEIGHT_SIZE=1
@@ -44,8 +42,8 @@ configure_hitm_seed_experiment() {
     source "${config_path}"
   fi
 
-  local report_path="${ARBITER_HITM_SEED_REPORT_PATH:-${OUT_DIR}/${stem}.hitm-seed-sites.csv}"
-  local effective_args_path="${OUT_DIR}/${stem}.hitm-seed-effective.opt-args"
+  local report_path="${ARBITER_HITM_SEED_REPORT_PATH:-${OUT_DIR}/ycsb_bench.hitm-seed-sites.csv}"
+  local effective_args_path="${OUT_DIR}/ycsb_bench.hitm-seed-effective.opt-args"
 
   REWRITE_ARGS=(-arbiter-hitm-seed-report-path="${report_path}")
   for setting in "${settings[@]}"; do
@@ -64,7 +62,7 @@ configure_hitm_seed_experiment() {
     -passes=arbiter-report-hitm-seed-sites \
     "${REWRITE_ARGS[@]}" \
     -disable-output \
-    "${OUT_DIR}/${stem}.bc"
+    "${OUT_DIR}/ycsb_bench.bc"
 
   REWRITE_PASS="arbiter-experiment-hitm-seed-rewrite"
   EXPERIMENT_REPORTS=("${report_path}" "${effective_args_path}")

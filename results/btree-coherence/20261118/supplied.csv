@@ -1,3 +1,0 @@
-benchmark,binary_sha256,timed_operations,reported_seconds,mops_per_s,process_wall_seconds,max_rss_kib,swaps,exit_status
-btree,0e5d618377670e92a4c9461be4416762ccbb20ce5fd4c461cd563be974985de4,600000000,49,12.244898,107.89,36260608,0,0
-micro,e7cc80c8124a691ec488dc972de8d008db369d676e8555d36ff6f6847f3a14e8,26452835776,120.000,220.440298,124.02,8391680,0,0
