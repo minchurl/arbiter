@@ -1,0 +1,212 @@
+[
+  {
+    "name": "supplied-corrected",
+    "build": "corrected",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 50
+  },
+  {
+    "name": "supplied-store",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 50
+  },
+  {
+    "name": "supplied-padded",
+    "build": "padded",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 50
+  },
+  {
+    "name": "read-0",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 0
+  },
+  {
+    "name": "read-10",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "read-90",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 90
+  },
+  {
+    "name": "read-100",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 100
+  },
+  {
+    "name": "no-ballast-read-0",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 0,
+    "read_pct": 0
+  },
+  {
+    "name": "no-ballast-read-50",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 0,
+    "read_pct": 50
+  },
+  {
+    "name": "no-ballast-read-90",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 0,
+    "read_pct": 90
+  },
+  {
+    "name": "table-16",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 16,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "table-64",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 64,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "table-1024",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 1024,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "table-4096",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 4096,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "table-65536",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 65536,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "table-1000000",
+    "build": "epoch-store",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 1000000,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "noise-maint",
+    "build": "epoch-store",
+    "victims": 30,
+    "noise": 2,
+    "noise_mode": "maint",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "noise-combined",
+    "build": "epoch-store",
+    "victims": 29,
+    "noise": 2,
+    "noise_mode": "combined",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "padded-256-writes",
+    "build": "padded",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "padded-65536-writes",
+    "build": "padded",
+    "victims": 32,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 65536,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  },
+  {
+    "name": "16-workers",
+    "build": "epoch-store",
+    "victims": 16,
+    "noise": 0,
+    "noise_mode": "none",
+    "table_size": 256,
+    "ballast_mb": 8192,
+    "read_pct": 10
+  }
+]

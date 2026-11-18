@@ -1,0 +1,19 @@
+case,build,victims,noise,noise_mode,table_size,ballast_mb,read_pct,entry_bytes,epoch_store,benchmark,round,mode,node,operations,seconds,mops_per_s,max_rss_kib,arena_allocations,arena_resident_bytes_at_exit,swaps,live_sample_nodes,checked_keys,fallback_allocations,page_query_errors,selected_sites
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,1,local,0,10084299264,30.000058,336.142659,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,1,cxl,2,10617221952,30.000057,353.906726,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,1,local,0,11238869376,30.000059,374.628242,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,1,cxl,2,11246088832,30.000058,374.868903,8443648,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,1,local,0,16172351104,30.000058,539.077328,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,1,cxl,2,16097961984,30.000058,536.597695,8443392,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,2,cxl,2,16053071360,30.000057,535.101362,8443392,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,2,local,0,16220789184,30.000058,540.691927,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,2,cxl,2,11270501824,30.000059,375.682655,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,2,local,0,11254742144,30.000058,375.157346,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,2,cxl,2,10607009984,30.000058,353.566316,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,2,local,0,10613050368,30.000058,353.767662,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,3,local,0,10603765568,30.000058,353.458169,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+corrected,final-corrected,32,0,none,256,8192,50,32,0,micro,3,cxl,2,10611355072,30.00006,353.711128,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,3,local,0,11265020672,30.000059,375.499951,8443392,1,45056,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+epoch-store,final-epoch-store,32,0,none,256,8192,50,32,1,micro,3,cxl,2,11275040128,30.000058,375.833944,8443392,1,45056,0,"table=2,2,2 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,3,local,0,16360240384,30.000059,545.340274,8443392,1,57344,0,"table=0,0,0 ballast=0,0,0",,0,0,4
+padded,final-padded,32,0,none,256,8192,50,64,1,micro,3,cxl,2,16297492544,30.000058,543.248701,8443392,1,57344,0,"table=2,2,2 ballast=0,0,0",,0,0,4
