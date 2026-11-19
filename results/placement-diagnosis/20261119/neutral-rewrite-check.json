@@ -1,0 +1,18 @@
+{
+  "micro": {
+    "original_sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c",
+    "neutral_sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c",
+    "byte_identical": true,
+    "original_binary_sha256": "85f73753e7c5497a605129e827648c8b5a9531b055e3ad7485b6d250054e397e",
+    "neutral_binary_sha256": "b3d34a47c1011838afd65d256878e5f48fdcfe271eeaa2eef9a95312485662ce",
+    "binary_identical": false
+  },
+  "xindex": {
+    "original_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f",
+    "neutral_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f",
+    "byte_identical": true,
+    "original_binary_sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+    "neutral_binary_sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+    "binary_identical": true
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "base_commit": "62b5367694441d39d45da0bdc5e5634e3b9b5c49",
+  "branch": "perf/xindex-micro-placement",
+  "constraint": "No benchmark source or workload-logic changes. Primary comparisons retain the prior fixed workloads and binaries. Diagnostic CLI sweeps are labeled separately. Only allocation selection/runtime placement may vary.",
+  "files": {
+    "benchmark/btree-coherence/btree.patch": "cef015f3ec6bf021f445260c430aa1ef331b8752a7ff7b0a6841619b82a9d662",
+    "benchmark/btree-coherence/coherence-noise.patch": "73f05fc6b798632334c6dee65b68e36fc7be73d4dfc545480e82c095baefc825",
+    "benchmark/btree-coherence/page-sample.h": "a626f8432190b11d8a7f38822182d9b2cc902fea8929163e7eb5c890c886b234",
+    "benchmark/btree-coherence/perf-window.h": "9cee2198a7d87738226684c58518907c233dd444dc60805ea99e731610a73bbd",
+    "benchmark/xindex/XIndex-H/CMakeLists.txt": "21e29ac3c90abd9e0226b70b8474663983c29b0ebfd33f6e1914882bd258b760",
+    "benchmark/xindex/XIndex-H/LICENCE": "1e90e8e20ec457b513dc9c68c371c033ee450902db5f0afc970f290e8b848923",
+    "benchmark/xindex/XIndex-H/Makefile": "e2d3831ae4bbb70196fdecb2a49e345a6984d524184e81e9f7830e90c8be4b78",
+    "benchmark/xindex/XIndex-H/README.md": "3bb59d402c15f2e16ea7d6cdfd938f948ac893e4040ebf2edf91d1f426e0b82d",
+    "benchmark/xindex/XIndex-H/helper.h": "3a291c80bf84b9c4f3652b3b024bcc9d4ff17828ae6f28ce052f8d8800e00f0a",
+    "benchmark/xindex/XIndex-H/intel-mkl-install.txt": "97ddb2917bf78f7046b2ba735cfe0f296ee16c982c315401d6bb5c18f75c7cf0",
+    "benchmark/xindex/XIndex-H/microbench.cpp": "cbf131c0f0beda21522c3c757e1981e53e29556b1afffd52c20239629303497e",
+    "benchmark/xindex/XIndex-H/xindex.h": "37c5b0aa4a39beba7777341e52566432c0669a0ebe30671d51a9f591490f4a4c",
+    "benchmark/xindex/XIndex-H/xindex_buffer.h": "4f8890ad76cdaf4bb05100ca1643e24372618475722847e265ad0fe885f58f21",
+    "benchmark/xindex/XIndex-H/xindex_buffer_impl.h": "43dc90690934b98112dc8bdafc069171d911fd88218c96cb5a8223714017c8e5",
+    "benchmark/xindex/XIndex-H/xindex_group.h": "7041b47a49988411e6510d42f59d6299c3f3f9a2bf86e15b3bb9d0496ae8b9ae",
+    "benchmark/xindex/XIndex-H/xindex_group_impl.h": "bfd19400f70b84d5c9341350bd97f820c8c8ab95756a40b7eaaae09a3d6eea7e",
+    "benchmark/xindex/XIndex-H/xindex_impl.h": "cad088447cb6767d6f538a8e3946869e286e1b26b24cf4c90ae91f144a866088",
+    "benchmark/xindex/XIndex-H/xindex_model.h": "2884f464739426d7963812f3c159123ee20947ce5b956b6fb2da6fddb089cf48",
+    "benchmark/xindex/XIndex-H/xindex_model_impl.h": "c99337e28963f654aa823904a0b5528a48f914556a2258725f95add2597de6a2",
+    "benchmark/xindex/XIndex-H/xindex_root.h": "0910dd30df28722880b6403d67b289818eb595f6ee794b9f1f331164e45ccd17",
+    "benchmark/xindex/XIndex-H/xindex_root_impl.h": "050b74ff7c8633d1bc17391bce3fd930e107525e121c154aafbbfb56ee9b5493",
+    "benchmark/xindex/XIndex-H/xindex_util.h": "05d4ba9b76fd2efc8c3114cfd8b6c87cf1ac1d94ee0a4e9c06f2a615b6ce6e91",
+    "benchmark/xindex/XIndex-H/ycsb_bench.cpp": "e95a7e3f199a8718cb7d25cb02c68fd4af0505636a1d08613dabc672193c1c56",
+    "benchmark/xindex/XIndex-H/ycsb_bench_large.cpp": "10dd13d171a3399fb27ebb39136f8e091b87c7e686516aaee4a6aeda3c58b908",
+    "benchmark/xindex/XIndex-H/ycsb_bench_tiny.cpp": "279795073efd8e3d221b288a19d5778869a911cfb54e5d8da3ee30d27a95fc60",
+    "benchmark/xindex/XIndex-H/ycsb_rmw.h": "7c76553ea64634eec84e010bcaee2d20320e4394ace7e2c8e3c5882f62b81701",
+    "build/libcuckoo-rmw/micro/coherence_noise.cpp": "3c29040d8b814700eb16c37ea9a4c93a5312863e4b338cf9f21ae813eb2e54b6",
+    "build/libcuckoo-rmw/micro/micro-native.bc": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de",
+    "build/libcuckoo-rmw/micro/micro-placed.bc": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c",
+    "build/libcuckoo-rmw/micro/micro-native": "02d3023a89c0cb0c72062f2f05e7af6b9ca767d9e3f698bebe6c5ea59888f9fb",
+    "build/libcuckoo-rmw/micro/micro-placed": "85f73753e7c5497a605129e827648c8b5a9531b055e3ad7485b6d250054e397e",
+    "build/libcuckoo-rmw/xindex/ycsb_bench.bc": "71cf5a1c9a05733d919f13f503a0258f0f1b1cb23bac6b67d8c0380a822237da",
+    "build/libcuckoo-rmw/xindex/ycsb_bench.arbiter.bc": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f",
+    "build/libcuckoo-rmw/xindex/ycsb_bench-native": "988fefb51e5ab4839ca90e0011373267cdb3f4b843f787675987fe41aa7d5e8a",
+    "build/libcuckoo-rmw/xindex/ycsb_bench-arbiter": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193"
+  },
+  "traces": {
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat": {
+      "size": 21757793131,
+      "mtime_ns": 1786455736746866210,
+      "inode": 8134536
+    },
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat": {
+      "size": 5388149510,
+      "mtime_ns": 1786455710919187914,
+      "inode": 8134535
+    }
+  }
+}

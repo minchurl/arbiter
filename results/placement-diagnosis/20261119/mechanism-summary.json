@@ -1,0 +1,261 @@
+{
+  "confirmations": [
+    {
+      "case": "confirm-micro-baseline",
+      "node": 0,
+      "n": 5,
+      "mean_mops": 541.6680621142649,
+      "min_mops": 537.6300206362941,
+      "max_mops": 545.3811599043469,
+      "ratio_to_local": 1.0,
+      "paired_ratio_min": 1.0,
+      "paired_ratio_max": 1.0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "node": 2,
+      "n": 5,
+      "mean_mops": 535.4524291117461,
+      "min_mops": 528.2892175548982,
+      "max_mops": 546.4152591694816,
+      "ratio_to_local": 0.9885250147881017,
+      "paired_ratio_min": 0.9761730933517649,
+      "paired_ratio_max": 1.0163406770380679
+    },
+    {
+      "case": "confirm-micro-table1",
+      "node": 0,
+      "n": 5,
+      "mean_mops": 6.407707249275737,
+      "min_mops": 6.135629533261918,
+      "max_mops": 6.574139823329675,
+      "ratio_to_local": 1.0,
+      "paired_ratio_min": 1.0,
+      "paired_ratio_max": 1.0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "node": 2,
+      "n": 5,
+      "mean_mops": 6.467343317455062,
+      "min_mops": 6.279322259976964,
+      "max_mops": 6.58198216090056,
+      "ratio_to_local": 1.0093069277136633,
+      "paired_ratio_min": 0.974843546114446,
+      "paired_ratio_max": 1.029471844871929
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "node": 0,
+      "n": 5,
+      "mean_mops": 210.49602675236224,
+      "min_mops": 209.60335743015153,
+      "max_mops": 211.0084277063647,
+      "ratio_to_local": 1.0,
+      "paired_ratio_min": 1.0,
+      "paired_ratio_max": 1.0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "node": 2,
+      "n": 5,
+      "mean_mops": 209.42598886874092,
+      "min_mops": 208.67118718553436,
+      "max_mops": 211.22690533554652,
+      "ratio_to_local": 0.9949165886875377,
+      "paired_ratio_min": 0.9889234731226811,
+      "paired_ratio_max": 1.0052143654114694
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "node": 0,
+      "n": 3,
+      "mean_mops": 26.620198055618857,
+      "min_mops": 26.533644661430696,
+      "max_mops": 26.714217974661562,
+      "ratio_to_local": 1.0,
+      "paired_ratio_min": 1.0,
+      "paired_ratio_max": 1.0
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "node": 2,
+      "n": 3,
+      "mean_mops": 45.792506240747876,
+      "min_mops": 42.48814846208836,
+      "max_mops": 48.77608606052625,
+      "ratio_to_local": 1.7202165868590231,
+      "paired_ratio_min": 1.5965346666114322,
+      "paired_ratio_max": 1.838273131449113
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "node": 1,
+      "n": 3,
+      "mean_mops": 27.19035263662209,
+      "min_mops": 26.048280487884295,
+      "max_mops": 28.019838045336098,
+      "ratio_to_local": 1.021418119422402,
+      "paired_ratio_min": 0.9787901876127403,
+      "paired_ratio_max": 1.0488736025105776
+    }
+  ],
+  "retired_branch_samples": {
+    "local": {
+      "xindex_leaf_cas_failure": {
+        "samples": 3440,
+        "estimated_events_per_operation": 0.8600258
+      },
+      "xindex_reader_locked_leaf": {
+        "samples": 1103,
+        "estimated_events_per_operation": 0.2757582725
+      },
+      "micro_cas_failure": {
+        "samples": 1278,
+        "estimated_events_per_operation": 0.015955029497233042
+      },
+      "micro_reader_lock_wait": {
+        "samples": 1230,
+        "estimated_events_per_operation": 0.015355779563064666
+      },
+      "micro_writer_lock_wait": {
+        "samples": 1204,
+        "estimated_events_per_operation": 0.01503118584872346
+      },
+      "micro_reader_version_retry": {
+        "samples": 9,
+        "estimated_events_per_operation": 0.00011235936265657072
+      }
+    },
+    "cxl": {
+      "xindex_leaf_cas_failure": {
+        "samples": 656,
+        "estimated_events_per_operation": 0.16400492
+      },
+      "xindex_reader_locked_leaf": {
+        "samples": 145,
+        "estimated_events_per_operation": 0.0362510875
+      },
+      "micro_cas_failure": {
+        "samples": 1298,
+        "estimated_events_per_operation": 0.015967255103330007
+      },
+      "micro_reader_lock_wait": {
+        "samples": 1262,
+        "estimated_events_per_operation": 0.015524403652082026
+      },
+      "micro_writer_lock_wait": {
+        "samples": 1241,
+        "estimated_events_per_operation": 0.015266073638854037
+      },
+      "micro_reader_version_retry": {
+        "samples": 12,
+        "estimated_events_per_operation": 0.0001476171504159939
+      }
+    }
+  },
+  "one_entry_micro_branch_control": {
+    "local": {
+      "writer_pause_wait": {
+        "samples": 78251,
+        "estimated_events_per_operation": 84.38897996517693
+      },
+      "reader_pause_wait": {
+        "samples": 9861,
+        "estimated_events_per_operation": 10.634493251672307
+      },
+      "cas_failure": {
+        "samples": 214,
+        "estimated_events_per_operation": 0.23078608212735766
+      }
+    },
+    "cxl": {
+      "writer_pause_wait": {
+        "samples": 78789,
+        "estimated_events_per_operation": 83.5089655110868
+      },
+      "reader_pause_wait": {
+        "samples": 10045,
+        "estimated_events_per_operation": 10.646759808588342
+      },
+      "cas_failure": {
+        "samples": 205,
+        "estimated_events_per_operation": 0.21728081242017025
+      }
+    }
+  },
+  "xindex_instruction_samples_per_operation": {
+    "local": {
+      "total": 476.10345127249997,
+      "background_coordinator": 259.131666585,
+      "maintenance": 22.36302592,
+      "remaining_symbols": 194.60875876749998
+    },
+    "cxl": {
+      "total": 314.591046275,
+      "background_coordinator": 135.195353065,
+      "maintenance": 6.89953291,
+      "remaining_symbols": 172.49616029999999
+    }
+  },
+  "micro_hitm_object_attribution": [
+    {
+      "case": "micro-samples-hitm-cxl-r2",
+      "workload": "micro",
+      "record": "hitm",
+      "node": "2",
+      "object": "table",
+      "samples": "306254",
+      "fraction": "0.9973231382459066",
+      "conditional_mean_cycles": "",
+      "conditional_median_cycles": "",
+      "conditional_p90_cycles": "",
+      "conditional_p99_cycles": ""
+    },
+    {
+      "case": "micro-samples-hitm-cxl-r2",
+      "workload": "micro",
+      "record": "hitm",
+      "node": "2",
+      "object": "ballast",
+      "samples": "822",
+      "fraction": "0.002676861754093449",
+      "conditional_mean_cycles": "",
+      "conditional_median_cycles": "",
+      "conditional_p90_cycles": "",
+      "conditional_p99_cycles": ""
+    },
+    {
+      "case": "micro-samples-hitm-local-r2",
+      "workload": "micro",
+      "record": "hitm",
+      "node": "0",
+      "object": "table",
+      "samples": "303905",
+      "fraction": "0.9970963614291808",
+      "conditional_mean_cycles": "",
+      "conditional_median_cycles": "",
+      "conditional_p90_cycles": "",
+      "conditional_p99_cycles": ""
+    },
+    {
+      "case": "micro-samples-hitm-local-r2",
+      "workload": "micro",
+      "record": "hitm",
+      "node": "0",
+      "object": "ballast",
+      "samples": "885",
+      "fraction": "0.0029036385708192526",
+      "conditional_mean_cycles": "",
+      "conditional_median_cycles": "",
+      "conditional_p90_cycles": "",
+      "conditional_p99_cycles": ""
+    }
+  ],
+  "interpretation_limits": [
+    "Branch values are PEBS period-weighted estimates, not software operation counters.",
+    "Remaining instruction symbols are not exclusively foreground instructions.",
+    "Fresh uninstrumented confirmations are separate from diagnostic profiles and screens.",
+    "Changed CLI inputs are separate workloads; they do not establish gains for the fixed baseline."
+  ]
+}

@@ -1,0 +1,140 @@
+case,workload,record,node,symbol,samples,period,share,period_per_operation
+micro-hot1-samples-branches-cxl,micro,branches,2,"victim_thread(int, Config, VictimResult*)",90449,9045171347,1.0,95.86747415898526
+micro-hot1-samples-branches-local,micro,branches,0,"victim_thread(int, Config, VictimResult*)",89751,8975369253,1.0,96.79103578043214
+micro-samples-branches-cxl,micro,branches,2,"victim_thread(int, Config, VictimResult*)",46824,4682540472,1.0,0.5760021209232082
+micro-samples-branches-local,micro,branches,0,"victim_thread(int, Config, VictimResult*)",46002,4600338006,0.9999782622872422,0.5743061556586185
+micro-samples-branches-local,micro,branches,0,free,1,100003,2.1737712757863617e-05,1.2484373628507857e-05
+micro-samples-cycles-cxl,micro,cycles,2,"victim_thread(int, Config, VictimResult*)",239709,1672910133004,0.9998913156813506,204.2858976185275
+micro-samples-cycles-cxl,micro,cycles,2,[unknown],26,181838861,0.00010868431864944265,0.022205086937103772
+micro-samples-cycles-local,micro,cycles,0,"victim_thread(int, Config, VictimResult*)",239694,1672710718097,0.9999334479270275,206.39110167216808
+micro-samples-cycles-local,micro,cycles,0,[unknown],16,111329775,6.655207297250942e-05,0.013736669863217879
+micro-samples-hitm-cxl-r2,micro,hitm,2,"victim_thread(int, Config, VictimResult*)",307076,3071681228,1.0,0.3833381275872418
+micro-samples-hitm-local-r2,micro,hitm,0,"victim_thread(int, Config, VictimResult*)",304790,3048814370,1.0,0.371353372140497
+micro-samples-locks-cxl,micro,locks,2,"victim_thread(int, Config, VictimResult*)",41941,4194225823,1.0,0.5161425048036227
+micro-samples-locks-local,micro,locks,0,"victim_thread(int, Config, VictimResult*)",42361,4236227083,1.0,0.5163017143611186
+micro-samples-memory-cxl,micro,memory,2,"victim_thread(int, Config, VictimResult*)",221191,221854573,1.0,0.028516972352574284
+micro-samples-memory-local,micro,memory,0,"victim_thread(int, Config, VictimResult*)",228281,228965843,1.0,0.028292168890922693
+xindex-buffer-samples-locks-cxl,xindex,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",4008,400812024,0.46469565217391307,1.00203006
+xindex-buffer-samples-locks-cxl,xindex,locks,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",2611,261107833,0.3027246376811594,0.6527695825
+xindex-buffer-samples-locks-cxl,xindex,locks,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),2006,200606018,0.23257971014492754,0.501515045
+xindex-buffer-samples-locks-local,xindex,locks,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",3974,397411922,0.39871576201464837,0.993529805
+xindex-buffer-samples-locks-local,xindex,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",3944,394411832,0.3957058292364804,0.98602958
+xindex-buffer-samples-locks-local,xindex,locks,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),2049,204906147,0.2055784087488713,0.5122653675
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::XIndex<Key, unsigned long>::background(void*)",280538,28054641614,0.9183364158632994,70.136604035
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",6140,614018420,0.020099186539437288,1.53504605
+xindex-samples-branches-cxl,xindex,branches,2,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",4028,402812084,0.01318559012717482,1.00703021
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",4019,401912057,0.013156128778827112,1.0047801425
+xindex-samples-branches-cxl,xindex,branches,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",3851,385111553,0.012606183609669868,0.9627788825
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",2336,233607008,0.0076468566378054565,0.58401752
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",2208,220806624,0.007227850794638034,0.55201656
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",1351,135104053,0.004422475735306152,0.3377601325
+xindex-samples-branches-cxl,xindex,branches,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",986,98602958,0.00322765438564905,0.246507395
+xindex-samples-branches-cxl,xindex,branches,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),28,2800084,9.165752819287363e-05,0.00700021
+xindex-samples-branches-local,xindex,branches,0,"xindex::XIndex<Key, unsigned long>::background(void*)",481403,48141744209,0.932855733810287,120.3543605225
+xindex-samples-branches-local,xindex,branches,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",8751,875126253,0.01695756056064009,2.1878156325
+xindex-samples-branches-local,xindex,branches,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",6331,633118993,0.012268119747390288,1.5827974825
+xindex-samples-branches-local,xindex,branches,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",5142,514215426,0.009964092835425818,1.285538565
+xindex-samples-branches-local,xindex,branches,0,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",4052,405212156,0.007851906684003387,1.01303039
+xindex-samples-branches-local,xindex,branches,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",4028,402812084,0.007805399832962893,1.00703021
+xindex-samples-branches-local,xindex,branches,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",3989,398911967,0.0077298262000220904,0.9972799175
+xindex-samples-branches-local,xindex,branches,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",1348,134804044,0.002612134800107741,0.33701011
+xindex-samples-branches-local,xindex,branches,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",983,98302949,0.0019048431072002294,0.2457573725
+xindex-samples-branches-local,xindex,branches,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),26,2600078,5.038242196053506e-05,0.006500195
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",54726,356350438963,0.4707685105790839,890.8760974075
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",16217,104447470232,0.1379837783782757,261.11867558
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",13658,88129222249,0.11642601821226481,220.3230556225
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",11057,70083564379,0.09258620619294611,175.2089109475
+xindex-samples-cycles-cxl,xindex,cycles,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),7691,49238184916,0.06504772954392124,123.09546229
+xindex-samples-cycles-cxl,xindex,cycles,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",6498,41531341425,0.05486634954595556,103.8283535625
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::XIndex<Key, unsigned long>::background(void*)",4159,25524643615,0.03372017302030915,63.8116090375
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",2024,14667163338,0.01937654029315602,36.667908345
+xindex-samples-cycles-cxl,xindex,cycles,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",1020,6513352244,0.008604678988772587,16.28338061
+xindex-samples-cycles-cxl,xindex,cycles,2,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",62,409075258,0.0005404223732229221,1.022688145
+xindex-samples-cycles-cxl,xindex,cycles,2,[unknown],9,57972424,7.658638440451827e-05,0.14493106
+xindex-samples-cycles-cxl,xindex,cycles,2,"validate_xindex_state(xindex::XIndex<Key, unsigned long>*, unsigned long, unsigned long&, unsigned long&)",2,2275775,3.0064876874596884e-06,0.0056894375
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",92968,620027405346,0.4131898686085551,1550.068513365
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",69949,468738574523,0.312370111948261,1171.8464363075
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",20508,137113230035,0.09137305385887123,342.7830750875
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",13182,88057708690,0.05868216915877693,220.144271725
+xindex-samples-cycles-local,xindex,cycles,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",8756,58393051147,0.03891346886129575,145.9826278675
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::XIndex<Key, unsigned long>::background(void*)",7388,49016624260,0.032664963456449536,122.54156065
+xindex-samples-cycles-local,xindex,cycles,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),6729,44903335320,0.029923843786554955,112.2583383
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",2934,19770744335,0.01317533899894847,49.4268608375
+xindex-samples-cycles-local,xindex,cycles,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",2031,14178526988,0.009448652838119855,35.44631747
+xindex-samples-cycles-local,xindex,cycles,0,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",52,357808586,0.00023844572249810583,0.894521465
+xindex-samples-cycles-local,xindex,cycles,0,[unknown],3,20910545,1.3934908790461932e-05,0.0522763625
+xindex-samples-cycles-local,xindex,cycles,0,pthread_exit@plt,1,7004442,4.667800882190338e-06,0.017511105
+xindex-samples-cycles-local,xindex,cycles,0,"validate_xindex_state(xindex::XIndex<Key, unsigned long>*, unsigned long, unsigned long&, unsigned long&)",2,2220947,1.4800519964185562e-06,0.0055523675
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",3322,33229966,0.28874402433724466,0.083074915
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",2931,29318793,0.2547588005215124,0.0732969825
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",2918,29188754,0.25362885701868754,0.072971885
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",2034,20346102,0.17679269882659712,0.050865255
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),222,2220666,0.019295958279009127,0.005551665
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",77,770231,0.006692742285962625,0.0019255775
+xindex-samples-hitm-cxl-r2,xindex,hitm,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",1,10003,8.69187309865276e-05,2.50075e-05
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",6691,66930073,0.35200968013468015,0.1673251825
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",6165,61668495,0.3243371212121212,0.1541712375
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",2901,29018703,0.1526199494949495,0.0725467575
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",2844,28448532,0.14962121212121213,0.07112133
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",226,2260678,0.01188973063973064,0.005651695
+xindex-samples-hitm-local-r2,xindex,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),174,1740522,0.009154040404040404,0.004351305
+xindex-samples-hitm-local-r2,xindex,hitm,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",7,70021,0.00036826599326599327,0.0001750525
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::XIndex<Key, unsigned long>::background(void*)",4188,54078141226,0.429749526141373,135.195353065
+xindex-samples-instructions-cxl,xindex,instructions,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",49070,30452423024,0.24200007743847224,76.13105756
+xindex-samples-instructions-cxl,xindex,instructions,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),16926,10497887007,0.08342487120424324,26.2447175175
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",15412,9581492250,0.0761424424141456,23.953730625
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",12460,7732565564,0.06144934555162587,19.33141391
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",9523,5897231101,0.046864263707023394,14.7430777525
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",4800,2973362010,0.023628787637211022,7.433405025
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",2330,2759813164,0.021931752323201114,6.89953291
+xindex-samples-instructions-cxl,xindex,instructions,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",2977,1857111519,0.014758140298250929,4.6427787975
+xindex-samples-instructions-cxl,xindex,instructions,2,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",9,5665481,4.502258620424559e-05,0.0141637025
+xindex-samples-instructions-cxl,xindex,instructions,2,_Unwind_Find_FDE,1,726164,5.770698249348959e-06,0.00181541
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::XIndex<Key, unsigned long>::background(void*)",7703,103652666634,0.5442759675285043,259.131666585
+xindex-samples-instructions-local,xindex,instructions,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",85582,30512847117,0.1602217282580453,76.2821177925
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",38690,13638972666,0.07161769479693222,34.097431665
+xindex-samples-instructions-local,xindex,instructions,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),29819,10616696564,0.05574784500944252,26.54174141
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",29677,10556325160,0.05543083720452826,26.3908129
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",3362,8945210368,0.046970938480343886,22.36302592
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",21550,7688897065,0.040374088049821885,19.2222426625
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",8669,3076934938,0.016156861128480363,7.692337345
+xindex-samples-instructions-local,xindex,instructions,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",4929,1748862476,0.009183206251318637,4.37215619
+xindex-samples-instructions-local,xindex,instructions,0,"void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)",12,3967521,2.083329258271419e-05,0.0099188025
+xindex-samples-locks-cxl,xindex,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",3991,399111973,0.5455166757791142,0.9977799325
+xindex-samples-locks-cxl,xindex,locks,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),2043,204306129,0.27925095680699835,0.5107653225
+xindex-samples-locks-cxl,xindex,locks,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",1282,128203846,0.17523236741388737,0.320509615
+xindex-samples-locks-local,xindex,locks,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",4269,426912807,0.4191869599371563,1.0672820175
+xindex-samples-locks-local,xindex,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",3933,393311799,0.38619402985074625,0.9832794975
+xindex-samples-locks-local,xindex,locks,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),1982,198205946,0.1946190102120974,0.495514865
+xindex-samples-memory-cxl,xindex,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),138,6900414,0.3374083129584352,0.017251035
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",89,4450267,0.2176039119804401,0.0111256675
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",79,3950237,0.19315403422982885,0.0098755925
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",69,3450207,0.1687041564792176,0.0086255175
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",16,800048,0.039119804400977995,0.00200012
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",7,350021,0.017114914425427872,0.0008750525
+xindex-samples-memory-cxl,xindex,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",6,300018,0.014669926650366748,0.000750045
+xindex-samples-memory-cxl,xindex,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",5,250015,0.012224938875305624,0.0006250375
+xindex-samples-memory-cxl-r2,xindex,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&),7066,7087198,0.32548712515546546,0.017717995
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",5060,5075180,0.2330830531116127,0.01268795
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",4242,4254726,0.1954028283200516,0.010636815
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",3671,3682013,0.16910037311714035,0.0092050325
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",897,899691,0.041319268506149524,0.0022492275
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",409,410227,0.018840112395780553,0.0010255675
+xindex-samples-memory-cxl-r2,xindex,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",214,214642,0.009857662720530656,0.000536605
+xindex-samples-memory-cxl-r2,xindex,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",150,150450,0.006909576673269151,0.000376125
+xindex-samples-memory-local,xindex,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",158,7900474,0.27768014059753954,0.019751185
+xindex-samples-memory-local,xindex,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),134,6700402,0.23550087873462214,0.016751005
+xindex-samples-memory-local,xindex,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",113,5650339,0.19859402460456943,0.0141258475
+xindex-samples-memory-local,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",67,3350201,0.11775043936731107,0.0083755025
+xindex-samples-memory-local,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",58,2900174,0.10193321616871705,0.007250435
+xindex-samples-memory-local,xindex,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",19,950057,0.033391915641476276,0.0023751425
+xindex-samples-memory-local,xindex,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",12,600036,0.0210896309314587,0.00150009
+xindex-samples-memory-local,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",8,400024,0.014059753954305799,0.00100006
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)",7716,7739148,0.26900951783286264,0.01934787
+xindex-samples-memory-local-r2,xindex,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&),7109,7130327,0.24784715685249104,0.0178258175
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)",5034,5049102,0.17550465432486143,0.012622755
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)",3772,3783316,0.13150646724540668,0.00945829
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)",3617,3627851,0.12610256946623435,0.0090696275
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)",936,938808,0.03263256981487292,0.00234702
+xindex-samples-memory-local-r2,xindex,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)",263,263789,0.009169194296273053,0.0006594725
+xindex-samples-memory-local-r2,xindex,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const",236,236708,0.008227870166997874,0.00059177

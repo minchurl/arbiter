@@ -1,0 +1,20 @@
+--- a/runtime/src/arbiter_jemalloc_arena.cpp
++++ b/runtime/src/arbiter_jemalloc_arena.cpp
+@@ -60,7 +60,7 @@
+   void reportResidency(const std::map<uintptr_t, Extent> &ranges);
+ 
+   bool bind(void *ptr, size_t size, unsigned flags = 0) {
+-    if (mbind(ptr, size, MPOL_BIND, mask->maskp, mask->size + 1, flags) == 0)
++    if (mbind(ptr, size, MPOL_INTERLEAVE, mask->maskp, mask->size + 1, flags) == 0)
+       return true;
+     int error = errno;
+     munmap(ptr, size);
+@@ -178,6 +178,8 @@
+   }
+   numa_bitmask_clearall(arena->mask);
+   numa_bitmask_setbit(arena->mask, node);
++  numa_bitmask_setbit(arena->mask, 0);
++  std::fprintf(stderr, "arbiter-experiment-interleave nodes=0,%ld\n", node);
+   arena->node = node;
+   arena->pageSize = page;
+   arena->alignment = alignment;

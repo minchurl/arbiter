@@ -1,0 +1,7 @@
+{
+  "screen_threshold": 1.1,
+  "selected_tables": [],
+  "rounds": 5,
+  "seconds": 30,
+  "selection_rule": "Strongest screen effect and widest qualifying hot set; never claim improvement for unchanged 256-entry baseline."
+}

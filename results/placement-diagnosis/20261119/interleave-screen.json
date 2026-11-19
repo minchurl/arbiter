@@ -1,0 +1,50 @@
+{
+  "screen": [
+    {
+      "selection": "ballast",
+      "node": 1,
+      "local": 533.4619697602877,
+      "interleaved": 499.6376550508004,
+      "ratio": 0.9365947028526019
+    },
+    {
+      "selection": "ballast",
+      "node": 2,
+      "local": 533.4619697602877,
+      "interleaved": 127.889875519361,
+      "ratio": 0.2397356939555196
+    },
+    {
+      "selection": "both",
+      "node": 1,
+      "local": 546.6651728044815,
+      "interleaved": 493.1819169724408,
+      "ratio": 0.9021645085644237
+    },
+    {
+      "selection": "both",
+      "node": 2,
+      "local": 546.6651728044815,
+      "interleaved": 127.44468001042799,
+      "ratio": 0.23313114928579773
+    },
+    {
+      "selection": "table",
+      "node": 1,
+      "local": 543.8925395170085,
+      "interleaved": 540.0236453302462,
+      "ratio": 0.9928866570036096
+    },
+    {
+      "selection": "table",
+      "node": 2,
+      "local": 543.8925395170085,
+      "interleaved": 544.9375028343667,
+      "ratio": 1.0019212679737917
+    }
+  ],
+  "screen_threshold": 1.03,
+  "confirmation_choice": null,
+  "confirmation_rounds": 5,
+  "confirmation_seconds": 30
+}

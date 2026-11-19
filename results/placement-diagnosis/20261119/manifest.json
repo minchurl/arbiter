@@ -1,0 +1,377 @@
+{
+  "investigation": "Compare XIndex and microbenchmark CXL behavior without benchmark source changes; search allocation/extent placement only.",
+  "completed_at_unix": 1795048342.3345275,
+  "branch": "perf/xindex-micro-placement",
+  "base_commit": "62b5367694441d39d45da0bdc5e5634e3b9b5c49",
+  "main_branch": "21498d914c5f302cb1e80d8a03315421c2c52714",
+  "benchmark_source_changes": false,
+  "production_compiler_runtime_policy_changes": false,
+  "experimental_runtime_patch": "interleave-runtime.patch: MPOL_INTERLEAVE on {0,target}, isolated binaries only; no production interface change.",
+  "new_selection_parameters": false,
+  "frozen_micro_version": {
+    "entry_bytes": 64,
+    "epoch_store": true,
+    "note": "Already corrected version at task start, not pristine upstream."
+  },
+  "topology": {
+    "cpu_node": 0,
+    "ordinary_memory_node": 0,
+    "cxl_target_node": 2,
+    "cxl_target_evidence": "/sys/bus/dax/devices/dax0.0/target_node",
+    "dax_device_path": "/sys/devices/platform/ACPI0017:00/root0/decoder0.0/region0/dax_region0/dax0.0",
+    "cxl_devices": [
+      "dax_region0",
+      "decoder0.0",
+      "decoder1.0",
+      "endpoint1",
+      "mem0",
+      "region0",
+      "root0"
+    ],
+    "node1": "Memory-only NUMA node; physical memory technology not asserted."
+  },
+  "default_inputs": {
+    "xindex": {
+      "workload": "YCSB-A",
+      "load": 100000000,
+      "operations": 400000000,
+      "fg": 31,
+      "bg_option": 1,
+      "background_actual": "coordinator plus one maintenance worker"
+    },
+    "micro": {
+      "victims": 32,
+      "entries": 256,
+      "entry_bytes": 64,
+      "read_percent": 50,
+      "ballast_mib": 8192,
+      "noise": 0
+    }
+  },
+  "scope": {
+    "memory_max": "64G",
+    "memory_swap_max": 0,
+    "concurrent_benchmarks": false,
+    "governor": "schedutil",
+    "boost": "unchanged",
+    "cache_flush": false
+  },
+  "protocols": {
+    "throughput": "Fresh processes; setup and validation outside reported workload interval; no perf counters. Reverse two-mode order on even rounds, cyclic rotate three-node order. No outliers removed.",
+    "confirmation": "Five 30-second micro pairs and three full XIndex rounds; separate changed-input holdouts use five 30-second pairs. Screen selection rules are retained.",
+    "profiles": "Separate diagnostics, excluded from throughput means. XIndex enabled by read-only observation of existing run_control and disabled at existing completed-operation output. Micro uses existing acknowledged perf FIFOs.",
+    "live_residency": "Micro prints three live page samples per object. Production arena checks all still-resident selected extent pages at exit; a freed large ballast may be purged by then. Interleaved cases additionally snapshot live mappings and NUMA page counts after the existing g_start flag, checking full initialized object-containing VMAs. XIndex selected allocations remain live at the arena check.",
+    "state": "XIndex: 400M completed operations and the existing 4096-key digest. Micro: existing operation mix, write/version and epoch checks. Not a full-key XIndex state proof.",
+    "sampling": "PEBS branch/locked-load estimates use period-weighted counts per operation. Instruction samples use event periods. Ordinary cycle sample IPs can skid; stall events overlap.",
+    "latency": "Exploratory load-latency records include below-threshold weights and out-of-order warnings; no all-load mean or stall partition is inferred."
+  },
+  "uncore": "Unavailable under current permissions. Cannot directly establish CHA IRQ occupancy, memory-controller bandwidth saturation or CXL coherence route. IRQ here is hardware Ingress Request Queue, not Linux interrupts.",
+  "excluded": [
+    "Two first XIndex basic-counter probes multiplexed; kept as rejected diagnostics.",
+    "Inactive RCU site 2 selected no executed allocation; excluded from accepted throughput rows. Active site 25 is a separate control.",
+    "First sparse XIndex latency probes use alias ldlat 131/period 50003; later raw ldlat 128/period 1003 are separately labeled.",
+    "CLI input changes never count as improvement of the original fixed workload.",
+    "One early decoded memory-sample analysis overlapped a diagnostic profile, whose throughput is excluded along with all other profiles."
+  ],
+  "accepted_throughput_rows": 130,
+  "accepted_profiles": 56,
+  "profiles": [
+    {
+      "case": "micro-offcore-cxl-r2",
+      "valid": true,
+      "kind": "offcore"
+    },
+    {
+      "case": "xindex-samples-memory-local",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "xindex-offcore-cxl-r2",
+      "valid": true,
+      "kind": "offcore"
+    },
+    {
+      "case": "micro-samples-cycles-cxl",
+      "valid": true,
+      "kind": "cycles"
+    },
+    {
+      "case": "xindex-basic-local",
+      "valid": false,
+      "kind": "basic"
+    },
+    {
+      "case": "xindex-samples-hitm-local-r2",
+      "valid": true,
+      "kind": "hitm"
+    },
+    {
+      "case": "xindex-samples-instructions-local",
+      "valid": true,
+      "kind": "instructions"
+    },
+    {
+      "case": "micro-tlb-cxl-r2",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "micro-samples-cycles-local",
+      "valid": true,
+      "kind": "cycles"
+    },
+    {
+      "case": "xindex-rfo-cxl-r2",
+      "valid": true,
+      "kind": "rfo"
+    },
+    {
+      "case": "xindex-samples-instructions-cxl",
+      "valid": true,
+      "kind": "instructions"
+    },
+    {
+      "case": "xindex-samples-branches-local",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "micro-tlb-local-r2",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "xindex-stall-cxl-r2",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "micro-rfo-local-r2",
+      "valid": true,
+      "kind": "rfo"
+    },
+    {
+      "case": "micro-samples-branches-local",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "micro-samples-hitm-cxl-r2",
+      "valid": true,
+      "kind": "hitm"
+    },
+    {
+      "case": "micro-offcore-local-r2",
+      "valid": true,
+      "kind": "offcore"
+    },
+    {
+      "case": "xindex-basic-cxl-r2",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "micro-thp-tlb-cxl",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "micro-samples-memory-local",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "micro-hot1-basic-local",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "micro-hot1-basic-cxl",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "xindex-samples-memory-local-r2",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "micro-basic-cxl-r2",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "xindex-samples-cycles-cxl",
+      "valid": true,
+      "kind": "cycles"
+    },
+    {
+      "case": "xindex-stall-local-r2",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "xindex-samples-hitm-cxl-r2",
+      "valid": true,
+      "kind": "hitm"
+    },
+    {
+      "case": "micro-samples-memory-cxl",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "xindex-samples-memory-cxl-r2",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "xindex-basic-local-r2",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "micro-hot1-samples-branches-local",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "micro-thp-tlb-local",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "micro-stall-cxl-r2",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "xindex-tlb-cxl-r2",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "micro-samples-branches-cxl",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "xindex-samples-locks-cxl",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "micro-samples-locks-cxl",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "xindex-buffer-basic-local",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "xindex-tlb-local-r2",
+      "valid": true,
+      "kind": "tlb"
+    },
+    {
+      "case": "micro-stall-local-r2",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "xindex-samples-memory-cxl",
+      "valid": true,
+      "kind": "memory"
+    },
+    {
+      "case": "xindex-offcore-local-r2",
+      "valid": true,
+      "kind": "offcore"
+    },
+    {
+      "case": "xindex-rfo-local-r2",
+      "valid": true,
+      "kind": "rfo"
+    },
+    {
+      "case": "xindex-samples-locks-local",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "xindex-basic-local-r1",
+      "valid": false,
+      "kind": "basic"
+    },
+    {
+      "case": "xindex-samples-cycles-local",
+      "valid": true,
+      "kind": "cycles"
+    },
+    {
+      "case": "xindex-buffer-samples-locks-cxl",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "micro-thp-stall-cxl",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "micro-thp-stall-local",
+      "valid": true,
+      "kind": "stall"
+    },
+    {
+      "case": "micro-rfo-cxl-r2",
+      "valid": true,
+      "kind": "rfo"
+    },
+    {
+      "case": "micro-samples-hitm-local-r2",
+      "valid": true,
+      "kind": "hitm"
+    },
+    {
+      "case": "xindex-buffer-samples-locks-local",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "xindex-samples-branches-cxl",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "micro-hot1-samples-branches-cxl",
+      "valid": true,
+      "kind": "branches"
+    },
+    {
+      "case": "xindex-buffer-basic-cxl",
+      "valid": true,
+      "kind": "basic"
+    },
+    {
+      "case": "micro-samples-locks-local",
+      "valid": true,
+      "kind": "locks"
+    },
+    {
+      "case": "micro-basic-local-r2",
+      "valid": true,
+      "kind": "basic"
+    }
+  ],
+  "reproduction": "Archived driver paths reflect this host. Build matching frozen inputs first using the benchmark guide and hashes. experiments.jsonl/raw-runs.jsonl.gz contain exact cases and commands. Historical stage scripts retain failures/resumes; do not blindly rerun all stages. summarize.py and plot.py regenerate derived outputs directly from archived tables.",
+  "primary_event_sources": [
+    "https://perfmon-events.intel.com/platforms/emeraldrapids/core-events/core/",
+    "https://perfmon-events.intel.com/platforms/emeraldrapids/offcore-events/offcore/",
+    "https://perfmon-events.intel.com/platforms/emeraldrapids/uncore-events/uncore/",
+    "https://cdrdv2-public.intel.com/817509/817509-EMR_XCC_UPG_Guide-Rev_001.pdf"
+  ]
+}

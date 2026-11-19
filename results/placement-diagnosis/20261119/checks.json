@@ -1,0 +1,920 @@
+{
+  "benchmark_compiler_runtime_policy_diff_empty": true,
+  "frozen_files": [
+    {
+      "path": "benchmark/btree-coherence/btree.patch",
+      "unchanged": true,
+      "sha256": "cef015f3ec6bf021f445260c430aa1ef331b8752a7ff7b0a6841619b82a9d662"
+    },
+    {
+      "path": "benchmark/btree-coherence/coherence-noise.patch",
+      "unchanged": true,
+      "sha256": "73f05fc6b798632334c6dee65b68e36fc7be73d4dfc545480e82c095baefc825"
+    },
+    {
+      "path": "benchmark/btree-coherence/page-sample.h",
+      "unchanged": true,
+      "sha256": "a626f8432190b11d8a7f38822182d9b2cc902fea8929163e7eb5c890c886b234"
+    },
+    {
+      "path": "benchmark/btree-coherence/perf-window.h",
+      "unchanged": true,
+      "sha256": "9cee2198a7d87738226684c58518907c233dd444dc60805ea99e731610a73bbd"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/CMakeLists.txt",
+      "unchanged": true,
+      "sha256": "21e29ac3c90abd9e0226b70b8474663983c29b0ebfd33f6e1914882bd258b760"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/LICENCE",
+      "unchanged": true,
+      "sha256": "1e90e8e20ec457b513dc9c68c371c033ee450902db5f0afc970f290e8b848923"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/Makefile",
+      "unchanged": true,
+      "sha256": "e2d3831ae4bbb70196fdecb2a49e345a6984d524184e81e9f7830e90c8be4b78"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/README.md",
+      "unchanged": true,
+      "sha256": "3bb59d402c15f2e16ea7d6cdfd938f948ac893e4040ebf2edf91d1f426e0b82d"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/helper.h",
+      "unchanged": true,
+      "sha256": "3a291c80bf84b9c4f3652b3b024bcc9d4ff17828ae6f28ce052f8d8800e00f0a"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/intel-mkl-install.txt",
+      "unchanged": true,
+      "sha256": "97ddb2917bf78f7046b2ba735cfe0f296ee16c982c315401d6bb5c18f75c7cf0"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/microbench.cpp",
+      "unchanged": true,
+      "sha256": "cbf131c0f0beda21522c3c757e1981e53e29556b1afffd52c20239629303497e"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex.h",
+      "unchanged": true,
+      "sha256": "37c5b0aa4a39beba7777341e52566432c0669a0ebe30671d51a9f591490f4a4c"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_buffer.h",
+      "unchanged": true,
+      "sha256": "4f8890ad76cdaf4bb05100ca1643e24372618475722847e265ad0fe885f58f21"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_buffer_impl.h",
+      "unchanged": true,
+      "sha256": "43dc90690934b98112dc8bdafc069171d911fd88218c96cb5a8223714017c8e5"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_group.h",
+      "unchanged": true,
+      "sha256": "7041b47a49988411e6510d42f59d6299c3f3f9a2bf86e15b3bb9d0496ae8b9ae"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_group_impl.h",
+      "unchanged": true,
+      "sha256": "bfd19400f70b84d5c9341350bd97f820c8c8ab95756a40b7eaaae09a3d6eea7e"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_impl.h",
+      "unchanged": true,
+      "sha256": "cad088447cb6767d6f538a8e3946869e286e1b26b24cf4c90ae91f144a866088"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_model.h",
+      "unchanged": true,
+      "sha256": "2884f464739426d7963812f3c159123ee20947ce5b956b6fb2da6fddb089cf48"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_model_impl.h",
+      "unchanged": true,
+      "sha256": "c99337e28963f654aa823904a0b5528a48f914556a2258725f95add2597de6a2"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_root.h",
+      "unchanged": true,
+      "sha256": "0910dd30df28722880b6403d67b289818eb595f6ee794b9f1f331164e45ccd17"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_root_impl.h",
+      "unchanged": true,
+      "sha256": "050b74ff7c8633d1bc17391bce3fd930e107525e121c154aafbbfb56ee9b5493"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/xindex_util.h",
+      "unchanged": true,
+      "sha256": "05d4ba9b76fd2efc8c3114cfd8b6c87cf1ac1d94ee0a4e9c06f2a615b6ce6e91"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/ycsb_bench.cpp",
+      "unchanged": true,
+      "sha256": "e95a7e3f199a8718cb7d25cb02c68fd4af0505636a1d08613dabc672193c1c56"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/ycsb_bench_large.cpp",
+      "unchanged": true,
+      "sha256": "10dd13d171a3399fb27ebb39136f8e091b87c7e686516aaee4a6aeda3c58b908"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/ycsb_bench_tiny.cpp",
+      "unchanged": true,
+      "sha256": "279795073efd8e3d221b288a19d5778869a911cfb54e5d8da3ee30d27a95fc60"
+    },
+    {
+      "path": "benchmark/xindex/XIndex-H/ycsb_rmw.h",
+      "unchanged": true,
+      "sha256": "7c76553ea64634eec84e010bcaee2d20320e4394ace7e2c8e3c5882f62b81701"
+    },
+    {
+      "path": "build/libcuckoo-rmw/micro/coherence_noise.cpp",
+      "unchanged": true,
+      "sha256": "3c29040d8b814700eb16c37ea9a4c93a5312863e4b338cf9f21ae813eb2e54b6"
+    },
+    {
+      "path": "build/libcuckoo-rmw/micro/micro-native.bc",
+      "unchanged": true,
+      "sha256": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de"
+    },
+    {
+      "path": "build/libcuckoo-rmw/micro/micro-placed.bc",
+      "unchanged": true,
+      "sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c"
+    },
+    {
+      "path": "build/libcuckoo-rmw/micro/micro-native",
+      "unchanged": true,
+      "sha256": "02d3023a89c0cb0c72062f2f05e7af6b9ca767d9e3f698bebe6c5ea59888f9fb"
+    },
+    {
+      "path": "build/libcuckoo-rmw/micro/micro-placed",
+      "unchanged": true,
+      "sha256": "85f73753e7c5497a605129e827648c8b5a9531b055e3ad7485b6d250054e397e"
+    },
+    {
+      "path": "build/libcuckoo-rmw/xindex/ycsb_bench.bc",
+      "unchanged": true,
+      "sha256": "71cf5a1c9a05733d919f13f503a0258f0f1b1cb23bac6b67d8c0380a822237da"
+    },
+    {
+      "path": "build/libcuckoo-rmw/xindex/ycsb_bench.arbiter.bc",
+      "unchanged": true,
+      "sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f"
+    },
+    {
+      "path": "build/libcuckoo-rmw/xindex/ycsb_bench-native",
+      "unchanged": true,
+      "sha256": "988fefb51e5ab4839ca90e0011373267cdb3f4b843f787675987fe41aa7d5e8a"
+    },
+    {
+      "path": "build/libcuckoo-rmw/xindex/ycsb_bench-arbiter",
+      "unchanged": true,
+      "sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193"
+    }
+  ],
+  "prior_input_manifest_checks": [
+    {
+      "path": "/home/shin/vmitosis-workloads/btree/btree.c",
+      "unchanged": true,
+      "sha256": "dcbcf77f2359b935c72403f2a09f0ebd62eb9e38635c7ee05072981c1e263948"
+    },
+    {
+      "path": "/home/shin/vmitosis-workloads/common/main-mt.c",
+      "unchanged": true,
+      "sha256": "bb65cdd9e0a7003a06b05b9731ddb427b86fda4934f1473149ec6f44e7297c83"
+    },
+    {
+      "path": "/home/shin/microbench/coherence_noise.cpp",
+      "unchanged": true,
+      "sha256": "66416e4a4665d46ac7a1c75305979627c9c354f04e08d050aeb03652b5653072"
+    },
+    {
+      "path": "/home/shin/arbiter/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config",
+      "unchanged": true,
+      "sha256": "de7e64acaefaa76e3b675989f839fe0c15199b2df59b3db3cb335fb963cd7308"
+    },
+    {
+      "path": "/home/shin/arbiter/build/libcuckoo-rmw/compiler/runtime/libarbiter_runtime.a",
+      "unchanged": true,
+      "sha256": "5206abb3a57ce0fa620d528ed9f75242f0762938d5c2aca179b42f09cb8a7566"
+    }
+  ],
+  "trace_metadata_unchanged": true,
+  "accepted_throughput_runs": 130,
+  "accepted_cases": [
+    {
+      "case": "confirm-micro-baseline",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 2,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 2,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 3,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 3,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 4,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 4,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 5,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-baseline",
+      "round": 5,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 2,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 2,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 3,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 3,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 4,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 4,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 5,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-table1",
+      "round": 5,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 2,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 2,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 3,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 3,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 4,
+      "node": 2
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 4,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 5,
+      "node": 0
+    },
+    {
+      "case": "confirm-micro-threads8",
+      "round": 5,
+      "node": 2
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 2,
+      "node": 2
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 2,
+      "node": 1
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 2,
+      "node": 0
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 3,
+      "node": 1
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 3,
+      "node": 0
+    },
+    {
+      "case": "confirm-xindex-baseline",
+      "round": 3,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-combined",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-combined",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-maint",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-maint",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r0",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r0",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r100",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r100",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r50",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-no-ballast-r50",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-reads0",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-reads0",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-reads100",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-reads100",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-spin",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-spin",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table1",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table1",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table1048576",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table1048576",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table16",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table16",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table262144",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table262144",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table32768",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table32768",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table4",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table4",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table4096",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table4096",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-table64",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-table64",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-threads1",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-threads1",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-threads16",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-threads16",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-micro-threads8",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-micro-threads8",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-xindex-bg0-fg31",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-xindex-bg0-fg31",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-xindex-bg0-fg32",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-xindex-bg0-fg32",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-xindex-threads1",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-xindex-threads1",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "diagnostic-xindex-threads8",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "diagnostic-xindex-threads8",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-align128",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-align128",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-align4096",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-align4096",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-ballast",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-ballast",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-ballast",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-ballast-hot1",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-ballast-hot1",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-ballast-hot16",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-ballast-hot16",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-ballast-hot4",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-ballast-hot4",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-ballast-hot64",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-ballast-hot64",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-both",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-both",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-both",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-table",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-table",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-micro-table",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-micro-thp",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-micro-thp",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-auto-plus-data",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-auto-plus-data",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-buffer",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-buffer",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-buffer-leaf",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-buffer-leaf",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-data-array",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-data-array",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-leaf",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-leaf",
+      "round": 1,
+      "node": 2
+    },
+    {
+      "case": "screen-xindex-node1",
+      "round": 1,
+      "node": 1
+    },
+    {
+      "case": "screen-xindex-rcu-active",
+      "round": 1,
+      "node": 0
+    },
+    {
+      "case": "screen-xindex-rcu-active",
+      "round": 1,
+      "node": 2
+    }
+  ],
+  "rejected_inactive_rcu_case": "screen-xindex-rcu: site 2 was an unexecuted out-of-line clone. Full operations/digest passed, but no placement occurred; excluded. Site 25 is used in the active RCU control.",
+  "main_branch": "21498d914c5f302cb1e80d8a03315421c2c52714",
+  "isolated_interleave_worker_instructions_identical": true,
+  "live_interleave_checks": [
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 0,
+      "snapshot_seconds": 0.051954217022284865
+    },
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 2,
+      "snapshot_seconds": 0.04440720399725251
+    },
+    {
+      "case": "screen-micro-interleave-ballast",
+      "round": 1,
+      "node": 1,
+      "snapshot_seconds": 0.04733521197340451
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 0,
+      "snapshot_seconds": 0.04749718701350503
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 2,
+      "snapshot_seconds": 0.045959890994708985
+    },
+    {
+      "case": "screen-micro-interleave-both",
+      "round": 1,
+      "node": 1,
+      "snapshot_seconds": 0.053162713011261076
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 0,
+      "snapshot_seconds": 0.05192952498327941
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 2,
+      "snapshot_seconds": 0.05089971600682475
+    },
+    {
+      "case": "screen-micro-interleave-table",
+      "round": 1,
+      "node": 1,
+      "snapshot_seconds": 0.04648427999927662
+    }
+  ]
+}

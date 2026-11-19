@@ -1,0 +1,285 @@
+case,record,target_node,symbol_offset,sampled_address_node,samples,unique_lines,hottest_line_sample_fraction,period_per_operation
+xindex-buffer-samples-locks-cxl,locks,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x262",0,2611,540,0.7525852163921869,0.6527695825
+xindex-buffer-samples-locks-cxl,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,2013,31,0.03974167908594138,0.5032650975
+xindex-buffer-samples-locks-cxl,locks,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,2006,1661,0.03140578265204387,0.501515045
+xindex-buffer-samples-locks-cxl,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,1995,31,0.037092731829573934,0.4987649625
+xindex-buffer-samples-locks-local,locks,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x262",0,3974,499,0.8512833417211877,0.993529805
+xindex-buffer-samples-locks-local,locks,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,2049,1684,0.036603221083455345,0.5122653675
+xindex-buffer-samples-locks-local,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,2034,31,0.03982300884955752,0.508515255
+xindex-buffer-samples-locks-local,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,1910,31,0.03926701570680628,0.477514325
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",2,2848,1050,0.22752808988764045,0.07122136
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,2824,1324,0.059490084985835696,0.07062118
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,2715,1234,0.06408839779005525,0.0678953625
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",2,588,9,0.967687074829932,0.01470441
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",2,489,11,0.8977505112474438,0.0122286675
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",2,405,80,0.7037037037037037,0.0101280375
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",2,323,4,0.9690402476780186,0.0080774225
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",2,201,3,0.9900497512437811,0.0050265075
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xdb",2,178,8,0.8370786516853933,0.004451335
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,128,87,0.203125,0.00320096
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",2,123,5,0.8048780487804879,0.0030759225
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,2,90,28,0.6888888888888889,0.002250675
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x78",2,71,1,1.0,0.0017755325
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",2,70,2,0.9,0.001750525
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",2,64,64,0.015625,0.00160048
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",2,43,1,1.0,0.0010753225
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x38",2,42,2,0.9761904761904762,0.001050315
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,34,15,0.35294117647058826,0.000850255
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,33,11,0.30303030303030304,0.0008252475
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,32,10,0.40625,0.00080024
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xbc",2,32,2,0.8125,0.00080024
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x70",0,27,10,0.2962962962962963,0.0006752025
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",2,26,2,0.8076923076923077,0.000650195
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,0,19,6,0.631578947368421,0.0004751425
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x6a",0,15,8,0.4,0.0003751125
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,11,7,0.2727272727272727,0.0002750825
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,0,10,5,0.4,0.000250075
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",2,9,2,0.7777777777777778,0.0002250675
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",2,9,1,1.0,0.0002250675
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,2,8,2,0.75,0.00020006
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x12",2,7,2,0.8571428571428571,0.0001750525
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,2,5,4,0.4,0.0001250375
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",2,5,1,1.0,0.0001250375
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0xd3",0,4,4,0.25,0.00010003
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,2,3,1,1.0,7.50225e-05
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,2,3,1,1.0,7.50225e-05
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,2,3,2,0.6666666666666666,7.50225e-05
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,2,2,0.5,5.0015e-05
+xindex-samples-hitm-cxl-r2,hitm,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,unmapped,1,1,1.0,2.50075e-05
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",2,1,1,1.0,2.50075e-05
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",unmapped,1,1,1.0,2.50075e-05
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x98",2,1,1,1.0,2.50075e-05
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,1,1,1.0,2.50075e-05
+xindex-samples-hitm-cxl-r2,hitm,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x93",2,1,1,1.0,2.50075e-05
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",0,3965,4,0.9906683480453973,0.0991547375
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,2735,1295,0.06142595978062157,0.0683955125
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,2704,1318,0.06360946745562131,0.06762028
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",0,2704,1057,0.1989644970414201,0.06762028
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",0,2625,4,0.9973333333333333,0.0656446875
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",0,1441,2,0.9979181124219292,0.0360358075
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",0,498,105,0.6746987951807228,0.012453735
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",0,398,3,0.9949748743718593,0.009952985
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",0,373,2,0.9973190348525469,0.0093277975
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x78",0,242,3,0.987603305785124,0.006051815
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xdb",0,169,4,0.9171597633136095,0.0042262675
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xbc",0,154,2,0.9935064935064936,0.003851155
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",0,147,1,1.0,0.0036761025
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x38",0,134,2,0.9925373134328358,0.003351005
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,130,96,0.12307692307692308,0.003250975
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",0,117,5,0.8632478632478633,0.0029258775
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,88,57,0.11363636363636363,0.00220066
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",0,71,71,0.014084507042253521,0.0017755325
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",0,70,2,0.9857142857142858,0.001750525
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x12",0,42,1,1.0,0.001050315
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,31,12,0.2903225806451613,0.0007752325
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,0,26,7,0.23076923076923078,0.000650195
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",0,22,1,1.0,0.000550165
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",0,19,1,1.0,0.0004751425
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",0,16,1,1.0,0.00040012
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,0,14,6,0.2857142857142857,0.000350105
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,12,7,0.3333333333333333,0.00030009
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x70",0,11,6,0.36363636363636365,0.0002750825
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x6a",0,9,5,0.5555555555555556,0.0002250675
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,9,2,0.8888888888888888,0.0002250675
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x98",0,7,6,0.2857142857142857,0.0001750525
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0xd3",0,6,5,0.3333333333333333,0.000150045
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,5,5,0.2,0.0001250375
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",0,5,5,0.2,0.0001250375
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,4,3,0.5,0.00010003
+xindex-samples-hitm-local-r2,hitm,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x18d",0,2,2,0.5,5.0015e-05
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",unmapped,1,1,1.0,2.50075e-05
+xindex-samples-hitm-local-r2,hitm,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",unmapped,1,1,1.0,2.50075e-05
+xindex-samples-hitm-local-r2,hitm,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,unmapped,1,1,1.0,2.50075e-05
+xindex-samples-locks-cxl,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,2014,31,0.038728897715988087,0.503515105
+xindex-samples-locks-cxl,locks,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,1977,31,0.04400606980273141,0.4942648275
+xindex-samples-locks-cxl,locks,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,1362,1127,0.03450807635829662,0.340510215
+xindex-samples-locks-cxl,locks,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",2,1282,512,0.5249609984399376,0.320509615
+xindex-samples-locks-cxl,locks,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,2,681,534,0.1145374449339207,0.1702551075
+xindex-samples-locks-local,locks,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",0,4269,535,0.8517217146872804,1.0672820175
+xindex-samples-locks-local,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,2006,31,0.03988035892323031,0.501515045
+xindex-samples-locks-local,locks,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,1982,1627,0.03229061553985873,0.495514865
+xindex-samples-locks-local,locks,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,1927,31,0.03995848469122989,0.4817644525
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,61,60,0.03278688524590164,0.0076254575
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,49,49,0.02040816326530612,0.0061253675
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,46,45,0.043478260869565216,0.005750345
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",2,40,40,0.025,0.0050003
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,37,37,0.02702702702702703,0.0046252775
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,35,35,0.02857142857142857,0.0043752625
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",2,27,27,0.037037037037037035,0.0033752025
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,27,27,0.037037037037037035,0.0033752025
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",2,17,2,0.9411764705882353,0.0021251275
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,16,16,0.0625,0.00200012
+xindex-samples-memory-cxl,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",2,6,6,0.16666666666666666,0.000750045
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",2,6,3,0.6666666666666666,0.000750045
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,2,6,5,0.3333333333333333,0.000750045
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",2,5,3,0.6,0.0006250375
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,2,5,5,0.2,0.0006250375
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",2,4,1,1.0,0.00050003
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,2,3,2,0.6666666666666666,0.0003750225
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",2,2,1,1.0,0.000250015
+xindex-samples-memory-cxl,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,2,2,0.5,0.000250015
+xindex-samples-memory-cxl,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x18",0,2,2,0.5,0.000250015
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",2,2,2,0.5,0.000250015
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x98",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",2,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,1,1,1.0,0.0001250075
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,2875,2557,0.018782608695652174,0.0072090625
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,2140,1719,0.03691588785046729,0.00536605
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,2134,1728,0.02577319587628866,0.005351005
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,2109,1812,0.020862968231389285,0.0052883175
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,2027,1734,0.023186975826344353,0.0050827025
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",2,2025,1640,0.07209876543209877,0.0050776875
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,1995,1653,0.033583959899749376,0.0050024625
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",2,1612,1587,0.0018610421836228288,0.00404209
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",2,1068,135,0.7799625468164794,0.00267801
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,857,837,0.004667444574095682,0.0021489275
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",2,347,347,0.002881844380403458,0.0008701025
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",2,276,105,0.5942028985507246,0.00069207
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,2,265,135,0.4377358490566038,0.0006644875
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",2,242,3,0.9628099173553719,0.000606815
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,2,236,113,0.4915254237288136,0.00059177
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",2,192,98,0.2552083333333333,0.00048144
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,2,190,122,0.3,0.000476425
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",2,167,92,0.2934131736526946,0.0004187525
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0xd3",0,105,75,0.24761904761904763,0.0002632875
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",2,103,3,0.9611650485436893,0.0002582725
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",2,72,1,1.0,0.00018054
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x18d",0,61,61,0.01639344262295082,0.0001529575
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xdb",2,59,2,0.9491525423728814,0.0001479425
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,56,55,0.03571428571428571,0.00014042
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,50,24,0.08,0.000125375
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",2,44,3,0.9318181818181818,0.00011033
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",2,37,2,0.7567567567567568,9.27775e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",2,34,2,0.9705882352941176,8.5255e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,34,25,0.08823529411764706,8.5255e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,2,33,3,0.9393939393939394,8.27475e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x38",2,32,5,0.8125,8.024e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,2,31,2,0.8709677419354839,7.77325e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x18",0,22,22,0.045454545454545456,5.5165e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x78",2,22,1,1.0,5.5165e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x23",0,21,11,0.14285714285714285,5.26575e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",2,15,10,0.4,3.76125e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,2,13,4,0.6923076923076923,3.25975e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",2,13,1,1.0,3.25975e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,13,6,0.6153846153846154,3.25975e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x98",2,9,9,0.1111111111111111,2.25675e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,0,9,2,0.5555555555555556,2.25675e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xbc",2,8,2,0.875,2.006e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0xf2",0,7,6,0.2857142857142857,1.75525e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x12",2,6,1,1.0,1.5045e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x73",0,6,5,0.3333333333333333,1.5045e-05
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,0,6,5,0.3333333333333333,1.5045e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x6a",0,5,3,0.6,1.25375e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x70",0,5,4,0.4,1.25375e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x4c",0,4,4,0.25,1.003e-05
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x93",2,4,4,0.25,1.003e-05
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x15c",0,2,2,0.5,5.015e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x30",2,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x16e",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x19d",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x76",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x70",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x12",unmapped,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x38",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x369",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x4d,0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x37c",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-cxl-r2,memory,2,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x68",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",0,91,5,0.9560439560439561,0.0113756825
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,64,63,0.03125,0.00800048
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,49,46,0.04081632653061224,0.0061253675
+xindex-samples-memory-local,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,49,46,0.061224489795918366,0.0061253675
+xindex-samples-memory-local,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,46,44,0.043478260869565216,0.005750345
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",0,40,38,0.075,0.0050003
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,38,38,0.02631578947368421,0.004750285
+xindex-samples-memory-local,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,36,35,0.05555555555555555,0.00450027
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",0,26,26,0.038461538461538464,0.003250195
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,24,24,0.041666666666666664,0.00300018
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",0,14,1,1.0,0.001750105
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",0,14,1,1.0,0.001750105
+xindex-samples-memory-local,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",0,11,11,0.09090909090909091,0.0013750825
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",0,10,1,1.0,0.001250075
+xindex-samples-memory-local,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x18d",0,8,8,0.125,0.00100006
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",0,6,1,1.0,0.000750045
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",0,5,1,1.0,0.0006250375
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",0,5,3,0.6,0.0006250375
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,5,5,0.2,0.0006250375
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",0,3,3,0.3333333333333333,0.0003750225
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",0,3,2,0.6666666666666666,0.0003750225
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xdb",0,2,1,1.0,0.000250015
+xindex-samples-memory-local,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0xd3",0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x23",0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",0,2,1,1.0,0.000250015
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x38",0,2,2,0.5,0.000250015
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x395",0,1,1,1.0,0.0001250075
+xindex-samples-memory-local,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",0,1,1,1.0,0.0001250075
+xindex-samples-memory-local,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",0,1,1,1.0,0.0001250075
+xindex-samples-memory-local,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,0,1,1,1.0,0.0001250075
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x18",0,1,1,1.0,0.0001250075
+xindex-samples-memory-local,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x15c",0,1,1,1.0,0.0001250075
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x272",0,4738,144,0.9510341916420431,0.011880535
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x7e",0,2803,2497,0.013913663931501962,0.0070285225
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x30,0,2444,1937,0.038461538461538464,0.00612833
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x3b,0,2354,1872,0.04672897196261682,0.005902655
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x40",0,2179,1873,0.023864157870582835,0.0054638425
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x20,0,2177,1841,0.02480477721635278,0.0054588275
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xb",0,2109,1702,0.07349454717875771,0.0052883175
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x63",0,1955,1664,0.02608695652173913,0.0049021625
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x8",0,1579,1556,0.0018999366687777073,0.0039593425
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x12c",0,1062,2,0.9971751412429378,0.002662965
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x44",0,818,808,0.0024449877750611247,0.002051135
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x50",0,796,2,0.9962311557788944,0.00199597
+xindex-samples-memory-local-r2,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x1a1",0,686,686,0.0014577259475218659,0.001720145
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xce",0,447,141,0.6420581655480985,0.0011208525
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x154",0,336,2,0.9970238095238095,0.00084252
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x139",0,317,2,0.9936908517350158,0.0007948775
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x148",0,286,1,1.0,0.000717145
+xindex-samples-memory-local-r2,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x18d",0,244,244,0.004098360655737705,0.00061183
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0x78",0,141,2,0.9929078014184397,0.0003535575
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x11",0,127,83,0.16535433070866143,0.0003184525
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x284",0,101,76,0.10891089108910891,0.0002532575
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x38",0,80,20,0.625,0.0002006
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xdb",0,79,2,0.9746835443037974,0.0001980925
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xbc",0,79,2,0.9873417721518988,0.0001980925
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)+0xd5",0,74,2,0.9459459459459459,0.000185555
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0xd3",0,73,62,0.1095890410958904,0.0001830475
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0xa3",0,69,69,0.014492753623188406,0.0001730175
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x153",0,67,26,0.08955223880597014,0.0001680025
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x5c,0,63,7,0.7936507936507936,0.0001579725
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)+0x7d",0,56,26,0.44642857142857145,0.00014042
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x6b",0,53,24,0.11320754716981132,0.0001328975
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x60,0,50,6,0.8,0.000125375
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x12",0,38,1,1.0,9.5285e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x23",0,37,23,0.16216216216216217,9.27775e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x18",0,34,34,0.029411764705882353,8.5255e-05
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0xbc",0,33,2,0.9696969696969697,8.27475e-05
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x76,0,19,4,0.7368421052631579,4.76425e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x73",0,13,11,0.15384615384615385,3.25975e-05
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x98",0,11,10,0.18181818181818182,2.75825e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0xf2",0,11,10,0.18181818181818182,2.75825e-05
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x6a",0,7,3,0.5714285714285714,1.75525e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x15c",0,7,7,0.14285714285714285,1.75525e-05
+xindex-samples-memory-local-r2,memory,0,"xindex::HRoot<Key, unsigned long>::do_maintenance(void*)+0x19d",0,6,6,0.16666666666666666,1.5045e-05
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x7b",0,5,1,1.0,1.25375e-05
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x70",0,3,1,1.0,7.5225e-06
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x164",0,3,1,1.0,7.5225e-06
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x4c",0,3,3,0.3333333333333333,7.5225e-06
+xindex-samples-memory-local-r2,memory,0,"xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)+0x93",0,2,2,0.5,5.015e-06
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x29",0,2,2,0.5,5.015e-06
+xindex-samples-memory-local-r2,memory,0,xindex::AtomicVal<unsigned long>::update(unsigned long const&)+0x4d,0,2,1,1.0,5.015e-06
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x369",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x395",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-local-r2,memory,0,"run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const+0x158",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)+0x4f",0,1,1,1.0,2.5075e-06
+xindex-samples-memory-local-r2,memory,0,"xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)+0x8",0,1,1,1.0,2.5075e-06

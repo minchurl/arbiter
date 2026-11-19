@@ -1,0 +1,10 @@
+{
+  "screen_threshold": 1.03,
+  "selected_cases": [
+    "diagnostic-micro-table1",
+    "diagnostic-micro-threads8"
+  ],
+  "rounds": 5,
+  "seconds": 30,
+  "rule": "At most two highest table-placement ratios; changed input conditions are separate from the fixed 256-entry/32-worker baseline."
+}

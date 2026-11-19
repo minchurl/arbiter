@@ -1,0 +1,5 @@
+case,leaf_address,leaf_cas_samples,value_cas_samples_same_leaf,sampled_attempts_per_value_update
+xindex-buffer-samples-locks-cxl,0x7fcec8c33400,1965,63,31.19047619047619
+xindex-buffer-samples-locks-local,0x7f73eb433400,3383,75,45.10666666666667
+xindex-samples-locks-cxl,0x7f30464e2c80,673,78,8.628205128205128
+xindex-samples-locks-local,0x7f33b1ce2c80,3636,64,56.8125

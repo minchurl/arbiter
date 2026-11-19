@@ -9,6 +9,7 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [placement-diagnosis/20261119](placement-diagnosis/20261119/) | Frozen-code XIndex/micro bottleneck comparison, precise retry/address samples, allocation and isolated extent-placement ablations. `runs.csv`, `mechanism-summary.json`, `checks.json`, `manifest.json`, `performance.png`. |
 | [object-rmw-20261119](libcuckoo/object-rmw-20261119/) | Object/member RMW and std::thread extension; full XIndex A and micro regressions; original libcuckoo placement comparisons and isolated TTAS/padding experiments. `placement-summary.csv`, `algorithm-summary.csv`, `regression-validation.json`, `manifest.json`. |
 | [jemalloc-strict-20261119](xindex/ycsb-a/jemalloc-strict-20261119/) | Final 650-line runtime: one full A Local/CXL pair, no fresh controls. `runs.csv`, `manifest.json`, `validation.txt`, `checks.txt`, `code-size.csv`, `selected-sites.csv`. |
 | [jemalloc-demand-20261118](xindex/ycsb-a/jemalloc-demand-20261118/) | Bounded vs initial 1,002-line demand runtime: four runs per allocator/placement, 16 total. `runs.csv`, `lifecycle.csv`, hashes/environment, code counts. Intermediate strict-only checks are not performance rows. |
@@ -16,6 +17,32 @@ of today's runtime. Directory names below link to the retained data directly.
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+For placement diagnosis, `runs.csv` separates `screen`, `diagnostic` and
+`confirm` phases; `extent_policy` and `selected_node_mask` distinguish complete
+single-node placement from the isolated interleave experiment. `node` is the
+runtime target argument, not a claim that interleaved objects reside entirely
+on that node. `experiments.jsonl` and compressed `raw-runs.jsonl.gz` retain exact
+settings, commands, logs, validation and live interleave mapping snapshots.
+The large micro ballast can be purged before the exit arena report; its live
+three-page samples and, for interleave, live VMA page counts are separate checks.
+
+`counters.csv`, `sample-positions.csv`, `sample-symbols.csv`, `sample-objects.csv`
+and compressed `samples.csv.gz` retain diagnostic measurements; their throughput
+is excluded from the confirmation means. `profiles.jsonl.gz` includes raw
+counter output, rejected probes and process snapshots. Raw perf binaries remain
+under ignored `build/placement-diagnosis/`; hashes are retained. The inactive
+RCU trial is in `rejected-runs.jsonl.gz`. The interleave runtime patch is evidence
+only, and does not change the production single-node runtime or add selection
+parameters. `frozen-inputs.json` and `checks.json` record the unchanged inputs.
+
+Run `python3 results/placement-diagnosis/20261119/scripts/summarize.py` and
+`python3 results/placement-diagnosis/20261119/scripts/plot.py` from the repository
+root to regenerate the derived summary/figure (Matplotlib is required for the
+plot). Other scripts preserve the measured host's paths and frozen build inputs;
+historical stage scripts include a failed inactive-RCU trial and its resume.
+Use the benchmark guide to build the matching inputs before replaying individual
+commands; do not blindly rerun all historical stage controllers.
 
 For object-RMW/libcuckoo, `libcuckoo-runs.csv` labels every screen, confirmation
 and control; `libcuckoo-raw.jsonl` retains stdout/stderr and commands, and

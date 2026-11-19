@@ -1,0 +1,18 @@
+{
+  "build/libcuckoo-rmw/micro/micro-placed": {
+    "normalized_worker_sha256": "1765cbfc9a68cb479e1e08645f97fa285082ef7d4cfac7b501e45a476ec4a794",
+    "instructions": 149
+  },
+  "build/placement-diagnosis/placements/micro-table/binary": {
+    "normalized_worker_sha256": "1765cbfc9a68cb479e1e08645f97fa285082ef7d4cfac7b501e45a476ec4a794",
+    "instructions": 149
+  },
+  "build/placement-diagnosis/placements/micro-ballast/binary": {
+    "normalized_worker_sha256": "1765cbfc9a68cb479e1e08645f97fa285082ef7d4cfac7b501e45a476ec4a794",
+    "instructions": 149
+  },
+  "build/placement-diagnosis/placements/micro-both/binary": {
+    "normalized_worker_sha256": "1765cbfc9a68cb479e1e08645f97fa285082ef7d4cfac7b501e45a476ec4a794",
+    "instructions": 149
+  }
+}

@@ -6,6 +6,214 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## Why XIndex benefits from CXL and the microbenchmark does not (November 19)
+
+XIndex's CXL gain accompanies a sharp reduction in retries on a highly contended
+leaf lock. The micro's correct table allocation is already selected, but moving
+it to CXL does not reduce its retries or improve the fixed workload in fresh
+confirmations. Additional selection parameters are not supported by this result.
+
+This investigation freezes the benchmark code at `62b5367`: the microbenchmark
+is the **already corrected 64-byte-entry / epoch-store version**, not the original
+32-byte upstream version. No benchmark, compiler, production runtime or policy
+source was changed. Allocation ablations rewrite only selected calls from the
+same frozen input bitcode. A separate runtime copy tests interleaved extents;
+its small patch is experimental evidence, not a production change.
+
+Fresh confirmations use the complete XIndex A trace (100M load, 400M timed
+operations, 31 foreground workers, `--bg 1`) and the existing micro default
+(32 victims, 256 entries, 50% reads, 8 GiB ballast, no noise). CPUs and ordinary
+memory stay on node 0; selected allocations use node 0 or CXL node 2.
+Micro has five 30-second pairs; XIndex has three rounds, rotating nodes 0/2/1.
+No performance counters run during these confirmations. Brackets are observed
+ranges, not confidence intervals; percentage changes compare arithmetic means.
+
+| Fixed workload | Runs per mode | Local Mops/s [min, max] | CXL Mops/s [min, max] | Change |
+|---|---:|---:|---:|---:|
+| XIndex YCSB-A | 3 | 26.620 [26.534, 26.714] | 45.793 [42.488, 48.776] | +72.02% |
+| Micro, 256 entries / 32 workers | 5 | 541.668 [537.630, 545.381] | 535.452 [528.289, 546.415] | -1.15% |
+
+![Placement, retry branches and workload controls](../results/placement-diagnosis/20261119/performance.png)
+
+### The difference is avoidable retry traffic, not missing micro allocation selection
+
+XIndex's [leaf lock](../benchmark/xindex/XIndex-H/xindex_buffer_impl.h#L875)
+repeatedly issues `cmpxchgb` until it succeeds, without a load/pause waiting
+loop. Its [reader](../benchmark/xindex/XIndex-H/xindex_buffer_impl.h#L53) repeats
+the lookup when the leaf is locked or its version changed. Precise retired
+conditional-branch samples locate those retries in the unchanged executable:
+
+| Estimated taken retry branches per completed operation | Local | CXL |
+|---|---:|---:|
+| XIndex leaf-lock CAS failure (`HGroup::put+0x279`) | 0.8600 | 0.1640 |
+| XIndex reader sees a locked leaf (`AltBtreeBuffer::get+0x141`) | 0.2758 | 0.0363 |
+| Micro table CAS failure (`victim_thread+0x18a`) | 0.01596 | 0.01597 |
+
+These are separate PEBS diagnostics with period 100,003, not software counters
+or throughput confirmation runs. XIndex's leaf CAS attempt samples likewise
+fall from 1.0673 to 0.3205 per operation, while value CAS (~0.5/op) and the two
+RCU progress sites combined (~1/op) remain. One leaf accounts for 85.2% of Local
+leaf CAS samples. A bounded 1M-record trace sample has a most frequent key at
+3.78%; it is not an exact distribution of the entire 400M trace.
+
+The microbenchmark already waits on status loads with `pause` before CAS and
+uses 64-byte entries. Its 16 KiB table fits easily in cache; all 256 table lines
+receive locked-operation samples, with no line above 0.49% of those samples.
+**99.71% / 99.73% of Local / CXL HITM address samples are in the selected table.**
+The correct object is already selected. Locked loads stay near 0.516/op and
+instructions near 67.4/op in both modes. Moving the backing pages does not
+remove the required CPU cache ownership transfers, and these measurements show
+no corresponding collapse in retries. HITM identifies sharing; it does not by
+itself predict a CXL placement gain.
+
+The micro imitates an individual value's version/status protocol; it does not
+reproduce XIndex's extra **outer leaf lock** around buffered updates. It also
+uses uniform table indexing and per-worker epoch stores, whereas this XIndex
+trace is skewed and RCU progress uses an atomic increment. Thus equal write
+percentages do not make their critical paths or contention patterns equivalent.
+XIndex's reader also executes explicit memory fences where this micro uses
+atomic acquire/relaxed loads; the benchmark is an approximation, not the same
+instruction sequence with a different data structure.
+The outer leaf lock, rather than the value CAS, is where the largest measured
+retry reduction occurs.
+
+Micro cycle samples concentrate around status reads, CAS and the ballast read.
+Memory-stall counters remain around two thirds of cycles in both modes. These
+events overlap, and ordinary cycle sample IPs can skid; their percentages are
+not disjoint execution-time components. The micro also pays for RNG, indexing
+and its large read working set. It is not a pure test of CXL load latency.
+
+### Controls narrow the cause, but do not prove a CHA mechanism
+
+The XIndex gain depends on concurrency. Single diagnostic Local/CXL pairs give
+**4.254/2.185 Mops/s at 1 foreground worker** and **29.662/17.236 at 8 workers**.
+At 31 workers with background disabled, Local/CXL are **27.617/53.973**;
+32 foreground workers with background disabled give **25.391/52.654**.
+CXL's extra access cost dominates at low concurrency; a reduction in excessive
+retry traffic can outweigh it under the measured high-contention workload.
+
+`--bg 1` creates both a busy coordinator and a maintenance worker. Instruction
+sampling estimates 476.1/314.6 total instructions per operation, of which the
+coordinator contributes 259.1/135.2 and maintenance 22.4/6.9. Remaining symbols
+contribute 194.6/172.5. Most of the whole-process instruction decrease is thus
+background work during a shorter run, not proof of fewer foreground retries.
+The direct branch samples above and the background-disabled controls avoid
+that interpretation error. Remaining symbols are not exclusively foreground.
+
+Moving **only site 68's 96-byte buffer objects** improves a screening pair from
+26.702 to 38.464 Mops/s. A separate profile/address check confirms that leaf
+locks and value CAS still reside on node 0 in this control, and that leaf CAS
+attempts decrease. The buffer contains root/begin pointers and metadata; in
+existing-key A it is not the hot per-update lock itself. This supports an
+**indirect timing/contention effect** from allocation placement, not just a
+faster service path for a lock whose backing page was moved. Slower cold accesses
+moderating contention is a plausible explanation; exact hardware arbitration
+and queue behavior remain unmeasured. Traffic redistribution and address/home
+effects are not separated by the available counters, so this is not a proof
+that added latency alone causes the gain.
+
+The host permits user core PMUs but denies system-wide/uncore access.
+Consequently this experiment does **not** establish CHA queue occupancy,
+memory-controller saturation or a particular CXL coherence route. Intel's
+CHA IRQ terminology means *Ingress Request Queue*, not Linux interrupt counts.
+[Intel core event definitions](https://perfmon-events.intel.com/platforms/emeraldrapids/core-events/core/)
+and [uncore guide](https://cdrdv2-public.intel.com/817509/817509-EMR_XCC_UPG_Guide-Rev_001.pdf)
+provide the event/queue definitions; they are not evidence that the inaccessible
+hardware events occurred here.
+
+### Placement search on unchanged default inputs
+
+Each row below is an exploratory pair, except the confirmation table above.
+Explicit site IDs are causal ablations, not new automatic selection parameters.
+
+| Micro selected objects / setting | Local Mops/s | CXL Mops/s |
+|---|---:|---:|
+| Table only | 535.186 | 533.969 |
+| Read-only ballast only | 543.514 | 53.935 |
+| Table and ballast | 536.235 | 53.586 |
+| Table, arena alignment 128 bytes | 539.019 | 538.497 |
+| Table, arena alignment 4 KiB | 531.866 | 532.088 |
+| Table, global jemalloc `thp:always` control | 545.263 | 546.565 |
+
+Arena alignment changes allocation-base alignment, not the stride of entries
+inside the table. The THP control actually backs about 8 GiB with huge pages
+and reduces page-walker-active cycles from 37.3% to 10.0%, but does not produce
+a large throughput gain. Walker activity is not an additive stall fraction.
+This is a global allocator page-policy control, not a CXL speedup or a committed
+runtime setting. Without ballast, the existing 50%-read workload runs at
+784.302/785.305 Mops/s, and 0%-read at 582.384/581.931: ballast alone is not hiding
+a table-placement gain. Those no-ballast inputs are separate workloads.
+
+For XIndex, leaf-block-only (site 71) gives 25.008/38.176 Mops/s, buffer+leaf
+(68+71) gives 26.223/45.726, active RCU allocation 25 gives 26.426/26.149, and
+data array 38 gives 26.376/41.958. Site 71 is a **520-byte block containing five
+104-byte nodes**, not one 520-byte leaf. Adding data array 38 to the automatic
+eight sites gives only **25.958/26.780**: selecting more RMW-related storage can
+destroy the existing gain. The automatic set remains `68,71,74,90,97,98,99,100`;
+only 68/71/74 execute in this A trace. An initial site-2 RCU trial selected an
+unused out-of-line constructor clone; it is excluded, and the active site-25
+trial is retained separately.
+
+An isolated runtime copy also interleaves only the selected extents over node 0
+and another node, preserving the same benchmark bitcode, 32 workers, 256 entries,
+write mix and ballast size. Full page counts check approximately equal residency
+on the two requested nodes. Node 2 is the verified CXL target; node 1 is a
+separate memory-only NUMA node whose physical technology is not asserted here.
+
+| Selected objects | Interleaved nodes | Single-node Local Mops/s | Interleaved Mops/s | Change |
+|---|---|---:|---:|---:|
+| ballast | 0 + 1 | 533.462 | 499.638 | -6.34% |
+| ballast | 0 + 2 | 533.462 | 127.890 | -76.03% |
+| both | 0 + 1 | 546.665 | 493.182 | -9.78% |
+| both | 0 + 2 | 546.665 | 127.445 | -76.69% |
+| table | 0 + 1 | 543.893 | 540.024 | -0.71% |
+| table | 0 + 2 | 543.893 | 544.938 | +0.19% |
+
+The runtime patch is retained only as an experiment. It changes the meaning of
+the target inside those isolated binaries; the production single-node binding
+contract and runtime are unchanged.
+
+### Changed-input checks are not default-workload improvements
+
+Hot-set, worker-count, read-mix, ballast and noise sweeps keep source code fixed
+but alter workload inputs. They are labeled separately in the archive. A
+64 MiB table (1,048,576 entries) falls from 637.272 to 179.865 Mops/s when placed
+in CXL: a large cold selected allocation can be expensive. Moving ballast to
+CXL with a tiny hot table (1/4/16/64 entries) also fails to produce a useful
+screen gain. The two largest apparent table-placement wins were retested on
+fresh 30-second runs, five pairs each:
+
+| Separate micro input | Runs per mode | Local Mops/s [min, max] | CXL Mops/s [min, max] | Change |
+|---|---:|---:|---:|---:|
+| Micro, one entry / 32 workers | 5 | 6.408 [6.136, 6.574] | 6.467 [6.279, 6.582] | +0.93% |
+| Micro, 256 entries / 8 workers | 5 | 210.496 [209.603, 211.008] | 209.426 [208.671, 211.227] | -0.51% |
+
+In a separate one-entry branch-sampling pair, writer load/pause wait-loop
+branches remain high at 84.39/83.51 per operation, and CAS failures are
+0.231/0.217. The tiny hot set creates substantial waiting, but CXL does not
+produce the XIndex-like collapse in retry work. These are diagnostic samples,
+not additional throughput confirmation rows.
+
+These controls must not be reported as improvement of the unchanged
+256-entry/32-worker baseline. The measurements support retaining the existing
+XIndex selection and keeping the micro ballast local. More RMW parameters or
+broader selection are not justified by this diagnosis; placement benefit also
+depends on access concentration, retry behavior and cold-access cost.
+Across the tested settings on this host and frozen version, no reproducible
+placement-only improvement was found for the fixed micro workload.
+
+Every accepted XIndex row executes 400M operations and matches the existing
+4,096-key digest; micro validates reads+writes, versions and epochs. Residency,
+zero fallback/query errors and zero swap are checked. Frozen-source/artifact
+hashes and empty production-code diffs establish the scope. Two initial
+multiplexed counter probes and the inactive RCU trial are excluded, but retained.
+Precise load-latency samples are exploratory, not an all-load latency mean.
+The host retains `schedutil`/boost; CPU caches are not flushed. Profiles,
+single-pair screens and repeated throughput confirmations are not pooled.
+[Evidence and reproduction files](../results/placement-diagnosis/20261119/)
+· [Checks](../results/placement-diagnosis/20261119/checks.json)
+· [Mechanism summary](../results/placement-diagnosis/20261119/mechanism-summary.json)
+
 ## Object RMW analysis and libcuckoo (November 19)
 
 The extension recognizes the tested libstdc++ `std::thread` state and follows
