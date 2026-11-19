@@ -1,0 +1,70 @@
+[
+  {
+    "name": "update100-hot1",
+    "benchmark": "contention",
+    "hot": 1,
+    "initial_operations": 100000,
+    "rounds": 5,
+    "confirmation_count": 400000,
+    "calibration_fast_mops": 0.862255,
+    "target_fast_mode_seconds": 12
+  },
+  {
+    "name": "update100-hot16",
+    "benchmark": "contention",
+    "hot": 16,
+    "initial_operations": 500000,
+    "rounds": 5,
+    "confirmation_count": 2200000,
+    "calibration_fast_mops": 5.76154,
+    "target_fast_mode_seconds": 12
+  },
+  {
+    "name": "update100-hot64",
+    "benchmark": "contention",
+    "hot": 64,
+    "initial_operations": 2000000,
+    "rounds": 5,
+    "confirmation_count": 9200000,
+    "calibration_fast_mops": 24.4858,
+    "target_fast_mode_seconds": 12
+  },
+  {
+    "name": "update100-hot65536",
+    "benchmark": "contention",
+    "hot": 65536,
+    "initial_operations": 40000000,
+    "rounds": 5,
+    "confirmation_count": 188100000,
+    "calibration_fast_mops": 501.483,
+    "target_fast_mode_seconds": 12
+  },
+  {
+    "name": "insert50-erase50",
+    "benchmark": "universal",
+    "capacity": 20,
+    "prefill": 50,
+    "inserts": 50,
+    "erases": 50,
+    "initial_power": 24,
+    "max_power": 29,
+    "rounds": 5,
+    "confirmation_count": 29,
+    "calibration_fast_mops": 228.1972426859,
+    "target_fast_mode_seconds": 12
+  },
+  {
+    "name": "insert100-growth",
+    "benchmark": "universal",
+    "capacity": 12,
+    "prefill": 0,
+    "inserts": 100,
+    "erases": 0,
+    "initial_power": 24,
+    "max_power": 27,
+    "rounds": 3,
+    "confirmation_count": 27,
+    "calibration_fast_mops": 24.132839153499997,
+    "target_fast_mode_seconds": 12
+  }
+]

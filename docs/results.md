@@ -6,6 +6,122 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## Libcuckoo with actual writes (November 19)
+
+Write percentage alone does not explain the missing CXL gain. This follow-up
+uses unchanged original-library binaries from the previous investigation and
+covers guaranteed value increments, successful inserts/deletes, and table growth.
+Only the runner forwards additional existing upstream workload options; no
+benchmark, library, compiler, runtime or selection-policy source is changed.
+The frozen base is `5ad2815`; hashes and exact commands are retained.
+
+The upstream universal benchmark's percentages count **attempts**. In the old
+pure-update configuration (capacity `2^23`, prefill 75%, 32 workers, 4,194,304,000
+requests), each worker has 524,288 candidate keys and 196,608 present keys.
+Its full-period query sequence completes 250 cycles, so exactly **37.5%** of
+attempts successfully update a present key, storing the same default value.
+This fraction is derived from the pinned source and settings, not an added
+counter. Workers have separate key sequences; different keys can share bucket
+locks. Even read-only lookups acquire spinlocks. Upsert's existing-value callback
+is empty, so an all-upsert run is not evidence of 100% payload modification.
+
+The existing-key driver with `--reads 0` instead increments a present value on
+every request. The final all-key sum equals the update count in every run,
+with zero failures. Earlier experiments already included this kind of 100%
+write workload; the new runs add smaller hot sets and structural mutations.
+For 50% insert/50% erase, the initial per-worker population exceeds the maximum
+50-operation batch imbalance, so both operation types always succeed. Pure
+insertion always inserts fresh keys. The upstream runtime assertions remain
+active under `-DNDEBUG` and validate those outcomes.
+
+All comparisons use 32 workers, CPU/ordinary memory node 0, selected memory node
+0 or CXL node 2, fixed counts and matched seeds within each pair, fresh processes,
+and alternating placement order. There is no perf instrumentation in these rows
+and no outlier removal. `schedutil` and boost remain enabled. Original update
+and small-table churn cases use five pairs; other structural cases use three.
+Calibrations select counts and are excluded. Three later native reference rounds
+for hot-64, hot-65,536 and small-table churn are retained separately; they were
+not interleaved with the paired comparisons and are only secondary references.
+
+Means below are Mops/s; the percent is CXL/Local minus one. Brackets are the
+complete observed paired range, **not** a confidence interval.
+
+| Workload | Pairs | Local | CXL | Change [paired min, max] |
+|---|---:|---:|---:|---:|
+| 100% increments, 1 hot key | 5 | 0.876 | 0.873 | -0.34% [-12.35, +12.27] |
+| 100% increments, 16 hot keys | 5 | 5.777 | 5.894 | +2.04% [-1.79, +5.46] |
+| 16 hot keys, fresh-seed recheck | 5 | 5.882 | 5.775 | -1.83% [-8.34, +2.99] |
+| 100% increments, 64 hot keys | 5 | 23.969 | 24.160 | +0.80% [-2.09, +2.84] |
+| 100% increments, 65,536 hot keys | 5 | 528.375 | 527.921 | -0.09% [-1.16, +1.20] |
+| 50% insert / 50% erase, capacity 2^20 | 5 | 282.968 | 290.607 | +2.70% [-1.49, +16.88] |
+| 50% insert / 50% erase, capacity 2^23 | 3 | 212.254 | 174.978 | -17.56% [-44.54, -4.00] |
+| 100% insert, growth from capacity 2^12 | 3 | 25.726 | 4.090 | -84.10% [-84.29, -83.91] |
+| 100% insert, reserved 2^28; short control | 3 | 184.076 | 163.769 | -11.03% [-14.67, -8.67] |
+| 100% insert, reserved 2^30; longer control | 3 | 179.221 | 165.891 | -7.44% [-9.03, -6.51] |
+
+The apparent +2.70% small-table churn mean comes from **one positive pair out
+of five**; the other four pairs are negative. The initial hot-16 +2.04% result
+has four positive pairs out of five. A fresh-seed five-pair recheck reverses the
+initial placement order and gives **-1.83%**, with 3/5 positive pairs: the small
+initial gain does not reproduce. Keep the two batches separate. Large-table
+churn is negative in all three pairs,
+but its -17.56% mean is strongly affected by one -44.54% pair; the magnitude is
+not a precise estimate. The growing-insert regression is consistent across all
+three pairs, at roughly -84%.
+
+The original update timings span 11.3–15.9 seconds. Structural churn takes
+1.65–5.06 seconds, and growth takes 5.17–32.89 seconds across modes. Reserved
+insertion initially takes only 0.71–0.83 seconds for 134,217,728 requests; retain
+it as a short control. The longer reserved run quadruples capacity and request
+count to 536,870,912 requests, uses fresh seeds and takes 2.96–3.28 seconds.
+It is a distinct workload, not a count-matched comparison to the growth run.
+[Summary and durations](../results/libcuckoo/write-heavy-20261119/summary.csv)
+· [Every throughput row](../results/libcuckoo/write-heavy-20261119/runs.csv)
+
+Existing-key runs execute selected lock site 26; universal runs without resize
+execute lock site 43. Growing insertion additionally executes bucket-resize
+site 51, with 23 selected allocations per process. Site 51 comes from the older
+function/thread signals, not the new object-RMW evidence. Reserving capacity
+leaves the bucket array in ordinary DRAM and only moves lock storage. It also
+removes resizing work, so this control does not isolate site 51's causal cost.
+Exit-resident selected pages are on the requested node and all fallback counts
+are zero. Growth frees/purges bucket pages before the exit report; that report
+is not a full census of every page while the workload was running.
+
+Separate whole-process perf diagnostics provide a direct check of the lock
+risk. Counts include initialization and validation, divided by timed requests;
+these are neither exact failed-acquire counts nor hot-phase-only measurements.
+Each counter reports 100% running time.
+
+| Hot keys | Locked loads/request, Local → CXL | RFO HitM responses/request, Local → CXL |
+|---|---:|---:|
+| 1 | 83.824 → 90.152 | 27.963 → 29.279 |
+| 65,536 | 2.023 → 2.021 | 1.897 → 1.870 |
+
+For one hot key, 100% of locked-load address samples lie in the selected arena
+in both modes. The corresponding retired L3 HitM-load samples are 99.97% Local
+and 100% CXL. Sampling uses period 100,003, reports no lost events, and matches
+successful `mbind` extents, including arena metadata rather than exact object
+boundaries. These event classes do not measure all coherence traffic.
+[Counters](../results/libcuckoo/write-heavy-20261119/counters.csv)
+· [Address samples](../results/libcuckoo/write-heavy-20261119/address-samples.csv)
+
+Thus the selected lock storage is a real RMW/HitM risk, while CXL placement
+leaves the original test-and-set serialization in place. For the hot-one case,
+the diagnostic counts do not show a reduction in locked operations or RFO HitM
+responses. Write intensity and allocation-risk detection are insufficient to
+predict a placement speedup. The earlier XIndex gain accompanies reduced lock
+retries; the earlier micro 100%-write control still has no gain. These results
+do not justify another selection parameter or a claim that arbitrary
+write-heavy workloads will benefit.
+
+All operation/placement checks pass. Runner validation covers five rejected
+argument combinations and twelve real native/Local/CXL upstream smoke processes,
+including legacy inferred updates, explicit updates, mixed operations and upserts.
+[Checks and frozen hashes](../results/libcuckoo/write-heavy-20261119/checks.json)
+· [Runner checks](../results/libcuckoo/write-heavy-20261119/runner-checks.json)
+· [Evidence and reproduction](../results/README.md)
+
 ## Why XIndex benefits from CXL and the microbenchmark does not (November 19)
 
 XIndex's CXL gain accompanies a sharp reduction in retries on a highly contended

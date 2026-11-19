@@ -1,0 +1,32 @@
+{
+  "frozen_inputs": {
+    "benchmark/libcuckoo/contention.cpp": true,
+    "benchmark/libcuckoo/libcuckoo-upstream/tests/universal-benchmark/universal_benchmark.cc": true,
+    "benchmark/libcuckoo/libcuckoo-upstream/tests/universal-benchmark/universal_table_wrapper.hh": true,
+    "runtime/src/arbiter_jemalloc_arena.cpp": true,
+    "runtime/src/arbiter_runtime_site.cpp": true,
+    "configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config": true,
+    "build/libcuckoo-rmw/compiler/runtime/libarbiter_runtime.a": true,
+    "build/libcuckoo-rmw/bench-final/universal-placed": true,
+    "build/libcuckoo-rmw/bench-final/universal-native": true,
+    "build/libcuckoo-rmw/bench-final/contention-placed": true,
+    "build/libcuckoo-rmw/bench-final/universal-placed.bc": true,
+    "build/libcuckoo-rmw/bench-final/contention.bc": true,
+    "build/libcuckoo-rmw/bench-final/universal.bc": true,
+    "build/libcuckoo-rmw/bench-final/contention-placed.bc": true,
+    "build/libcuckoo-rmw/bench-final/contention-native": true
+  },
+  "upstream_clean": true,
+  "benchmark_compiler_runtime_policy_unchanged": true,
+  "throughput_rows": 105,
+  "rows_by_phase": {
+    "calibrate": 12,
+    "confirm": 84,
+    "native": 9
+  },
+  "all_operation_and_placement_checks_passed": true,
+  "profile_data_sha256": {
+    "build/libcuckoo-write-heavy-20261119/profiles/samples-hot1-cxl.data": "6c0f7a91303ca0c75b04d25f0148becf69c239316c627bc03796f8d32741cbde",
+    "build/libcuckoo-write-heavy-20261119/profiles/samples-hot1-local.data": "1341451dc9008551b97ce40f03250b4b5e222567e46031fe696473513d867aa4"
+  }
+}

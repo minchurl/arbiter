@@ -1,0 +1,97 @@
+{
+  "all_passed": true,
+  "negative_cases": 5,
+  "smoke_processes": 12,
+  "raw_file": "raw-runner-checks.json.gz",
+  "cases": [
+    {
+      "name": "invalid-sum",
+      "exit_code": 2,
+      "result_directory_created": false
+    },
+    {
+      "name": "negative-mix",
+      "exit_code": 2,
+      "result_directory_created": false
+    },
+    {
+      "name": "wrong-driver",
+      "exit_code": 2,
+      "result_directory_created": false
+    },
+    {
+      "name": "truncated-count",
+      "exit_code": 2,
+      "result_directory_created": false
+    },
+    {
+      "name": "zero-count",
+      "exit_code": 2,
+      "result_directory_created": false
+    },
+    {
+      "name": "legacy",
+      "exit_code": 0,
+      "expected_mix": {
+        "reads": 60,
+        "updates": 40,
+        "inserts": 0,
+        "erases": 0,
+        "upserts": 0
+      },
+      "validated_modes": [
+        "native",
+        "local",
+        "cxl"
+      ]
+    },
+    {
+      "name": "updates",
+      "exit_code": 0,
+      "expected_mix": {
+        "reads": 0,
+        "updates": 100,
+        "inserts": 0,
+        "erases": 0,
+        "upserts": 0
+      },
+      "validated_modes": [
+        "native",
+        "local",
+        "cxl"
+      ]
+    },
+    {
+      "name": "upserts",
+      "exit_code": 0,
+      "expected_mix": {
+        "reads": 0,
+        "updates": 0,
+        "inserts": 0,
+        "erases": 0,
+        "upserts": 100
+      },
+      "validated_modes": [
+        "native",
+        "local",
+        "cxl"
+      ]
+    },
+    {
+      "name": "mixed",
+      "exit_code": 0,
+      "expected_mix": {
+        "reads": 20,
+        "updates": 20,
+        "inserts": 20,
+        "erases": 20,
+        "upserts": 20
+      },
+      "validated_modes": [
+        "native",
+        "local",
+        "cxl"
+      ]
+    }
+  ]
+}

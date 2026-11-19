@@ -1,0 +1,43 @@
+[
+  {
+    "name": "insert50-erase50-large",
+    "benchmark": "universal",
+    "capacity": 23,
+    "prefill": 50,
+    "inserts": 50,
+    "erases": 50,
+    "confirmation_count": 29,
+    "rounds": 3,
+    "rationale": "Larger bucket working set, beyond the 60 MiB LLC; same request count as the smaller churn case."
+  },
+  {
+    "name": "insert100-reserved",
+    "benchmark": "universal",
+    "capacity": 28,
+    "prefill": 0,
+    "inserts": 100,
+    "erases": 0,
+    "confirmation_count": 27,
+    "rounds": 3,
+    "rationale": "Reserve enough capacity to avoid timed resize; same 134217728 successful insert requests as the growth case."
+  },
+  {
+    "name": "insert100-reserved-long",
+    "benchmark": "universal",
+    "capacity": 30,
+    "prefill": 0,
+    "inserts": 100,
+    "erases": 0,
+    "confirmation_count": 29,
+    "rounds": 3,
+    "rationale": "The capacity-28, 134M-request reserved control lasted under one second. Increase both capacity and count fourfold; retain the short control separately. This is not a count-matched comparison to the growth case."
+  },
+  {
+    "name": "update100-hot16-recheck",
+    "benchmark": "contention",
+    "hot": 16,
+    "confirmation_count": 2200000,
+    "rounds": 5,
+    "rationale": "Initial hot-16 mean was +2.04%, with four of five positive pairs. Retest the same fixed count on fresh seeds, reversing the initial placement order. Do not pool this follow-up into the original result."
+  }
+]

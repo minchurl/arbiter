@@ -20,6 +20,10 @@ def main():
     p.add_argument('--rounds', type=int, default=3)
     p.add_argument('--threads', type=int, default=32)
     p.add_argument('--reads', type=int, default=50)
+    p.add_argument('--updates', type=int, help='universal update attempts; defaults to the remaining percentage')
+    p.add_argument('--inserts', type=int, default=0, help='universal insert percentage')
+    p.add_argument('--erases', type=int, default=0, help='universal erase percentage')
+    p.add_argument('--upserts', type=int, default=0, help='universal upsert percentage')
     p.add_argument('--keys', type=int, default=1048576)
     p.add_argument('--hot', type=int, default=65536)
     p.add_argument('--operations', type=int, default=1000000, help='contention operations per worker')
@@ -35,6 +39,19 @@ def main():
     args = p.parse_args()
     if args.rounds < 1 or args.threads < 1 or not 0 <= args.reads <= 100:
         p.error('invalid rounds/threads/reads')
+    if args.benchmark == 'universal':
+        if args.updates is None:
+            args.updates = 100 - args.reads - args.inserts - args.erases - args.upserts
+        mix = [args.reads, args.updates, args.inserts, args.erases, args.upserts]
+        if any(not 0 <= value <= 100 for value in mix) or sum(mix) != 100:
+            p.error('universal operation percentages must be 0..100 and sum to 100')
+        if not 0 <= args.initial_capacity < 63 or args.total_ops < 1 or not 0 <= args.prefill <= 100:
+            p.error('invalid universal capacity/prefill/total-ops')
+        expected_ops = (1 << args.initial_capacity) * args.total_ops // 100
+        if not expected_ops or expected_ops % args.threads:
+            p.error('universal total operation count must be positive and divisible by threads')
+    elif args.updates is not None or args.inserts or args.erases or args.upserts:
+        p.error('updates/inserts/erases/upserts require --benchmark universal')
     args.bin_dir = args.bin_dir.resolve()
     args.result_dir.mkdir(parents=True, exist_ok=False)
     config = {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()}
@@ -54,7 +71,9 @@ def main():
                 if args.partitioned:
                     workload += ['--partitioned']
             else:
-                workload += ['--reads', str(args.reads), '--updates', str(100-args.reads),
+                workload += ['--reads', str(args.reads), '--updates', str(args.updates),
+                             '--inserts', str(args.inserts), '--erases', str(args.erases),
+                             '--upserts', str(args.upserts),
                              '--initial-capacity', str(args.initial_capacity), '--prefill', str(args.prefill),
                              '--total-ops', str(args.total_ops), '--num-threads', str(args.threads)]
             env = dict(os.environ, ARBITER_TARGET_NODE=str(args.cxl_node if mode=='cxl' else args.local_node),
@@ -75,6 +94,8 @@ def main():
                     raise RuntimeError(f'{stem}: correctness failed')
                 mops=data['mops']
             else:
+                if data['output']['total_ops']['value'] != expected_ops:
+                    raise RuntimeError(f'{stem}: unexpected operation count')
                 mops=data['output']['throughput']['value']/1e6
             sites=[]
             if mode!='native':

@@ -138,6 +138,12 @@ used for XIndex, micro and libcuckoo; numeric config values are unchanged.
 ./scripts/run-libcuckoo.py --benchmark universal \
   --result-dir build/libcuckoo-universal --reads 10 \
   --initial-capacity 23 --prefill 75 --total-ops 1000
+./scripts/run-libcuckoo.py --benchmark universal \
+  --result-dir build/libcuckoo-insert-erase --reads 0 --inserts 50 --erases 50 \
+  --initial-capacity 20 --prefill 50 --total-ops 51200
+./scripts/run-libcuckoo.py --benchmark universal \
+  --result-dir build/libcuckoo-insert-growth --reads 0 --inserts 100 \
+  --initial-capacity 12 --prefill 0 --total-ops 409600
 ```
 
 Use `ARBITER_BUILD_DIR`, `ARBITER_BENCH_BUILD_DIR` and runner `--bin-dir` for
@@ -148,8 +154,20 @@ CPU/ordinary memory on node 0 and selected objects on node 0 or 2. A selected
 run fails validation if no selected allocation executes, private pages appear
 on another node, or any residency query fails.
 
-Universal's read/update options specify **attempts**; missing-key updates are
-expected. `--total-ops` is a percentage of initial capacity. The contention
+Universal accepts the upstream `--reads`, `--updates`, `--inserts`, `--erases`
+and `--upserts` percentages; they must sum to 100. Omitted `--updates` takes the
+remaining percentage, preserving the default read/update mix. These are workload
+options, not Arbiter selection parameters. Read/update percentages specify
+**attempts**; missing-key updates are expected. With capacity `2^23`, prefill 75%,
+32 workers and `--total-ops 50000`, only 37.5% of pure update attempts find a
+present key. The upstream upsert callback leaves an existing value unchanged.
+Use the contention driver with `--reads 0` for guaranteed value increments.
+The insert/erase example starts with enough keys that both operations succeed;
+the pure-insert example inserts new keys and includes timed table growth.
+Pre-generating insert keys uses substantial memory even for bounded table size.
+`--total-ops` is a percentage of initial capacity; the resulting request count
+must be positive and divisible by workers to avoid upstream's count truncation.
+The contention
 workload preloads all keys and uses only find/update_fn, with no timed resize.
 Every successful update increments a value; after timing, all keys and the
 complete value sum are checked against the executed updates. `--hot` controls

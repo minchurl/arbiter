@@ -9,6 +9,7 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [write-heavy-20261119](libcuckoo/write-heavy-20261119/) | Unchanged libcuckoo binaries: successful 100% updates, insert/erase and insertion with/without growth; paired placement comparisons, separate lock diagnostics and runner validation. `runs.csv`, `summary.csv`, `checks.json`, `raw-runs.jsonl.gz`. |
 | [placement-diagnosis/20261119](placement-diagnosis/20261119/) | Frozen-code XIndex/micro bottleneck comparison, precise retry/address samples, allocation and isolated extent-placement ablations. `runs.csv`, `mechanism-summary.json`, `checks.json`, `manifest.json`, `performance.png`. |
 | [object-rmw-20261119](libcuckoo/object-rmw-20261119/) | Object/member RMW and std::thread extension; full XIndex A and micro regressions; original libcuckoo placement comparisons and isolated TTAS/padding experiments. `placement-summary.csv`, `algorithm-summary.csv`, `regression-validation.json`, `manifest.json`. |
 | [jemalloc-strict-20261119](xindex/ycsb-a/jemalloc-strict-20261119/) | Final 650-line runtime: one full A Local/CXL pair, no fresh controls. `runs.csv`, `manifest.json`, `validation.txt`, `checks.txt`, `code-size.csv`, `selected-sites.csv`. |
@@ -17,6 +18,30 @@ of today's runtime. Directory names below link to the retained data directly.
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+For write-heavy libcuckoo, `runs.csv` separates count calibrations, paired
+confirmations and later native references: 105 rows in total (12, 84 and 9,
+respectively). `summary.csv` reports ratios of
+means, complete paired ranges and actual timed durations; the initial reserved
+insert control lasts under one second and has a separate longer confirmation.
+The initial hot-16 result and its fresh-seed recheck are also separate rows.
+Do not pool those workloads or calibration/diagnostic timing with confirmations.
+`raw-runs.jsonl.gz` retains every command, stdout and stderr; `experiments.jsonl`
+contains per-case settings and binary hashes. `counters.csv`,
+`address-samples.csv` and `profiles/` are separate whole-process diagnostics,
+including setup/validation and selected-arena metadata. `runner-checks.json`
+summarizes rejected inputs and real upstream smoke processes;
+`raw-runner-checks.json.gz` preserves their full commands and output.
+
+Run `python3 results/libcuckoo/write-heavy-20261119/scripts/summarize.py` from the
+repository root to regenerate the derived CSVs. Other archived scripts preserve
+the measured host's paths and frozen `build/libcuckoo-rmw/bench-final/` binaries;
+they require fresh output directories and do not rebuild those binaries. Create
+an empty `build/libcuckoo-write-heavy-20261119/` first. The measured order is
+`run.py`, `extra.py`, `profile.py`, `check-runner.py`, `long-reserved.py`, then
+`recheck-hot16.py`, sequentially after preparing the matching inputs. The longer
+reserved control uses about 34 GiB RSS in the same 64 GiB/no-swap scope. Binary
+perf data remains in the ignored build directory with hashes in `checks.json`.
 
 For placement diagnosis, `runs.csv` separates `screen`, `diagnostic` and
 `confirm` phases; `extent_policy` and `selected_node_mask` distinguish complete

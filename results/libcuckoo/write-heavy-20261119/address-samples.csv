@@ -1,0 +1,5 @@
+hot,mode,event,samples,in_arena,outside_arena,zero_address,arena_pct,reported_lost_events,scope
+1,cxl,mem_inst_retired.lock_loads:upp,9414,9414,0,0,100.0,0,whole_process_selected_arena_extents
+1,cxl,mem_load_l3_hit_retired.xsnp_fwd:upp,2899,2899,0,0,100.0,0,whole_process_selected_arena_extents
+1,local,mem_inst_retired.lock_loads:upp,10920,10920,0,0,100.0,0,whole_process_selected_arena_extents
+1,local,mem_load_l3_hit_retired.xsnp_fwd:upp,3370,3369,1,0,99.97032640949556,0,whole_process_selected_arena_extents
