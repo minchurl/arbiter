@@ -1,0 +1,21 @@
+START confirm-cold-local
+confirm-cold-local 0 baseline 28.241 
+confirm-cold-local 1 coldbuffer 42.034 48.24400372230833
+confirm-cold-local 2 baseline 28.468 
+confirm-cold-local 3 coldbuffer 42.309 48.68609703177216
+confirm-cold-local 4 baseline 28.443 
+DONE confirm-cold-local
+START confirm-cold-cxl
+confirm-cold-cxl 0 baseline 41.335 
+confirm-cold-cxl 1 coldbuffer 27.834 -32.880204304135006
+confirm-cold-cxl 2 baseline 41.604 
+confirm-cold-cxl 3 coldbuffer 27.863 -32.79874082597408
+confirm-cold-cxl 4 baseline 41.321 
+DONE confirm-cold-cxl
+START profile-cold-local
+Traceback (most recent call last):
+  File "/home/shin/arbiter/build/xindex-contention-cause-20261119/replicate.py", line 8, in <module>
+    with (base/(name+'.console')).open('w') as f:subprocess.run(command,stdout=f,stderr=subprocess.STDOUT,check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/python3', 'build/xindex-contention-cause-20261119/migrate.py', 'profile-cold-local', '--binary', 'buffer', '--node', '0', '--bulk', '--warmup', '20', '--step', '30', '--phases', 'baseline,coldbuffer,baseline,coldbuffer,baseline', '--profile']' returned non-zero exit status 1.

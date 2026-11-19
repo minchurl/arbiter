@@ -1,0 +1,22 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 41K of event 'cpu/event=0xcd,umask=0x1,ldlat=128,period=10007/upp'
+# Event count (approx.): 419363349
+#
+# Overhead  Symbol                                                                                                                                            IPC   [IPC Coverage]
+# ........  ................................................................................................................................................  ....................
+#
+    26.70%  [.] xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)                                                                     -      -            
+    26.46%  [.] xindex::AtomicVal<unsigned long>::update(unsigned long const&)                                                                                -      -            
+    18.45%  [.] xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)                                                                           -      -            
+    14.37%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)                                                                  -      -            
+    10.95%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)                                                                   -      -            
+     2.20%  [.] run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const                                -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

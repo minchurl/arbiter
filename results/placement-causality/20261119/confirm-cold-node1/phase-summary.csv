@@ -1,0 +1,6 @@
+case,selected_node,binary,foreground_workers,intervention_node,profile,instrumentation,phase,name,samples,operations,seconds,mops,min_mops,max_mops,gain_vs_adjacent_baselines_pct
+confirm-cold-node1,0,buffer,31,1,False,none,0,baseline,26,741917440,25.999662999999998,28.53565601984918,28.3661,28.7333,
+confirm-cold-node1,0,buffer,31,1,False,none,1,coldbuffer,22,666326272,22.000121,30.287391237530013,29.9786,31.0281,6.036365344985617
+confirm-cold-node1,0,buffer,31,1,False,none,2,baseline,24,686186696,24.00029,28.59076686156709,28.3861,28.8002,
+confirm-cold-node1,0,buffer,31,1,False,none,3,coldbuffer,22,659322112,21.999675999999994,29.96962827998013,29.5655,30.4607,5.33153338319734
+confirm-cold-node1,0,buffer,31,1,False,none,4,baseline,25,707860480,24.999872999999997,28.314563037980236,28.175,28.568,

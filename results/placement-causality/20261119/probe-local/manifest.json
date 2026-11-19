@@ -1,0 +1,96 @@
+{
+  "args": {
+    "name": "probe-local",
+    "node": 0,
+    "binary": "auto",
+    "phases": "baseline,leaf,baseline,buffer,baseline,both,baseline",
+    "step": 20,
+    "warmup": 10,
+    "fg": 31,
+    "top": 1
+  },
+  "duration": 155,
+  "command": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "-p",
+    "MemoryMax=64G",
+    "-p",
+    "MemorySwapMax=0",
+    "--",
+    "timeout",
+    "--kill-after=10",
+    "455",
+    "numactl",
+    "--cpunodebind=0",
+    "--membind=0",
+    "/home/shin/arbiter/build/placement-diagnosis/placements/xindex-auto/binary",
+    "--fg",
+    "31",
+    "--bg",
+    "0",
+    "--duration",
+    "155",
+    "--ycsb_type",
+    "a",
+    "--ycsb-load",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat",
+    "--ycsb-tx",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat"
+  ],
+  "env": {
+    "ARBITER_TARGET_NODE": "0",
+    "ARBITER_ARENA_REPORT": "1",
+    "XINDEX_VALIDATE": "1",
+    "XINDEX_THROUGHPUT_SAMPLE_SECONDS": "1",
+    "LD_LIBRARY_PATH": "/opt/intel/oneapi/mkl/latest/lib:"
+  },
+  "binary_sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+  "start": 1795058012.0461738,
+  "scope": "Duration replay and existing one-second throughput sampling; not fixed-count primary throughput. Migration transition intervals are excluded. No benchmark memory contents or instructions are written.",
+  "pid": 401719,
+  "table": "0x7f2882c40000",
+  "selected_hot_keys": [
+    2571001333982442796
+  ],
+  "target_pages": {
+    "leaf": [
+      139783402561536
+    ],
+    "buffer": [
+      139782755000320
+    ],
+    "record": [
+      139807597756416
+    ]
+  },
+  "initial_nodes": {
+    "0x7f21b5752000": 0,
+    "0x7f21dc0e2000": 0,
+    "0x7f277e338000": 0
+  },
+  "run_observed_monotonic": 225511.408524651,
+  "restore": {
+    "return_code": 0,
+    "errno": 0,
+    "status": [
+      0,
+      0,
+      0
+    ]
+  },
+  "final_query": {
+    "return_code": 0,
+    "errno": 0,
+    "status": [
+      0,
+      0,
+      0
+    ]
+  },
+  "valid": true,
+  "finish": 1795058229.1095893,
+  "operations": 4110859264
+}

@@ -1,0 +1,6 @@
+{
+  "reason": "Controller observed run_control only after bulk-page discovery, so its relative clock started late. The benchmark completed successfully during the final baseline before the redundant restore deadline. Throughput is exploratory only; confirmation uses explicit alignment to flushed benchmark elapsed timestamps.",
+  "benchmark_state_check": "digest=0x7474b8e9d3962859, failed_reads=0",
+  "final_residency": "all 850643 selected resident pages on node0; query errors and fallbacks zero",
+  "exclude_from_confirmations": true
+}

@@ -1,0 +1,9 @@
+fg_n: 31
+bg_n: 0
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=a throughput_unit=logical-transactions/s update_mapping=update
+exist_keys.size() : 100000000, item_num : 100000000
+load number : 100000000

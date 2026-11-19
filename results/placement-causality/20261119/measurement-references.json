@@ -1,0 +1,11 @@
+{
+  "move_pages": "https://man7.org/linux/man-pages/man2/move_pages.2.html",
+  "core_events": "https://perfmon-events.intel.com/platforms/emeraldrapids/core-events/core/",
+  "notes": [
+    "move_pages with nodes=NULL queries residency; MPOL_MF_MOVE changes private process pages and returns per-page status. Existing mbind policy does not prohibit the diagnostic migration.",
+    "MEM_TRANS_RETIRED.LOAD_LATENCY selects instruction latencies >=128 cycles here. On this CPU, weight is cache-access latency and ins_lat is dispatch-to-completion instruction latency. Cache weights can be below 128. Neither conditional sample mean is an all-load average.",
+    "MEM_LOAD_RETIRED.L3_MISS counts retired load instructions with at least one uop missing L3. This is not a direct DRAM/CXL transaction count."
+  ],
+  "intel_latency_fields": "https://cdrdv2-public.intel.com/789573/252046-sdm-change-document.pdf",
+  "kernel_weight_fields": "https://github.com/torvalds/linux/blob/v6.8/arch/x86/events/intel/ds.c#L1742"
+}

@@ -1,0 +1,1 @@
+["/usr/lib/linux-hwe-6.8-tools-6.8.0-149/perf", "script", "--ns", "--show-lost-events", "-i", "build/xindex-contention-cause-20261119/profile-cold-local-r2/perf.data", "-F", "tid,time,period,event,ip,sym,symoff,addr"]

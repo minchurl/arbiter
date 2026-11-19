@@ -1,0 +1,7 @@
+confirm-cold-cxl READY [(2571001333982442796, '0x7f17bf033400')]
+confirm-cold-cxl PHASE 0 baseline nodes {2: 850643, 0: 2} migration_seconds 0.316
+confirm-cold-cxl PHASE 1 coldbuffer nodes {0: 850634, 2: 11} migration_seconds 2.991
+confirm-cold-cxl PHASE 2 baseline nodes {2: 850643, 0: 2} migration_seconds 4.639
+confirm-cold-cxl PHASE 3 coldbuffer nodes {0: 850634, 2: 11} migration_seconds 2.957
+confirm-cold-cxl PHASE 4 baseline nodes {2: 850643, 0: 2} migration_seconds 4.645
+confirm-cold-cxl COMPLETE

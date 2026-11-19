@@ -1,0 +1,4 @@
+{
+  "reason": "perf record completed its recording and exited from requested SIGINT. Controller incorrectly required exit code 0, then terminated the benchmark before final validation. Repeat with explicit acceptance of 0 or SIGINT only.",
+  "exclude_from_confirmations": true
+}

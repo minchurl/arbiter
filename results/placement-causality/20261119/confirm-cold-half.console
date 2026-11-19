@@ -1,0 +1,7 @@
+confirm-cold-half READY [(2571001333982442796, '0x7fc5b4c33400')]
+confirm-cold-half PHASE 0 baseline nodes {0: 850645} migration_seconds 0.339
+confirm-cold-half PHASE 1 halfbuffer nodes {0: 425329, 2: 425316} migration_seconds 3.06
+confirm-cold-half PHASE 2 baseline nodes {0: 850645} migration_seconds 2.598
+confirm-cold-half PHASE 3 halfbuffer nodes {0: 425329, 2: 425316} migration_seconds 3.049
+confirm-cold-half PHASE 4 baseline nodes {0: 850645} migration_seconds 2.59
+confirm-cold-half COMPLETE

@@ -1,0 +1,6 @@
+{
+  "samples": 41907,
+  "cache_at_65535": 0,
+  "instruction_at_65535": 30,
+  "scope": "Entire recording, including warmup and transitions; no samples removed. Instruction latency is a reported 16-bit field. Upper-bound observations are retained and may be censored."
+}

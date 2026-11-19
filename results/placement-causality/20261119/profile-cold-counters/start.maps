@@ -1,0 +1,198 @@
+561c2f684000-561c2f687000 r--p 00000000 08:04 8273739                    /home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary
+561c2f687000-561c2f699000 r-xp 00003000 08:04 8273739                    /home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary
+561c2f699000-561c2f69d000 r--p 00015000 08:04 8273739                    /home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary
+561c2f69d000-561c2f69e000 r--p 00018000 08:04 8273739                    /home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary
+561c2f69e000-561c2f69f000 rw-p 00019000 08:04 8273739                    /home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary
+7fe8bb1e0000-7fe8bb1e1000 ---p 00000000 00:00 0 
+7fe8bb1e1000-7fe8bb9e1000 rw-p 00000000 00:00 0 
+7fe8bb9e1000-7fe8bb9e2000 ---p 00000000 00:00 0 
+7fe8bb9e2000-7fe8bc1e2000 rw-p 00000000 00:00 0 
+7fe8bc1e2000-7fe8bc1e3000 ---p 00000000 00:00 0 
+7fe8bc1e3000-7fe8bc9e3000 rw-p 00000000 00:00 0 
+7fe8bc9e3000-7fe8bc9e4000 ---p 00000000 00:00 0 
+7fe8bc9e4000-7fe8bd1e4000 rw-p 00000000 00:00 0 
+7fe8bd1e4000-7fe8bd1e5000 ---p 00000000 00:00 0 
+7fe8bd1e5000-7fe8bd9e5000 rw-p 00000000 00:00 0 
+7fe8bd9e5000-7fe8bd9e6000 ---p 00000000 00:00 0 
+7fe8bd9e6000-7fe8be1e6000 rw-p 00000000 00:00 0 
+7fe8be1e6000-7fe8be1e7000 ---p 00000000 00:00 0 
+7fe8be1e7000-7fe8be9e7000 rw-p 00000000 00:00 0 
+7fe8be9e7000-7fe8be9e8000 ---p 00000000 00:00 0 
+7fe8be9e8000-7fe8bf1e8000 rw-p 00000000 00:00 0 
+7fe8bf1e8000-7fe8bf1e9000 ---p 00000000 00:00 0 
+7fe8bf1e9000-7fe8bf9e9000 rw-p 00000000 00:00 0 
+7fe8bf9e9000-7fe8bf9ea000 ---p 00000000 00:00 0 
+7fe8bf9ea000-7fe8c01ea000 rw-p 00000000 00:00 0 
+7fe8c01ea000-7fe8c01eb000 ---p 00000000 00:00 0 
+7fe8c01eb000-7fe8c09eb000 rw-p 00000000 00:00 0 
+7fe8c09eb000-7fe8c09ec000 ---p 00000000 00:00 0 
+7fe8c09ec000-7fe8c11ec000 rw-p 00000000 00:00 0 
+7fe8c11ec000-7fe8c11ed000 ---p 00000000 00:00 0 
+7fe8c11ed000-7fe8c19ed000 rw-p 00000000 00:00 0 
+7fe8c19ed000-7fe8c19ee000 ---p 00000000 00:00 0 
+7fe8c19ee000-7fe8c21ee000 rw-p 00000000 00:00 0 
+7fe8c21ee000-7fe8c21ef000 ---p 00000000 00:00 0 
+7fe8c21ef000-7fe8c29ef000 rw-p 00000000 00:00 0 
+7fe8c29ef000-7fe8c29f0000 ---p 00000000 00:00 0 
+7fe8c29f0000-7fe8c31f0000 rw-p 00000000 00:00 0 
+7fe8c31f0000-7fe8c31f1000 ---p 00000000 00:00 0 
+7fe8c31f1000-7fe8c39f1000 rw-p 00000000 00:00 0 
+7fe8c39f1000-7fe8c39f2000 ---p 00000000 00:00 0 
+7fe8c39f2000-7fe8c41f2000 rw-p 00000000 00:00 0 
+7fe8c41f2000-7fe8c41f3000 ---p 00000000 00:00 0 
+7fe8c41f3000-7fe8c49f3000 rw-p 00000000 00:00 0 
+7fe8c49f3000-7fe8c49f4000 ---p 00000000 00:00 0 
+7fe8c49f4000-7fe8c51f4000 rw-p 00000000 00:00 0 
+7fe8c51f4000-7fe8c51f5000 ---p 00000000 00:00 0 
+7fe8c51f5000-7fe8c59f5000 rw-p 00000000 00:00 0 
+7fe8c59f5000-7fe8c59f6000 ---p 00000000 00:00 0 
+7fe8c59f6000-7fe8c61f6000 rw-p 00000000 00:00 0 
+7fe8c61f6000-7fe8c61f7000 ---p 00000000 00:00 0 
+7fe8c61f7000-7fe8c69f7000 rw-p 00000000 00:00 0 
+7fe8c69f7000-7fe8c69f8000 ---p 00000000 00:00 0 
+7fe8c69f8000-7fe8c71f8000 rw-p 00000000 00:00 0 
+7fe8c71f8000-7fe8c71f9000 ---p 00000000 00:00 0 
+7fe8c71f9000-7fe8c79f9000 rw-p 00000000 00:00 0 
+7fe8c79f9000-7fe8c79fa000 ---p 00000000 00:00 0 
+7fe8c79fa000-7fe8c81fa000 rw-p 00000000 00:00 0 
+7fe8c81fa000-7fe8c81fb000 ---p 00000000 00:00 0 
+7fe8c81fb000-7fe8c89fb000 rw-p 00000000 00:00 0 
+7fe8c89fb000-7fe8c89fc000 ---p 00000000 00:00 0 
+7fe8c89fc000-7fe8c91fc000 rw-p 00000000 00:00 0 
+7fe8c91fc000-7fe8c91fd000 ---p 00000000 00:00 0 
+7fe8c91fd000-7fe8c99fd000 rw-p 00000000 00:00 0 
+7fe8c99fd000-7fe8c99fe000 ---p 00000000 00:00 0 
+7fe8c99fe000-7fe8ca1fe000 rw-p 00000000 00:00 0 
+7fe8ca1fe000-7fe8ca1ff000 ---p 00000000 00:00 0 
+7fe8ca1ff000-7fe8ca9ff000 rw-p 00000000 00:00 0 
+7fe8ca9ff000-7fe8caa00000 ---p 00000000 00:00 0 
+7fe8caa00000-7fe8cb200000 rw-p 00000000 00:00 0 
+7fe8cb200000-7fe98da00000 rw-p 00000000 00:00 0 
+7fe98da00000-7fe98f200000 rw-p 00000000 00:00 0 
+7fe98f400000-7fe9af400000 rw-p 00000000 00:00 0 
+7fe9af400000-7fea51400000 rw-p 00000000 00:00 0 
+7fea51400000-7fea6e800000 rw-p 00000000 00:00 0 
+7fea6ea00000-7feaeea00000 rw-p 00000000 00:00 0 
+7feaeea00000-7feb06a00000 rw-p 00000000 00:00 0 
+7feb06a00000-7feb78600000 rw-p 00000000 00:00 0 
+7feb78600000-7feb79600000 rw-p 00000000 00:00 0 
+7feb79800000-7feb8d800000 rw-p 00000000 00:00 0 
+7feb8d800000-7febed800000 rw-p 00000000 00:00 0 
+7febed800000-7febfd800000 rw-p 00000000 00:00 0 
+7febfd800000-7febff000000 rw-p 00000000 00:00 0 
+7febff000000-7febffe00000 rw-p 00000000 00:00 0 
+7fec00000000-7fec50000000 rw-p 00000000 00:00 0 
+7fec50000000-7fec5e000000 rw-p 00000000 00:00 0 
+7fec5e000000-7fec9e000000 rw-p 00000000 00:00 0 
+7fec9e000000-7fecaac00000 rw-p 00000000 00:00 0 
+7fecaae00000-7fece4200000 rw-p 00000000 00:00 0 
+7fece4200000-7fecee200000 rw-p 00000000 00:00 0 
+7fecee200000-7fed1e200000 rw-p 00000000 00:00 0 
+7fed1e200000-7fed26200000 rw-p 00000000 00:00 0 
+7fed26200000-7fed4e200000 rw-p 00000000 00:00 0 
+7fed4e200000-7fed4ec00000 rw-p 00000000 00:00 0 
+7fed4ee00000-7fed4fe00000 rw-p 00000000 00:00 0 
+7fed4fe00000-7fed56e00000 rw-p 00000000 00:00 0 
+7fed56e00000-7fed76e00000 rw-p 00000000 00:00 0 
+7fed76e00000-7fed7ce00000 rw-p 00000000 00:00 0 
+7fed7ce00000-7fed98e00000 rw-p 00000000 00:00 0 
+7fed98e00000-7fed9de00000 rw-p 00000000 00:00 0 
+7fed9de00000-7fedb5e00000 rw-p 00000000 00:00 0 
+7fedb5e00000-7fedb6600000 rw-p 00000000 00:00 0 
+7fedb6800000-7fedba800000 rw-p 00000000 00:00 0 
+7fedba800000-7fedcf600000 rw-p 00000000 00:00 0 
+7fedcf600000-7fedd2e00000 rw-p 00000000 00:00 0 
+7fedd2e00000-7fede2e00000 rw-p 00000000 00:00 0 
+7fede2e00000-7fede5e00000 rw-p 00000000 00:00 0 
+7fede5e00000-7fedf3e00000 rw-p 00000000 00:00 0 
+7fedf3e00000-7fedf6c00000 rw-p 00000000 00:00 0 
+7fedf6e00000-7fee02e00000 rw-p 00000000 00:00 0 
+7fee02e00000-7fee04e00000 rw-p 00000000 00:00 0 
+7fee04e00000-7fee0ee00000 rw-p 00000000 00:00 0 
+7fee0ee00000-7fee10a00000 rw-p 00000000 00:00 0 
+7fee10a00000-7fee18a00000 rw-p 00000000 00:00 0 
+7fee18a00000-7fee1a200000 rw-p 00000000 00:00 0 
+7fee1a200000-7fee21200000 rw-p 00000000 00:00 0 
+7fee21200000-7fee22600000 rw-p 00000000 00:00 0 
+7fee22600000-7fee28600000 rw-p 00000000 00:00 0 
+7fee28600000-7fee29600000 rw-p 00000000 00:00 0 
+7fee29600000-7fee2e600000 rw-p 00000000 00:00 0 
+7fee2e600000-7fee2f800000 rw-p 00000000 00:00 0 
+7fee2f900000-7fee33900000 rw-p 00000000 00:00 0 
+7fee33900000-7fee34500000 rw-p 00000000 00:00 0 
+7fee34500000-7fee37d00000 rw-p 00000000 00:00 0 
+7fee37d00000-7fee38700000 rw-p 00000000 00:00 0 
+7fee38700000-7fee3b700000 rw-p 00000000 00:00 0 
+7fee3b700000-7fee3bf00000 rw-p 00000000 00:00 0 
+7fee3bf00000-7fee40700000 rw-p 00000000 00:00 0 
+7fee40700000-7fee40e00000 rw-p 00000000 00:00 0 
+7fee40e00000-7fee42a00000 rw-p 00000000 00:00 0 
+7fee42a00000-7fee43000000 rw-p 00000000 00:00 0 
+7fee43000000-7fee44800000 rw-p 00000000 00:00 0 
+7fee44800000-7fee44d00000 rw-p 00000000 00:00 0 
+7fee44d00000-7fee46100000 rw-p 00000000 00:00 0 
+7fee46100000-7fee46500000 rw-p 00000000 00:00 0 
+7fee46500000-7fee47500000 rw-p 00000000 00:00 0 
+7fee47500000-7fee48200000 rw-p 00000000 00:00 0 
+7fee48200000-7ff3ac800000 rw-p 00000000 00:00 0 
+7ff3ac980000-7ff3adc00000 rw-p 00000000 00:00 0 
+7ff3adc00000-7ff3adc28000 r--p 00000000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3adc28000-7ff3addbd000 r-xp 00028000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3addbd000-7ff3ade15000 r--p 001bd000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3ade15000-7ff3ade16000 ---p 00215000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3ade16000-7ff3ade1a000 r--p 00215000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3ade1a000-7ff3ade1c000 rw-p 00219000 08:04 22022287                   /usr/lib/x86_64-linux-gnu/libc.so.6
+7ff3ade1c000-7ff3ade29000 rw-p 00000000 00:00 0 
+7ff3ae000000-7ff3ae09a000 r--p 00000000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae09a000-7ff3ae1ab000 r-xp 0009a000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae1ab000-7ff3ae21a000 r--p 001ab000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae21a000-7ff3ae21b000 ---p 0021a000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae21b000-7ff3ae226000 r--p 0021a000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae226000-7ff3ae229000 rw-p 00225000 08:04 22024385                   /usr/lib/x86_64-linux-gnu/libstdc++.so.6.0.30
+7ff3ae229000-7ff3ae22c000 rw-p 00000000 00:00 0 
+7ff3ae400000-7ff3ae74c000 r--p 00000000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3ae74c000-7ff3aec1d000 r-xp 0034c000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3aec1d000-7ff3aef0f000 r--p 0081d000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3aef0f000-7ff3aef10000 ---p 00b0f000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3aef10000-7ff3aef16000 r--p 00b0f000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3aef16000-7ff3aef17000 rw-p 00b15000 08:04 11535781                   /opt/intel/oneapi/mkl/2025.2/lib/libmkl_rt.so.2
+7ff3aef17000-7ff3aef4e000 rw-p 00000000 00:00 0 
+7ff3af000000-7ff3af006000 r--p 00000000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af006000-7ff3af0a3000 r-xp 00006000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af0a3000-7ff3af0b0000 r--p 000a3000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af0b0000-7ff3af0b1000 ---p 000b0000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af0b1000-7ff3af0b6000 r--p 000b0000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af0b6000-7ff3af0b7000 rw-p 000b5000 08:04 22023201                   /usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+7ff3af0b7000-7ff3af2da000 rw-p 00000000 00:00 0 
+7ff3af366000-7ff3af36e000 rw-p 00000000 00:00 0 
+7ff3af36e000-7ff3af36f000 r--p 00000000 08:04 22025839                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7ff3af36f000-7ff3af370000 r-xp 00001000 08:04 22025839                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7ff3af370000-7ff3af371000 r--p 00002000 08:04 22025839                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7ff3af371000-7ff3af372000 r--p 00002000 08:04 22025839                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7ff3af372000-7ff3af373000 rw-p 00003000 08:04 22025839                   /usr/lib/x86_64-linux-gnu/libdl.so.2
+7ff3af373000-7ff3af376000 r--p 00000000 08:04 22020788                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff3af376000-7ff3af38d000 r-xp 00003000 08:04 22020788                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff3af38d000-7ff3af391000 r--p 0001a000 08:04 22020788                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff3af391000-7ff3af392000 r--p 0001d000 08:04 22020788                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff3af392000-7ff3af393000 rw-p 0001e000 08:04 22020788                   /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+7ff3af393000-7ff3af395000 rw-p 00000000 00:00 0 
+7ff3af395000-7ff3af3a3000 r--p 00000000 08:04 22025847                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7ff3af3a3000-7ff3af41f000 r-xp 0000e000 08:04 22025847                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7ff3af41f000-7ff3af47a000 r--p 0008a000 08:04 22025847                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7ff3af47a000-7ff3af47b000 r--p 000e4000 08:04 22025847                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7ff3af47b000-7ff3af47c000 rw-p 000e5000 08:04 22025847                   /usr/lib/x86_64-linux-gnu/libm.so.6
+7ff3af47c000-7ff3af47f000 r--p 00000000 08:04 22048533                   /usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7ff3af47f000-7ff3af485000 r-xp 00003000 08:04 22048533                   /usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7ff3af485000-7ff3af487000 r--p 00009000 08:04 22048533                   /usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7ff3af487000-7ff3af488000 r--p 0000a000 08:04 22048533                   /usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7ff3af488000-7ff3af489000 rw-p 0000b000 08:04 22048533                   /usr/lib/x86_64-linux-gnu/libnuma.so.1.0.0
+7ff3af49d000-7ff3af49f000 rw-p 00000000 00:00 0 
+7ff3af49f000-7ff3af4a1000 r--p 00000000 08:04 22022257                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ff3af4a1000-7ff3af4cb000 r-xp 00002000 08:04 22022257                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ff3af4cb000-7ff3af4d6000 r--p 0002c000 08:04 22022257                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ff3af4d7000-7ff3af4d9000 r--p 00037000 08:04 22022257                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ff3af4d9000-7ff3af4db000 rw-p 00039000 08:04 22022257                   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7fffffdf1000-7fffffe12000 rw-p 00000000 00:00 0                          [stack]
+7fffffe42000-7fffffe46000 r--p 00000000 00:00 0                          [vvar]
+7fffffe46000-7fffffe48000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]

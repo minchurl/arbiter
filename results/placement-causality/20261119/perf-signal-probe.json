@@ -1,0 +1,4 @@
+{
+  "returncode": -2,
+  "stderr": "Lowering default frequency rate from 4000 to 750.\nPlease consider tweaking /proc/sys/kernel/perf_event_max_sample_rate.\n[ perf record: Woken up 1 times to write data ]\n[ perf record: Captured and wrote 0.002 MB build/xindex-contention-cause-20261119/signal-probe.data ]\n"
+}

@@ -1,0 +1,124 @@
+{
+  "args": {
+    "name": "confirm-hot-local",
+    "node": 0,
+    "alternate_node": null,
+    "binary": "auto",
+    "phases": "baseline,both,baseline,both,baseline",
+    "step": 20,
+    "warmup": 10,
+    "fg": 31,
+    "top": 20,
+    "bulk": false,
+    "profile": false,
+    "phase_stat": false,
+    "profile_kind": "retry"
+  },
+  "duration": 115,
+  "command": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "-p",
+    "MemoryMax=64G",
+    "-p",
+    "MemorySwapMax=0",
+    "--",
+    "timeout",
+    "--kill-after=10",
+    "415",
+    "numactl",
+    "--cpunodebind=0",
+    "--membind=0",
+    "/home/shin/arbiter/build/placement-diagnosis/placements/xindex-auto/binary",
+    "--fg",
+    "31",
+    "--bg",
+    "0",
+    "--duration",
+    "115",
+    "--ycsb_type",
+    "a",
+    "--ycsb-load",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat",
+    "--ycsb-tx",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat"
+  ],
+  "env": {
+    "ARBITER_TARGET_NODE": "0",
+    "ARBITER_ARENA_REPORT": "1",
+    "XINDEX_VALIDATE": "1",
+    "XINDEX_THROUGHPUT_SAMPLE_SECONDS": "1",
+    "LD_LIBRARY_PATH": "/opt/intel/oneapi/mkl/latest/lib:"
+  },
+  "binary_sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+  "start": 1795059736.382588,
+  "scope": "Duration replay and existing one-second throughput sampling; not fixed-count primary throughput. Migration transition intervals are excluded. No benchmark memory contents or instructions are written.",
+  "pid": 402941,
+  "table": "0x7fdd26040000",
+  "selected_hot_keys": [
+    2571001333982442796,
+    2022500030905740657,
+    4239820673744022922,
+    1139105090870882302
+  ],
+  "page_sets_file": "page-sets.json.gz",
+  "page_set_counts": {
+    "leaf": 4,
+    "buffer": 4,
+    "record": 4
+  },
+  "initial_node_counts": {
+    "0": 12
+  },
+  "run_observed_monotonic": 227233.956422254,
+  "phase_clock_monotonic": 227233.956010981,
+  "restore": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "0": 12
+    },
+    "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+    "status": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "final_query": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "0": 12
+    },
+    "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+    "status": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "valid": true,
+  "finish": 1795059911.093171,
+  "operations": 3119432960
+}

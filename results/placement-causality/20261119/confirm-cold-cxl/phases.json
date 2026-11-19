@@ -1,0 +1,207 @@
+[
+  {
+    "phase": 0,
+    "name": "baseline",
+    "start_elapsed": 20.357472509989748,
+    "stable_from_elapsed": 22.673398823011667,
+    "end_elapsed": 50,
+    "migration_seconds": 0.31592631302191876,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "2": 850643,
+      "0": 2
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    }
+  },
+  {
+    "phase": 1,
+    "name": "coldbuffer",
+    "start_elapsed": 50.51168964401586,
+    "stable_from_elapsed": 55.50292378300219,
+    "end_elapsed": 80,
+    "migration_seconds": 2.9912341389863286,
+    "page_count": 850645,
+    "changed_page_count": 850632,
+    "desired_node_counts": {
+      "0": 850634,
+      "2": 11
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    }
+  },
+  {
+    "phase": 2,
+    "name": "baseline",
+    "start_elapsed": 80.36556101901806,
+    "stable_from_elapsed": 87.00454505201196,
+    "end_elapsed": 110,
+    "migration_seconds": 4.638984032993903,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "2": 850643,
+      "0": 2
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    }
+  },
+  {
+    "phase": 3,
+    "name": "coldbuffer",
+    "start_elapsed": 110.50215311200009,
+    "stable_from_elapsed": 115.45938541699434,
+    "end_elapsed": 140,
+    "migration_seconds": 2.9572323049942497,
+    "page_count": 850645,
+    "changed_page_count": 850632,
+    "desired_node_counts": {
+      "0": 850634,
+      "2": 11
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    }
+  },
+  {
+    "phase": 4,
+    "name": "baseline",
+    "start_elapsed": 140.3096535190125,
+    "stable_from_elapsed": 146.95507466499112,
+    "end_elapsed": 170,
+    "migration_seconds": 4.6454211459786166,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "2": 850643,
+      "0": 2
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850634,
+        "2": 11
+      },
+      "status_sha256": "e160777a15bda1a7424fcdc8b71dadce76a2c0c261648e3731c0dba22271a182"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850643,
+        "0": 2
+      },
+      "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+    }
+  }
+]

@@ -1,0 +1,2 @@
+[ perf record: Woken up 218 times to write data ]
+[ perf record: Captured and wrote 57.168 MB /home/shin/arbiter/build/xindex-contention-cause-20261119/profile-cold-local/perf.data (1067813 samples) ]

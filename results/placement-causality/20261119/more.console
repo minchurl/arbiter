@@ -1,0 +1,28 @@
+START profile-cold-local-r2
+profile-cold-local-r2 0 baseline 27.292 
+profile-cold-local-r2 1 coldbuffer 40.018 46.73854980670591
+profile-cold-local-r2 2 baseline 27.251 
+profile-cold-local-r2 3 coldbuffer 39.756 46.34246668437649
+profile-cold-local-r2 4 baseline 27.082 
+DONE profile-cold-local-r2
+START confirm-hot-local
+confirm-hot-local 0 baseline 28.269 
+confirm-hot-local 1 both 27.491 -0.6126654070430115
+confirm-hot-local 2 baseline 27.052 
+confirm-hot-local 3 both 27.267 3.433900172849791
+confirm-hot-local 4 baseline 25.672 
+DONE confirm-hot-local
+START confirm-hot-cxl
+confirm-hot-cxl 0 baseline 57.608 
+confirm-hot-cxl 1 both 58.028 4.261533022135944
+confirm-hot-cxl 2 baseline 53.704 
+confirm-hot-cxl 3 both 57.228 3.076451910842959
+confirm-hot-cxl 4 baseline 57.336 
+DONE confirm-hot-cxl
+START profile-cold-memory
+profile-cold-memory 0 baseline 28.231 
+profile-cold-memory 1 coldbuffer 42.059 48.986177095589966
+profile-cold-memory 2 baseline 28.229 
+profile-cold-memory 3 coldbuffer 41.729 47.81175541984084
+profile-cold-memory 4 baseline 28.233 
+DONE profile-cold-memory

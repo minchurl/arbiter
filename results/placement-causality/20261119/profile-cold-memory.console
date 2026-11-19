@@ -1,0 +1,7 @@
+profile-cold-memory READY [(2571001333982442796, '0x7f89ce233400')]
+profile-cold-memory PHASE 0 baseline nodes {0: 850645} migration_seconds 0.334
+profile-cold-memory PHASE 1 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.788
+profile-cold-memory PHASE 2 baseline nodes {0: 850645} migration_seconds 2.999
+profile-cold-memory PHASE 3 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.753
+profile-cold-memory PHASE 4 baseline nodes {0: 850645} migration_seconds 2.999
+profile-cold-memory COMPLETE

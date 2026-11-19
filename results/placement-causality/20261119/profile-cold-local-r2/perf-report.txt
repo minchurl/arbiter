@@ -1,0 +1,49 @@
+# To display the perf.data header info, please use --header/--header-only options.
+#
+#
+# Total Lost Samples: 0
+#
+# Samples: 363K of event 'br_inst_retired.cond_taken:upp'
+# Event count (approx.): 36382891454
+#
+# Overhead  Symbol                                                                                                                                            IPC   [IPC Coverage]
+# ........  ................................................................................................................................................  ....................
+#
+    23.15%  [.] xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)                                                                     -      -            
+    21.75%  [.] run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const                                -      -            
+    19.36%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)                                                                   -      -            
+    16.54%  [.] void* run_fg<xindex::XIndex<Key, unsigned long> >(void*)                                                                                      -      -            
+     8.63%  [.] xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)                                                                           -      -            
+     7.42%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)                                                                  -      -            
+     3.09%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)  -      -            
+
+
+# Samples: 124K of event 'mem_inst_retired.lock_loads:upp'
+# Event count (approx.): 12446573386
+#
+# Overhead  Symbol                                                                                                              IPC   [IPC Coverage]
+# ........  ..................................................................................................................  ....................
+#
+    41.72%  [.] run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const  -      -            
+    37.42%  [.] xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)                                       -      -            
+    20.86%  [.] xindex::AtomicVal<unsigned long>::update(unsigned long const&)                                                  -      -            
+
+
+# Samples: 568K of event 'cpu/event=0x3c,umask=0,period=30000003/u'
+# Event count (approx.): 17063521706352
+#
+# Overhead  Symbol                                                                                                                                            IPC   [IPC Coverage]
+# ........  ................................................................................................................................................  ....................
+#
+    38.67%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::get(Key const&, unsigned long&)                                                                   -      -            
+    30.64%  [.] xindex::HGroup<Key, unsigned long>::put(Key const&, unsigned long const&)                                                                     -      -            
+    14.72%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::locate_leaf(Key, unsigned long&)                                                                  -      -            
+     6.79%  [.] xindex::HGroup<Key, unsigned long>::get(Key const&, unsigned long&)                                                                           -      -            
+     4.36%  [.] run_fg<xindex::XIndex<Key, unsigned long> >(void*)::{lambda(unsigned long)#1}::operator()(unsigned long) const                                -      -            
+     3.38%  [.] xindex::AtomicVal<unsigned long>::update(unsigned long const&)                                                                                -      -            
+     1.41%  [.] xindex::AltBtreeBuffer<Key, unsigned long>::insert_leaf(Key const&, unsigned long const&, xindex::AltBtreeBuffer<Key, unsigned long>::Leaf*)  -      -            
+
+
+#
+# (Cannot load tips.txt file, please install perf!)
+#

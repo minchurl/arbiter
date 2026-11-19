@@ -1,0 +1,7 @@
+profile-cold-local-r2 READY [(2571001333982442796, '0x7f431ae33400')]
+profile-cold-local-r2 PHASE 0 baseline nodes {0: 850645} migration_seconds 0.335
+profile-cold-local-r2 PHASE 1 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.817
+profile-cold-local-r2 PHASE 2 baseline nodes {0: 850645} migration_seconds 3.172
+profile-cold-local-r2 PHASE 3 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.839
+profile-cold-local-r2 PHASE 4 baseline nodes {0: 850645} migration_seconds 3.169
+profile-cold-local-r2 COMPLETE

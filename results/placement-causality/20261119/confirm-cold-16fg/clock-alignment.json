@@ -1,0 +1,33 @@
+{
+  "samples": [
+    {
+      "elapsed_sec": 8.00021,
+      "observed_monotonic": 228144.39955256,
+      "start_estimate": 228136.39934256
+    },
+    {
+      "elapsed_sec": 9.00021,
+      "observed_monotonic": 228145.400410662,
+      "start_estimate": 228136.400200662
+    },
+    {
+      "elapsed_sec": 10.0002,
+      "observed_monotonic": 228146.39905916,
+      "start_estimate": 228136.39885916
+    },
+    {
+      "elapsed_sec": 11.0002,
+      "observed_monotonic": 228147.399583277,
+      "start_estimate": 228136.399383277
+    },
+    {
+      "elapsed_sec": 12.0002,
+      "observed_monotonic": 228148.400540802,
+      "start_estimate": 228136.40034080198
+    }
+  ],
+  "start_estimate": 228136.39885916,
+  "spread_seconds": 0.001481641986174509,
+  "poll_seconds": 0.002,
+  "method": "Minimum observation-minus-elapsed over five distinct, flushed one-second samples; observation follows benchmark timestamp. Transition guard exceeds observed spread."
+}

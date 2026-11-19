@@ -1,0 +1,18 @@
+[
+  [
+    ".tools/llvm-18.1.8/bin/llvm-objdump",
+    "-d",
+    "--demangle",
+    "--start-address=72960",
+    "--stop-address=73786",
+    "build/placement-diagnosis/placements/xindex-auto/binary"
+  ],
+  [
+    ".tools/llvm-18.1.8/bin/llvm-objdump",
+    "-d",
+    "--demangle",
+    "--start-address=72928",
+    "--stop-address=73738",
+    "build/placement-diagnosis/placements/xindex-buffer/binary"
+  ]
+]

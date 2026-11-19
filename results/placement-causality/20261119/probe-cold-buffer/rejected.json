@@ -1,0 +1,4 @@
+{
+  "reason": "Unfiltered ptrace intercepts trace-file read syscalls and makes initialization excessively slow. Stopped before the workload; no throughput accepted. Replacement uses strace seccomp filtering.",
+  "time": 1795058399.7582362
+}

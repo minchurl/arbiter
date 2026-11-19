@@ -1,0 +1,317 @@
+[
+  {
+    "phase": 0,
+    "name": "baseline",
+    "start_elapsed": 10.0002360100043,
+    "stable_from_elapsed": 12.003541273996234,
+    "end_elapsed": 30,
+    "migration_seconds": 0.003305263991933316,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      0,
+      0,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 1,
+    "name": "leaf",
+    "start_elapsed": 30.00015243102098,
+    "stable_from_elapsed": 32.00071683601709,
+    "end_elapsed": 50,
+    "migration_seconds": 0.000564404996111989,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      0,
+      2,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        2,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        2,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 2,
+    "name": "baseline",
+    "start_elapsed": 50.00013409400708,
+    "stable_from_elapsed": 52.00355888201739,
+    "end_elapsed": 70,
+    "migration_seconds": 0.0034247880103066564,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      0,
+      0,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        2,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 3,
+    "name": "buffer",
+    "start_elapsed": 70.00012669301941,
+    "stable_from_elapsed": 72.00074360199505,
+    "end_elapsed": 90,
+    "migration_seconds": 0.0006169089756440371,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      2,
+      0,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 4,
+    "name": "baseline",
+    "start_elapsed": 90.00015058901045,
+    "stable_from_elapsed": 92.00077179999789,
+    "end_elapsed": 110,
+    "migration_seconds": 0.0006212109874468297,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      0,
+      0,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 5,
+    "name": "both",
+    "start_elapsed": 110.00013713701628,
+    "stable_from_elapsed": 112.00066317000892,
+    "end_elapsed": 130,
+    "migration_seconds": 0.0005260329926386476,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      2,
+      2,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        2,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        2,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 6,
+    "name": "baseline",
+    "start_elapsed": 130.0002357159974,
+    "stable_from_elapsed": 132.0006282789982,
+    "end_elapsed": 150,
+    "migration_seconds": 0.00039256300078704953,
+    "pages": [
+      "0x7f21b5752000",
+      "0x7f21dc0e2000",
+      "0x7f277e338000"
+    ],
+    "desired_nodes": [
+      0,
+      0,
+      0
+    ],
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        2,
+        2,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status": [
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]

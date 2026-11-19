@@ -1,0 +1,9 @@
+probe-local READY [(2571001333982442796, '0x7f21dc0e2c80')]
+probe-local PHASE 0 baseline nodes [0, 0, 0]
+probe-local PHASE 1 leaf nodes [0, 2, 0]
+probe-local PHASE 2 baseline nodes [0, 0, 0]
+probe-local PHASE 3 buffer nodes [2, 0, 0]
+probe-local PHASE 4 baseline nodes [0, 0, 0]
+probe-local PHASE 5 both nodes [2, 2, 0]
+probe-local PHASE 6 baseline nodes [0, 0, 0]
+probe-local COMPLETE

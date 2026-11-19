@@ -1,0 +1,103 @@
+{
+  "args": {
+    "name": "confirm-cold-cxl",
+    "node": 2,
+    "binary": "buffer",
+    "phases": "baseline,coldbuffer,baseline,coldbuffer,baseline",
+    "step": 30,
+    "warmup": 20,
+    "fg": 31,
+    "top": 1,
+    "bulk": true,
+    "profile": false
+  },
+  "duration": 175,
+  "command": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "-p",
+    "MemoryMax=64G",
+    "-p",
+    "MemorySwapMax=0",
+    "--",
+    "timeout",
+    "--kill-after=10",
+    "475",
+    "strace",
+    "-qq",
+    "-f",
+    "--seccomp-bpf",
+    "-e",
+    "trace=mbind",
+    "-o",
+    "/home/shin/arbiter/build/xindex-contention-cause-20261119/confirm-cold-cxl/mbind.log",
+    "numactl",
+    "--cpunodebind=0",
+    "--membind=0",
+    "/home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary",
+    "--fg",
+    "31",
+    "--bg",
+    "0",
+    "--duration",
+    "175",
+    "--ycsb_type",
+    "a",
+    "--ycsb-load",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat",
+    "--ycsb-tx",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat"
+  ],
+  "env": {
+    "ARBITER_TARGET_NODE": "2",
+    "ARBITER_ARENA_REPORT": "1",
+    "XINDEX_VALIDATE": "1",
+    "XINDEX_THROUGHPUT_SAMPLE_SECONDS": "1",
+    "LD_LIBRARY_PATH": "/opt/intel/oneapi/mkl/latest/lib:"
+  },
+  "binary_sha256": "088b430e3c47f9a6e5f6fecc3ab91021ee7ed3087eab31a2b39a7132edf40608",
+  "start": 1795059004.6832917,
+  "scope": "Duration replay and existing one-second throughput sampling; not fixed-count primary throughput. Migration transition intervals are excluded. No benchmark memory contents or instructions are written.",
+  "pid": 402310,
+  "table": "0x7f1e57c40000",
+  "selected_hot_keys": [
+    2571001333982442796
+  ],
+  "page_sets_file": "page-sets.json.gz",
+  "page_set_counts": {
+    "leaf": 1,
+    "buffer": 1,
+    "record": 1,
+    "bulkbuffer": 850643,
+    "coldbuffer": 850632
+  },
+  "initial_node_counts": {
+    "2": 850643,
+    "0": 2
+  },
+  "run_observed_monotonic": 226517.421199184,
+  "phase_clock_monotonic": 226510.764021371,
+  "restore": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "2": 850643,
+      "0": 2
+    },
+    "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+  },
+  "final_query": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "2": 850643,
+      "0": 2
+    },
+    "status_sha256": "d4a4dcc64ecc2b960d23a76f2b175e20a51217b7d8cc61b9cc579afd3012a49c"
+  },
+  "valid": true,
+  "finish": 1795059247.5992453,
+  "operations": 6533912064
+}

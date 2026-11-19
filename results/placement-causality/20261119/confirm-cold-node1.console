@@ -1,0 +1,7 @@
+confirm-cold-node1 READY [(2571001333982442796, '0x7f0f2ac33400')]
+confirm-cold-node1 PHASE 0 baseline nodes {0: 850645} migration_seconds 0.332
+confirm-cold-node1 PHASE 1 coldbuffer nodes {1: 850632, 0: 13} migration_seconds 3.649
+confirm-cold-node1 PHASE 2 baseline nodes {0: 850645} migration_seconds 2.665
+confirm-cold-node1 PHASE 3 coldbuffer nodes {1: 850632, 0: 13} migration_seconds 3.617
+confirm-cold-node1 PHASE 4 baseline nodes {0: 850645} migration_seconds 2.66
+confirm-cold-node1 COMPLETE

@@ -1,0 +1,1 @@
+["/usr/lib/linux-hwe-6.8-tools-6.8.0-149/perf", "record", "--clockid", "mono", "-p", "402667", "-c", "100003", "-e", "br_inst_retired.cond_taken:upp,mem_inst_retired.lock_loads:upp,cpu/event=0x3c,umask=0,period=30000003/u", "-d", "-m", "128", "-o", "/home/shin/arbiter/build/xindex-contention-cause-20261119/profile-cold-local-r2/perf.data"]

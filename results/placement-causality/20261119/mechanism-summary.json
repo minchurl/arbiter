@@ -1,0 +1,28 @@
+{
+  "cold_in_dram": {
+    "operations": 1959251139,
+    "seconds": 71.999993,
+    "mops": 27.211824020594,
+    "failed_leaf_cas_per_op": 0.9375802164584067,
+    "reader_locked_leaf_retry_per_op": 0.30287990660701103,
+    "leaf_cas_attempt_per_op": 1.1055065549715626,
+    "hottest_leaf_cas_attempt_per_op": 0.9514634882139017,
+    "value_cas_per_op": 0.5052081758672389,
+    "total_locked_loads_per_op": 2.6030624127150244,
+    "cycles_per_op": 3975.218196285045,
+    "leaf_tas_loop_cycle_fraction": 0.28450975482926644
+  },
+  "cold_in_cxl": {
+    "operations": 1715016448,
+    "seconds": 43.00020099999999,
+    "mops": 39.883917007736784,
+    "failed_leaf_cas_per_op": 0.5521395483432705,
+    "reader_locked_leaf_retry_per_op": 0.16116947002014992,
+    "leaf_cas_attempt_per_op": 0.7231634468849129,
+    "hottest_leaf_cas_attempt_per_op": 0.5628686302838304,
+    "value_cas_per_op": 0.49633666020677136,
+    "total_locked_loads_per_op": 2.2257597106147404,
+    "cycles_per_op": 2717.0820847917607,
+    "leaf_tas_loop_cycle_fraction": 0.2020820457354759
+  }
+}

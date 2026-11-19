@@ -1,0 +1,10 @@
+profile-cold-local READY [(2571001333982442796, '0x7fade4433400')]
+profile-cold-local PHASE 0 baseline nodes {0: 850645} migration_seconds 0.338
+profile-cold-local PHASE 1 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 5.145
+profile-cold-local PHASE 2 baseline nodes {0: 850645} migration_seconds 3.015
+profile-cold-local PHASE 3 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.77
+profile-cold-local PHASE 4 baseline nodes {0: 850645} migration_seconds 3.01
+Traceback (most recent call last):
+  File "/home/shin/arbiter/build/xindex-contention-cause-20261119/migrate.py", line 145, in <module>
+    prof.send_signal(signal.SIGINT);prof.wait(timeout=20);profile_log.close();assert prof.returncode==0
+AssertionError

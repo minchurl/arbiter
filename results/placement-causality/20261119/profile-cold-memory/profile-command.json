@@ -1,0 +1,1 @@
+["/usr/lib/linux-hwe-6.8-tools-6.8.0-149/perf", "record", "--clockid", "mono", "-p", "403565", "-e", "{cpu/mem-loads-aux,period=1000000000000/u,cpu/event=0xcd,umask=0x1,ldlat=128,period=10007/upp}", "-c", "10007", "-d", "-W", "-m", "128", "-o", "/home/shin/arbiter/build/xindex-contention-cause-20261119/profile-cold-memory/perf.data"]

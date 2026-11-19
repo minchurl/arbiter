@@ -1,0 +1,262 @@
+fg_n: 31
+bg_n: 0
+xindex::config.root_memory_constraint: 1.04858e+06
+xindex::config.hash_resize_tolerance_upper: 1.5
+xindex::config.hash_resize_tolerance_lower: 0.5
+xindex::config.hash_init_conflict_threshold: 0.4
+xindex-workload workload=a throughput_unit=logical-transactions/s update_mapping=update
+exist_keys.size() : 100000000, item_num : 100000000
+load number : 100000000
+  read: 199993860
+insert: 0
+update: 200006140
+   rmw: 0
+remove: 0
+operation count: 400000000
+exist_keys.size(): 100000000
+non_exist_keys.size(): 0
+start training
+conflict rate: 0.326569, mean error: 39.8777
+table: 0x7f9066e40000
+training done
+[ycsb] Worker6 Ready.
+[ycsb] Worker[ycsb] Worker15 Ready.
+7 Ready.
+[ycsb] Worker[ycsb] Worker4 Ready.
+[ycsb] Worker5 Ready.
+[ycsb] Worker8 Ready.
+[ycsb] Worker0 Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker30 Ready.
+[ycsb] Worker24 Ready.
+[ycsb] Worker27 Ready.
+9 Ready.
+[ycsb] Worker17 Ready.
+[ycsb] prepare data ...
+[ycsb] Worker312 Ready.
+[ycsb] Worker[ycsb] Worker[ycsb] Worker[ycsb] Worker16 Ready.
+[ycsb] Worker19 Ready.
+13 Ready.
+[ycsb] Worker10 Ready.
+[ycsb] Worker[ycsb] Worker20 Ready.
+[ycsb] Worker25 Ready.
+[ycsb] Worker26 Ready.
+[ycsb] Worker[ycsb] Worker23 Ready.
+2 Ready.
+ Ready.[ycsb] Worker22
+14 Ready.
+ Ready.
+[ycsb] Worker[ycsb] Worker18 Ready.
+[ycsb] Worker21 Ready.
+28 Ready.
+11291 Ready.
+ Ready.
+ Ready.
+[ycsb] Duration target(sec): 200
+[ycsb] Throughput sample interval(sec): 1
+[ycsb] Throughput sample elapsed_sec=1.00057 interval_sec=1.00057 interval_ops=26853120 interval_ops_per_sec=2.68377e+07 cumulative_ops=26853120 cumulative_ops_per_sec=2.68377e+07 final=0
+[ycsb] Throughput sample elapsed_sec=2.00067 interval_sec=1.0001 interval_ops=27487232 interval_ops_per_sec=2.74845e+07 cumulative_ops=54340352 cumulative_ops_per_sec=2.7161e+07 final=0
+[ycsb] Throughput sample elapsed_sec=3.00057 interval_sec=0.999898 interval_ops=27610624 interval_ops_per_sec=2.76134e+07 cumulative_ops=81950976 cumulative_ops_per_sec=2.73118e+07 final=0
+[ycsb] Throughput sample elapsed_sec=4.00057 interval_sec=0.999999 interval_ops=28042752 interval_ops_per_sec=2.80428e+07 cumulative_ops=109993728 cumulative_ops_per_sec=2.74945e+07 final=0
+[ycsb] Throughput sample elapsed_sec=5.00057 interval_sec=1 interval_ops=28368384 interval_ops_per_sec=2.83684e+07 cumulative_ops=138362112 cumulative_ops_per_sec=2.76693e+07 final=0
+[ycsb] Throughput sample elapsed_sec=6.00057 interval_sec=1 interval_ops=28192256 interval_ops_per_sec=2.81922e+07 cumulative_ops=166554368 cumulative_ops_per_sec=2.77564e+07 final=0
+[ycsb] Throughput sample elapsed_sec=7.00057 interval_sec=1 interval_ops=28142848 interval_ops_per_sec=2.81429e+07 cumulative_ops=194697216 cumulative_ops_per_sec=2.78116e+07 final=0
+[ycsb] Throughput sample elapsed_sec=8.00047 interval_sec=0.999895 interval_ops=28234240 interval_ops_per_sec=2.82372e+07 cumulative_ops=222931456 cumulative_ops_per_sec=2.78648e+07 final=0
+[ycsb] Throughput sample elapsed_sec=9.00057 interval_sec=1.0001 interval_ops=28330752 interval_ops_per_sec=2.83279e+07 cumulative_ops=251262208 cumulative_ops_per_sec=2.79163e+07 final=0
+[ycsb] Throughput sample elapsed_sec=10.0004 interval_sec=0.999798 interval_ops=27986944 interval_ops_per_sec=2.79926e+07 cumulative_ops=279249152 cumulative_ops_per_sec=2.79239e+07 final=0
+[ycsb] Throughput sample elapsed_sec=11.0006 interval_sec=1.0002 interval_ops=28027136 interval_ops_per_sec=2.80215e+07 cumulative_ops=307276288 cumulative_ops_per_sec=2.79328e+07 final=0
+[ycsb] Throughput sample elapsed_sec=12.0005 interval_sec=0.999898 interval_ops=28240384 interval_ops_per_sec=2.82433e+07 cumulative_ops=335516672 cumulative_ops_per_sec=2.79586e+07 final=0
+[ycsb] Throughput sample elapsed_sec=13.0006 interval_sec=1.00012 interval_ops=28768512 interval_ops_per_sec=2.8765e+07 cumulative_ops=364285184 cumulative_ops_per_sec=2.80207e+07 final=0
+[ycsb] Throughput sample elapsed_sec=14.0005 interval_sec=0.999896 interval_ops=28397910 interval_ops_per_sec=2.84009e+07 cumulative_ops=392683094 cumulative_ops_per_sec=2.80478e+07 final=0
+[ycsb] Throughput sample elapsed_sec=15.0005 interval_sec=0.999995 interval_ops=28091562 interval_ops_per_sec=2.80917e+07 cumulative_ops=420774656 cumulative_ops_per_sec=2.80507e+07 final=0
+[ycsb] Throughput sample elapsed_sec=16.0004 interval_sec=0.999898 interval_ops=28216576 interval_ops_per_sec=2.82194e+07 cumulative_ops=448991232 cumulative_ops_per_sec=2.80613e+07 final=0
+[ycsb] Throughput sample elapsed_sec=17.0005 interval_sec=1.0001 interval_ops=28228608 interval_ops_per_sec=2.82257e+07 cumulative_ops=477219840 cumulative_ops_per_sec=2.8071e+07 final=0
+[ycsb] Throughput sample elapsed_sec=18.0005 interval_sec=1.00001 interval_ops=28228608 interval_ops_per_sec=2.82283e+07 cumulative_ops=505448448 cumulative_ops_per_sec=2.80797e+07 final=0
+[ycsb] Throughput sample elapsed_sec=19.0007 interval_sec=1.0002 interval_ops=28366848 interval_ops_per_sec=2.83612e+07 cumulative_ops=533815296 cumulative_ops_per_sec=2.80945e+07 final=0
+[ycsb] Throughput sample elapsed_sec=20.0005 interval_sec=0.999793 interval_ops=28091904 interval_ops_per_sec=2.80977e+07 cumulative_ops=561907200 cumulative_ops_per_sec=2.80947e+07 final=0
+[ycsb] Throughput sample elapsed_sec=21.0007 interval_sec=1.00021 interval_ops=28655104 interval_ops_per_sec=2.86492e+07 cumulative_ops=590562304 cumulative_ops_per_sec=2.81211e+07 final=0
+[ycsb] Throughput sample elapsed_sec=22.0005 interval_sec=0.999795 interval_ops=28557824 interval_ops_per_sec=2.85637e+07 cumulative_ops=619120128 cumulative_ops_per_sec=2.81412e+07 final=0
+[ycsb] Throughput sample elapsed_sec=23.0004 interval_sec=0.999895 interval_ops=28506880 interval_ops_per_sec=2.85099e+07 cumulative_ops=647627008 cumulative_ops_per_sec=2.81572e+07 final=0
+[ycsb] Throughput sample elapsed_sec=24.0004 interval_sec=1 interval_ops=28115712 interval_ops_per_sec=2.81157e+07 cumulative_ops=675742720 cumulative_ops_per_sec=2.81555e+07 final=0
+[ycsb] Throughput sample elapsed_sec=25.0006 interval_sec=1.00021 interval_ops=28213248 interval_ops_per_sec=2.82073e+07 cumulative_ops=703955968 cumulative_ops_per_sec=2.81576e+07 final=0
+[ycsb] Throughput sample elapsed_sec=26.0005 interval_sec=0.999895 interval_ops=28277760 interval_ops_per_sec=2.82807e+07 cumulative_ops=732233728 cumulative_ops_per_sec=2.81623e+07 final=0
+[ycsb] Throughput sample elapsed_sec=27.0007 interval_sec=1.00021 interval_ops=28167680 interval_ops_per_sec=2.81618e+07 cumulative_ops=760401408 cumulative_ops_per_sec=2.81623e+07 final=0
+[ycsb] Throughput sample elapsed_sec=28.0005 interval_sec=0.99979 interval_ops=28302678 interval_ops_per_sec=2.83086e+07 cumulative_ops=788704086 cumulative_ops_per_sec=2.81675e+07 final=0
+[ycsb] Throughput sample elapsed_sec=29.0006 interval_sec=1.00011 interval_ops=28070399 interval_ops_per_sec=2.80674e+07 cumulative_ops=816774485 cumulative_ops_per_sec=2.81641e+07 final=0
+[ycsb] Throughput sample elapsed_sec=30.0005 interval_sec=0.999894 interval_ops=28108459 interval_ops_per_sec=2.81114e+07 cumulative_ops=844882944 cumulative_ops_per_sec=2.81623e+07 final=0
+[ycsb] Throughput sample elapsed_sec=31.0005 interval_sec=1 interval_ops=28270336 interval_ops_per_sec=2.82703e+07 cumulative_ops=873153280 cumulative_ops_per_sec=2.81658e+07 final=0
+[ycsb] Throughput sample elapsed_sec=32.0004 interval_sec=0.999894 interval_ops=28244736 interval_ops_per_sec=2.82477e+07 cumulative_ops=901398016 cumulative_ops_per_sec=2.81684e+07 final=0
+[ycsb] Throughput sample elapsed_sec=33.0007 interval_sec=1.00032 interval_ops=28229888 interval_ops_per_sec=2.8221e+07 cumulative_ops=929627904 cumulative_ops_per_sec=2.817e+07 final=0
+[ycsb] Throughput sample elapsed_sec=34.0004 interval_sec=0.999687 interval_ops=28206848 interval_ops_per_sec=2.82157e+07 cumulative_ops=957834752 cumulative_ops_per_sec=2.81713e+07 final=0
+[ycsb] Throughput sample elapsed_sec=35.0008 interval_sec=1.00042 interval_ops=28206848 interval_ops_per_sec=2.81951e+07 cumulative_ops=986041600 cumulative_ops_per_sec=2.8172e+07 final=0
+[ycsb] Throughput sample elapsed_sec=36.0005 interval_sec=0.999685 interval_ops=28261376 interval_ops_per_sec=2.82703e+07 cumulative_ops=1014302976 cumulative_ops_per_sec=2.81747e+07 final=0
+[ycsb] Throughput sample elapsed_sec=37.0005 interval_sec=1 interval_ops=28699904 interval_ops_per_sec=2.86998e+07 cumulative_ops=1043002880 cumulative_ops_per_sec=2.81889e+07 final=0
+[ycsb] Throughput sample elapsed_sec=38.0006 interval_sec=1.00011 interval_ops=28207872 interval_ops_per_sec=2.82047e+07 cumulative_ops=1071210752 cumulative_ops_per_sec=2.81893e+07 final=0
+[ycsb] Throughput sample elapsed_sec=39.0005 interval_sec=0.99989 interval_ops=28203264 interval_ops_per_sec=2.82064e+07 cumulative_ops=1099414016 cumulative_ops_per_sec=2.81898e+07 final=0
+[ycsb] Throughput sample elapsed_sec=40.004 interval_sec=1.00351 interval_ops=28254976 interval_ops_per_sec=2.81561e+07 cumulative_ops=1127668992 cumulative_ops_per_sec=2.81889e+07 final=0
+[ycsb] Throughput sample elapsed_sec=41.0005 interval_sec=0.996488 interval_ops=28289536 interval_ops_per_sec=2.83892e+07 cumulative_ops=1155958528 cumulative_ops_per_sec=2.81938e+07 final=0
+[ycsb] Throughput sample elapsed_sec=42.0007 interval_sec=1.00021 interval_ops=28293149 interval_ops_per_sec=2.82873e+07 cumulative_ops=1184251677 cumulative_ops_per_sec=2.8196e+07 final=0
+[ycsb] Throughput sample elapsed_sec=43.0005 interval_sec=0.999795 interval_ops=28050260 interval_ops_per_sec=2.8056e+07 cumulative_ops=1212301937 cumulative_ops_per_sec=2.81928e+07 final=0
+[ycsb] Throughput sample elapsed_sec=44.0005 interval_sec=0.999998 interval_ops=28060758 interval_ops_per_sec=2.80608e+07 cumulative_ops=1240362695 cumulative_ops_per_sec=2.81898e+07 final=0
+[ycsb] Throughput sample elapsed_sec=45.0005 interval_sec=1 interval_ops=28218937 interval_ops_per_sec=2.82189e+07 cumulative_ops=1268581632 cumulative_ops_per_sec=2.81904e+07 final=0
+[ycsb] Throughput sample elapsed_sec=46.0006 interval_sec=1.0001 interval_ops=28207360 interval_ops_per_sec=2.82045e+07 cumulative_ops=1296788992 cumulative_ops_per_sec=2.81907e+07 final=0
+[ycsb] Throughput sample elapsed_sec=47.0004 interval_sec=0.999795 interval_ops=28138240 interval_ops_per_sec=2.8144e+07 cumulative_ops=1324927232 cumulative_ops_per_sec=2.81897e+07 final=0
+[ycsb] Throughput sample elapsed_sec=48.0003 interval_sec=0.999897 interval_ops=28230144 interval_ops_per_sec=2.82331e+07 cumulative_ops=1353157376 cumulative_ops_per_sec=2.81906e+07 final=0
+[ycsb] Throughput sample elapsed_sec=49.0007 interval_sec=1.00041 interval_ops=28233216 interval_ops_per_sec=2.82216e+07 cumulative_ops=1381390592 cumulative_ops_per_sec=2.81913e+07 final=0
+[ycsb] Throughput sample elapsed_sec=50.0005 interval_sec=0.999794 interval_ops=28180992 interval_ops_per_sec=2.81868e+07 cumulative_ops=1409571584 cumulative_ops_per_sec=2.81912e+07 final=0
+[ycsb] Throughput sample elapsed_sec=51.0003 interval_sec=0.999794 interval_ops=28284416 interval_ops_per_sec=2.82903e+07 cumulative_ops=1437856000 cumulative_ops_per_sec=2.81931e+07 final=0
+[ycsb] Throughput sample elapsed_sec=52.0005 interval_sec=1.00021 interval_ops=28279808 interval_ops_per_sec=2.8274e+07 cumulative_ops=1466135808 cumulative_ops_per_sec=2.81947e+07 final=0
+[ycsb] Throughput sample elapsed_sec=53.0007 interval_sec=1.00021 interval_ops=28420352 interval_ops_per_sec=2.84144e+07 cumulative_ops=1494556160 cumulative_ops_per_sec=2.81988e+07 final=0
+[ycsb] Throughput sample elapsed_sec=54.0006 interval_sec=0.999892 interval_ops=28244736 interval_ops_per_sec=2.82478e+07 cumulative_ops=1522800896 cumulative_ops_per_sec=2.81997e+07 final=0
+[ycsb] Throughput sample elapsed_sec=55.0005 interval_sec=0.999897 interval_ops=28328192 interval_ops_per_sec=2.83311e+07 cumulative_ops=1551129088 cumulative_ops_per_sec=2.82021e+07 final=0
+[ycsb] Throughput sample elapsed_sec=56.001 interval_sec=1.00052 interval_ops=32159830 interval_ops_per_sec=3.2143e+07 cumulative_ops=1583288918 cumulative_ops_per_sec=2.82725e+07 final=0
+[ycsb] Throughput sample elapsed_sec=57.0006 interval_sec=0.999587 interval_ops=38083924 interval_ops_per_sec=3.80996e+07 cumulative_ops=1621372842 cumulative_ops_per_sec=2.84448e+07 final=0
+[ycsb] Throughput sample elapsed_sec=58.0008 interval_sec=1.00021 interval_ops=42076246 interval_ops_per_sec=4.20676e+07 cumulative_ops=1663449088 cumulative_ops_per_sec=2.86798e+07 final=0
+[ycsb] Throughput sample elapsed_sec=59.0004 interval_sec=0.999586 interval_ops=45779968 interval_ops_per_sec=4.57989e+07 cumulative_ops=1709229056 cumulative_ops_per_sec=2.89698e+07 final=0
+[ycsb] Throughput sample elapsed_sec=60.0013 interval_sec=1.00093 interval_ops=49350912 interval_ops_per_sec=4.93052e+07 cumulative_ops=1758579968 cumulative_ops_per_sec=2.9309e+07 final=0
+[ycsb] Throughput sample elapsed_sec=61.0003 interval_sec=0.998966 interval_ops=46783744 interval_ops_per_sec=4.68322e+07 cumulative_ops=1805363712 cumulative_ops_per_sec=2.9596e+07 final=0
+[ycsb] Throughput sample elapsed_sec=62.0004 interval_sec=1.0001 interval_ops=42672896 interval_ops_per_sec=4.26685e+07 cumulative_ops=1848036608 cumulative_ops_per_sec=2.98069e+07 final=0
+[ycsb] Throughput sample elapsed_sec=63.0003 interval_sec=0.999893 interval_ops=42353408 interval_ops_per_sec=4.23579e+07 cumulative_ops=1890390016 cumulative_ops_per_sec=3.00061e+07 final=0
+[ycsb] Throughput sample elapsed_sec=64.0005 interval_sec=1.00021 interval_ops=42050048 interval_ops_per_sec=4.20412e+07 cumulative_ops=1932440064 cumulative_ops_per_sec=3.01941e+07 final=0
+[ycsb] Throughput sample elapsed_sec=65.0003 interval_sec=0.999791 interval_ops=42100509 interval_ops_per_sec=4.21093e+07 cumulative_ops=1974540573 cumulative_ops_per_sec=3.03774e+07 final=0
+[ycsb] Throughput sample elapsed_sec=66.0003 interval_sec=1 interval_ops=41737300 interval_ops_per_sec=4.17373e+07 cumulative_ops=2016277873 cumulative_ops_per_sec=3.05495e+07 final=0
+[ycsb] Throughput sample elapsed_sec=67.0003 interval_sec=0.999998 interval_ops=41751695 interval_ops_per_sec=4.17518e+07 cumulative_ops=2058029568 cumulative_ops_per_sec=3.07167e+07 final=0
+[ycsb] Throughput sample elapsed_sec=68.0005 interval_sec=1.00021 interval_ops=41471488 interval_ops_per_sec=4.14629e+07 cumulative_ops=2099501056 cumulative_ops_per_sec=3.08748e+07 final=0
+[ycsb] Throughput sample elapsed_sec=69.0002 interval_sec=0.999691 interval_ops=41853184 interval_ops_per_sec=4.18661e+07 cumulative_ops=2141354240 cumulative_ops_per_sec=3.1034e+07 final=0
+[ycsb] Throughput sample elapsed_sec=70.0006 interval_sec=1.00041 interval_ops=42051584 interval_ops_per_sec=4.20342e+07 cumulative_ops=2183405824 cumulative_ops_per_sec=3.11913e+07 final=0
+[ycsb] Throughput sample elapsed_sec=71.0006 interval_sec=1 interval_ops=41796352 interval_ops_per_sec=4.17962e+07 cumulative_ops=2225202176 cumulative_ops_per_sec=3.13406e+07 final=0
+[ycsb] Throughput sample elapsed_sec=72.0005 interval_sec=0.999891 interval_ops=42827008 interval_ops_per_sec=4.28317e+07 cumulative_ops=2268029184 cumulative_ops_per_sec=3.15002e+07 final=0
+[ycsb] Throughput sample elapsed_sec=73.0004 interval_sec=0.999898 interval_ops=41830400 interval_ops_per_sec=4.18347e+07 cumulative_ops=2309859584 cumulative_ops_per_sec=3.16417e+07 final=0
+[ycsb] Throughput sample elapsed_sec=74.0003 interval_sec=0.999896 interval_ops=41844224 interval_ops_per_sec=4.18486e+07 cumulative_ops=2351703808 cumulative_ops_per_sec=3.17797e+07 final=0
+[ycsb] Throughput sample elapsed_sec=75.0005 interval_sec=1.00021 interval_ops=41469726 interval_ops_per_sec=4.14611e+07 cumulative_ops=2393173534 cumulative_ops_per_sec=3.19088e+07 final=0
+[ycsb] Throughput sample elapsed_sec=76.0002 interval_sec=0.999689 interval_ops=41607024 interval_ops_per_sec=4.162e+07 cumulative_ops=2434780558 cumulative_ops_per_sec=3.20365e+07 final=0
+[ycsb] Throughput sample elapsed_sec=77.0004 interval_sec=1.00021 interval_ops=41791858 interval_ops_per_sec=4.17832e+07 cumulative_ops=2476572416 cumulative_ops_per_sec=3.21631e+07 final=0
+[ycsb] Throughput sample elapsed_sec=78.0003 interval_sec=0.999897 interval_ops=41757440 interval_ops_per_sec=4.17618e+07 cumulative_ops=2518329856 cumulative_ops_per_sec=3.22862e+07 final=0
+[ycsb] Throughput sample elapsed_sec=79.0005 interval_sec=1.00021 interval_ops=41811968 interval_ops_per_sec=4.18032e+07 cumulative_ops=2560141824 cumulative_ops_per_sec=3.24067e+07 final=0
+[ycsb] Throughput sample elapsed_sec=80.0003 interval_sec=0.999796 interval_ops=42980864 interval_ops_per_sec=4.29896e+07 cumulative_ops=2603122688 cumulative_ops_per_sec=3.25389e+07 final=0
+[ycsb] Throughput sample elapsed_sec=81.0004 interval_sec=1.0001 interval_ops=42587136 interval_ops_per_sec=4.25829e+07 cumulative_ops=2645709824 cumulative_ops_per_sec=3.26629e+07 final=0
+[ycsb] Throughput sample elapsed_sec=82.0005 interval_sec=1.00011 interval_ops=43938304 interval_ops_per_sec=4.39336e+07 cumulative_ops=2689648128 cumulative_ops_per_sec=3.28004e+07 final=0
+[ycsb] Throughput sample elapsed_sec=83.0003 interval_sec=0.999791 interval_ops=42356224 interval_ops_per_sec=4.23651e+07 cumulative_ops=2732004352 cumulative_ops_per_sec=3.29156e+07 final=0
+[ycsb] Throughput sample elapsed_sec=84.0004 interval_sec=1.0001 interval_ops=42398436 interval_ops_per_sec=4.2394e+07 cumulative_ops=2774402788 cumulative_ops_per_sec=3.30285e+07 final=0
+[ycsb] Throughput sample elapsed_sec=85.0004 interval_sec=0.999998 interval_ops=42075988 interval_ops_per_sec=4.20761e+07 cumulative_ops=2816478776 cumulative_ops_per_sec=3.31349e+07 final=0
+[ycsb] Throughput sample elapsed_sec=86.0003 interval_sec=0.999897 interval_ops=41710536 interval_ops_per_sec=4.17148e+07 cumulative_ops=2858189312 cumulative_ops_per_sec=3.32347e+07 final=0
+[ycsb] Throughput sample elapsed_sec=87.0004 interval_sec=1.00011 interval_ops=41763328 interval_ops_per_sec=4.17589e+07 cumulative_ops=2899952640 cumulative_ops_per_sec=3.33326e+07 final=0
+[ycsb] Throughput sample elapsed_sec=88.0003 interval_sec=0.999893 interval_ops=41696512 interval_ops_per_sec=4.1701e+07 cumulative_ops=2941649152 cumulative_ops_per_sec=3.34277e+07 final=0
+[ycsb] Throughput sample elapsed_sec=89.0004 interval_sec=1.00011 interval_ops=42283520 interval_ops_per_sec=4.2279e+07 cumulative_ops=2983932672 cumulative_ops_per_sec=3.35272e+07 final=0
+[ycsb] Throughput sample elapsed_sec=90.0003 interval_sec=0.999894 interval_ops=42125568 interval_ops_per_sec=4.213e+07 cumulative_ops=3026058240 cumulative_ops_per_sec=3.36228e+07 final=0
+[ycsb] Throughput sample elapsed_sec=91.0005 interval_sec=1.00021 interval_ops=49010944 interval_ops_per_sec=4.90007e+07 cumulative_ops=3075069184 cumulative_ops_per_sec=3.37918e+07 final=0
+[ycsb] Throughput sample elapsed_sec=92.0004 interval_sec=0.999896 interval_ops=43296768 interval_ops_per_sec=4.33013e+07 cumulative_ops=3118365952 cumulative_ops_per_sec=3.38951e+07 final=0
+[ycsb] Throughput sample elapsed_sec=93.0008 interval_sec=1.00042 interval_ops=36683890 interval_ops_per_sec=3.66684e+07 cumulative_ops=3155049842 cumulative_ops_per_sec=3.3925e+07 final=0
+[ycsb] Throughput sample elapsed_sec=94.0004 interval_sec=0.999582 interval_ops=29959112 interval_ops_per_sec=2.99716e+07 cumulative_ops=3185008954 cumulative_ops_per_sec=3.38829e+07 final=0
+[ycsb] Throughput sample elapsed_sec=95.0005 interval_sec=1.0001 interval_ops=28249086 interval_ops_per_sec=2.82463e+07 cumulative_ops=3213258040 cumulative_ops_per_sec=3.38236e+07 final=0
+[ycsb] Throughput sample elapsed_sec=96.0006 interval_sec=1.0001 interval_ops=28174678 interval_ops_per_sec=2.81718e+07 cumulative_ops=3241432718 cumulative_ops_per_sec=3.37647e+07 final=0
+[ycsb] Throughput sample elapsed_sec=97.0003 interval_sec=0.999689 interval_ops=28284274 interval_ops_per_sec=2.82931e+07 cumulative_ops=3269716992 cumulative_ops_per_sec=3.37083e+07 final=0
+[ycsb] Throughput sample elapsed_sec=98.0005 interval_sec=1.00021 interval_ops=28037888 interval_ops_per_sec=2.8032e+07 cumulative_ops=3297754880 cumulative_ops_per_sec=3.36504e+07 final=0
+[ycsb] Throughput sample elapsed_sec=99.0007 interval_sec=1.0002 interval_ops=28181760 interval_ops_per_sec=2.8176e+07 cumulative_ops=3325936640 cumulative_ops_per_sec=3.35951e+07 final=0
+[ycsb] Throughput sample elapsed_sec=100 interval_sec=0.999793 interval_ops=28131840 interval_ops_per_sec=2.81377e+07 cumulative_ops=3354068480 cumulative_ops_per_sec=3.35405e+07 final=0
+[ycsb] Throughput sample elapsed_sec=101.001 interval_sec=1.0001 interval_ops=28229888 interval_ops_per_sec=2.8227e+07 cumulative_ops=3382298368 cumulative_ops_per_sec=3.34879e+07 final=0
+[ycsb] Throughput sample elapsed_sec=102 interval_sec=0.999796 interval_ops=28113408 interval_ops_per_sec=2.81192e+07 cumulative_ops=3410411776 cumulative_ops_per_sec=3.34353e+07 final=0
+[ycsb] Throughput sample elapsed_sec=103.001 interval_sec=1.00021 interval_ops=28180480 interval_ops_per_sec=2.81746e+07 cumulative_ops=3438592256 cumulative_ops_per_sec=3.33842e+07 final=0
+[ycsb] Throughput sample elapsed_sec=104 interval_sec=0.999894 interval_ops=28279808 interval_ops_per_sec=2.82828e+07 cumulative_ops=3466872064 cumulative_ops_per_sec=3.33352e+07 final=0
+[ycsb] Throughput sample elapsed_sec=105.001 interval_sec=1.0001 interval_ops=28216576 interval_ops_per_sec=2.82136e+07 cumulative_ops=3495088640 cumulative_ops_per_sec=3.32864e+07 final=0
+[ycsb] Throughput sample elapsed_sec=106 interval_sec=0.999897 interval_ops=28091648 interval_ops_per_sec=2.80945e+07 cumulative_ops=3523180288 cumulative_ops_per_sec=3.32374e+07 final=0
+[ycsb] Throughput sample elapsed_sec=107 interval_sec=1 interval_ops=28133746 interval_ops_per_sec=2.81337e+07 cumulative_ops=3551314034 cumulative_ops_per_sec=3.31897e+07 final=0
+[ycsb] Throughput sample elapsed_sec=108 interval_sec=1 interval_ops=28115087 interval_ops_per_sec=2.81151e+07 cumulative_ops=3579429121 cumulative_ops_per_sec=3.31427e+07 final=0
+[ycsb] Throughput sample elapsed_sec=109.001 interval_sec=1.0001 interval_ops=28246273 interval_ops_per_sec=2.82433e+07 cumulative_ops=3607675394 cumulative_ops_per_sec=3.30978e+07 final=0
+[ycsb] Throughput sample elapsed_sec=110.001 interval_sec=1 interval_ops=28219418 interval_ops_per_sec=2.82193e+07 cumulative_ops=3635894812 cumulative_ops_per_sec=3.30534e+07 final=0
+[ycsb] Throughput sample elapsed_sec=111 interval_sec=0.999895 interval_ops=28504804 interval_ops_per_sec=2.85078e+07 cumulative_ops=3664399616 cumulative_ops_per_sec=3.30125e+07 final=0
+[ycsb] Throughput sample elapsed_sec=112 interval_sec=0.999896 interval_ops=28153600 interval_ops_per_sec=2.81565e+07 cumulative_ops=3692553216 cumulative_ops_per_sec=3.29691e+07 final=0
+[ycsb] Throughput sample elapsed_sec=113 interval_sec=0.999995 interval_ops=28200192 interval_ops_per_sec=2.82003e+07 cumulative_ops=3720753408 cumulative_ops_per_sec=3.29269e+07 final=0
+[ycsb] Throughput sample elapsed_sec=114 interval_sec=1.00011 interval_ops=28236800 interval_ops_per_sec=2.82338e+07 cumulative_ops=3748990208 cumulative_ops_per_sec=3.28857e+07 final=0
+[ycsb] Throughput sample elapsed_sec=115.001 interval_sec=1.00031 interval_ops=28293888 interval_ops_per_sec=2.82851e+07 cumulative_ops=3777284096 cumulative_ops_per_sec=3.28457e+07 final=0
+[ycsb] Throughput sample elapsed_sec=116 interval_sec=0.999689 interval_ops=28256256 interval_ops_per_sec=2.8265e+07 cumulative_ops=3805540352 cumulative_ops_per_sec=3.28062e+07 final=0
+[ycsb] Throughput sample elapsed_sec=117.001 interval_sec=1.0001 interval_ops=28243456 interval_ops_per_sec=2.82406e+07 cumulative_ops=3833783808 cumulative_ops_per_sec=3.27672e+07 final=0
+[ycsb] Throughput sample elapsed_sec=118.001 interval_sec=1.0001 interval_ops=28357376 interval_ops_per_sec=2.83544e+07 cumulative_ops=3862141184 cumulative_ops_per_sec=3.27298e+07 final=0
+[ycsb] Throughput sample elapsed_sec=119 interval_sec=0.999792 interval_ops=28340480 interval_ops_per_sec=2.83464e+07 cumulative_ops=3890481664 cumulative_ops_per_sec=3.2693e+07 final=0
+[ycsb] Throughput sample elapsed_sec=120 interval_sec=0.999999 interval_ops=28278016 interval_ops_per_sec=2.8278e+07 cumulative_ops=3918759680 cumulative_ops_per_sec=3.26562e+07 final=0
+[ycsb] Throughput sample elapsed_sec=121 interval_sec=1 interval_ops=28198002 interval_ops_per_sec=2.8198e+07 cumulative_ops=3946957682 cumulative_ops_per_sec=3.26194e+07 final=0
+[ycsb] Throughput sample elapsed_sec=122.001 interval_sec=1.00011 interval_ops=28315108 interval_ops_per_sec=2.83121e+07 cumulative_ops=3975272790 cumulative_ops_per_sec=3.2584e+07 final=0
+[ycsb] Throughput sample elapsed_sec=123.001 interval_sec=0.999998 interval_ops=28294771 interval_ops_per_sec=2.82948e+07 cumulative_ops=4003567561 cumulative_ops_per_sec=3.25492e+07 final=0
+[ycsb] Throughput sample elapsed_sec=124.001 interval_sec=0.999917 interval_ops=28281313 interval_ops_per_sec=2.82837e+07 cumulative_ops=4031848874 cumulative_ops_per_sec=3.25148e+07 final=0
+[ycsb] Throughput sample elapsed_sec=125.004 interval_sec=1.0035 interval_ops=28218966 interval_ops_per_sec=2.81205e+07 cumulative_ops=4060067840 cumulative_ops_per_sec=3.24795e+07 final=0
+[ycsb] Throughput sample elapsed_sec=126.001 interval_sec=0.996581 interval_ops=32189440 interval_ops_per_sec=3.22999e+07 cumulative_ops=4092257280 cumulative_ops_per_sec=3.24781e+07 final=0
+[ycsb] Throughput sample elapsed_sec=127.001 interval_sec=1.00077 interval_ops=37998336 interval_ops_per_sec=3.79692e+07 cumulative_ops=4130255616 cumulative_ops_per_sec=3.25214e+07 final=0
+[ycsb] Throughput sample elapsed_sec=128.001 interval_sec=1.00007 interval_ops=42008320 interval_ops_per_sec=4.20052e+07 cumulative_ops=4172263936 cumulative_ops_per_sec=3.25954e+07 final=0
+[ycsb] Throughput sample elapsed_sec=129.002 interval_sec=1.00099 interval_ops=46304768 interval_ops_per_sec=4.62591e+07 cumulative_ops=4218568704 cumulative_ops_per_sec=3.27015e+07 final=0
+[ycsb] Throughput sample elapsed_sec=130.002 interval_sec=0.999466 interval_ops=49943296 interval_ops_per_sec=4.997e+07 cumulative_ops=4268512000 cumulative_ops_per_sec=3.28342e+07 final=0
+[ycsb] Throughput sample elapsed_sec=131.004 interval_sec=1.00254 interval_ops=45783040 interval_ops_per_sec=4.56669e+07 cumulative_ops=4314295040 cumulative_ops_per_sec=3.29324e+07 final=0
+[ycsb] Throughput sample elapsed_sec=132.001 interval_sec=0.996182 interval_ops=41387748 interval_ops_per_sec=4.15464e+07 cumulative_ops=4355682788 cumulative_ops_per_sec=3.29974e+07 final=0
+[ycsb] Throughput sample elapsed_sec=133 interval_sec=0.999785 interval_ops=41919034 interval_ops_per_sec=4.1928e+07 cumulative_ops=4397601822 cumulative_ops_per_sec=3.30646e+07 final=0
+[ycsb] Throughput sample elapsed_sec=134.001 interval_sec=1.00018 interval_ops=41944574 interval_ops_per_sec=4.1937e+07 cumulative_ops=4439546396 cumulative_ops_per_sec=3.31308e+07 final=0
+[ycsb] Throughput sample elapsed_sec=135 interval_sec=0.999778 interval_ops=41862884 interval_ops_per_sec=4.18722e+07 cumulative_ops=4481409280 cumulative_ops_per_sec=3.31955e+07 final=0
+[ycsb] Throughput sample elapsed_sec=136 interval_sec=1.00011 interval_ops=41903616 interval_ops_per_sec=4.1899e+07 cumulative_ops=4523312896 cumulative_ops_per_sec=3.32595e+07 final=0
+[ycsb] Throughput sample elapsed_sec=137.001 interval_sec=1.0001 interval_ops=41398784 interval_ops_per_sec=4.13945e+07 cumulative_ops=4564711680 cumulative_ops_per_sec=3.33189e+07 final=0
+[ycsb] Throughput sample elapsed_sec=138.001 interval_sec=1.00001 interval_ops=41888768 interval_ops_per_sec=4.18882e+07 cumulative_ops=4606600448 cumulative_ops_per_sec=3.3381e+07 final=0
+[ycsb] Throughput sample elapsed_sec=139.001 interval_sec=1 interval_ops=41742848 interval_ops_per_sec=4.17428e+07 cumulative_ops=4648343296 cumulative_ops_per_sec=3.34412e+07 final=0
+[ycsb] Throughput sample elapsed_sec=140 interval_sec=0.999885 interval_ops=41710848 interval_ops_per_sec=4.17157e+07 cumulative_ops=4690054144 cumulative_ops_per_sec=3.35003e+07 final=0
+[ycsb] Throughput sample elapsed_sec=141 interval_sec=1 interval_ops=41751609 interval_ops_per_sec=4.17515e+07 cumulative_ops=4731805753 cumulative_ops_per_sec=3.35588e+07 final=0
+[ycsb] Throughput sample elapsed_sec=142 interval_sec=0.999988 interval_ops=41553693 interval_ops_per_sec=4.15542e+07 cumulative_ops=4773359446 cumulative_ops_per_sec=3.36151e+07 final=0
+[ycsb] Throughput sample elapsed_sec=143 interval_sec=0.999899 interval_ops=41602416 interval_ops_per_sec=4.16066e+07 cumulative_ops=4814961862 cumulative_ops_per_sec=3.3671e+07 final=0
+[ycsb] Throughput sample elapsed_sec=144.001 interval_sec=1.00034 interval_ops=41897473 interval_ops_per_sec=4.18833e+07 cumulative_ops=4856859335 cumulative_ops_per_sec=3.3728e+07 final=0
+[ycsb] Throughput sample elapsed_sec=145 interval_sec=0.999659 interval_ops=41460025 interval_ops_per_sec=4.14742e+07 cumulative_ops=4898319360 cumulative_ops_per_sec=3.37814e+07 final=0
+[ycsb] Throughput sample elapsed_sec=146 interval_sec=1.00011 interval_ops=41937152 interval_ops_per_sec=4.19327e+07 cumulative_ops=4940256512 cumulative_ops_per_sec=3.38373e+07 final=0
+[ycsb] Throughput sample elapsed_sec=147 interval_sec=1.00001 interval_ops=41674240 interval_ops_per_sec=4.1674e+07 cumulative_ops=4981930752 cumulative_ops_per_sec=3.38906e+07 final=0
+[ycsb] Throughput sample elapsed_sec=148 interval_sec=1 interval_ops=41803008 interval_ops_per_sec=4.18029e+07 cumulative_ops=5023733760 cumulative_ops_per_sec=3.3944e+07 final=0
+[ycsb] Throughput sample elapsed_sec=149 interval_sec=1 interval_ops=42021120 interval_ops_per_sec=4.20211e+07 cumulative_ops=5065754880 cumulative_ops_per_sec=3.39982e+07 final=0
+[ycsb] Throughput sample elapsed_sec=150 interval_sec=0.999884 interval_ops=41649920 interval_ops_per_sec=4.16548e+07 cumulative_ops=5107404800 cumulative_ops_per_sec=3.40493e+07 final=0
+[ycsb] Throughput sample elapsed_sec=151 interval_sec=1.0001 interval_ops=41687012 interval_ops_per_sec=4.1683e+07 cumulative_ops=5149091812 cumulative_ops_per_sec=3.40998e+07 final=0
+[ycsb] Throughput sample elapsed_sec=152 interval_sec=0.999895 interval_ops=41426547 interval_ops_per_sec=4.14309e+07 cumulative_ops=5190518359 cumulative_ops_per_sec=3.41481e+07 final=0
+[ycsb] Throughput sample elapsed_sec=153 interval_sec=1.0001 interval_ops=41538643 interval_ops_per_sec=4.15345e+07 cumulative_ops=5232057002 cumulative_ops_per_sec=3.41964e+07 final=0
+[ycsb] Throughput sample elapsed_sec=154.001 interval_sec=1.00023 interval_ops=41765718 interval_ops_per_sec=4.17562e+07 cumulative_ops=5273822720 cumulative_ops_per_sec=3.42455e+07 final=0
+[ycsb] Throughput sample elapsed_sec=155 interval_sec=0.99967 interval_ops=41962752 interval_ops_per_sec=4.19766e+07 cumulative_ops=5315785472 cumulative_ops_per_sec=3.42953e+07 final=0
+[ycsb] Throughput sample elapsed_sec=156.001 interval_sec=1.00022 interval_ops=41371648 interval_ops_per_sec=4.13627e+07 cumulative_ops=5357157120 cumulative_ops_per_sec=3.43406e+07 final=0
+[ycsb] Throughput sample elapsed_sec=157.001 interval_sec=1 interval_ops=41868032 interval_ops_per_sec=4.1868e+07 cumulative_ops=5399025152 cumulative_ops_per_sec=3.43886e+07 final=0
+[ycsb] Throughput sample elapsed_sec=158 interval_sec=0.999909 interval_ops=41845248 interval_ops_per_sec=4.18491e+07 cumulative_ops=5440870400 cumulative_ops_per_sec=3.44358e+07 final=0
+[ycsb] Throughput sample elapsed_sec=159.001 interval_sec=1.0002 interval_ops=41860352 interval_ops_per_sec=4.18518e+07 cumulative_ops=5482730752 cumulative_ops_per_sec=3.44824e+07 final=0
+[ycsb] Throughput sample elapsed_sec=160 interval_sec=0.999556 interval_ops=41537024 interval_ops_per_sec=4.15555e+07 cumulative_ops=5524267776 cumulative_ops_per_sec=3.45266e+07 final=0
+[ycsb] Throughput sample elapsed_sec=161 interval_sec=1.00009 interval_ops=47936911 interval_ops_per_sec=4.79325e+07 cumulative_ops=5572204687 cumulative_ops_per_sec=3.46099e+07 final=0
+[ycsb] Throughput sample elapsed_sec=162.001 interval_sec=1.00111 interval_ops=42500862 interval_ops_per_sec=4.24536e+07 cumulative_ops=5614705549 cumulative_ops_per_sec=3.46584e+07 final=0
+[ycsb] Throughput sample elapsed_sec=163.003 interval_sec=1.00147 interval_ops=36447119 interval_ops_per_sec=3.63937e+07 cumulative_ops=5651152668 cumulative_ops_per_sec=3.4669e+07 final=0
+[ycsb] Throughput sample elapsed_sec=164 interval_sec=0.997563 interval_ops=29885156 interval_ops_per_sec=2.99582e+07 cumulative_ops=5681037824 cumulative_ops_per_sec=3.46404e+07 final=0
+[ycsb] Throughput sample elapsed_sec=165.001 interval_sec=1.00023 interval_ops=28390144 interval_ops_per_sec=2.83837e+07 cumulative_ops=5709427968 cumulative_ops_per_sec=3.46025e+07 final=0
+[ycsb] Throughput sample elapsed_sec=166.005 interval_sec=1.00384 interval_ops=28517376 interval_ops_per_sec=2.84083e+07 cumulative_ops=5737945344 cumulative_ops_per_sec=3.4565e+07 final=0
+[ycsb] Throughput sample elapsed_sec=167 interval_sec=0.995961 interval_ops=28072448 interval_ops_per_sec=2.81863e+07 cumulative_ops=5766017792 cumulative_ops_per_sec=3.4527e+07 final=0
+[ycsb] Throughput sample elapsed_sec=168 interval_sec=0.999999 interval_ops=28358144 interval_ops_per_sec=2.83582e+07 cumulative_ops=5794375936 cumulative_ops_per_sec=3.44902e+07 final=0
+[ycsb] Throughput sample elapsed_sec=169.001 interval_sec=1.0001 interval_ops=28104704 interval_ops_per_sec=2.81019e+07 cumulative_ops=5822480640 cumulative_ops_per_sec=3.44524e+07 final=0
+[ycsb] Throughput sample elapsed_sec=170 interval_sec=0.999898 interval_ops=28167168 interval_ops_per_sec=2.81701e+07 cumulative_ops=5850647808 cumulative_ops_per_sec=3.44155e+07 final=0
+[ycsb] Throughput sample elapsed_sec=171 interval_sec=0.999999 interval_ops=28188928 interval_ops_per_sec=2.8189e+07 cumulative_ops=5878836736 cumulative_ops_per_sec=3.43791e+07 final=0
+[ycsb] Throughput sample elapsed_sec=172.001 interval_sec=1.00009 interval_ops=28227584 interval_ops_per_sec=2.82249e+07 cumulative_ops=5907064320 cumulative_ops_per_sec=3.43433e+07 final=0
+[ycsb] Throughput sample elapsed_sec=173.001 interval_sec=0.999977 interval_ops=28196779 interval_ops_per_sec=2.81974e+07 cumulative_ops=5935261099 cumulative_ops_per_sec=3.43078e+07 final=0
+[ycsb] Throughput sample elapsed_sec=174 interval_sec=0.999774 interval_ops=28315250 interval_ops_per_sec=2.83216e+07 cumulative_ops=5963576349 cumulative_ops_per_sec=3.42734e+07 final=0
+[ycsb] Throughput sample elapsed_sec=175.001 interval_sec=1.00024 interval_ops=28120065 interval_ops_per_sec=2.81134e+07 cumulative_ops=5991696414 cumulative_ops_per_sec=3.42382e+07 final=0
+[ycsb] Throughput sample elapsed_sec=176.001 interval_sec=1.00012 interval_ops=28328303 interval_ops_per_sec=2.83248e+07 cumulative_ops=6020024717 cumulative_ops_per_sec=3.42046e+07 final=0
+[ycsb] Throughput sample elapsed_sec=177.001 interval_sec=0.999864 interval_ops=28380815 interval_ops_per_sec=2.83847e+07 cumulative_ops=6048405532 cumulative_ops_per_sec=3.41717e+07 final=0
+[ycsb] Throughput sample elapsed_sec=178 interval_sec=0.999886 interval_ops=28178091 interval_ops_per_sec=2.81813e+07 cumulative_ops=6076583623 cumulative_ops_per_sec=3.4138e+07 final=0
+[ycsb] Throughput sample elapsed_sec=179.001 interval_sec=1.00024 interval_ops=28400697 interval_ops_per_sec=2.83939e+07 cumulative_ops=6104984320 cumulative_ops_per_sec=3.41059e+07 final=0
+[ycsb] Throughput sample elapsed_sec=180.001 interval_sec=0.999885 interval_ops=28283904 interval_ops_per_sec=2.82871e+07 cumulative_ops=6133268224 cumulative_ops_per_sec=3.40736e+07 final=0
+[ycsb] Throughput sample elapsed_sec=181.001 interval_sec=1.00013 interval_ops=28209664 interval_ops_per_sec=2.82061e+07 cumulative_ops=6161477888 cumulative_ops_per_sec=3.40412e+07 final=0
+[ycsb] Throughput sample elapsed_sec=182 interval_sec=0.999752 interval_ops=28361984 interval_ops_per_sec=2.8369e+07 cumulative_ops=6189839872 cumulative_ops_per_sec=3.401e+07 final=0
+[ycsb] Throughput sample elapsed_sec=183.001 interval_sec=1.00022 interval_ops=28210944 interval_ops_per_sec=2.82046e+07 cumulative_ops=6218050816 cumulative_ops_per_sec=3.39783e+07 final=0
+[ycsb] Throughput sample elapsed_sec=184.004 interval_sec=1.00376 interval_ops=28598272 interval_ops_per_sec=2.84912e+07 cumulative_ops=6246649088 cumulative_ops_per_sec=3.39484e+07 final=0
+[ycsb] Throughput sample elapsed_sec=185 interval_sec=0.996057 interval_ops=28089600 interval_ops_per_sec=2.82008e+07 cumulative_ops=6274738688 cumulative_ops_per_sec=3.39174e+07 final=0
+[ycsb] Throughput sample elapsed_sec=186.001 interval_sec=1.00011 interval_ops=28194560 interval_ops_per_sec=2.81916e+07 cumulative_ops=6302933248 cumulative_ops_per_sec=3.38866e+07 final=0
+[ycsb] Throughput sample elapsed_sec=187.001 interval_sec=0.999998 interval_ops=28214187 interval_ops_per_sec=2.82143e+07 cumulative_ops=6331147435 cumulative_ops_per_sec=3.38563e+07 final=0
+[ycsb] Throughput sample elapsed_sec=188 interval_sec=0.999897 interval_ops=28144242 interval_ops_per_sec=2.81471e+07 cumulative_ops=6359291677 cumulative_ops_per_sec=3.38259e+07 final=0
+[ycsb] Throughput sample elapsed_sec=189 interval_sec=0.999999 interval_ops=28124360 interval_ops_per_sec=2.81244e+07 cumulative_ops=6387416037 cumulative_ops_per_sec=3.37958e+07 final=0
+[ycsb] Throughput sample elapsed_sec=190.001 interval_sec=1.00011 interval_ops=28190319 interval_ops_per_sec=2.81871e+07 cumulative_ops=6415606356 cumulative_ops_per_sec=3.37662e+07 final=0
+[ycsb] Throughput sample elapsed_sec=191.001 interval_sec=1.0001 interval_ops=28153288 interval_ops_per_sec=2.81506e+07 cumulative_ops=6443759644 cumulative_ops_per_sec=3.37368e+07 final=0
+[ycsb] Throughput sample elapsed_sec=192 interval_sec=0.999791 interval_ops=28138667 interval_ops_per_sec=2.81445e+07 cumulative_ops=6471898311 cumulative_ops_per_sec=3.37077e+07 final=0
+[ycsb] Throughput sample elapsed_sec=193 interval_sec=1 interval_ops=28281088 interval_ops_per_sec=2.8281e+07 cumulative_ops=6500179399 cumulative_ops_per_sec=3.36796e+07 final=0
+[ycsb] Throughput sample elapsed_sec=194.001 interval_sec=1.0001 interval_ops=28167481 interval_ops_per_sec=2.81646e+07 cumulative_ops=6528346880 cumulative_ops_per_sec=3.36512e+07 final=0
+[ycsb] Throughput sample elapsed_sec=195.001 interval_sec=1.0001 interval_ops=28148992 interval_ops_per_sec=2.81461e+07 cumulative_ops=6556495872 cumulative_ops_per_sec=3.36229e+07 final=0
+[ycsb] Throughput sample elapsed_sec=196.001 interval_sec=0.999886 interval_ops=28559872 interval_ops_per_sec=2.85631e+07 cumulative_ops=6585055744 cumulative_ops_per_sec=3.35971e+07 final=0
+[ycsb] Throughput sample elapsed_sec=197.001 interval_sec=0.999998 interval_ops=28091648 interval_ops_per_sec=2.80917e+07 cumulative_ops=6613147392 cumulative_ops_per_sec=3.35692e+07 final=0
+[ycsb] Throughput sample elapsed_sec=198 interval_sec=0.999898 interval_ops=28374528 interval_ops_per_sec=2.83774e+07 cumulative_ops=6641521920 cumulative_ops_per_sec=3.3543e+07 final=0
+[ycsb] Throughput sample elapsed_sec=199 interval_sec=0.999898 interval_ops=28279296 interval_ops_per_sec=2.82822e+07 cumulative_ops=6669801216 cumulative_ops_per_sec=3.35165e+07 final=0
+xindex-operation-count executed=6697998848
+[ycsb] Throughput sample elapsed_sec=200.01 interval_sec=1.00915 interval_ops=28197632 interval_ops_per_sec=2.79419e+07 cumulative_ops=6697998848 cumulative_ops_per_sec=3.34884e+07 final=1
+[ycsb] Time(sec) : 200.01
+[ycsb] Throughput(op/s): 3.34884e+07
+xindex-state-validation sampled_keys=4096 successful_reads=4096 failed_reads=0 digest=0x7474b8e9d3962859
+arbiter-arena-site site=68 object_bytes=96 allocations=26395417 frees=0 live=26395417 allocated_bytes=3378613376 assigned_bytes=3599761408
+arbiter-arena-summary node=0 allocator=jemalloc backing=demand slot_alignment=64 assigned_bytes=3599761408 allocations=26395417 frees=0 live=26395417 fallback_allocations=0
+arbiter-arena-residency resident_pages=850643 resident_bytes=3484233728 majority_node=0 query_error_pages=0 mincore_error_batches=0 zero_pages=2 node0_pages=850643

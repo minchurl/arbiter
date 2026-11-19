@@ -1,0 +1,10 @@
+probe-cold-buffer-r2 READY [(2571001333982442796, '0x7fc1c0a33400')]
+probe-cold-buffer-r2 PHASE 0 baseline nodes {0: 850645} migration_seconds 0.341
+probe-cold-buffer-r2 PHASE 1 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.803
+probe-cold-buffer-r2 PHASE 2 baseline nodes {0: 850645} migration_seconds 3.408
+probe-cold-buffer-r2 PHASE 3 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.765
+probe-cold-buffer-r2 PHASE 4 baseline nodes {0: 850645} migration_seconds 3.147
+Traceback (most recent call last):
+  File "/home/shin/arbiter/build/xindex-contention-cause-20261119/migrate.py", line 137, in <module>
+    assert proc.poll() is None;time.sleep(.05)
+AssertionError

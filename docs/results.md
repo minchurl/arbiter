@@ -6,6 +6,197 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## XIndex: changing cold-buffer placement changes contention (November 19)
+
+Moving XIndex's hot leaf locks to CXL is **not necessary** for a large gain.
+In a running process, moving the surrounding buffer pages to CXL increases
+throughput by about 48%, while the hot leaf locks stay in DRAM. Moving those
+pages back reverses the gain. This identifies an indirect effect of allocation
+placement on contention; it does not establish that CXL services a hot lock
+faster or that added latency is the only hardware cause.
+
+The experiment freezes benchmark/library sources, input IR, existing binaries,
+production runtime and selection policy at the inputs recorded from `bd7225e`.
+An external controller reads object addresses and uses
+[`move_pages`](https://man7.org/linux/man-pages/man2/move_pages.2.html) to change
+physical placement. It never writes benchmark instructions or object contents.
+Virtual addresses and the inspected tree topology remain identical across
+phases. CPUs and ordinary memory use node 0; node 2 is the verified CXL target.
+Background work is disabled. No new Arbiter selection parameter is introduced.
+
+These are **duration-replay diagnostics**, using the existing 100M-load/400M-A
+trace, 31 foreground workers and existing one-second throughput reporting.
+They are not the earlier one-pass 400M-operation confirmations, and their
+percentages must not be pooled or subtracted to decompose the earlier +72% gain.
+Migration and two seconds afterward are excluded; each retained sample's whole
+one-second interval lies inside the steady phase. Each process finishes with
+the original placement restored, zero failed sampled reads, the expected state
+digest, and zero allocation fallbacks or residency-query errors.
+
+The buffer-only binary selects the existing site 68: 96-byte buffer objects,
+containing tree pointers and metadata. It leaves leaf blocks and record arrays
+in DRAM. Of 850,643 resident selected-arena pages, 11 pages associated with the
+20 most frequent keys in the previous bounded trace sample stay put. The other
+**850,632 pages (3.245 GiB)** move. "Cold" below means this exclusion, not proof
+that every other page is infrequently accessed; extents also include allocator
+metadata. None of the sampled top-20 leaf or record pages is moved.
+
+| Initial buffer placement | Five consecutive steady phases, Mops/s | Intervention versus adjacent baselines |
+|---|---|---|
+| DRAM | **28.241 → 42.034 → 28.468 → 42.309 → 28.443** | Cold pages to CXL: **+48.24%, +48.69%** |
+| CXL | **41.335 → 27.834 → 41.604 → 27.863 → 41.321** | Cold pages to DRAM: **−32.88%, −32.80%** |
+
+Both rows use independent fresh processes and two reversible interventions.
+The opposite starting placement addresses initialization/history as an
+explanation. In the second row the hot buffer pages remain in CXL throughout;
+all leaf locks still remain in DRAM.
+
+Two additional controls use the original automatic-selection binary. Four of
+the sampled top-20 keys use buffered leaves. Moving only their four leaf pages
+and four buffer pages from DRAM to CXL gives **−0.61% and +3.43%** against
+adjacent baselines, with noticeable baseline drift. Starting with all selected
+objects in CXL, moving those eight hot pages back to DRAM preserves throughput:
+**58.028 and 57.228 Mops/s**, versus adjacent baselines of roughly 54–58 Mops/s.
+There is no comparable throughput collapse. These controls support the indirect
+effect, but do not prove that every possible hot-object placement has zero effect.
+
+The concurrency control is particularly revealing: with the **same buffer-only
+binary and 16 foreground workers**, a DRAM → cold-CXL → DRAM crossover gives
+**61.042 → 46.382 → 60.918 Mops/s**, a **23.94% regression** during CXL placement.
+The 16-worker DRAM control even exceeds the 31-worker buffer-only CXL result.
+This is one lower-concurrency crossover, not a search for the optimal worker
+count. It supports a high-concurrency collapse being relieved by placement,
+rather than CXL being intrinsically faster for this lookup path.
+
+Moving the same excluded-hot buffer page set from node 0 to memory-only node 1
+gives smaller gains of **6.04% and 5.33%**, again reversed by restoration.
+Node 1's physical technology is not asserted. Its distance-table value is not
+a measured access latency, and this control does not isolate CXL protocol from
+different access costs or physical-address/home distributions.
+
+A final partial-placement control moves a fixed random half of the eligible
+cold pages (425,316 pages; seed 381119). Its five phases are
+**27.810 → 32.461 → 27.886 → 32.452 → 27.916 Mops/s**: **+16.57% and +16.31%**
+against adjacent baselines. It does not outperform complete cold-buffer placement
+or sustain the approximately 50 Mops/s spikes seen during some migrations.
+Those transient peaks remain excluded from every steady-throughput result.
+
+![Reversible cold-buffer and hot-page controls](../results/placement-causality/20261119/placement-crossover.png)
+
+Separate phase-aligned profiles connect this intervention to reduced retries.
+All 31 worker TIDs appear in every phase and both recordings report zero lost
+samples. Retired conditional branches and locked loads use period 100,003;
+cycles use period 30,000,003. Event and operation denominators cover the same
+whole one-second intervals, excluding transitions. The profile itself achieves
+27.212/39.884 Mops/s and is not included in the unprofiled throughput rows.
+
+| Estimated events per completed operation | Cold buffers in DRAM | Cold buffers in CXL |
+|---|---:|---:|
+| Failed outer leaf-lock CAS | 0.9376 | 0.5521 (**−41.1%**) |
+| Reader retries a locked leaf | 0.3029 | 0.1612 (**−46.8%**) |
+| Outer leaf-lock CAS attempts | 1.1055 | 0.7232 |
+| Value CAS | 0.5052 | 0.4963 |
+| All locked loads | 2.6031 | 2.2258 |
+
+The retry change occurs in both CXL phases and reverses in all three DRAM
+phases. The hottest leaf's CAS samples remain on its unchanged DRAM address.
+Cycle samples in the outer TAS-loop region fall from 28.5% to 20.2%; estimated
+total cycles per operation fall from 3,975 to 2,717. Ordinary cycle samples can
+skid, so these are not precise critical-section times or waiter counts.
+
+In a separate `ldlat=128`, period-10,007 memory profile, sampled **cache-access**
+latency on the moved buffer pages rises from **271 to 1,674 cycles**. Samples
+on the four hot leaf objects, which stay in DRAM, instead fall from **1,282 to
+997 cycles**. The profile contains 1,026/894 cold-buffer samples and 5,830/3,333
+hot-leaf samples in DRAM/CXL phases. These are conditional sample means, not
+all-load averages or a direct measurement of physical memory-device latency.
+On this processor `weight` is cache-access latency and `ins_lat` is instruction
+latency; the eligibility threshold applies to the latter, so cache weights can
+be below 128. The distinction follows the
+[kernel PEBS decoder](https://github.com/torvalds/linux/blob/v6.8/arch/x86/events/intel/ds.c#L1742)
+and [Intel's latency-field definitions](https://cdrdv2-public.intel.com/789573/252046-sdm-change-document.pdf).
+The combination supports slower cold accesses moderating excessive contention,
+while leaving cache/home effects as alternative or additional causes.
+Instruction-latency means for the same sampled populations change from
+402 to 1,800 cycles on cold buffers and from 11,584 to 8,106 cycles on hot leaves.
+For the hottest leaf's outer CAS specifically, 3,049/1,600 selected samples
+give 20,757/15,630 instruction cycles. These remain conditional distributions,
+not average lock-acquisition times. Reported instruction latency is a 16-bit
+field; 30 samples in the entire recording reach its maximum and are retained.
+The per-field table also retains critical
+key-load samples, but their small counts (50/38) do not support a precise
+critical-section cost estimate.
+
+The buffer root is read by `locate_leaf` **before** the outer leaf lock is
+acquired. Each worker mixes hot-key requests with other requests from a very
+large trace. Delaying those other requests can change how many workers contend
+at once, even though the hot request's own buffer and leaf stay in DRAM. This
+is a plausible form of implicit pacing between requests; it is not an inserted
+software backoff, nor a measured count of simultaneous waiters.
+
+Source inspection explains why equal write percentages are insufficient.
+Both XIndex and the original libcuckoo use tight test-and-set-style atomic loops;
+this is **not** a TAS-versus-TTAS comparison. XIndex additionally has optimistic
+readers that retry a locked/version-changed leaf, and buffered writes hold an
+outer leaf lock across value CAS and an explicit memory fence. The hottest
+observed leaf's lock is at offset 1, its lookup keys share that cache line,
+and its updated value is at offset 64 on the **next** line. A claim that this
+particular value falsely shares the outer-lock line would be incorrect.
+
+Libcuckoo instead locks candidate buckets for both reads and writes. Its
+64-byte lock objects contain lock metadata; key/value buckets are separate.
+In the existing-key test, the automatically moved allocation is the roughly
+4 MiB lock array, while the approximately 36 MiB bucket array stays in DRAM.
+XIndex's buffer-only intervention moves about 3.2 GiB along a much larger lookup
+working set. The selected allocations therefore have different roles in the
+path leading to contention, even though both benchmarks have real RMW/HitM risk.
+The libcuckoo controls use 1M preloaded keys and uniformly choose from hot sets
+of 1, 64 or 65,536 keys, with **100% successful value increments**. They do not
+reproduce XIndex's mixture of highly popular keys and a huge cold-key population.
+Furthermore, libcuckoo acquires its candidate locks **before** looking up and
+updating the payload bucket. Moving cold payload buckets would add delay inside
+that protected operation; it is not equivalent to moving XIndex's pre-lock
+buffer access. This is a source-level distinction, not an isolated measurement
+of the earlier growing-insert regression.
+
+Separate five-second core-counter windows confirm the working-set difference.
+They start after prefill/warmup and finish while every worker remains active:
+31 for XIndex, 32 for libcuckoo. Every event has 100% running time. The XIndex
+comparison is another cold-buffer crossover; libcuckoo uses fresh processes.
+
+| Workload | L3 misses in Local / CXL window | L3 misses per 1,000 retired loads, Local / CXL |
+|---|---:|---:|
+| XIndex, buffer-only | 118,592,779 / 163,335,675 | 13.394 / 13.036 |
+| Libcuckoo, 1 hot key | 7 / 0 | 0.0000134 / 0 |
+| Libcuckoo, 64 hot keys | 4 / 0 | 0.000000523 / 0 |
+| Libcuckoo, 65,536 hot keys | 1,065 / 1,207 | 0.00000630 / 0.00000721 |
+
+XIndex's return-to-DRAM window gives 13.465 misses per 1,000 loads. These ratios
+compare retired loads, not logical requests or direct memory-device transfers.
+The higher absolute XIndex miss count during CXL placement reflects a faster
+execution rate; the claim is reduced **retry work per completed operation**, not
+less total memory traffic per second. Libcuckoo's measured accesses overwhelmingly
+stay within the cache hierarchy, so moving its lock backing pages produces
+little of the cold-access pacing seen in XIndex. The earlier full-count
+write-heavy comparisons still provide its throughput conclusion: no consistent
+CXL gain. This does not establish a result for every possible libcuckoo workload.
+
+The measured placement interventions establish the indirect effect. Whether
+its lowest-level trigger is access latency, cache pressure, physical-address/home
+distribution, or a combination still requires distinguishing evidence; this
+host does not allow the relevant uncore/system-wide measurements. In particular,
+an increase in completed throughput also increases completed hot-key requests
+per second. "Fewer hot requests arrive per second" is not a valid explanation;
+reduced simultaneous waiting, burstiness or retry amplification are the relevant
+hypotheses.
+
+[Raw phases and controls](../results/placement-causality/20261119/phases.csv)
+· [Retry estimates](../results/placement-causality/20261119/mechanism-summary.json)
+· [Latency samples](../results/placement-causality/20261119/memory-summary.csv)
+· [Cache counters](../results/placement-causality/20261119/cache-summary.csv)
+· [Frozen inputs and validation](../results/placement-causality/20261119/checks.json)
+· [Object layouts and source facts](../results/placement-causality/20261119/source-and-object-facts.json)
+
 ## Libcuckoo with actual writes (November 19)
 
 Write percentage alone does not explain the missing CXL gain. This follow-up

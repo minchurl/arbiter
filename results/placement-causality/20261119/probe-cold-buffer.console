@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/shin/arbiter/build/xindex-contention-cause-20261119/migrate.py", line 82, in <module>
+    time.sleep(.05)
+KeyboardInterrupt

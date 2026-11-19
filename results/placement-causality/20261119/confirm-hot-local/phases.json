@@ -1,0 +1,405 @@
+[
+  {
+    "phase": 0,
+    "name": "baseline",
+    "start_elapsed": 10.000283333007246,
+    "stable_from_elapsed": 12.004157410003245,
+    "end_elapsed": 30,
+    "migration_seconds": 0.003874076995998621,
+    "page_count": 12,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 12
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 1,
+    "name": "both",
+    "start_elapsed": 30.000154494016897,
+    "stable_from_elapsed": 32.004083564999746,
+    "end_elapsed": 50,
+    "migration_seconds": 0.003929070982849225,
+    "page_count": 12,
+    "changed_page_count": 8,
+    "desired_node_counts": {
+      "2": 8,
+      "0": 4
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 2,
+    "name": "baseline",
+    "start_elapsed": 50.00014844900579,
+    "stable_from_elapsed": 52.00083200499648,
+    "end_elapsed": 70,
+    "migration_seconds": 0.0006835559906903654,
+    "page_count": 12,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 12
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 3,
+    "name": "both",
+    "start_elapsed": 70.00016977300402,
+    "stable_from_elapsed": 72.00232973298989,
+    "end_elapsed": 90,
+    "migration_seconds": 0.0021599599858745933,
+    "page_count": 12,
+    "changed_page_count": 8,
+    "desired_node_counts": {
+      "2": 8,
+      "0": 4
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  {
+    "phase": 4,
+    "name": "baseline",
+    "start_elapsed": 90.00015093799448,
+    "stable_from_elapsed": 92.00079551999806,
+    "end_elapsed": 110,
+    "migration_seconds": 0.0006445820035878569,
+    "page_count": 12,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 12
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 8,
+        "0": 4
+      },
+      "status_sha256": "07124350e5d57690aa8c4f5eb265c545fdcee360094dfea315e10439451fc732",
+      "status": [
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        2,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 12
+      },
+      "status_sha256": "17b0761f87b081d5cf10757ccc89f12be355c70e2e29df288b65b30710dcbcd1",
+      "status": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  }
+]

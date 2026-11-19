@@ -1,0 +1,30 @@
+{
+  "cold_in_dram": {
+    "operations": 1959251139,
+    "seconds": 71.999993,
+    "mops": 27.211824020594,
+    "failed_leaf_cas_per_op": 0.9375802164584067,
+    "reader_locked_leaf_retry_per_op": 0.30287990660701103,
+    "leaf_cas_attempt_per_op": 1.1055065549715626,
+    "hottest_leaf_cas_attempt_per_op": 0.9514634882139017,
+    "value_cas_per_op": 0.5052081758672389,
+    "total_locked_loads_per_op": 2.6030624127150244,
+    "cycles_per_op": 3975.218196285045,
+    "leaf_tas_loop_cycle_fraction": 0.28450975482926644
+  },
+  "cold_in_cxl": {
+    "operations": 1715016448,
+    "seconds": 43.00020099999999,
+    "mops": 39.883917007736784,
+    "failed_leaf_cas_per_op": 0.5521395483432705,
+    "reader_locked_leaf_retry_per_op": 0.16116947002014992,
+    "leaf_cas_attempt_per_op": 0.7231634468849129,
+    "hottest_leaf_cas_attempt_per_op": 0.5628686302838304,
+    "value_cas_per_op": 0.49633666020677136,
+    "total_locked_loads_per_op": 2.2257597106147404,
+    "cycles_per_op": 2717.0820847917607,
+    "leaf_tas_loop_cycle_fraction": 0.2020820457354759
+  }
+}
+Memory: [{'mode': 'cold_in_dram', 'object': 'ALL', 'metric': 'cache_access', 'samples': 17722, 'conditional_mean_cycles': 573.3801489673851}, {'mode': 'cold_in_dram', 'object': 'ALL', 'metric': 'instruction', 'samples': 17722, 'conditional_mean_cycles': 4091.991084527706}, {'mode': 'cold_in_dram', 'object': 'cold_buffer_page', 'metric': 'cache_access', 'samples': 1026, 'conditional_mean_cycles': 270.9298245614035}, {'mode': 'cold_in_dram', 'object': 'cold_buffer_page', 'metric': 'instruction', 'samples': 1026, 'conditional_mean_cycles': 402.31481481481484}, {'mode': 'cold_in_dram', 'object': 'hot_leaf_object', 'metric': 'cache_access', 'samples': 5830, 'conditional_mean_cycles': 1282.4694682675815}, {'mode': 'cold_in_dram', 'object': 'hot_leaf_object', 'metric': 'instruction', 'samples': 5830, 'conditional_mean_cycles': 11584.26037735849}, {'mode': 'cold_in_dram', 'object': 'hot_record_object', 'metric': 'cache_access', 'samples': 865, 'conditional_mean_cycles': 179.78034682080926}, {'mode': 'cold_in_dram', 'object': 'hot_record_object', 'metric': 'instruction', 'samples': 865, 'conditional_mean_cycles': 266.26127167630057}, {'mode': 'cold_in_dram', 'object': 'other', 'metric': 'cache_access', 'samples': 10001, 'conditional_mean_cycles': 225.09369063093692}, {'mode': 'cold_in_dram', 'object': 'other', 'metric': 'instruction', 'samples': 10001, 'conditional_mean_cycles': 433.85031496850314}, {'mode': 'cold_in_cxl', 'object': 'ALL', 'metric': 'cache_access', 'samples': 14142, 'conditional_mean_cycles': 500.73186253712345}, {'mode': 'cold_in_cxl', 'object': 'ALL', 'metric': 'instruction', 'samples': 14142, 'conditional_mean_cycles': 2310.2139725639936}, {'mode': 'cold_in_cxl', 'object': 'cold_buffer_page', 'metric': 'cache_access', 'samples': 894, 'conditional_mean_cycles': 1673.6286353467563}, {'mode': 'cold_in_cxl', 'object': 'cold_buffer_page', 'metric': 'instruction', 'samples': 894, 'conditional_mean_cycles': 1800.158836689038}, {'mode': 'cold_in_cxl', 'object': 'hot_leaf_object', 'metric': 'cache_access', 'samples': 3333, 'conditional_mean_cycles': 997.0675067506751}, {'mode': 'cold_in_cxl', 'object': 'hot_leaf_object', 'metric': 'instruction', 'samples': 3333, 'conditional_mean_cycles': 8105.8247824782475}, {'mode': 'cold_in_cxl', 'object': 'hot_record_object', 'metric': 'cache_access', 'samples': 814, 'conditional_mean_cycles': 190.34520884520884}, {'mode': 'cold_in_cxl', 'object': 'hot_record_object', 'metric': 'instruction', 'samples': 814, 'conditional_mean_cycles': 329.04545454545456}, {'mode': 'cold_in_cxl', 'object': 'other', 'metric': 'cache_access', 'samples': 9101, 'conditional_mean_cycles': 231.508515547742}, {'mode': 'cold_in_cxl', 'object': 'other', 'metric': 'instruction', 'samples': 9101, 'conditional_mean_cycles': 415.0254917042083}]
+Cache: [('xindex_buffer_only', 'cold_in_dram', 13.393681162246061), ('xindex_buffer_only', 'cold_in_cxl', 13.035653139182912), ('xindex_buffer_only', 'cold_in_dram', 13.464793273005625), ('libcuckoo_hot1', 'cxl', 0.0), ('libcuckoo_hot1', 'local', 1.3353391220653083e-05), ('libcuckoo_hot64', 'cxl', 0.0), ('libcuckoo_hot64', 'local', 5.233990806060728e-07), ('libcuckoo_hot65536', 'cxl', 7.21282470382545e-06), ('libcuckoo_hot65536', 'local', 6.2987003309554e-06)]

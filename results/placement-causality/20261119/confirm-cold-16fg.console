@@ -1,0 +1,5 @@
+confirm-cold-16fg READY [(2571001333982442796, '0x7f8ba2633400')]
+confirm-cold-16fg PHASE 0 baseline nodes {0: 850645} migration_seconds 0.302
+confirm-cold-16fg PHASE 1 coldbuffer nodes {2: 850632, 0: 13} migration_seconds 4.153
+confirm-cold-16fg PHASE 2 baseline nodes {0: 850645} migration_seconds 3.092
+confirm-cold-16fg COMPLETE

@@ -1,0 +1,195 @@
+[
+  {
+    "phase": 0,
+    "name": "baseline",
+    "start_elapsed": 20.323732070013648,
+    "stable_from_elapsed": 22.65636028899462,
+    "end_elapsed": 50,
+    "migration_seconds": 0.3326282189809717,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 850645
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    }
+  },
+  {
+    "phase": 1,
+    "name": "coldbuffer",
+    "start_elapsed": 50.724243772012414,
+    "stable_from_elapsed": 57.87950667901896,
+    "end_elapsed": 80,
+    "migration_seconds": 5.155262907006545,
+    "page_count": 850645,
+    "changed_page_count": 850632,
+    "desired_node_counts": {
+      "2": 850632,
+      "0": 13
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    }
+  },
+  {
+    "phase": 2,
+    "name": "baseline",
+    "start_elapsed": 80.31000847599353,
+    "stable_from_elapsed": 85.47198124902206,
+    "end_elapsed": 110,
+    "migration_seconds": 3.1619727730285376,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 850645
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    }
+  },
+  {
+    "phase": 3,
+    "name": "coldbuffer",
+    "start_elapsed": 110.53149640501942,
+    "stable_from_elapsed": 117.30839629599359,
+    "end_elapsed": 140,
+    "migration_seconds": 4.776899890974164,
+    "page_count": 850645,
+    "changed_page_count": 850632,
+    "desired_node_counts": {
+      "2": 850632,
+      "0": 13
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    }
+  },
+  {
+    "phase": 4,
+    "name": "baseline",
+    "start_elapsed": 140.3090013670153,
+    "stable_from_elapsed": 145.46251885200036,
+    "end_elapsed": 170,
+    "migration_seconds": 3.153517484985059,
+    "page_count": 850645,
+    "changed_page_count": 0,
+    "desired_node_counts": {
+      "0": 850645
+    },
+    "before": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "2": 850632,
+        "0": 13
+      },
+      "status_sha256": "71db6fa19ce5ceea15fba5116a631e2f34ecffef39baf2e7e78c09c84d3f55dd"
+    },
+    "migration": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    },
+    "after": {
+      "return_code": 0,
+      "errno": 0,
+      "status_counts": {
+        "0": 850645
+      },
+      "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+    }
+  }
+]

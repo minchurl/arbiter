@@ -1,0 +1,7 @@
+# started on Thu Nov 19 13:05:53 2026
+
+560222686071,,cycles:u,160104942385,100.00,,
+568456109092,,instructions:u,160101760196,100.00,1.01,insn per cycle
+167340819937,,mem_inst_retired.all_loads:u,160099267023,100.00,,
+1207,,mem_load_retired.l3_miss:u,160096530918,100.00,,
+5365808430,,mem_inst_retired.lock_loads:u,160093318095,100.00,,

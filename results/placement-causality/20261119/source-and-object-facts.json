@@ -1,0 +1,76 @@
+{
+  "xindex": {
+    "source": "benchmark/xindex/XIndex-H/xindex_buffer_impl.h",
+    "reader_line": 53,
+    "leaf_lock_line": 875,
+    "inplace_update_line": 227,
+    "leaf_bytes": 104,
+    "buffer_bytes": 96,
+    "leaf_block_bytes": 520,
+    "leaves_per_block": 5,
+    "hottest_observed_object": {
+      "key": 2571001333982442796,
+      "root": 139938628804608,
+      "group": 139938629869952,
+      "group_index": 27,
+      "array": 139934220967936,
+      "array_size": 999916,
+      "record": 139934248958112,
+      "record_key": 2571001283382219299,
+      "buffer": 139909561396224,
+      "leaf": 139910296318976,
+      "node_path": [
+        139910296318976
+      ],
+      "leaf_keys": [
+        2571001307566120727,
+        2571001333982442796
+      ],
+      "value_slot": 1
+    },
+    "hottest_leaf_cacheline_offset": 0,
+    "leaf_fields": {
+      "is_leaf": 0,
+      "locked": 1,
+      "key_count": 2,
+      "version": 8,
+      "keys": [
+        16,
+        24,
+        32
+      ],
+      "parent": 40,
+      "values": [
+        48,
+        64,
+        80
+      ],
+      "next": 96
+    },
+    "hottest_value_offset": 64,
+    "note": "Hottest observed value is at leaf+64, separate from leaf+1 lock. Header and lookup keys share the outer-lock line. Other values/leaves need not have this alignment."
+  },
+  "libcuckoo": {
+    "upstream_revision": "0dd0b4d68fef76791a17950fde1a24f2328a58fe",
+    "source": "benchmark/libcuckoo/libcuckoo-upstream/libcuckoo/cuckoohash_map.hh",
+    "spinlock_line": 822,
+    "spinlock_bytes": 64,
+    "lock_loop_line": 838,
+    "lookup_lock_line": 1105,
+    "prefilled_keys": 1048576,
+    "requested_capacity": 2097152,
+    "bucket_bytes": 72,
+    "bucket_count": 524288,
+    "bucket_storage_bytes": 37748736,
+    "lock_storage_bytes": 4194304,
+    "note": "Original test-and-set loop without pause. Both reads and writes lock candidate buckets. Lock metadata includes element counter and migration flag; payload buckets are separate."
+  },
+  "placement": {
+    "cold_definition": "Resident site-68 extent pages excluding buffer pages associated with the 20 most frequent keys in the previously retained bounded trace sample. This is not a proof that every remaining page is cold.",
+    "excluded_buffer_pages": 11,
+    "migrated_pages": 850632,
+    "migrated_bytes": 3484188672,
+    "top20_actual_buffered_keys": 4,
+    "source_sample": "results/placement-diagnosis/20261119/trace-sample.json"
+  }
+}

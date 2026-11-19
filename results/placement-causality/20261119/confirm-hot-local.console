@@ -1,0 +1,7 @@
+confirm-hot-local READY [(2571001333982442796, '0x7fd67f4e2c80'), (2022500030905740657, '0x7fd6a36a2480'), (4239820673744022922, '0x7fd59c7a7e80'), (1139105090870882302, '0x7fd7108fb080')]
+confirm-hot-local PHASE 0 baseline nodes {0: 12} migration_seconds 0.004
+confirm-hot-local PHASE 1 both nodes {2: 8, 0: 4} migration_seconds 0.004
+confirm-hot-local PHASE 2 baseline nodes {0: 12} migration_seconds 0.001
+confirm-hot-local PHASE 3 both nodes {2: 8, 0: 4} migration_seconds 0.002
+confirm-hot-local PHASE 4 baseline nodes {0: 12} migration_seconds 0.001
+confirm-hot-local COMPLETE

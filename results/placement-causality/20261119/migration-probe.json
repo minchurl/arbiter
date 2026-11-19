@@ -1,0 +1,23 @@
+[
+  {
+    "action": "query",
+    "return_code": 0,
+    "errno": 0,
+    "error": "Success",
+    "page_status": 0
+  },
+  {
+    "action": "move",
+    "return_code": 0,
+    "errno": 0,
+    "error": "Success",
+    "page_status": 2
+  },
+  {
+    "action": "query-after",
+    "return_code": 0,
+    "errno": 0,
+    "error": "Success",
+    "page_status": 2
+  }
+]

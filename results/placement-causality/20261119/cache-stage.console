@@ -1,0 +1,17 @@
+confirm-cold-node1 0 baseline 28.536 
+confirm-cold-node1 1 coldbuffer 30.287 6.036365344985617
+confirm-cold-node1 2 baseline 28.591 
+confirm-cold-node1 3 coldbuffer 29.97 5.33153338319734
+confirm-cold-node1 4 baseline 28.315 
+confirm-cold-16fg 0 baseline 61.042 
+confirm-cold-16fg 1 coldbuffer 46.382 -23.939181458993243
+confirm-cold-16fg 2 baseline 60.918 
+profile-cold-counters 0 baseline 28.05 
+profile-cold-counters 1 coldbuffer 41.203 47.245722895339746
+profile-cold-counters 2 baseline 27.915 
+hot1-local LLC misses/1000 loads 1.3353391220653083e-05 all_workers True
+hot1-cxl LLC misses/1000 loads 0.0 all_workers True
+hot64-local LLC misses/1000 loads 5.233990806060728e-07 all_workers True
+hot64-cxl LLC misses/1000 loads 0.0 all_workers True
+hot65536-local LLC misses/1000 loads 6.2987003309554e-06 all_workers True
+hot65536-cxl LLC misses/1000 loads 7.21282470382545e-06 all_workers True

@@ -1,0 +1,103 @@
+{
+  "args": {
+    "name": "confirm-cold-16fg",
+    "node": 0,
+    "alternate_node": null,
+    "binary": "buffer",
+    "phases": "baseline,coldbuffer,baseline",
+    "step": 30,
+    "warmup": 20,
+    "fg": 16,
+    "top": 1,
+    "bulk": true,
+    "profile": false,
+    "phase_stat": false,
+    "profile_kind": "retry"
+  },
+  "duration": 115,
+  "command": [
+    "systemd-run",
+    "--user",
+    "--scope",
+    "--quiet",
+    "-p",
+    "MemoryMax=64G",
+    "-p",
+    "MemorySwapMax=0",
+    "--",
+    "timeout",
+    "--kill-after=10",
+    "415",
+    "strace",
+    "-qq",
+    "-f",
+    "--seccomp-bpf",
+    "-e",
+    "trace=mbind",
+    "-o",
+    "/home/shin/arbiter/build/xindex-contention-cause-20261119/confirm-cold-16fg/mbind.log",
+    "numactl",
+    "--cpunodebind=0",
+    "--membind=0",
+    "/home/shin/arbiter/build/placement-diagnosis/placements/xindex-buffer/binary",
+    "--fg",
+    "16",
+    "--bg",
+    "0",
+    "--duration",
+    "115",
+    "--ycsb_type",
+    "a",
+    "--ycsb-load",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_load_ycsb_a.dat",
+    "--ycsb-tx",
+    "/home/shin/arbiter/benchmark/xindex/YCSB/xindex_dat/xindex_transaction_ycsb_a.dat"
+  ],
+  "env": {
+    "ARBITER_TARGET_NODE": "0",
+    "ARBITER_ARENA_REPORT": "1",
+    "XINDEX_VALIDATE": "1",
+    "XINDEX_THROUGHPUT_SAMPLE_SECONDS": "1",
+    "LD_LIBRARY_PATH": "/opt/intel/oneapi/mkl/latest/lib:"
+  },
+  "binary_sha256": "088b430e3c47f9a6e5f6fecc3ab91021ee7ed3087eab31a2b39a7132edf40608",
+  "start": 1795060637.6186085,
+  "scope": "Duration replay and existing one-second throughput sampling; not fixed-count primary throughput. Migration transition intervals are excluded. No benchmark memory contents or instructions are written.",
+  "pid": 404935,
+  "table": "0x7f923b240000",
+  "selected_hot_keys": [
+    2571001333982442796
+  ],
+  "page_sets_file": "page-sets.json.gz",
+  "page_set_counts": {
+    "leaf": 1,
+    "buffer": 1,
+    "record": 1,
+    "bulkbuffer": 850643,
+    "coldbuffer": 850632
+  },
+  "initial_node_counts": {
+    "0": 850645
+  },
+  "run_observed_monotonic": 228143.551771625,
+  "phase_clock_monotonic": 228136.39885916,
+  "restore": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "0": 850645
+    },
+    "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+  },
+  "final_query": {
+    "return_code": 0,
+    "errno": 0,
+    "status_counts": {
+      "0": 850645
+    },
+    "status_sha256": "2ad0a860fa73fbbbb151664bc0db0c5ab7d628520994d481afd3043b782f269c"
+  },
+  "valid": true,
+  "finish": 1795060813.7113671,
+  "operations": 6424419520
+}
