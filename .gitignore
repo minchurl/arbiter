@@ -29,3 +29,5 @@ benchmark/xindex/YCSB/xindex_dat/*.tmp
 !tests/llvm/object-access.ll
 !tests/llvm/companion-loop.ll
 !tests/llvm/companion-context.ll
+!tests/llvm/adaptive-progress.ll
+!tests/llvm/adaptive-padded-progress.ll

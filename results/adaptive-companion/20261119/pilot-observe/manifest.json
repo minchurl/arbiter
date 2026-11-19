@@ -1,0 +1,24 @@
+{
+  "args": {
+    "case": "pilot-observe",
+    "table": 16,
+    "seconds": 6,
+    "rounds": 1,
+    "modes": [
+      "observe"
+    ],
+    "phase_after": 0
+  },
+  "variant": {
+    "binary": "/home/shin/arbiter/build/adaptive-companion/micro/adaptive",
+    "binary_sha256": "2167390ab686d071a6efd286582512221b44bc752aed9d07deca8fba395778e3",
+    "input_sha256": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de",
+    "instrumentation": "arbiter-adaptive-instrument function=_ZL13victim_threadi6ConfigP12VictimResult batch=64 companions=1\n",
+    "plain": {
+      "path": "/home/shin/arbiter/build/adaptive-companion/micro/plain",
+      "sha256": "8585007f72c7011a41276ca30f7dda01893bfe188892e4f0fb9ac44aa49a738a"
+    }
+  },
+  "guard": "Five quiet seconds before each run; reject overlap with a foreign process consuming more than one CPU core in a sampled interval. Small background-service bursts remain ordinary host noise. Initial screen-h16 used the stricter 0.15-core threshold.",
+  "measurement": "Total benchmark throughput includes online exploration, migration, monitoring and rollback. No debugger and no benchmark source changes."
+}

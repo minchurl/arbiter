@@ -1,0 +1,41 @@
+{
+  "commands": [
+    [
+      "cmake",
+      "-S",
+      ".",
+      "-B",
+      "build/adaptive-companion/compiler",
+      "-G",
+      "Ninja",
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_C_COMPILER=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang-18",
+      "-DCMAKE_CXX_COMPILER=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+      "-DLLVM_DIR=/home/shin/arbiter/.tools/llvm-18.1.8/lib/cmake/llvm",
+      "-DLLVM_LINK_LLVM_DYLIB=ON",
+      "-DLLVM_ENABLE_EH=OFF",
+      "-DLLVM_ENABLE_RTTI=OFF"
+    ],
+    [
+      "cmake",
+      "--build",
+      "build/adaptive-companion/compiler",
+      "--target",
+      "ArbiterLLVMPlugin",
+      "arbiter_adaptive_experiment",
+      "-j",
+      "4"
+    ]
+  ],
+  "returncode": 1,
+  "environment": {
+    "LD_LIBRARY_PATH": "/home/shin/arbiter/.tools/libtinfo5-root/lib/x86_64-linux-gnu:/home/shin/arbiter/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu",
+    "LIBRARY_PATH": "/home/shin/arbiter/.tools/libstdcxx:/home/shin/arbiter/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu",
+    "CPLUS_INCLUDE_PATH": "/usr/include/c++/11/backward:/usr/include/x86_64-linux-gnu/c++/11:/usr/include/c++/11"
+  },
+  "final_build_status": {
+    "passed": true,
+    "checks": "build-checks.json",
+    "note": "Original returncode and commands retain the initial rejected toolchain configuration; configure-clean.log and build-v4.log record the successful final build. See checks for all final tests."
+  }
+}

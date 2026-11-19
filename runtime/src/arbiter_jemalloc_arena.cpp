@@ -391,6 +391,24 @@ void Arena::reportResidency(const std::map<uintptr_t, Extent> &ranges) {
 
 AllocationError arenaError() { return lastError; }
 
+int visitSiteExtents(uint32_t id,
+    void (*visitor)(void *, uint64_t, void *), void *context) {
+  if (id > kMaxSiteId || !visitor) { errno = EINVAL; return -1; }
+  Arena *arena = activeArena.load(std::memory_order_acquire);
+  Site *site = arena ? arena->sites[id].load(std::memory_order_acquire) : nullptr;
+  if (!site) { errno = ENOENT; return -1; }
+  std::vector<std::pair<uintptr_t, size_t>> ranges;
+  try {
+    std::lock_guard<std::mutex> lock(arena->extentMutex);
+    for (const auto &[address, extent] : arena->extents)
+      if (extent.arena == site->arena)
+        ranges.emplace_back(address, extent.size);
+  } catch (const std::bad_alloc &) { errno = ENOMEM; return -1; }
+  for (const auto &[address, bytes] : ranges)
+    visitor(reinterpret_cast<void *>(address), bytes, context);
+  return 0;
+}
+
 int setSitePlacement(uint32_t id, int localNode, unsigned percent,
                      uint64_t limit) {
   if (id > kMaxSiteId || (percent != 0 && percent != 50 && percent != 100) ||
@@ -538,6 +556,16 @@ extern "C" int arbiter_set_site_placement(uint32_t id, int local_node,
                                           unsigned percent, uint64_t limit) {
 #if ARBITER_HAS_NUMA_ARENA
   return arbiter::runtime::setSitePlacement(id, local_node, percent, limit);
+#else
+  errno = ENOSYS;
+  return -1;
+#endif
+}
+
+extern "C" int arbiter_visit_site_extents(uint32_t id,
+    void (*visitor)(void *, uint64_t, void *), void *context) {
+#if ARBITER_HAS_NUMA_ARENA
+  return arbiter::runtime::visitSiteExtents(id, visitor, context);
 #else
   errno = ENOSYS;
   return -1;

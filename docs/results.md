@@ -6,6 +6,258 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## Online companion placement (November 19)
+
+**질문:** 사전 실험으로 입력별 비율을 정하지 않고, runtime이 CXL 배치 비율을
+탐색하고 손해가 나면 되돌릴 수 있는가?
+
+**판단:** 가능하다. 다만 두 문제를 분리해야 한다. Compiler는 seed와 같이
+접근하는 allocation을 **후보**로 찾고, runtime은 그 후보의 배치가 현재
+진행량에 도움이 되는지 판단한다. 정적 HITM-risk 점수를 더 낮추거나,
+benchmark 이름별로 최적 비율을 저장하는 방식은 사용하지 않았다.
+이번 변경은 선택 가능한 연구용 pipeline이며 기본 실행 경로는 그대로다.
+
+같은 제어기를 적용한 120초 반복 실험에서 16-entry는 **+15.72%**, 256-entry는
+자동 복귀 후에도 탐색 비용 때문에 **−1.43%**였다. Benchmark별 설정을 없애는
+방향은 실현했지만, 짧은 실행의 손실이나 모든 프로그램의 진행량 측정까지
+해결한 것은 아니다.
+
+### 조사 결과와 선택한 전략
+
+| 전략 | 장점 | 이번 문제에서의 한계 / 결정 |
+|---|---|---|
+| IPC·stall·memory latency로 조절 | 애플리케이션 수정 없이 하드웨어에서 관찰 가능 | spin/retry까지 빠르게 실행하는 것이 실제 처리량 개선은 아니다. 이번 구현의 보상 신호로 쓰지 않음 |
+| 애플리케이션이 완료 작업 수를 직접 제공 | 의미가 가장 명확하고 서비스 처리량과 연결하기 쉽다 | benchmark를 수정하지 않는 조건과 충돌하므로 요구하지 않음 |
+| compiler가 공통 작업 루프의 진행량을 제공 | 후보 발견과 피드백을 연결하고 입력별 설정을 없앨 수 있다 | 구조적으로 식별 가능한 한 개 루프에 한정하여 구현 |
+
+[BWAP](https://arxiv.org/pdf/2003.03304)는 실행 중 stall 관찰과 점진적 page
+placement 탐색의 선례다. 안정된 실행 구간에서의 초기화, 탐색 비용의 상각,
+지역 최적점 문제가 남는다.
+[Colloid](https://www.cs.cornell.edu/~midhul/papers/colloid.pdf)는 tier별
+관측 latency와 제한된 이동량을 이용한다. 이를 Arbiter에 그대로 적용하기
+어려운 이유는 **낮은 메모리 latency와 높은 작업 처리량이 항상 같은 방향이
+아니기 때문**이다. 이 부분은 contention pacing 가설에 근거한 우리의
+설계 판단이며, 두 논문이 Arbiter의 개선 원인을 입증했다는 뜻은 아니다.
+
+[Application Heartbeats](https://ctuning.org/dissemination/smart10-02.pdf)의
+핵심은 실행 instruction 수와 유용한 작업 진척을 구분하는 것이다. 그래서
+이번 controller는 가능한 범위에서 루프의 완료 횟수를 관찰한다. 단,
+[LLVM의 loop 구조](https://releases.llvm.org/18.1.8/docs/LoopTerminology.html)는
+프로그램의 의미 자체를 보장하지 않는다. 모든 루프를 자동으로 transaction
+counter라고 간주하는 범용 해법은 아니다.
+
+### 실제 구현
+
+1. 기존 seed selection을 그대로 수행한다. 기존 common-loop companion
+   분석에서 명확한 한 개 루프만 나오는 경우 그 allocation들을 추가한다.
+   후보가 없거나 여러 진행 영역이 섞이면 기존 seed-only rewrite로 끝난다.
+2. 해당 루프에 완료 횟수를 publish하는 atomic induction counter가 있으면
+   재사용한다. global 이름을 검색하지 않고 SCEV, 주소 수명, loop invariant,
+   dominance, 초기값, stride를 검사한다. 없는 경우 worker별 별도 cache line에
+   compiler가 카운터를 추가하고, 고정 반복 수를 알면 묶어서 갱신한다.
+3. companion은 DRAM에서 시작한다. runtime은 누적 진행량 차이/시간을 읽으며
+   같은 탐색 정책으로 **0 → 12.5 → 25 → 50%**를 시험한다. seed 배치는 바꾸지 않는다.
+4. allocation을 다시 만드는 대신 현재 resident page를 옮긴다. CXL에 있는
+   companion backing의 합계는 **4 GiB**로 제한한다. 상한이 찼으면 이후
+   비율을 요청해도 그 이상 옮기지 않는다. 이는 seed를 포함한 전체 process
+   CXL RSS 상한이나 기존 API의 lifetime allocation budget과는 다른 값이다.
+5. probe가 손해면 가장 좋았던 배치로 복귀한다. 선택 후에도 성능을 관찰하고
+   큰 하락이 지속되면 현재 조건에서 DRAM 배치와 다시 비교한다.
+
+여기서 비율은 **companion의 resident backing page 비율**이다. workload의
+읽기/쓰기 비율이나 table entry 수가 아니다. page 접근 빈도가 균일하지
+않으면 CXL 접근 비중과도 다를 수 있다. 같은 실행 도중 benchmark 옵션이나
+데이터 내용을 변경하지 않으며, 별도 실행 조건 변경 실험만 runner가 CPU affinity를
+바꾼다. 16-entry와 256-entry는 서로 다른 입력이고 각각 같은 입력끼리 비교한다.
+
+모든 입력에 같은 상수를 썼다: 진행 시작 후 warmup 3초, sample 2초 × 3회의
+중앙값, 이동 후 settle 2초, 이전 최선보다 2% 이상 좋아야 채택, 3% 이상
+나빠지면 확장 중단, 첫 sample부터 15% 이상 나쁘면 probe 조기 중단.
+유지 단계에서 15% 이상 하락이 3회 연속 나오면 현재 배치의 성능을 다시
+측정하고 DRAM과 비교한다. DRAM이 그 값의 98% 이상이면 DRAM에 남고,
+아니면 이전 비율로 돌아간다. **공통 제어 상수는 존재한다.** 없앤 것은
+benchmark별 비율/조건 lookup과 추가 seed scoring parameter다.
+
+`move_pages`는 가상 주소를 유지한 채 물리 페이지를 이동할 수 있지만 이동 중
+접근이 대기할 수 있다. syscall 성공만 보지 않고 각 page의 status와 실제
+residency를 확인한다. 또한 migration은 allocation policy를 변경하지 않으므로
+새로 할당되거나 refault된 page는 여전히 DRAM 정책을 따른다. 현재 prototype은
+안정된 장수 allocation을 대상으로 하며 allocation churn 전체를 제어하지
+않는다. [Linux page migration](https://kernel.org/doc/html/latest/mm/page_migration.html),
+[move_pages(2)](https://man7.org/linux/man-pages/man2/move_pages.2.html).
+
+micro에서는 기존 atomic induction 배열을 compiler가 찾아 등록했다.
+runtime은 그 값을 **읽기만** 하며 모든 성능 실행에서 최종 합계가 benchmark의
+`total_ops`와 일치했다. plain/adaptive worker의 정규화된 assembly는 동일한
+149 instructions다. 따라서 이 경로에는 worker 내부 counter 갱신 명령을
+추가하지 않았다. 자동 삽입 fallback은 별도로 검증했지만, 그 경로의 실전
+성능을 이번 micro 결과로 대신 주장할 수는 없다.
+
+### 측정 방법과 결과
+
+Micro의 table은 기존 seed 정책으로 CXL에 두고, **ballast companion만** 조절했다.
+32 workers, noise 없음, ballast 8 GiB, read 50%가 공통 조건이다. 확인 실험은
+조건별로 120초 × 3회이며 round마다 실행 순서를 뒤집었다. 초기 prototype
+6회는 아래 수치에 섞지 않았다. 최종 compiler/runtime/binary를 고정한 후
+측정했으며 benchmark source, 입력 IR, 기존 seed config는 바꾸지 않았다.
+
+주 비교는 **동일 adaptive binary**의 `observe`와 `adapt`다. 전자는 companion을
+DRAM에 유지하며 같은 progress observer를 실행한다. 아래 처리량은 benchmark의
+전체 timed 구간이며, 초기 탐색·페이지 query/move/검증·settling·rollback 중
+시간을 제외하지 않았다. 값은 Mops/s 평균, 변화율은 round별 변화율의 평균이다.
+
+| 입력 | 관찰만, DRAM companion | 자동 배치 | paired 변화 | 3회 변화 범위 | runtime 결정 |
+|---|---:|---:|---:|---:|---|
+| 16 entries | 59.792 | 69.191 | **+15.72%** | +15.24~+16.37% | 모두 12.5→25→50%, 4 GiB에서 유지 |
+| 256 entries | 533.415 | 525.735 | **−1.43%** | −2.23~−0.63% | 모두 첫 12.5% 거부, 0% 복귀 |
+
+![전체 처리량과 첫 round의 자동 배치 과정](../results/adaptive-companion/20261119/adaptive-results.png)
+
+16-entry 첫 실행의 내부 관측치는 baseline 약 60.4 → 12.5% 약 63.4 → 25%
+약 66.6 → 50% 약 71.2 Mops/s였다. 3회의 query/move/검증 시간 합계는 실행당
+평균 **6.98초**이며 이 비용을 포함해도 전체 성능이 개선됐다. 유지 구간만
+보면 평균 70.96 Mops/s지만, 개선율 계산에는 더 낮은 전체 평균 69.191을 썼다.
+
+256-entry 첫 실행은 baseline 약 537.4 → 12.5% 약 353.1 → 복귀 후 약 545.3
+Mops/s였다. 즉 손해를 감지하고 회복했지만, probe와 왕복 이동 비용을 이미
+지불했다. query/move/검증은 평균 **2.95초**, 전체 실행은 여전히 −1.43%다.
+손해인 배치를 계속 유지하지 않는 것과 탐색 손실이 없는 것은 다르다.
+
+별도의 observer 없는 companion-local binary는 16-entry에서 57.614 Mops/s,
+256-entry에서 538.319 Mops/s였다. plain 대비 adapt는 각각 +20.09%, −2.32%다.
+그러나 plain→observe 자체가 +3.78%, −0.89%로 달라지므로 이 비교를 순수한
+배치 효과나 observer 명령 비용으로 해석하지 않는다. Worker 명령이 같아도
+link/address/layout과 observer 실행 자체가 영향을 줄 수 있다.
+
+초기화·종료까지 포함한 launcher wall time으로 완료 작업 수를 나누어도
+observe→adapt는 각각 **+15.89%, −1.46%**였다. 고정 시간 workload의 상각
+처리량이며 고정 작업량의 완료 시간 단축률과는 다른 지표다. 3회라는 작은
+표본과 한 대의 공유 host 결과이므로 다른 시스템에 대한 성능 보장은 아니다.
+원본 CSV의 paired bootstrap interval도 이 제한 안에서 읽어야 한다.
+
+이번 실험은 **자동 판단과 전체 성능 변화**를 검증했다. 새 PMU/HITM 측정으로
+coherence 감소량을 입증한 실험은 아니다. 앞선 contention pacing 가설과
+일관된 결과이지만, 이 표만으로 개선 원인을 하나로 확정하지 않는다.
+
+추가 입력과 짧은 실행은 각 **1 pair의 탐색적 확인**이다. 공통 정책은 바꾸지 않았다.
+
+| 입력 / 길이 | observe → adapt Mops/s | paired 변화 | 관찰된 결정 |
+|---|---:|---:|---|
+| 8 entries / 90초 | 30.194 → 30.696 | +1.66% | 세 비율 모두 채택 기준 미달, 0% 유지 |
+| 32 entries / 90초 | 156.847 → 149.223 | −4.86% | 50%에서 큰 손실, 0% 복귀 |
+| 16 entries / 30초 | 59.931 → 63.624 | +6.16% | 25%까지 채택, 다음 probe 도중 종료 |
+| 256 entries / 30초 | 529.558 → 488.104 | −7.83% | 12.5% 거부 후 0% 복귀, 탐색 비용 미회수 |
+
+8-entry의 작은 전체 차이를 새로운 개선 구간이라고 주장하지 않는다. Controller가
+측정한 각 probe는 2% 채택 기준에 미달했다. 32-entry는 작은 비율에서 거의
+평평하다가 50%에서 크게 나빠졌다. 따라서 “경합이 크면 더 많이 이동”이라는
+단조 규칙도, 모든 입력에서 손실 없는 탐색도 이 결과로 정당화할 수 없다.
+
+30초 16-entry에서는 종료 시 benchmark가 ballast를 해제하는 동안 진행 중이던
+마지막 migration이 취소됐다. 원래 검사기는 이 취소 event에도 page 실패가
+없어야 한다고 요구해 멈췄다. 프로그램은 정상 종료했고 최종 작업 수/검증도
+일치했다. 검사기를 고쳐 종료 취소와 실행 중 실패를 구분하고 **그 비교 전체를
+새로 실행**했다. 위 표는 새 실행만 사용한다. Runtime/compiler/binary는 바꾸지
+않았고, 중단된 비교의 5개 process와 원래 검사기는 따로 보존했다. 정상 완료
+migration에는 여전히 failed/missing/mismatch가 모두 0이어야 한다. 취소된
+event는 별도 기록하며 cap과 최종 작업 수 검사를 유지한다. 종료 후의 query
+시간은 benchmark timed 구간 밖일 수 있으므로 launcher wall time도 보존한다.
+
+실행 조건 변경 검증에서는 benchmark 인자를 그대로 두고, launch 약 90초 뒤
+32 worker가 사용할 수 있는 CPU를 8개로 제한했다. Runtime은 CPU 수를 설정으로
+받지 않는다. 처음에는 50%를 선택했고, 진행량이 하락하자 현재 조건에서
+50% 약 **19.12 Mops/s**, DRAM 약 **22.47 Mops/s**를 관측해 **0%로 전환**했다.
+한 쌍의 180초 전체 처리량은 observe 41.219 → adapt 43.050 Mops/s, **+4.44%**다.
+
+이 값은 재조정 자체의 개선율이 아니다. 앞부분의 50% 배치 이득도 포함하며,
+같은 조건 변경에서 50%를 고정한 대조군은 없다. 더구나 140~180초의 비교 가능한
+sample만 모으면 observe **25.34**, adapt **21.04 Mops/s**로 후자가 낮다.
+두 process의 후반부가 모두 DRAM companion이어도 차이가 남았다. 따라서 이
+1 pair는 **조건 변화 감지와 실제 50→0 전환의 동작 검증**이며, phase 변경
+후 최적화나 안정된 성능 회복을 입증한 결과로 해석하지 않는다. 스케줄링과
+실행 이력의 영향을 분리하려면 반복 및 고정 비율 대조군이 더 필요하다.
+
+![CPU 조건 변경에 따른 진행량과 실제 CXL 비율](../results/adaptive-companion/20261119/adaptive-phase.png)
+
+XIndex는 이전/현재 CXL binary로 각각 **4억 transaction 전체**를 실행했다.
+둘 다 최종 digest `0x7474b8e9d3962859`와 operation 검증을 통과했고 adaptive
+observer는 실행되지 않았다. 처리량은 **45.957 → 47.973 Mops/s**다. 이것은
+1 pair의 회귀 진단이며 새로운 speedup이나 통계적 동등성의 증거는 아니다.
+현재 XIndex/libcuckoo adaptive pass 출력이 기존 seed-only IR과 byte-identical인
+것도 확인했다. Libcuckoo에 새로운 자동 배치 성능 결과가 생긴 것은 아니다.
+
+검사는 LLVM RUN 25개, allocation/runtime/arena-boundary smoke, extent visitor의
+해제 후 조회와 callback 중 재할당, owned/borrowed counter, 중복 등록과 reset을
+포함한다. 기존 std::thread/member RMW와 read-only 제외 검사도 통과했다.
+
+별도 GDB 진단에서는 ballast에 걸친 **2,097,153개 page를 시작/종료 시 전수 조회**했다.
+16-entry는 전부 DRAM에서 시작해 종료 전 1,048,576개 page, 정확히 **4 GiB**가
+CXL이었다. 256-entry는 종료 전에도 전부 DRAM이었다. Table은 두 진단 모두
+CXL을 유지했다. 이 두 실행의 throughput은 성능 표에 포함하지 않았으며,
+두 시점의 snapshot이 모든 중간 순간의 residency를 증명하는 것은 아니다.
+
+마지막으로 **16-entry, read 100%, 90초**를 고정된 binary에 적용했다. 제어기를
+이 입력에 맞춰 수정하지 않고 2회씩 순서를 뒤집어 실행했다. 두 번 모두 첫
+12.5%를 거부하고 0%로 복귀했다. 첫 실행의 관측치는 약 983.7 → 413.1 →
+983.7 Mops/s였다. 전체 결과는 observe **983.639**, adapt **938.821 Mops/s**,
+paired **−4.56%**(두 pair −4.61%, −4.51%)다. 쓰기 50%인 같은 16-entry의 50%
+선택과 다른 결정이며, 읽기 비율을 controller에 전달하지 않았다. 여기서도
+복귀는 가능했지만 탐색 손실은 남았다.
+
+최종 성능 표에는 **micro 34개 + XIndex 2개 process**가 들어간다. 초기 pilot 6개,
+최종 smoke 1개, 중단된 짧은 비교 5개, GDB 진단 2개, 최종 비교 중 CPU guard로
+거부한 추가 2회는 제외했다. 정상 완료된 migration 35회는 page 실패·누락·위치
+불일치가 모두 0이었고, 짧은 실행 종료 중 취소 1회는 위 설명처럼 별도 기록했다.
+관측된 companion CXL backing은 모두 4 GiB 이하였으며 swap은 없었다.
+소스/config/input/binary 634개 해시와 main 상태가 유지된 것도 확인했다.
+기록한 rewrite/link 명령으로 다시 만든 bitcode와 executable 9개도 측정 파일과
+byte-identical이었다.
+
+### generality에 대해 지금 주장할 수 있는 범위
+
+- **입력별 배치 profile 없이 피드백으로 서로 다른 결정을 내리는 것**은
+  구현했다. runtime/compiler에 benchmark 이름, table 크기, read 비율,
+  `g_epochs` 같은 애플리케이션 symbol lookup은 없다. 실험 runner만 기존
+  benchmark 옵션으로 조건을 바꾼다.
+- 제어기 설계에는 앞선 실험을 참고했다. 따라서 사전 지식이 전혀 없는
+  알고리즘이라고 주장하지 않는다. 공통 상수와 제한된 counter pattern이
+  다른 프로그램에서도 적절한지는 별도 검증이 필요하다. 이번 일반화
+  증거는 주로 같은 프로그램의 다른 입력에 동일한 binary/정책을 적용한 것이다.
+- 기존 점수/threshold/config는 바꾸지 않았다. micro·XIndex·libcuckoo에는
+  같은 seed 옵션을 전달했다. XIndex·libcuckoo는 현재 분석에서 적합한
+  companion이 없어 seed-only IR과 byte-identical이며 controller도 연결되지
+  않는다. **세 benchmark 모두에서 자동 비율 조절을 검증한 것은 아니다.**
+- 자동으로 찾은 progress가 실제 유용한 작업인지 일반적으로 증명하지는
+  못한다. global range의 각 원소를 서로 다른 worker가 소유하는지까지
+  증명하지 않으며 reset/역행을 감지하면 중단한다. micro에서는 완료 작업
+  수와의 일치 및 worker assembly를 별도로 확인했다.
+- 탐색은 0~50%의 거친 후보에 한정된다. 모든 비율의 최적점을 보장하지
+  않으며, companion이 여러 개여도 지금은 개별 기여도를 분리하지 않는다.
+  첫 12.5%가 나쁜데 그 이상에서 좋아지는 비단조 구간은 놓칠 수 있다.
+- 유지 중 하락은 현재 비율과 0%만 다시 비교한다. 0%로 정착한 후 새 유리한
+  phase를 재탐색하거나, 모든 중간 비율을 다시 최적화하는 기능은 아직 없다.
+  평균 진행량 기준이므로 tail latency·worker fairness도 보장하지 않는다.
+- 처음 탐색할 때는 앞선 window와 비교하므로 cache warmup, 부하 변화,
+  측정 노이즈를 배치 효과로 오인할 수 있다. 중앙값과 hysteresis는 이를
+  완전히 제거하지 않는다. 유지 단계의 15% 기준보다 작은 지속적 손실도
+  놓칠 수 있다. 더 엄밀한 반복 비교는 추가 이동 비용과 교환 관계다.
+- 페이지 이동 비용과 손해인 probe는 실행 중 실제로 발생한다. 특히 짧은
+  실행에서는 되돌리더라도 전체 실행 손실을 회수하지 못할 수 있다. 따라서
+  “잘못 배치해도 손실이 없다”는 보장은 할 수 없다.
+
+다음 단계의 우선순위는 benchmark별 threshold 추가가 아니라 **진행 신호의
+적용 범위 확대와 탐색 비용 절감**이다. 같은 code path에서 seed·companion과
+완료 작업의 연결을 더 엄격하게 판별하고, 이동 비용 대비 충분한 실행 기간이
+남는 경우에만 재탐색하는 방법이 필요하다. 실행 종료 시점을 모르는 일반
+프로그램에서 이를 완벽하게 판단할 수는 없으므로 비용 예산과 보수적 중단
+규칙으로 다뤄야 한다. 이번 결과는 그 방향의 실행 가능한 첫 prototype이다.
+
+구현은 [AdaptiveExperiment.cpp](../compiler/llvm/lib/hitm_seed/AdaptiveExperiment.cpp),
+[arbiter_adaptive_experiment.cpp](../runtime/src/arbiter_adaptive_experiment.cpp),
+기존 arena의 extent snapshot API 세 부분이다. 실행법은
+[benchmark guide](benchmarks.md#adaptive-runtime-research-pipeline), 원본 결과와
+재생성 스크립트는 [evidence archive](../results/adaptive-companion/20261119/)에 있다.
+
 ## Automatic companion candidates and bounded first-touch placement (November 19)
 
 This follow-up connects compiler-discovered candidates to an opt-in runtime

@@ -1,0 +1,35 @@
+{
+  "successful_cache_options": {
+    "CMAKE_BUILD_TYPE": "Release",
+    "CMAKE_CXX_COMPILER": "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+    "CMAKE_C_COMPILER": "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang-18",
+    "LLVM_DIR": "/home/shin/arbiter/.tools/llvm-18.1.8/lib/cmake/llvm",
+    "LLVM_ENABLE_EH": "OFF",
+    "LLVM_ENABLE_RTTI": "OFF",
+    "LLVM_LINK_LLVM_DYLIB": "ON",
+    "CMAKE_GENERATOR": "Ninja"
+  },
+  "environment": {
+    "LD_LIBRARY_PATH": "/home/shin/arbiter/.tools/libtinfo5-root/lib/x86_64-linux-gnu:/home/shin/arbiter/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu",
+    "LIBRARY_PATH": "/home/shin/arbiter/.tools/libstdcxx:/home/shin/arbiter/.tools/libllvm18-root/usr/lib/x86_64-linux-gnu",
+    "CPLUS_INCLUDE_PATH": "/usr/include/c++/11/backward:/usr/include/x86_64-linux-gnu/c++/11:/usr/include/c++/11"
+  },
+  "configure_reconstruction": [
+    "cmake",
+    "-S",
+    ".",
+    "-B",
+    "build/adaptive-companion/compiler",
+    "-G",
+    "Ninja",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DCMAKE_C_COMPILER=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang-18",
+    "-DCMAKE_CXX_COMPILER=/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+    "-DLLVM_DIR=/home/shin/arbiter/.tools/llvm-18.1.8/lib/cmake/llvm",
+    "-DLLVM_LINK_LLVM_DYLIB=ON",
+    "-DLLVM_ENABLE_EH=OFF",
+    "-DLLVM_ENABLE_RTTI=OFF"
+  ],
+  "final_checks": "build-checks.json",
+  "note": "Options read from the successful final cache. Reconstruct in a fresh build directory; preserve the clang++ driver name rather than resolving it to clang-18."
+}

@@ -1,0 +1,36 @@
+{
+  "controller": "One automatic loop domain; first-touch local; progress counted at compiler-proven fixed-trip loop exit; same controller for all inputs.",
+  "constants": {
+    "warmup_seconds": 3,
+    "sample_seconds": 2,
+    "median_samples": 3,
+    "candidate_basis_points": [
+      1250,
+      2500,
+      5000
+    ],
+    "resident_budget_bytes": 4294967296,
+    "accept_gain": 0.02,
+    "stop_probe_loss": 0.03,
+    "phase_drop": 0.15,
+    "phase_drop_samples": 3
+  },
+  "primary_metric": "Benchmark total operations / entire timed duration, including exploration and migration; confirm counter total equals benchmark total.",
+  "planned_cases": [
+    "pilot-observe",
+    "pilot-h16",
+    "pilot-h256",
+    "confirm-h16",
+    "confirm-h256",
+    "neighbor-h8",
+    "neighbor-h32",
+    "phase-affinity"
+  ],
+  "files": {
+    "compiler/llvm/lib/hitm_seed/AdaptiveExperiment.cpp": "1281bafbbf4c6d319bead2275519505aa474620dbc8a3c3300f85869fdf6c104",
+    "runtime/src/arbiter_adaptive_experiment.cpp": "d4d622ff8a06e34934d08be3785d40679cf8fc46edcb4d1e63a15584eae4e2a1",
+    "build/libcuckoo-rmw/micro/coherence_noise.cpp": "3c29040d8b814700eb16c37ea9a4c93a5312863e4b338cf9f21ae813eb2e54b6",
+    "build/libcuckoo-rmw/micro/micro-native.bc": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de",
+    "configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config": "de7e64acaefaa76e3b675989f839fe0c15199b2df59b3db3cb335fb963cd7308"
+  }
+}

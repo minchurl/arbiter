@@ -1,0 +1,139 @@
+[
+  {
+    "table": 16,
+    "initial": {
+      "pid": 545214,
+      "objects": {
+        "table": {
+          "address": "0x7ff1c9800000",
+          "bytes": 1024,
+          "pages": 1,
+          "nodes": {
+            "2": 1
+          },
+          "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        },
+        "ballast": {
+          "address": "0x7fef49200f00",
+          "bytes": 8589934592,
+          "pages": 2097153,
+          "nodes": {
+            "0": 2097153
+          },
+          "ordered_residency_sha256": "74eaa77d56cf8bdf33d7545d48ecd9fd361975c8fa23b9098eb21efd2e08cd31"
+        }
+      },
+      "method": "All-page query only; nodes=NULL. No page migration."
+    },
+    "final": {
+      "pid": 545214,
+      "objects": {
+        "table": {
+          "address": "0x7ff1c9800000",
+          "bytes": 1024,
+          "pages": 1,
+          "nodes": {
+            "2": 1
+          },
+          "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+        },
+        "ballast": {
+          "address": "0x7fef49200f00",
+          "bytes": 8589934592,
+          "pages": 2097153,
+          "nodes": {
+            "2": 1048576,
+            "0": 1048577
+          },
+          "ordered_residency_sha256": "a1966fe86ea83c03d395d8cedd2eeafa331a94b47aac2336d39b55822ce30bf3"
+        }
+      },
+      "method": "All-page query only; nodes=NULL. No page migration."
+    },
+    "last_migration": {
+      "event": "migration",
+      "time": 37.360561,
+      "seconds": 3.200747,
+      "ratio_bp": 5000,
+      "resident_pages": 2097163,
+      "wanted_pages": 1048576,
+      "target_pages": 1048576,
+      "moved": 524286,
+      "failed": 0,
+      "missing": 0,
+      "mismatch": 0,
+      "progress": 229387453,
+      "budget_bytes": 4294967296,
+      "cancelled": 0
+    },
+    "excluded_from_throughput": true
+  },
+  {
+    "table": 256,
+    "initial": {
+      "pid": 545637,
+      "objects": {
+        "table": {
+          "address": "0x7f2853200500",
+          "bytes": 16384,
+          "pages": 5,
+          "nodes": {
+            "2": 5
+          },
+          "ordered_residency_sha256": "cf9f4a4c8e8fa27f5b64870518c85d88d98fb016d6aa49af672d0e295735d728"
+        },
+        "ballast": {
+          "address": "0x7f25d2c00840",
+          "bytes": 8589934592,
+          "pages": 2097153,
+          "nodes": {
+            "0": 2097153
+          },
+          "ordered_residency_sha256": "74eaa77d56cf8bdf33d7545d48ecd9fd361975c8fa23b9098eb21efd2e08cd31"
+        }
+      },
+      "method": "All-page query only; nodes=NULL. No page migration."
+    },
+    "final": {
+      "pid": 545637,
+      "objects": {
+        "table": {
+          "address": "0x7f2853200500",
+          "bytes": 16384,
+          "pages": 5,
+          "nodes": {
+            "2": 5
+          },
+          "ordered_residency_sha256": "cf9f4a4c8e8fa27f5b64870518c85d88d98fb016d6aa49af672d0e295735d728"
+        },
+        "ballast": {
+          "address": "0x7f25d2c00840",
+          "bytes": 8589934592,
+          "pages": 2097153,
+          "nodes": {
+            "0": 2097153
+          },
+          "ordered_residency_sha256": "74eaa77d56cf8bdf33d7545d48ecd9fd361975c8fa23b9098eb21efd2e08cd31"
+        }
+      },
+      "method": "All-page query only; nodes=NULL. No page migration."
+    },
+    "last_migration": {
+      "event": "migration",
+      "time": 20.872887,
+      "seconds": 1.322919,
+      "ratio_bp": 0,
+      "resident_pages": 2097163,
+      "wanted_pages": 0,
+      "target_pages": 0,
+      "moved": 262145,
+      "failed": 0,
+      "missing": 0,
+      "mismatch": 0,
+      "progress": 362273635,
+      "budget_bytes": 4294967296,
+      "cancelled": 0
+    },
+    "excluded_from_throughput": true
+  }
+]

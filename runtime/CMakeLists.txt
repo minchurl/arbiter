@@ -21,6 +21,15 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA_ARENA=1)
   target_include_directories(arbiter_runtime PRIVATE ${NUMAIF_INCLUDE_DIR})
   target_link_libraries(arbiter_runtime PUBLIC ${NUMA_LIBRARY})
+  # Linked only by the opt-in adaptive LLVM experiment, never default binaries.
+  add_library(arbiter_adaptive_experiment STATIC src/arbiter_adaptive_experiment.cpp)
+  target_include_directories(arbiter_adaptive_experiment PRIVATE ${NUMA_INCLUDE_DIR} ${NUMAIF_INCLUDE_DIR})
+  target_link_libraries(arbiter_adaptive_experiment PUBLIC arbiter_runtime pthread)
+  add_executable(arbiter-adaptive-counter-smoke ../tests/llvm/adaptive-counter-smoke.cpp)
+  target_link_libraries(arbiter-adaptive-counter-smoke PRIVATE arbiter_adaptive_experiment)
+  target_compile_options(arbiter-adaptive-counter-smoke PRIVATE -UNDEBUG)
+  set_target_properties(arbiter-adaptive-counter-smoke PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR})
 else()
   target_compile_definitions(arbiter_runtime PRIVATE ARBITER_HAS_NUMA_ARENA=0)
 endif()

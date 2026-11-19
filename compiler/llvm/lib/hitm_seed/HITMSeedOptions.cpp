@@ -1,8 +1,36 @@
 #include "HITMSeedOptions.h"
+#include "HITMRiskScoring.h"
 
 using namespace llvm;
 
 namespace arbiter::llvm::hitm_seed {
+
+HITMSeedPolicy hitmSeedPolicyFromOptions() {
+  HITMSeedPolicy policy;
+  policy.minScore = HITMMinScore;
+  policy.seedLimit = HITMSeedLimit;
+  policy.explicitSiteIds = HITMSeedSiteIds;
+  policy.requireEscape = HITMRequireEscape;
+  policy.requireSync = HITMRequireSync;
+  policy.scoring.weightEscapeReturn = HITMWeightEscapeReturn;
+  policy.scoring.weightEscapeStore = HITMWeightEscapeStore;
+  policy.scoring.weightEscapeCall = HITMWeightEscapeCall;
+  policy.scoring.weightSyncAtomic = HITMWeightSyncAtomic;
+  policy.scoring.weightSyncStore = HITMWeightSyncStore;
+  policy.scoring.weightSyncInlineAsm = HITMWeightSyncInlineAsm;
+  policy.scoring.weightSyncFile = HITMWeightSyncFile;
+  policy.scoring.weightPublishedRMW = HITMWeightPublishedRMW;
+  policy.scoring.weightWorkerEntry = HITMWeightWorkerEntry;
+  policy.scoring.weightWorkerReachable = HITMWeightWorkerReachable;
+  policy.scoring.weightSize = HITMWeightSize;
+  policy.scoring.largeAllocationThreshold = HITMLargeAllocationThreshold;
+  policy.scoring.includeDynamicSize = HITMIncludeDynamicSize;
+  policy.dynamicSizeEstimate = DynamicSizeEstimate;
+  policy.maxEstimatedBytes = MaxEstimatedBytes;
+  return policy;
+}
+
+
 
 cl::opt<std::string> ReportPath(
     "arbiter-hitm-seed-report-path",

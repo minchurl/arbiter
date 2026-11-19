@@ -9,6 +9,7 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [adaptive-companion/20261119](adaptive-companion/20261119/) | Online companion placement without input profiles: automatic progress discovery, shared probe/rollback policy, whole-run results, condition-change diagnostics and full XIndex correctness pair. `summary.csv`, `controller-summary.json`, `frozen.json`, `audit.json`, `adaptive-results.png`, `adaptive-phase.png`. |
 | [budgeted-companion/20261119](budgeted-companion/20261119/) | Historical companion replay, common-loop candidates, runtime first-touch interleave/caps, fresh micro confirmations and full XIndex regression. `summary.csv`, `decisions.json`, `accepted-plans/`, `budget-checks.csv`, `audit.json`, `final-selection-checks.json`, `performance.png`. |
 | [companion-placement/20261119](companion-placement/20261119/) | Frozen-code libcuckoo lock/bucket ablations, micro partial-ballast placement and refinement, fresh confirmations and full XIndex A regression. `summary.csv`, `placement-validation.csv`, `mechanism-summary.json`, `audit.json`, `checks.json`, `performance.png`, `placement-window.png`. |
 | [placement-causality/20261119](placement-causality/20261119/) | Unchanged XIndex binaries: reversible cold-buffer and hot-page placement in the same process, phase-aligned retry/latency profiles, and libcuckoo cache controls. `phases.csv`, `mechanism-summary.json`, `cache-summary.csv`, `checks.json`, `placement-crossover.png`. |
@@ -21,6 +22,70 @@ of today's runtime. Directory names below link to the retained data directly.
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+For online adaptive placement, the final frozen binaries run 34 micro processes:
+nine each for the 16/256-entry confirmations, two each for the 8/32-entry
+neighbors, three each for the short 16/256-entry checks, two for the CPU-affinity
+condition change, and four for the 100%-read holdout. Two full 400M-transaction
+XIndex processes are a separate prior/current correctness and regression
+diagnostic, not a statistically established performance comparison. Six pilot
+processes, a final six-second observer smoke, and two GDB page diagnostics are
+excluded from throughput conclusions. An interrupted short-workload comparison
+is also excluded in full and rerun: five processes, including two foreign-CPU
+rejections, two controls, and a shutdown-validation assertion. Any other CPU-guard-rejected attempts remain
+in the raw archive. This is a monitored shared host, not an exclusive reservation.
+
+The primary comparison is **observe versus adapt in the same binary**. A plain
+companion-local binary is also retained, but link/address/layout effects prevent
+its difference from being interpreted as the observer thread's isolated cost.
+The timed throughput includes warmup, probes, page query/migration/verification,
+settling and rollback. Launcher wall-rate comparisons also include initialization
+and shutdown. `controller-summary.json` retains steady monitoring rates separately;
+do not replace the whole-run result with a peak window.
+
+`frozen.json` records sources, binaries and the one shared controller policy;
+`shared-policy.json` verifies identical seed options across the three programs.
+`worker-equivalence.json` proves matching 149-instruction micro workers. XIndex
+and libcuckoo have no suitable companion domain and retain seed-only IR with no
+adaptive observer. `build-checks.json` records final tests; `build.json` preserves
+an initial rejected toolchain configuration as history and points to the successful
+final build. Intermediate prototype snapshots are debugging evidence, not exact
+source manifests for every pilot executable. The holdout only adds an evaluation
+runner read-percentage option after freezing measured code; the earlier runner
+is retained as `driver-before-read-option.py` in the raw tools evidence.
+`final-build-config.json` records the successful toolchain cache, and
+`reproduction.json` verifies byte-identical regeneration of all nine rewritten
+bitcode/linked executable outputs after the final throughput measurements.
+`shutdown-validation.json` explains the later harness correction: a cancelled
+atexit migration can encounter pages purged by benchmark teardown. Such events
+are recorded separately, with valid final work counts and the byte cap still
+required. Every live completed migration must have zero failed/missing/mismatched
+pages. Measured compiler/runtime/binary files did not change. The earlier driver
+and interrupted queue logs remain in raw evidence; `resume-queue.py` records the
+fresh comparisons after the interruption.
+
+The controller discovers sites/progress automatically; there is no benchmark-name,
+table-size, read-ratio or application-symbol lookup in it. The separate page-query
+diagnostic uses benchmark symbols to validate every object page, and is excluded
+from performance comparisons. Its final snapshots complement the controller's
+per-migration checks; they do not prove every page stayed on a node at every
+instant. The 4 GiB cap covers current resident companion backing, including
+allocator metadata, and excludes seed pages.
+
+```sh
+python3 results/adaptive-companion/20261119/scripts/extract-raw.py confirm-h16 /tmp/arbiter-adaptive-h16
+python3 results/adaptive-companion/20261119/scripts/summarize.py --base results/adaptive-companion/20261119
+python3 results/adaptive-companion/20261119/scripts/plot.py --base results/adaptive-companion/20261119
+```
+
+Extraction refuses an existing output directory. Summary/plot regeneration reads
+the archive; plotting needs Matplotlib. Other scripts preserve this host's
+toolchain, paths and earlier frozen build inputs, which must be prepared before
+replaying the recorded build commands into fresh directories. `queue.py`, `after.py`
+and `holdout.py` record the sequential scheduling; they are not generic job runners.
+`raw-files.jsonl.gz` preserves logs/commands/events/host guards losslessly and
+`artifacts.sha256` covers the archive. The [Korean report](../docs/results.md#online-companion-placement-november-19)
+states positive results, exploration losses and the current limits of generality.
 
 For budgeted companion placement, 92 accepted processes cover eight cases:
 14 each for the 16/256-entry screens, 25 fresh 16-entry confirmations, six

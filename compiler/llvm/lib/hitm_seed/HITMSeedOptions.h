@@ -8,6 +8,9 @@
 
 namespace arbiter::llvm::hitm_seed {
 
+struct HITMSeedPolicy;
+HITMSeedPolicy hitmSeedPolicyFromOptions();
+
 extern ::llvm::cl::opt<std::string> ReportPath;
 extern ::llvm::cl::opt<unsigned> HITMMinScore;
 extern ::llvm::cl::opt<unsigned> HITMSeedLimit;

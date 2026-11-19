@@ -1,0 +1,10 @@
+{
+  "observed_at_unix": 1795088531.196953,
+  "foreign_pid": 540087,
+  "foreign_started_utc": "2026-11-19T11:39:42.130Z",
+  "foreign_command_category": "another user's micro replay preparation",
+  "last_neighbor_h32_finished_utc": "2026-11-19T11:39:15.902480Z",
+  "primary_and_neighbor_cases_finished_before_foreign_process": true,
+  "response": "Do not touch foreign process. Existing guard rejected overlapping short-h16 attempts and waits for five quiet seconds. Retain rejected evidence.",
+  "foreign_absent_when_checked_utc": "2026-11-19T11:43:17Z"
+}

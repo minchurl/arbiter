@@ -17,6 +17,7 @@ results/companion-placement/**/*.svg -whitespace
 results/budgeted-companion/**/*.csv whitespace=cr-at-eol
 results/budgeted-companion/**/*.console -whitespace
 results/budgeted-companion/**/*.svg -whitespace
+results/adaptive-companion/**/*.svg -whitespace
 
 # Unified diffs retain the supplied sources' indentation on context lines.
 benchmark/btree-coherence/*.patch -whitespace

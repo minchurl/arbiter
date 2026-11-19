@@ -5,6 +5,7 @@ add_llvm_library(ArbiterLLVM
   hitm_seed/HITMRiskScoring.cpp
   hitm_seed/ObjectAccessAnalysis.cpp
   hitm_seed/CompanionAnalysis.cpp
+  hitm_seed/AdaptiveExperiment.cpp
   hitm_seed/HITMSeedOptions.cpp
   hitm_seed/HITMSeedPasses.cpp
   ReportAllocationSites.cpp
@@ -15,4 +16,5 @@ add_llvm_library(ArbiterLLVM
   Analysis
   Core
   Support
+  TransformUtils
 )

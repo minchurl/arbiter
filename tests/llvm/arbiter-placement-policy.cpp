@@ -25,6 +25,19 @@ extern "C" long mbind(void *address, unsigned long bytes, int mode,
 static void require(bool value, const char *message) {
   if (!value) { std::fprintf(stderr, "%s (errno=%d)\n", message, errno); std::abort(); }
 }
+struct Ranges { size_t count=0, bytes=0; };
+static void visit(void *address, uint64_t bytes, void *context) {
+  auto &ranges=*static_cast<Ranges *>(context);
+  require(reinterpret_cast<uintptr_t>(address)%sysconf(_SC_PAGESIZE)==0,
+          "extent address alignment");
+  ranges.bytes+=bytes;
+  if (!ranges.count++) {
+    // A visitor can allocate: the extent registry mutex must be released.
+    void *p=arbiter_alloc_site(128,64,600,0);
+    require(p!=nullptr,"allocate inside extent visitor");
+    arbiter_free_maybe(p);
+  }
+}
 static std::pair<size_t, size_t> pages(void *pointer, size_t bytes, int target) {
   const size_t page = sysconf(_SC_PAGESIZE);
   std::vector<void *> addresses;
@@ -108,5 +121,14 @@ int main() {
   std::memset(retry, 1, mib);
   require(pages(retry, mib, target).second > 0, "failed mapping consumed budget");
   arbiter_free_maybe(retry);
+  Ranges ranges;
+  require(arbiter_visit_site_extents(70000,visit,&ranges)==-1 && errno==EINVAL,
+          "invalid extent site");
+  require(arbiter_visit_site_extents(60000,visit,&ranges)==-1 && errno==ENOENT,
+          "unallocated extent site");
+  require(arbiter_visit_site_extents(500,nullptr,&ranges)==-1 && errno==EINVAL,
+          "invalid extent visitor");
+  require(arbiter_visit_site_extents(500,visit,&ranges)==0 && ranges.count>0 &&
+          ranges.bytes>=mib,"retained extents after free");
   std::puts("PASS placement caps, concurrent allocations, late-policy rejection, strict binding failure, default placement");
 }

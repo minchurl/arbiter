@@ -1,0 +1,42 @@
+[
+  {
+    "name": "build-v4",
+    "passed": true
+  },
+  {
+    "name": "variants-build",
+    "passed": true
+  },
+  {
+    "name": "analysis-tests",
+    "passed": true
+  },
+  {
+    "name": "arbiter-placement-policy",
+    "passed": true
+  },
+  {
+    "name": "arbiter-runtime-smoke",
+    "passed": true
+  },
+  {
+    "name": "arbiter-slab-arena-boundary-smoke",
+    "passed": true
+  },
+  {
+    "name": "counter-owned",
+    "passed": true
+  },
+  {
+    "name": "counter-borrow",
+    "passed": true
+  },
+  {
+    "name": "counter-duplicate",
+    "passed": true
+  },
+  {
+    "name": "counter-reset",
+    "passed": true
+  }
+]

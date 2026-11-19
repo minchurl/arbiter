@@ -1,3 +1,11 @@
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-adaptive-rewrite -arbiter-hitm-seed-site-ids=1 -S %s | FileCheck %s --check-prefix=ADAPT
+; ADAPT: call ptr @arbiter_adaptive_counter()
+; ADAPT: exit:
+; ADAPT-NEXT: {{.*}}load atomic i64, ptr {{.*}} monotonic, align 8
+; ADAPT-NEXT: {{.*}}add i64 {{.*}}, 100
+; ADAPT-NEXT: store atomic i64 {{.*}} monotonic, align 8
+; ADAPT: call void @arbiter_adaptive_register(i32 2)
+; ADAPT-NOT: call void @arbiter_adaptive_register(i32 3)
 ; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-companion-sites -arbiter-hitm-seed-site-ids=1 -disable-output %s | FileCheck %s
 ; CHECK: seed_id,companion_id,relation,function,access,loop_depth
 ; CHECK-NEXT: 1,2,same-worker-loop,worker,read,1

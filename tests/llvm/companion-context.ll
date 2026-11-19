@@ -1,3 +1,6 @@
+; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-experiment-adaptive-rewrite -arbiter-hitm-seed-site-ids=1 -S %s | FileCheck %s --check-prefix=NOADAPT
+; NOADAPT: ModuleID
+; NOADAPT-NOT: arbiter_adaptive_
 ; RUN: opt -load-pass-plugin %shlibdir/ArbiterLLVMPlugin%shlibext -passes=arbiter-report-companion-sites -arbiter-hitm-seed-site-ids=1 -disable-output %s | FileCheck %s
 ; CHECK: seed_id,companion_id,relation,function,access,loop_depth
 ; CHECK-NEXT: 1,2,same-worker-loop,known,read-write,1

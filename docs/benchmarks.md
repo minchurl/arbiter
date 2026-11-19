@@ -54,6 +54,26 @@ Remove `--dry-run` to execute. The profile records absolute paths to the
 validated binaries and the measured host's NUMA nodes; it is not a portable
 configuration. Rebuild and revalidate after changing binaries, inputs or host.
 
+## Adaptive runtime research pipeline
+
+Build `ArbiterLLVMPlugin` and the separate `arbiter_adaptive_experiment` target.
+Run `arbiter-experiment-adaptive-rewrite` on whole-program input IR with the
+existing seed options. Link its output with `libarbiter_adaptive_experiment.a`,
+`libarbiter_runtime.a`, jemalloc, libnuma and pthreads. Normal seed-only binaries
+do not pull the adaptive library into the executable.
+
+The generated constructor registers companion IDs and, when available, an
+automatically recognized progress-counter range. It does not need a placement
+plan, a benchmark-name mapping, or the workload's arguments. Set the existing
+`ARBITER_TARGET_NODE` and pin ordinary memory/CPUs as usual. For controlled
+comparisons, run the **same** adaptive binary with `ARBITER_ADAPTIVE_MODE=observe`
+and `ARBITER_ADAPTIVE_MODE=adapt`. A separate uninstrumented companion-local
+binary measures the total deployment difference, including link/layout effects;
+it does not isolate the observer thread's cost. Whole timed-workload throughput must
+include exploration, migration and rollback, not just the final steady interval.
+
+See the [adaptive architecture and limitations](overview.md#adaptive-companion-experiment).
+
 ## Setup and data
 
 [README](../README.md#setup) lists base dependencies and the complete setup.

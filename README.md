@@ -68,13 +68,21 @@ policy selects no objects. See the
 Libcuckoo's lock storage is now discovered through `std::thread` and object-field
 accesses without new selection parameters. Its placement results show no
 consistent CXL gain; separate TTAS experiments improve highly contended cases.
-XIndex and microbenchmark selection and rewritten bitcode remain unchanged.
+Default XIndex and microbenchmark seed selection and rewritten bitcode remain unchanged.
 
 An opt-in companion report now finds other allocations accessed in the same
 worker loop. A separate runtime API can interleave a selected heap site or cap
 its cumulative CXL backing, then use DRAM. Default seed selection is unchanged;
 candidate discovery and a byte cap do not by themselves predict a speedup.
 See [experimental placement](docs/benchmarks.md#experimental-companion-placement).
+
+A separate research pipeline now tests online companion placement: it measures
+compiler-selected loop progress, probes a shared set of CXL fractions, and
+rolls back a losing placement. It uses no benchmark/input profile. Its current
+scope is a single progress domain and stable allocations; XIndex and libcuckoo
+keep the seed-only rewrite when no suitable companion is found. See the
+[adaptive runtime protocol](docs/benchmarks.md#adaptive-runtime-research-pipeline)
+and [online experiment report](docs/results.md#online-companion-placement-november-19).
 
 Keep current behavior in the architecture guide, commands in the benchmark
 guide, and conclusions in the results guide. Add experiment data to `results/`

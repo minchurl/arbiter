@@ -1,0 +1,13 @@
+{
+  "manifest_files_verified": 77,
+  "regenerated_files_identical": [
+    "summary.csv",
+    "controller-summary.json",
+    "phase-windows.csv",
+    "adaptive-results.png",
+    "adaptive-results.svg",
+    "adaptive-phase.png",
+    "adaptive-phase.svg"
+  ],
+  "extracted_files_byte_identical": 46
+}

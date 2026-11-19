@@ -15,6 +15,11 @@ struct CompanionReportPass : public ::llvm::PassInfoMixin<CompanionReportPass> {
                                 ::llvm::ModuleAnalysisManager &manager);
 };
 
+struct AdaptiveExperimentPass : public ::llvm::PassInfoMixin<AdaptiveExperimentPass> {
+  ::llvm::PreservedAnalyses run(::llvm::Module &module,
+                                ::llvm::ModuleAnalysisManager &manager);
+};
+
 struct RewriteExperimentPass
     : public ::llvm::PassInfoMixin<RewriteExperimentPass> {
   ::llvm::PreservedAnalyses run(::llvm::Module &module,

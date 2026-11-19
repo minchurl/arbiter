@@ -1,0 +1,57 @@
+{
+  "frozen_files_checked": 634,
+  "frozen_artifacts_unchanged": true,
+  "benchmark_and_seed_config_unchanged": true,
+  "main_unchanged": true,
+  "counts": {
+    "confirm-h16": 9,
+    "confirm-h256": 9,
+    "neighbor-h8": 2,
+    "neighbor-h32": 2,
+    "short-h16": 3,
+    "short-h256": 3,
+    "phase-affinity": 2,
+    "holdout-readonly": 4
+  },
+  "accepted_micro_processes": 34,
+  "accepted_xindex_processes": 2,
+  "accepted_performance_processes": 36,
+  "rejected_micro_attempts": [
+    "phase-affinity/1-observe-attempt1.host.json",
+    "holdout-readonly/2-adapt-attempt1.host.json"
+  ],
+  "excluded_pilot_processes": 6,
+  "excluded_final_smokes": 1,
+  "excluded_interrupted_processes": 5,
+  "excluded_page_diagnostics": 2,
+  "migration_events": 36,
+  "maximum_companion_target_bytes": 4294967296,
+  "cancelled_shutdown_migrations": [
+    {
+      "case": "short-h16",
+      "run": "1-adapt-attempt1",
+      "migration": {
+        "event": "migration",
+        "time": 34.042196,
+        "seconds": 1.224526,
+        "ratio_bp": 5000,
+        "resident_pages": 2097163,
+        "wanted_pages": 1048576,
+        "target_pages": 0,
+        "moved": 151552,
+        "failed": 372734,
+        "missing": 2097153,
+        "mismatch": 2097153,
+        "progress": 72106996,
+        "budget_bytes": 4294967296,
+        "cancelled": 1
+      }
+    }
+  ],
+  "llvm_RUN_checks": 25,
+  "runtime_checks": "placement policy, runtime smoke, arena boundary, four counter modes",
+  "worker_instructions": 149,
+  "worker_assembly_identical": true,
+  "xindex_and_cuckoo_adaptive_ir_equals_seed_only": true,
+  "note": "Shared host with sampled foreign-CPU guard, not an exclusive reservation. One XIndex pair is diagnostic, not statistical equivalence. Pilot source snapshots are historical debugging evidence, not exact source manifests for every intermediate binary."
+}

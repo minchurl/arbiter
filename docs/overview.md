@@ -99,6 +99,56 @@ active compiler policy. These two relations find different candidates. Existing
 seed-only rewriting remains the default; experiments generate an explicit-site
 override from candidate reports and separately validate a placement plan.
 
+## Adaptive companion experiment
+
+`arbiter-experiment-adaptive-rewrite` is a separate opt-in pipeline. It keeps
+the seed policy and expands only one unambiguous common-loop domain. Multiple
+domains, missing provenance, and unsuitable loop exits retain the ordinary
+seed rewrite. No benchmark names, input arguments, or saved throughput profiles
+participate in this decision.
+
+`AdaptiveExperiment.cpp` derives a progress signal from the selected loop.
+For a fixed-trip inner loop, progress can be published in batches at its
+dedicated exit. When ScalarEvolution proves an existing atomic 64-bit store
+has the recurrence `{{1,+,batch}<outer>,+,1}<inner>`, the pass can instead
+register its global counter range. Array stride and field offset come from
+LLVM types and GEPs; each observed field must be initially zero. Padding may be
+undefined because it is never read. This path inserts registration in a module
+constructor and leaves the worker body unchanged. Unsupported counter layouts
+use separate padded counters, which add instructions to the work path.
+
+These are structural progress proxies, not proof of application-level requests,
+tail latency, or fairness. Monotonicity checks reject observed resets; they do
+not prove that arbitrary external writers or variable work per iteration are
+absent. A positive result on one recognized program is not evidence that every
+application supplies a usable progress metric.
+
+The separately linked `arbiter_adaptive_experiment` library starts companions
+locally, measures progress, and tries the same 12.5/25/50% ladder on every input.
+It accepts a gain above 2%, stops expansion after a loss above 3%, and aborts a
+probe early for a loss above 15%. Three consecutive monitoring windows below
+85% of the settled rate trigger a fresh local-placement comparison. These are
+common experimental controller constants, not new seed-scoring options.
+`ARBITER_ADAPTIVE_MODE=observe` runs the same observer without migration;
+`adapt` enables the controller and is the default for this experimental binary.
+
+The controller queries resident pages of compiler-registered sites through
+`arbiter_visit_site_extents`, migrates only those pages with `move_pages`, and
+checks per-page results and a 4 GiB current-resident companion budget. It demotes
+before promoting. This budget is distinct from the fixed placement API's
+lifetime mapping budget; seed pages are excluded. Mappings are retained, but
+freed objects and allocator metadata may share their pages. New allocations
+and refaulted pages initially remain local: `move_pages` does not change their
+allocation policy. The prototype therefore targets stable, long-lived objects,
+not arbitrary allocation churn. Migration can temporarily stall application
+accesses and has to be charged to end-to-end performance.
+
+It is a research implementation, not a default runtime feature. It does not
+optimize several progress domains, continuously re-explore after settling at
+zero, enforce latency SLAs, or guarantee that an unknown input never loses
+performance during exploration. The [results report](results.md) separates
+same-binary control comparisons, observer overhead, migration costs and scope.
+
 ## Why jemalloc still needs NUMA hooks
 
 A separate page per small object wastes memory: an early 357,388-object,

@@ -1,0 +1,15 @@
+{
+  "issue": "Short workload exit can free/purge companion pages while relocation is in progress. Runtime marks the final event cancelled=1 at atexit; original harness incorrectly required zero failed page statuses even for this cancellation.",
+  "source_changes": false,
+  "runtime_binary_changes": false,
+  "resolution": "Classify cancelled shutdown migration separately; still enforce cap, valid benchmark output and final counter equality. Every live completed migration still requires zero failures/missing/mismatch.",
+  "excluded_directory": "short-h16-interrupted",
+  "excluded_runs": "All five original processes: two foreign-CPU rejected plain attempts, accepted plain/observe controls and the final adapt attempt with the harness assertion. None enter final summaries.",
+  "fresh_comparison": "Rerun all three modes in short-h16 using identical frozen measured binaries.",
+  "recorded_cancelled_event": {
+    "failed": 368638,
+    "missing": 2097153,
+    "target_pages": 0,
+    "cancelled": 1
+  }
+}

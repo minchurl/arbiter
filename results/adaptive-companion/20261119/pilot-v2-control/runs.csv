@@ -1,0 +1,3 @@
+round,mode,attempt,ops,seconds,mops,wall_seconds,rss_kib,migration_seconds,migration_count,chosen_bp,last_target_pages,valid
+1,plain,1,1084884160,20.000057,54.2440534044478,26.299458166002296,8394496,0,0,0,0,True
+1,observe,1,1030142464,20.00006,51.50696867909396,24.68275703000836,8394496,0,0,0,0,True

@@ -1,0 +1,13 @@
+{
+  "question": "Can Arbiter choose companion CXL placement online without a per-benchmark profile?",
+  "sources": [
+    {"title": "Bandwidth-Aware Page Placement in NUMA Systems", "url": "https://arxiv.org/pdf/2003.03304", "finding": "Online hill climbing uses resource stalls; authors also require initialization at a stable phase and discuss amortization and local optima. This supports online ratio search, not the sufficiency of stall metrics for contended retries."},
+    {"title": "Tiered Memory Management: Access Latency is the Key! (Colloid)", "url": "https://www.cs.cornell.edu/~midhul/papers/colloid.pdf", "finding": "Uses measured per-tier queue occupancy/request rates to balance access latencies and limits migration each quantum. Useful for bandwidth/latency adaptation; not a proof that minimizing memory latency optimizes Arbiter's contention workloads."},
+    {"title": "Application Heartbeats", "url": "https://ctuning.org/dissemination/smart10-02.pdf", "finding": "Application progress differs from instruction execution, which can include spinning. Explicit progress is semantically stronger than IPC, but manual application annotations conflict with the no-benchmark-edit constraint."},
+    {"title": "Linux page migration", "url": "https://kernel.org/doc/html/latest/mm/page_migration.html", "finding": "Physical pages can migrate without changing virtual addresses; accesses can block while migration entries are present."},
+    {"title": "move_pages(2)", "url": "https://man7.org/linux/man-pages/man2/move_pages.2.html", "finding": "Per-page status and partial failure must be checked. Moving a page does not update its NUMA allocation policy."},
+    {"title": "LLVM 18.1.8 loop terminology", "url": "https://releases.llvm.org/18.1.8/docs/LoopTerminology.html", "finding": "Latches/backedges and exits define structural loop progress, not semantic application requests."}
+  ],
+  "inference": "Compiler-discovered common-loop completions are a portable candidate progress proxy. A fixed-trip loop can publish a batched count at its dedicated exit, excluding inner retry spins. This must be validated per program structure; it is not a universal automatic throughput oracle.",
+  "prototype_scope": "One unambiguous common loop domain. No argv/symbol-name/per-input lookup in controller. All deployments use the same timing, search ladder, hysteresis and 4 GiB resident companion budget. Existing seeds stay fixed. Multiple/ambiguous domains retain seed-only rewrite. This prototype does not re-explore from zero after a later improvement phase."
+}

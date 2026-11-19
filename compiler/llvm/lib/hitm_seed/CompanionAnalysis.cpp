@@ -73,9 +73,13 @@ discoverLoopCompanions(Module &module, const HITMSeedSelection &selection) {
           const char *access = kind == 1 ? "read" : kind == 2 ? "write" : "read-write";
           if (entry.loopDepth < loop->getLoopDepth())
             entry = {seed, candidate, function.getName().str(), access,
-                     loop->getLoopDepth()};
-          else if (entry.loopDepth == loop->getLoopDepth() && entry.access != access)
-            entry.access = "read-write";
+                     loop->getLoopDepth(), loop->getHeader()};
+          else if (entry.loopDepth == loop->getLoopDepth()) {
+            if (entry.access != access)
+              entry.access = "read-write";
+            if (entry.loopHeader != loop->getHeader())
+              entry.loopHeader = nullptr;
+          }
         }
       }
   }
