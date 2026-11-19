@@ -1,0 +1,211 @@
+[
+  {
+    "case": "screen-h16",
+    "attempt": "1-full-attempt4.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.4436730449261521
+      },
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.3360792551916461
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-cap4g-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.23444006077880292
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.15618422538896365
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "2-full-attempt2.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.485092895669984
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-half-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.19646032211720624
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.21590142748060126
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "2-cap4g-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.2816832064093217
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "2-original-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.31704560819307825
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "2-full-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.3169804487164499
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-cap1g-attempt2.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.35434590832251234
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.41080872181434663
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-full-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.19389284236150692
+      },
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.15591424203044274
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-cap1g-attempt1.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.33810355945404713
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-full-attempt3.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.26109362376415385
+      },
+      {
+        "pid": 3171,
+        "name": "codex",
+        "cpu_cores": 0.15494894065257933
+      }
+    ]
+  },
+  {
+    "case": "screen-h16",
+    "attempt": "1-full-attempt2.host",
+    "reason": "Concurrent foreign CPU load",
+    "processes": [
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.15579083086835804
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.1555858020851443
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.17516533140134283
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.1563965992041797
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.17619167681347878
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.15652045757209634
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.17600572433255834
+      },
+      {
+        "pid": 1310,
+        "name": "avahi-daemon",
+        "cpu_cores": 0.1564983730073708
+      }
+    ]
+  }
+]

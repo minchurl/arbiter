@@ -1,0 +1,103 @@
+[
+  {
+    "name": "screen-h16-cap4g matched arguments",
+    "decision": {
+      "matched_profile": true,
+      "strategy": "cap4g",
+      "command": [
+        "numactl",
+        "--cpunodebind=0",
+        "--membind=0",
+        "/home/shin/arbiter/build/budgeted-companion/micro/expanded",
+        "--victims",
+        "32",
+        "--noise",
+        "0",
+        "--mode",
+        "none",
+        "--duration",
+        "30",
+        "--table-size",
+        "16",
+        "--ballast-mb",
+        "8192",
+        "--read-pct",
+        "50"
+      ],
+      "plan": "/home/shin/arbiter/build/budgeted-companion/accepted-plans/screen-h16-cap4g.plan"
+    },
+    "passed": true
+  },
+  {
+    "name": "screen-h16 matched arguments",
+    "decision": {
+      "matched_profile": true,
+      "strategy": "half",
+      "command": [
+        "numactl",
+        "--cpunodebind=0",
+        "--membind=0",
+        "/home/shin/arbiter/build/budgeted-companion/micro/expanded",
+        "--victims",
+        "32",
+        "--noise",
+        "0",
+        "--mode",
+        "none",
+        "--duration",
+        "30",
+        "--table-size",
+        "16",
+        "--ballast-mb",
+        "8192",
+        "--read-pct",
+        "50"
+      ],
+      "plan": "/home/shin/arbiter/build/budgeted-companion/accepted-plans/screen-h16.plan"
+    },
+    "passed": true
+  },
+  {
+    "name": "unmatched input selects seed-only binary",
+    "decision": {
+      "matched_profile": false,
+      "strategy": "seed",
+      "command": [
+        "numactl",
+        "--cpunodebind=0",
+        "--membind=0",
+        "/home/shin/arbiter/build/budgeted-companion/micro/seed",
+        "--victims",
+        "32",
+        "--noise",
+        "0",
+        "--mode",
+        "none",
+        "--duration",
+        "1",
+        "--table-size",
+        "256",
+        "--ballast-mb",
+        "8192",
+        "--read-pct",
+        "50"
+      ],
+      "plan": null
+    },
+    "passed": true
+  },
+  {
+    "name": "changed plan rejected before execution",
+    "passed": true
+  },
+  {
+    "name": "matching-bounded-profile",
+    "passed": true,
+    "measurement": "Functional integration check, excluded from performance summaries."
+  },
+  {
+    "name": "unmatched-seed-fallback",
+    "passed": true,
+    "measurement": "Functional integration check, excluded from performance summaries."
+  }
+]

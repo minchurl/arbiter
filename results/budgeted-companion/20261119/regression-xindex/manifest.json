@@ -1,0 +1,75 @@
+{
+  "args": {
+    "case": "regression-xindex",
+    "workload": "xindex",
+    "table": 16,
+    "threads": 32,
+    "reads": 50,
+    "seconds": 20,
+    "rounds": 3,
+    "strategies": [
+      "original",
+      "seed",
+      "seed-local"
+    ]
+  },
+  "variant": {
+    "seeds": [
+      68,
+      71,
+      74,
+      90,
+      97,
+      98,
+      99,
+      100
+    ],
+    "legacy_members": [
+      69,
+      72
+    ],
+    "loop_companions": [],
+    "companions": [
+      69,
+      72
+    ],
+    "binaries": {
+      "seed": {
+        "path": "/home/shin/arbiter/build/budgeted-companion/xindex/seed",
+        "sha256": "04e9a011428a31f53b11a8f1b33946712d99321015d8c70a27e6b5f30e085c09",
+        "bitcode_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f"
+      },
+      "expanded": {
+        "path": "/home/shin/arbiter/build/budgeted-companion/xindex/expanded",
+        "sha256": "2c5c18d560571d5b97e83b31811a0770d7bfaf6362a819989c4a9c1184094112",
+        "bitcode_sha256": "afedda7e2f8907c49e3e9288e3ccd43ce5099df3ce18a201dda68829e879825d"
+      }
+    },
+    "original_binary": "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench-arbiter",
+    "source_sha256": "71cf5a1c9a05733d919f13f503a0258f0f1b1cb23bac6b67d8c0380a822237da"
+  },
+  "policy": {
+    "local": [
+      0,
+      0
+    ],
+    "half": [
+      50,
+      18446744073709551615
+    ],
+    "cap1g": [
+      100,
+      1073741824
+    ],
+    "cap4g": [
+      100,
+      4294967296
+    ],
+    "full": [
+      100,
+      18446744073709551615
+    ]
+  },
+  "cap_scope": "Finite budgets divided equally across automatically discovered companion sites; all selected seed sites retain their original policy.",
+  "measurement": "Untraced benchmark, no page migration. Live NUMA VMAs checked after initialization; full per-page checks are separate diagnostics. Five quiet seconds before each run; reject overlap with a foreign process consuming more than one CPU core in a sampled interval. Small background-service bursts remain ordinary host noise. Initial screen-h16 used the stricter 0.15-core threshold."
+}

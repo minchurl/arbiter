@@ -22,6 +22,10 @@ bool registerArbiterPipeline(StringRef name, ModulePassManager &manager,
     manager.addPass(arbiter::llvm::hitm_seed::ReportPass());
     return true;
   }
+  if (name == "arbiter-report-companion-sites") {
+    manager.addPass(arbiter::llvm::hitm_seed::CompanionReportPass());
+    return true;
+  }
   if (name == "arbiter-experiment-hitm-seed-rewrite") {
     manager.addPass(arbiter::llvm::hitm_seed::RewriteExperimentPass());
     return true;

@@ -1,0 +1,9 @@
+regression-xindex 1 original 47.801 Mops/s
+regression-xindex 1 seed 50.679 Mops/s
+regression-xindex 1 seed-local 26.986 Mops/s
+regression-xindex 2 seed-local 28.058 Mops/s
+regression-xindex 2 seed 46.589 Mops/s
+regression-xindex 2 original 48.689 Mops/s
+regression-xindex 3 original 49.401 Mops/s
+regression-xindex 3 seed 48.047 Mops/s
+regression-xindex 3 seed-local 25.295 Mops/s

@@ -99,6 +99,7 @@ struct Cell {
 };
 struct Context {
   const Function *function;
+  const CallBase *caller;
 };
 struct CachedLoad {
   uint64_t version = 0;
@@ -133,7 +134,7 @@ class Analysis {
     if (found != contextIds.end())
       return found->second;
     unsigned id = contexts.size();
-    contexts.push_back({function});
+    contexts.push_back({function, caller});
     contextIds[key] = id;
     changed = true;
     return id;
@@ -430,7 +431,7 @@ class Analysis {
 public:
   explicit Analysis(Module &module)
       : module(module), layout(module.getDataLayout()) {}
-  ObjectAccessInfo run() {
+  ObjectAccessInfo run(bool collectAccesses) {
     for (const GlobalVariable &global : module.globals())
       if (global.hasInitializer())
         initializer(global, global.getInitializer(), 0);
@@ -461,14 +462,32 @@ public:
                 "partial evidence\n";
       return ObjectAccessInfo();
     }
+    SmallPtrSet<const Function *, 32> calledFunctions;
+    if (collectAccesses)
+      for (const Context &ctx : contexts)
+        if (ctx.caller)
+          calledFunctions.insert(ctx.function);
     for (unsigned ctx = 0; ctx < contexts.size(); ++ctx)
       for (const Instruction &instruction :
            instructions(contexts[ctx].function)) {
+        // Every function has a synthetic, unconstrained root for discovery.
+        // Once calls are modeled, report provenance from those call contexts;
+        // the artificial root is not another observed caller.
+        bool collectHere = collectAccesses &&
+                           (contexts[ctx].caller ||
+                            !calledFunctions.contains(contexts[ctx].function));
         const Value *address = nullptr;
         if (const auto *rmw = dyn_cast<AtomicRMWInst>(&instruction))
           address = rmw->getPointerOperand();
         else if (const auto *cas = dyn_cast<AtomicCmpXchgInst>(&instruction))
           address = cas->getPointerOperand();
+        bool isRMW = address != nullptr;
+        if (collectHere && !address) {
+          if (const auto *read = dyn_cast<LoadInst>(&instruction))
+            address = read->getPointerOperand();
+          else if (const auto *write = dyn_cast<StoreInst>(&instruction))
+            address = write->getPointerOperand();
+        }
         if (!address)
           continue;
         SmallPtrSet<const CallBase *, 4> candidates;
@@ -482,14 +501,30 @@ public:
         }
         // Alias unions are useful for finding paths, but are insufficient to
         // award object-specific evidence when multiple allocations remain.
-        if (!unknown && candidates.size() == 1)
-          result.rmwAllocations.insert(*candidates.begin());
+        if (!unknown && candidates.size() == 1) {
+          const CallBase *allocation = *candidates.begin();
+          if (isRMW)
+            result.rmwAllocations.insert(allocation);
+          if (collectHere) {
+            auto &origins = result.accesses[&instruction];
+            if (!::llvm::is_contained(origins, allocation))
+              origins.push_back(allocation);
+          }
+        } else if (collectHere) {
+          // An unresolved context must not disappear when another context of
+          // the same instruction has a unique origin. nullptr poisons the
+          // combined provenance for companion reporting, without changing RMW
+          // scoring's existing context-specific evidence.
+          auto &origins = result.accesses[&instruction];
+          if (!::llvm::is_contained(origins, nullptr))
+            origins.push_back(nullptr);
+        }
       }
     return std::move(result);
   }
 };
 } // namespace
-ObjectAccessInfo analyzeObjectAccesses(Module &module) {
-  return Analysis(module).run();
+ObjectAccessInfo analyzeObjectAccesses(Module &module, bool collectAccesses) {
+  return Analysis(module).run(collectAccesses);
 }
 } // namespace arbiter::llvm::hitm_seed

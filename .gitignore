@@ -27,3 +27,5 @@ benchmark/xindex/YCSB/xindex_dat/*.tmp
 
 /benchmark/libcuckoo/libcuckoo-upstream/
 !tests/llvm/object-access.ll
+!tests/llvm/companion-loop.ll
+!tests/llvm/companion-context.ll

@@ -1,0 +1,6 @@
+neighbor-h32 1 seed 151.919 Mops/s
+neighbor-h32 1 local 151.145 Mops/s
+neighbor-h32 1 half 89.724 Mops/s
+neighbor-h32 2 half 89.867 Mops/s
+neighbor-h32 2 local 153.091 Mops/s
+neighbor-h32 2 seed 152.465 Mops/s

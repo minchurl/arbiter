@@ -1,0 +1,418 @@
+{
+  "records": {
+    "micro": {
+      "seeds": [
+        4
+      ],
+      "legacy_members": [],
+      "loop_companions": [
+        5
+      ],
+      "companions": [
+        5
+      ],
+      "binaries": {
+        "seed": {
+          "path": "/home/shin/arbiter/build/budgeted-companion/micro/seed",
+          "sha256": "d593c92f95a16a01717c7ed3b2a75f7c058e4080f63f78351767d6a80f2f122f",
+          "bitcode_sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c"
+        },
+        "expanded": {
+          "path": "/home/shin/arbiter/build/budgeted-companion/micro/expanded",
+          "sha256": "8196c764341f404ac5676d0f7f6363bb93ad7c0743f39c457dd8dbc64650a44f",
+          "bitcode_sha256": "a5345f0b1cc3fadd947fe4700594cc1b32bde4993e23950154d1feea89c2991e"
+        }
+      },
+      "original_binary": "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-placed",
+      "source_sha256": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de"
+    },
+    "xindex": {
+      "seeds": [
+        68,
+        71,
+        74,
+        90,
+        97,
+        98,
+        99,
+        100
+      ],
+      "legacy_members": [
+        69,
+        72
+      ],
+      "loop_companions": [],
+      "companions": [
+        69,
+        72
+      ],
+      "binaries": {
+        "seed": {
+          "path": "/home/shin/arbiter/build/budgeted-companion/xindex/seed",
+          "sha256": "04e9a011428a31f53b11a8f1b33946712d99321015d8c70a27e6b5f30e085c09",
+          "bitcode_sha256": "80d6e27f22dcfd3b9d3df4d35eb07874c9ea432e2f838e57b6bdc20cc6fcfe3f"
+        },
+        "expanded": {
+          "path": "/home/shin/arbiter/build/budgeted-companion/xindex/expanded",
+          "sha256": "2c5c18d560571d5b97e83b31811a0770d7bfaf6362a819989c4a9c1184094112",
+          "bitcode_sha256": "afedda7e2f8907c49e3e9288e3ccd43ce5099df3ce18a201dda68829e879825d"
+        }
+      },
+      "original_binary": "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench-arbiter",
+      "source_sha256": "71cf5a1c9a05733d919f13f503a0258f0f1b1cb23bac6b67d8c0380a822237da"
+    }
+  },
+  "commands": [
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+        "-O2",
+        "-std=c++17",
+        "-I/home/shin/arbiter/runtime/include",
+        "-c",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.cpp",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.o"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/libcuckoo-rmw/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-report-hitm-seed-sites",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-report-path=/home/shin/arbiter/build/budgeted-companion/micro/old-seeds.csv",
+        "-disable-output",
+        "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-native.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-report-hitm-seed-sites",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-report-path=/home/shin/arbiter/build/budgeted-companion/micro/new-seeds.csv",
+        "-disable-output",
+        "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-native.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-experiment-hitm-seed-rewrite",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-site-ids=4",
+        "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-native.bc",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/micro/seed.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+        "-std=c++17",
+        "-O2",
+        "-gline-tables-only",
+        "-march=native",
+        "-pthread",
+        "/home/shin/arbiter/build/budgeted-companion/micro/seed.bc",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.o",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/runtime/libarbiter_runtime.a",
+        "-Wl,--no-as-needed",
+        "-ljemalloc",
+        "-lnuma",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/micro/seed"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-experiment-hitm-seed-rewrite",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-site-ids=4,5",
+        "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-native.bc",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/micro/expanded.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+        "-std=c++17",
+        "-O2",
+        "-gline-tables-only",
+        "-march=native",
+        "-pthread",
+        "/home/shin/arbiter/build/budgeted-companion/micro/expanded.bc",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.o",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/runtime/libarbiter_runtime.a",
+        "-Wl,--no-as-needed",
+        "-ljemalloc",
+        "-lnuma",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/micro/expanded"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/libcuckoo-rmw/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-report-hitm-seed-sites",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-report-path=/home/shin/arbiter/build/budgeted-companion/xindex/old-seeds.csv",
+        "-disable-output",
+        "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-report-hitm-seed-sites",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-report-path=/home/shin/arbiter/build/budgeted-companion/xindex/new-seeds.csv",
+        "-disable-output",
+        "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-experiment-hitm-seed-rewrite",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-site-ids=68,71,74,90,97,98,99,100",
+        "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench.bc",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/seed.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+        "-std=c++17",
+        "-O2",
+        "-gline-tables-only",
+        "-march=native",
+        "-pthread",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/seed.bc",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.o",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/runtime/libarbiter_runtime.a",
+        "-Wl,--no-as-needed",
+        "-ljemalloc",
+        "-lnuma",
+        "-L/opt/intel/oneapi/mkl/latest/lib",
+        "-Wl,-rpath,/opt/intel/oneapi/mkl/latest/lib",
+        "-lmkl_rt",
+        "-ldl",
+        "-lm",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/seed"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm18-apt-root/usr/bin/opt-18",
+        "-load-pass-plugin",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/lib/ArbiterLLVMPlugin.so",
+        "-passes=arbiter-experiment-hitm-seed-rewrite",
+        "-arbiter-hitm-min-score=5",
+        "-arbiter-hitm-seed-limit=12",
+        "-arbiter-hitm-weight-escape-return=1",
+        "-arbiter-hitm-weight-escape-store=1",
+        "-arbiter-hitm-weight-escape-call=1",
+        "-arbiter-hitm-weight-sync-atomic=1",
+        "-arbiter-hitm-weight-sync-store=1",
+        "-arbiter-hitm-weight-sync-inline-asm=1",
+        "-arbiter-hitm-weight-sync-file=1",
+        "-arbiter-hitm-weight-published-rmw=3",
+        "-arbiter-hitm-weight-worker-entry=1",
+        "-arbiter-hitm-weight-worker-reachable=2",
+        "-arbiter-hitm-weight-size=1",
+        "-arbiter-hitm-require-escape=1",
+        "-arbiter-hitm-require-sync=1",
+        "-arbiter-hitm-large-allocation-threshold=128",
+        "-arbiter-hitm-include-dynamic-size=0",
+        "-arbiter-hitm-seed-dynamic-size-estimate=4096",
+        "-arbiter-hitm-seed-max-estimated-bytes=0",
+        "-arbiter-hitm-seed-site-ids=68,69,71,72,74,90,97,98,99,100",
+        "/home/shin/arbiter/build/libcuckoo-rmw/xindex/ycsb_bench.bc",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/expanded.bc"
+      ],
+      "stderr": ""
+    },
+    {
+      "command": [
+        "/home/shin/arbiter/.tools/llvm-18.1.8/bin/clang++",
+        "-std=c++17",
+        "-O2",
+        "-gline-tables-only",
+        "-march=native",
+        "-pthread",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/expanded.bc",
+        "/home/shin/arbiter/build/budgeted-companion/plan-loader.o",
+        "/home/shin/arbiter/build/budgeted-companion/compiler/runtime/libarbiter_runtime.a",
+        "-Wl,--no-as-needed",
+        "-ljemalloc",
+        "-lnuma",
+        "-L/opt/intel/oneapi/mkl/latest/lib",
+        "-Wl,-rpath,/opt/intel/oneapi/mkl/latest/lib",
+        "-lmkl_rt",
+        "-ldl",
+        "-lm",
+        "-o",
+        "/home/shin/arbiter/build/budgeted-companion/xindex/expanded"
+      ],
+      "stderr": ""
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+START final-build
+PASS final-build
+START final-analysis-tests
+PASS final-analysis-tests
+START final-test-build
+PASS final-test-build
+START final-arbiter-placement-policy
+PASS final-arbiter-placement-policy
+START final-arbiter-runtime-smoke
+PASS final-arbiter-runtime-smoke
+START final-arbiter-slab-arena-boundary-smoke
+PASS final-arbiter-slab-arena-boundary-smoke
+START reproduce-plan-loader.o
+PASS reproduce-plan-loader.o
+START reproduce-micro-seed.bc
+PASS reproduce-micro-seed.bc
+START reproduce-micro-seed
+PASS reproduce-micro-seed
+START reproduce-micro-expanded.bc
+PASS reproduce-micro-expanded.bc
+START reproduce-micro-expanded
+PASS reproduce-micro-expanded
+START reproduce-xindex-seed.bc
+PASS reproduce-xindex-seed.bc
+START reproduce-xindex-seed
+PASS reproduce-xindex-seed
+START reproduce-xindex-expanded.bc
+PASS reproduce-xindex-expanded.bc
+START reproduce-xindex-expanded
+PASS reproduce-xindex-expanded
+START final-audit
+Traceback (most recent call last):
+  File "/home/shin/arbiter/build/budgeted-companion/scripts/finish.py", line 38, in <module>
+    for name in ['audit','summarize','emit-plans','plot']:run([sys.executable,str(base/'scripts'/(name+'.py'))],'final-'+name)
+  File "/home/shin/arbiter/build/budgeted-companion/scripts/finish.py", line 11, in run
+    with (base/(name+'.log')).open('w') as f:subprocess.run(command,env={**env,**(extra or {})},stdout=f,stderr=subprocess.STDOUT,check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/home/shin/arbiter/build/budgeted-companion/scripts/audit.py']' returned non-zero exit status 1.

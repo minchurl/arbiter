@@ -3,6 +3,57 @@
 Run commands from the repository root. Measured hosts use CPUs/ordinary memory
 on node 0 and CXL on node 2; inspect `numactl --hardware` on another machine.
 
+## Experimental companion placement
+
+Candidate reporting uses the same policy options and report-path option as
+seed reporting. It adds no scoring weights or thresholds:
+
+```sh
+opt-18 -load-pass-plugin build-llvm18/lib/ArbiterLLVMPlugin.so \
+  -passes=arbiter-report-companion-sites \
+  -arbiter-hitm-seed-report-path=companions.csv \
+  -disable-output input.bc
+```
+
+Pass the same effective seed options used for the workload when comparing
+reports. The CSV contains seed/companion IDs, the common worker function,
+access kind and loop depth. Reporting does not rewrite or move candidates.
+An experiment can union these IDs with the selected seeds and use the existing
+`-arbiter-hitm-seed-site-ids` override to build an expanded variant. IDs must be
+derived again after changing the source, compiler or optimization settings.
+
+Before a rewritten heap site first allocates, a controller/constructor can call
+`arbiter_set_site_placement(site_id, local_node, target_percent, max_target_bytes)`
+from `arbiter_runtime_site.h`. For example, 50 with `UINT64_MAX` interleaves
+backing over local and target; 100 with `4ULL << 30` grants at most 4 GiB of
+target backing, then uses local memory. Both the selected seed policy and any
+companion plans must be tested on representative inputs. The API applies a
+fixed plan; it does not automatically recognize a workload or measure speedup.
+See the [placement contract](overview.md#placement-and-failure-contract).
+
+The retained experiment's `build-variants.py`, `run.py` and `queue.py` automate
+candidate extraction, first-touch comparisons, and a training/confirmation
+split. Its `ARBITER_EXPERIMENT_PLAN` file loader is linked into experimental
+binaries only; it is not a production runtime environment variable.
+`emit-plans.py` exports a plan only after independent confirmation, and
+`launch-profile.py` applies it only to the exact validated argument list and
+binary hash. Unmatched arguments launch the seed-only binary. This fallback
+is explicit: an expanded binary with no plan would use target-only placement
+for every rewritten site, including companions.
+
+For the retained host and frozen binaries, preview the bounded confirmed plan:
+
+```sh
+python3 results/budgeted-companion/20261119/scripts/launch-profile.py \
+  --profile results/budgeted-companion/20261119/accepted-plans/screen-h16-cap4g.json \
+  --dry-run -- --victims 32 --noise 0 --mode none --duration 30 \
+  --table-size 16 --ballast-mb 8192 --read-pct 50
+```
+
+Remove `--dry-run` to execute. The profile records absolute paths to the
+validated binaries and the measured host's NUMA nodes; it is not a portable
+configuration. Rebuild and revalidate after changing binaries, inputs or host.
+
 ## Setup and data
 
 [README](../README.md#setup) lists base dependencies and the complete setup.

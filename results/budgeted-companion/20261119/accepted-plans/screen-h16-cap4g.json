@@ -1,0 +1,120 @@
+{
+  "profile": {
+    "case": "screen-h16",
+    "workload": "micro",
+    "table": 16,
+    "threads": 32,
+    "reads": 50,
+    "seconds": 20,
+    "rounds": 2,
+    "strategies": [
+      "original",
+      "seed",
+      "local",
+      "half",
+      "cap1g",
+      "cap4g",
+      "full"
+    ]
+  },
+  "validated_argv": [
+    "--victims",
+    "32",
+    "--noise",
+    "0",
+    "--mode",
+    "none",
+    "--duration",
+    "30",
+    "--table-size",
+    "16",
+    "--ballast-mb",
+    "8192",
+    "--read-pct",
+    "50"
+  ],
+  "environment": {
+    "ARBITER_TARGET_NODE": "2",
+    "ARBITER_ARENA_REPORT": "1",
+    "XINDEX_VALIDATE": "1",
+    "LD_LIBRARY_PATH": "/opt/intel/oneapi/mkl/latest/lib:"
+  },
+  "cpu_node": 0,
+  "local_node": 0,
+  "selected_strategy": "cap4g",
+  "role": "independently confirmed alternative",
+  "target_percent": 100,
+  "total_companion_limit_bytes": 4294967296,
+  "companions": [
+    5
+  ],
+  "source_sha256": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de",
+  "baseline_binary": {
+    "path": "/home/shin/arbiter/build/budgeted-companion/micro/seed",
+    "sha256": "d593c92f95a16a01717c7ed3b2a75f7c058e4080f63f78351767d6a80f2f122f",
+    "bitcode_sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c"
+  },
+  "expanded_binary": {
+    "path": "/home/shin/arbiter/build/budgeted-companion/micro/expanded",
+    "sha256": "8196c764341f404ac5676d0f7f6363bb93ad7c0743f39c457dd8dbc64650a44f",
+    "bitcode_sha256": "a5345f0b1cc3fadd947fe4700594cc1b32bde4993e23950154d1feea89c2991e"
+  },
+  "plan_sha256": "6f9d16e099c91c1d436f08ddd308fa6c243109428badb0fea311482594d6d253",
+  "scope": "Use launch-profile.py with this frozen profile. Exact validated arguments choose the expanded binary plus plan; unmatched arguments choose the seed-only binary. Argument matching does not detect load changes or altered input-file contents. This is an offline profile launcher, not online adaptation.",
+  "confirmation": [
+    {
+      "case": "confirm-h16",
+      "treatment": "cap4g",
+      "reference": "original",
+      "pairs": "5",
+      "reference_mops": "51.83198434778506",
+      "treatment_mops": "66.4261179359288",
+      "paired_change_pct": "28.192272701353833",
+      "ci95_low_pct": "25.63002633540065",
+      "ci95_high_pct": "30.75451906730701",
+      "positive_pairs": "5",
+      "min_pair_pct": "24.193686330826147",
+      "max_pair_pct": "31.215875608610165",
+      "reference_launcher_wall_mops": "45.084342719174444",
+      "treatment_launcher_wall_mops": "55.22956416214357",
+      "paired_launcher_wall_change_pct": "22.536292328578618",
+      "max_target_assigned_bytes": "4294967296"
+    },
+    {
+      "case": "confirm-h16",
+      "treatment": "cap4g",
+      "reference": "seed",
+      "pairs": "5",
+      "reference_mops": "57.383742759783296",
+      "treatment_mops": "66.4261179359288",
+      "paired_change_pct": "15.766032262410494",
+      "ci95_low_pct": "14.129727202395665",
+      "ci95_high_pct": "17.402337322425325",
+      "positive_pairs": "5",
+      "min_pair_pct": "13.565741562964217",
+      "max_pair_pct": "18.260025898996936",
+      "reference_launcher_wall_mops": "49.91318599105526",
+      "treatment_launcher_wall_mops": "55.22956416214357",
+      "paired_launcher_wall_change_pct": "10.659003171120244",
+      "max_target_assigned_bytes": "4294967296"
+    },
+    {
+      "case": "confirm-h16",
+      "treatment": "cap4g",
+      "reference": "local",
+      "pairs": "5",
+      "reference_mops": "57.7449406039733",
+      "treatment_mops": "66.4261179359288",
+      "paired_change_pct": "15.035839584892031",
+      "ci95_low_pct": "13.696063370228051",
+      "ci95_high_pct": "16.375615799556005",
+      "positive_pairs": "5",
+      "min_pair_pct": "12.905863891713354",
+      "max_pair_pct": "16.744105229257332",
+      "reference_launcher_wall_mops": "50.21583938629935",
+      "treatment_launcher_wall_mops": "55.22956416214357",
+      "paired_launcher_wall_change_pct": "9.98689926386307",
+      "max_target_assigned_bytes": "4294967296"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+[
+  {
+    "name": "final-build",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "final-analysis-tests",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "final-test-build",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "final-arbiter-placement-policy",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "final-arbiter-runtime-smoke",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "final-arbiter-slab-arena-boundary-smoke",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-plan-loader.o",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-micro-seed.bc",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-micro-seed",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-micro-expanded.bc",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-micro-expanded",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-xindex-seed.bc",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-xindex-seed",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-xindex-expanded.bc",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "reproduce-xindex-expanded",
+    "passed": true,
+    "evidence": "finish-build-checks.console"
+  },
+  {
+    "name": "page-validation",
+    "passed": true,
+    "evidence": "page-validation/summary.json"
+  },
+  {
+    "name": "final-audit",
+    "command": [
+      "/usr/bin/python3",
+      "build/budgeted-companion/scripts/audit.py"
+    ],
+    "passed": true
+  },
+  {
+    "name": "final-summarize",
+    "command": [
+      "/usr/bin/python3",
+      "build/budgeted-companion/scripts/summarize.py"
+    ],
+    "passed": true
+  },
+  {
+    "name": "final-emit-plans",
+    "command": [
+      "/usr/bin/python3",
+      "build/budgeted-companion/scripts/emit-plans.py"
+    ],
+    "passed": true
+  },
+  {
+    "name": "final-plot",
+    "command": [
+      "/usr/bin/python3",
+      "build/budgeted-companion/scripts/plot.py"
+    ],
+    "passed": true
+  }
+]

@@ -44,6 +44,14 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NUMA_INCLUDE_DIR AND
     ../tests/llvm/arbiter-numa-placement.cpp
   )
 
+  add_executable(arbiter-placement-policy
+    ../tests/llvm/arbiter-placement-policy.cpp
+  )
+  target_include_directories(arbiter-placement-policy PRIVATE ${NUMAIF_INCLUDE_DIR})
+  target_link_libraries(arbiter-placement-policy PRIVATE arbiter_runtime pthread)
+  set_target_properties(arbiter-placement-policy PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY ${LLVM_RUNTIME_OUTPUT_INTDIR})
+
   add_executable(arbiter-slab-arena-smoke
     ../tests/llvm/arbiter-slab-arena-smoke.cpp
   )

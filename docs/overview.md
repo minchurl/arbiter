@@ -13,6 +13,7 @@ Paths below are relative to the repository root.
 | 1 | `compiler/llvm/lib/AllocationSite.cpp` | Discover supported allocations and assign deterministic site IDs |
 | 2 | `compiler/llvm/lib/hitm_seed/HITMRiskScoring.cpp` and `ObjectAccessAnalysis.cpp` | Trace object accesses; score, filter and select sites |
 | 3 | `compiler/llvm/lib/hitm_seed/HITMSeedOptions.cpp` and `HITMSeedPasses.cpp` | Policy options, CSV decisions and selected-site rewrite |
+| 3a | `compiler/llvm/lib/hitm_seed/CompanionAnalysis.cpp` | Optional common-worker-loop candidates; does not change seed selection |
 | 4 | `compiler/llvm/lib/RewriteHeapAllocations.cpp` and `RewriteMMapAllocations.cpp` | Rewrite allocation/deallocation calls to the runtime ABI |
 | 5 | `runtime/include/arbiter_runtime_site.h` and `runtime/src/arbiter_runtime_site.cpp` | C/C++ allocation contracts, diagnostics and mmap |
 | 6 | `runtime/src/arbiter_jemalloc_arena.cpp` | Per-site jemalloc arenas, NUMA extent hooks and ownership lookup |
@@ -20,7 +21,9 @@ Paths below are relative to the repository root.
 
 Active LLVM pipelines are `arbiter-report-sites`,
 `arbiter-experiment-all-rewrite`, `arbiter-report-hitm-seed-sites` and
-`arbiter-experiment-hitm-seed-rewrite`. Generic all-site rewriting and GUPS
+`arbiter-experiment-hitm-seed-rewrite`. The opt-in
+`arbiter-report-companion-sites` pipeline reports additional candidates only.
+Generic all-site rewriting and GUPS
 remain infrastructure checks; the active placement policy is seed-only.
 
 ## Selection
@@ -68,6 +71,34 @@ For the retained XIndex build, raw-046/evidence-balanced/published-RMW select
 The [config guide](../configs/hitm-seed/README.md) explains policy choices,
 parameters and analysis limits. Hardware measurements are separate from selection.
 
+## Companion candidates
+
+`CompanionAnalysis.cpp` reuses allocation provenance and worker discovery to
+report selected seeds and other heap allocations accessed in a common worker
+loop. Accesses in nested retry loops also contribute to their enclosing loops;
+the report retains the deepest common loop depth for each pair/function,
+merging access kinds when several loops have that depth. Loads,
+stores and RMW/CAS are classified separately. Ambiguous or unresolved modeled
+call contexts do not earn a unique allocation link. Synthetic unconstrained
+function roots are excluded from this report when actual call contexts exist.
+Ordinary seed scoring does not collect
+or consume this optional access map, and its policy/options are unchanged.
+
+This finds the microbenchmark's separately allocated read-only ballast without
+matching its name, size or site ID. It is **candidate evidence**, not a frequency
+measurement, dependence proof, critical-section classification, or prediction
+that moving an object is beneficial. Both accesses must appear in a common
+loop in the same analyzed function; call-graph reachability alone does not
+summarize callee accesses into a caller's loop. Disjoint paths can still produce
+may-co-access candidates.
+
+The earlier `UseBasedHotSet` implementation (PR #10, removed in #11) instead
+followed seed-owned pointer members and ranked their accesses. Its isolated
+replay is retained with the experiment evidence; it is not restored as an
+active compiler policy. These two relations find different candidates. Existing
+seed-only rewriting remains the default; experiments generate an explicit-site
+override from candidate reports and separately validate a placement plan.
+
 ## Why jemalloc still needs NUMA hooks
 
 A separate page per small object wastes memory: an early 357,388-object,
@@ -102,6 +133,26 @@ teardown; jemalloc can reuse extents and purge their physical pages.
 Selected allocations are strict: binding/allocation failure never retries on
 ordinary DRAM. Limit memory with a process/cgroup limit. One site may request
 mixed sizes/alignments, including objects larger than the former chunk limit.
+
+An opt-in `arbiter_set_site_placement(site, local_node, target_percent,
+max_target_bytes)` call configures a heap site before its first allocation.
+Supported percentages are 0 (local), 50 (page interleave between local and
+target), and 100 (target first). A finite cap limits the lifetime total of
+target-backed **mappings**, including jemalloc metadata and unused capacity;
+it is not a live-payload/RSS limit. A cap smaller than one page grants no target
+pages. `UINT64_MAX` means unlimited. For 50%, an odd interleaved range is charged
+conservatively for its extra page. Freed/purged mappings remain charged because
+jemalloc can reuse them; budgets are not refunded.
+
+Once a site's budget is consumed, further backing is intentionally local. This
+is the configured policy, not recovery from a failed target allocation: mapping
+or binding errors still fail strictly. Unconfigured sites retain their original
+target-only behavior, and mmap is unchanged. Repeated/late configuration returns
+`EBUSY`. Plans do not migrate existing memory, detect slowdown, or adapt online.
+Per-site caps are independent; a process-wide companion allowance can be divided
+between sites before execution. Seed allocations outside those plans are not
+included in that allowance. The exit report's `arbiter-placement-site` lines
+record each plan and its cumulative charge.
 
 | API | Failure behavior |
 |---|---|

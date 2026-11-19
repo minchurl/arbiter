@@ -1,0 +1,6 @@
+neighbor-h8 1 seed 28.488 Mops/s
+neighbor-h8 1 local 28.651 Mops/s
+neighbor-h8 1 half 29.193 Mops/s
+neighbor-h8 2 half 28.74 Mops/s
+neighbor-h8 2 local 29.097 Mops/s
+neighbor-h8 2 seed 29.027 Mops/s

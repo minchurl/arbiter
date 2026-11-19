@@ -4,6 +4,7 @@ add_llvm_library(ArbiterLLVM
   Passes.cpp
   hitm_seed/HITMRiskScoring.cpp
   hitm_seed/ObjectAccessAnalysis.cpp
+  hitm_seed/CompanionAnalysis.cpp
   hitm_seed/HITMSeedOptions.cpp
   hitm_seed/HITMSeedPasses.cpp
   ReportAllocationSites.cpp

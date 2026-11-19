@@ -70,6 +70,12 @@ accesses without new selection parameters. Its placement results show no
 consistent CXL gain; separate TTAS experiments improve highly contended cases.
 XIndex and microbenchmark selection and rewritten bitcode remain unchanged.
 
+An opt-in companion report now finds other allocations accessed in the same
+worker loop. A separate runtime API can interleave a selected heap site or cap
+its cumulative CXL backing, then use DRAM. Default seed selection is unchanged;
+candidate discovery and a byte cap do not by themselves predict a speedup.
+See [experimental placement](docs/benchmarks.md#experimental-companion-placement).
+
 Keep current behavior in the architecture guide, commands in the benchmark
 guide, and conclusions in the results guide. Add experiment data to `results/`
 and index it there instead of adding another narrative report.

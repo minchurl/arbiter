@@ -1,0 +1,28 @@
+{
+  "args": {
+    "workload": "micro",
+    "name": "budget-firsttouch-h16-ballast",
+    "binary": "build/placement-diagnosis/interleave-runtime/micro-ballast",
+    "nodes": [
+      0,
+      2
+    ],
+    "rounds": 3,
+    "seconds": 20,
+    "victims": 32,
+    "fg": 31,
+    "bg": 1,
+    "table": 16,
+    "ballast": 8192,
+    "reads": 50,
+    "objects": "ballast",
+    "alignment": 64,
+    "malloc_conf": "",
+    "membind": "0",
+    "noise": 0,
+    "noise_mode": "none",
+    "interleaved": true
+  },
+  "binary_sha256": "a8bda13016b314f164426daaf1a26588079b70a09b47287194c5b35c61d88aa0",
+  "start": 1795076226.003057
+}

@@ -6,6 +6,143 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## Automatic companion candidates and bounded first-touch placement (November 19)
+
+This follow-up connects compiler-discovered candidates to an opt-in runtime
+placement plan. Benchmark sources and original input IR stay frozen. There is
+no page migration in these throughput runs: jemalloc's extent hooks establish
+the memory policy before initialization touches the pages. The existing seed
+scores, thresholds, seed reports and seed-only rewritten IR are unchanged.
+
+The historical `UseBasedHotSet` code was found on
+`experiment/hotset-migration` and verified byte-for-byte against commit
+`046a8033dc7184e2b3e6595ee2b1c002b1603859` (PR #10; removed by `47d700a` in the
+PR #11 refactor). An isolated replay with today's seed policy finds XIndex
+members 69 and 72, but no extra micro/libcuckoo members. That algorithm follows
+seed-owned pointer members; micro's separately published ballast is not one.
+The new, small `arbiter-report-companion-sites` pass instead finds seed 4 and
+read-only companion 5 in micro's common worker loop. It reports no companions
+for the retained XIndex/libcuckoo inputs. These are distinct, incomplete
+relations, not proof that other companions do not exist. The historical
+algorithm and its extra policy knobs are not restored to the active compiler.
+
+The historical XIndex members are backing allocations of `allocated_blocks`,
+the vector of node-block pointers. Source uses are reserve/destruction,
+`allocate_new_block()` and `allocate_node()` in `xindex_buffer_impl.h`.
+Ownership and initialization writes therefore do not establish the
+per-operation access frequency seen in micro's ballast loop.
+
+The experiment automatically unions candidate reports with existing seeds,
+uses the existing explicit-site rewrite override, and links a generic plan
+constructor. The same expanded binary tests companion-local, 50% page
+interleave, target-first with a 1/4 GiB cap, and target-only placement. Seed
+objects keep their original CXL policy. All new binaries, including seed-only
+controls, contain the experimental constructor; without a plan it does nothing.
+The original automatic-selection executable is an additional control. Micro's
+149 timed worker instructions match across all three binaries after normalizing
+addresses. Initialization and exit-time page reporting are outside throughput;
+whole-process wall times are retained separately.
+
+A two-round screen freezes the highest-throughput companion strategy that
+beats original, new seed-only, and expanded-local controls in **both** rounds.
+Otherwise it retains the seed policy. This selects interleave for 16 entries,
+and retains seeds for 256 entries. Fresh confirmation uses five 30-second runs
+per treatment, reversing order in alternate rounds; 4 GiB is also confirmed
+as the preselected bounded alternative. Training and confirmation are separate.
+
+For **16 entries, 32 workers, 50% reads, no noise, 8 GiB ballast**, with the table
+in CXL, the fresh confirmation is:
+
+| Ballast plan, same expanded executable | Mops/s | Paired change vs DRAM ballast | Paired bootstrap 95% interval |
+|---|---:|---:|---:|
+| All DRAM | 57.745 | reference | — |
+| 50% page interleave | 66.766 | **+15.62%** | +14.80% to +16.28% |
+| Target first, **4 GiB backing cap** | 66.426 | **+15.04%** | +13.70% to +16.38% |
+
+Both plans improve in all five pairs. The original executable averages 51.832
+Mops/s, so its comparisons are larger (+28.82% and +28.19%), but rebuilding and
+linking the new runtime/harness also changes the seed-only control. Those
+larger numbers do not isolate placement. The same-expanded-binary comparisons
+above are the primary evidence. Bootstrap intervals enumerate all resamples
+for these small paired samples; they are exploratory estimates for this host
+and input, not a cross-workload guarantee.
+
+Using useful operations divided by launcher wall time (including initialization,
+teardown/reporting and controller polling), the same 30-second confirmations
+still improve by about **10.52%** for interleave and **9.99%** for the 4 GiB cap.
+These are amortized rates for this fixed-duration protocol, not fixed-work
+completion-time speedups.
+
+The 256-entry screen shows why blindly expanding the seed set is unsuitable:
+companion interleave is about 128 Mops/s versus about 531 Mops/s for the same
+expanded binary with DRAM ballast. The 1 GiB, 4 GiB and full-CXL candidates also
+lose. The original seed policy is therefore retained for this input. No
+benchmark-name, table-size, or allocation-ID exception is added to compiler
+selection; the differing decision comes from measured profile results.
+
+Two-round neighboring-input screens also reject a simple contention threshold.
+At 8 entries, interleave changes throughput by **+0.33%** against the same
+expanded-local binary, with one positive and one negative pair. At 32 entries,
+it loses **40.97%**, with both pairs negative. These small screens are not
+confirmations; only the independently confirmed 16-entry profile is exported.
+
+Three fresh original/new seed-only pairs on the default micro input average
+**536.216 → 530.767 Mops/s**, or **−0.98%** paired, with an interval of
+−3.13% to +2.76%. Run-to-run differences change sign; this is not evidence
+of a clear regression, nor proof of exact performance equivalence.
+
+Full XIndex YCSB-A regression runs execute all **400M transactions** per process,
+with the expected final digest `0x7474b8e9d3962859`. Three repetitions of each
+control give **26.780 Mops/s** for new-runtime DRAM placement and **48.438** for
+new-runtime seed CXL placement: **+81.26%** paired, all three positive. Original
+seed CXL averages **48.630**; new versus original is **−0.34%**, with a paired
+interval of −4.31% to +6.02%. The existing CXL advantage is retained without
+changing the XIndex selection policy.
+
+Adding the historical XIndex members fails the two-round selection rule.
+Their expanded variants also raise peak RSS from about **31.99 to 33.43 GiB**:
+the numerous 8-byte vector-storage allocations inherit the existing 64-byte
+arena alignment floor. Site 69 has 26.4M allocations in the retained trace.
+The 4 GiB total companion cap is split into 2 GiB per site; observed charges
+are about 1.79 GB and 4 MiB, so this cap does not bind here and placement matches
+the full-CXL candidate. Keeping the original seeds avoids this extra footprint.
+
+The new runtime limit is a **per-site lifetime backing-mapping budget**,
+including allocator metadata and unused extent capacity. It is not a current
+payload/RSS cap, and it does not include seed sites outside the companion plan.
+All 4 GiB confirmation runs charge exactly 4,294,967,296 bytes, then place
+remaining backing locally. Interleave without a cap charges about 5 GiB of
+virtual backing for an 8 GiB resident object because of jemalloc's extent size.
+This conservative accounting avoids exceeding the configured mapping budget;
+freed/purged extents remain charged because they can be reused.
+
+This establishes a usable path from candidate discovery through **offline
+profile selection** to bounded allocation placement. The runtime itself does
+not infer workload conditions, measure throughput, migrate existing memory,
+or revert a slowdown. The profile launcher chooses the seed-only **binary** for unmatched
+arguments; simply omitting a plan from an expanded binary would instead put
+all its rewritten sites in CXL. The profile launcher also checks binary and
+plan hashes before applying a matching plan. Argument matching does not detect
+load changes or changed input-file contents. Throughput
+improvement does not establish the proposed Shared-state/HITM mechanism; the
+previous counter evidence below still cautions against that claim.
+
+The archive contains **92 accepted performance processes**, including 21 full
+XIndex executions, plus rejected attempts kept separately. Four additional
+placement diagnostics query all 2,097,153 ballast pages before and after
+timing. The ordered page-residency hashes stay identical: interleave has
+1,048,576 pages on CXL; the 4 GiB cap has 1,048,064. These diagnostics are
+excluded from the throughput table. Final validation passes 19 LLVM checks,
+runtime smoke/boundary and concurrent-budget/failure-path tests, and six
+profile-launcher checks. Final seed reports remain identical for micro,
+XIndex and libcuckoo; all nine rebuilt experimental artifacts match their
+measured versions byte-for-byte. The source/input audit retains hashes for
+54 frozen files and checks that main and the full XIndex traces remain intact.
+
+See [the evidence guide](../results/README.md),
+[paired results](../results/budgeted-companion/20261119/summary.csv), and
+[the comparison figure](../results/budgeted-companion/20261119/performance.png).
+
 ## Companion allocations and partial CXL placement (November 19)
 
 This experiment tests libcuckoo's initial bucket array and lock storage

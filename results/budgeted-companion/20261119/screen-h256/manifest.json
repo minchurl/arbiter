@@ -1,0 +1,70 @@
+{
+  "args": {
+    "case": "screen-h256",
+    "workload": "micro",
+    "table": 256,
+    "threads": 32,
+    "reads": 50,
+    "seconds": 20,
+    "rounds": 2,
+    "strategies": [
+      "original",
+      "seed",
+      "local",
+      "half",
+      "cap1g",
+      "cap4g",
+      "full"
+    ]
+  },
+  "variant": {
+    "seeds": [
+      4
+    ],
+    "legacy_members": [],
+    "loop_companions": [
+      5
+    ],
+    "companions": [
+      5
+    ],
+    "binaries": {
+      "seed": {
+        "path": "/home/shin/arbiter/build/budgeted-companion/micro/seed",
+        "sha256": "d593c92f95a16a01717c7ed3b2a75f7c058e4080f63f78351767d6a80f2f122f",
+        "bitcode_sha256": "3a53d5e8d388dfc78d6687aaafc0b48501503e4cd6a3d2fd83566303bd230e8c"
+      },
+      "expanded": {
+        "path": "/home/shin/arbiter/build/budgeted-companion/micro/expanded",
+        "sha256": "8196c764341f404ac5676d0f7f6363bb93ad7c0743f39c457dd8dbc64650a44f",
+        "bitcode_sha256": "a5345f0b1cc3fadd947fe4700594cc1b32bde4993e23950154d1feea89c2991e"
+      }
+    },
+    "original_binary": "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-placed",
+    "source_sha256": "ceaed4cd970cb94f14d9771203600ccff1cb5140a95c551c5184fb8881bd07de"
+  },
+  "policy": {
+    "local": [
+      0,
+      0
+    ],
+    "half": [
+      50,
+      18446744073709551615
+    ],
+    "cap1g": [
+      100,
+      1073741824
+    ],
+    "cap4g": [
+      100,
+      4294967296
+    ],
+    "full": [
+      100,
+      18446744073709551615
+    ]
+  },
+  "cap_scope": "Finite budgets divided equally across automatically discovered companion sites; all selected seed sites retain their original policy.",
+  "measurement": "Untraced benchmark, no page migration. Live NUMA VMAs checked after initialization; full per-page checks are separate diagnostics. Five quiet seconds before each run; reject overlap with a foreign process consuming more than one CPU core in a sampled interval. Small background-service bursts remain ordinary host noise. Initial screen-h16 used the stricter 0.15-core threshold."
+}

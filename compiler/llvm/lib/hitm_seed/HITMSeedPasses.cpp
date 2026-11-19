@@ -1,6 +1,7 @@
 #include "arbiter/LLVM/HITMSeed/Passes.h"
 
 #include "HITMRiskScoring.h"
+#include "CompanionAnalysis.h"
 #include "HITMSeedOptions.h"
 #include "arbiter/LLVM/AllocationSite.h"
 #include "arbiter/LLVM/RewritePlan.h"
@@ -127,6 +128,25 @@ PreservedAnalyses ReportPass::run(Module &module, ModuleAnalysisManager &) {
 
   raw_ostream &stream = file ? *file : outs();
   emitReport(stream, selection.records);
+  return PreservedAnalyses::all();
+}
+
+PreservedAnalyses CompanionReportPass::run(Module &module,
+                                         ModuleAnalysisManager &) {
+  auto sites = collectAllocationSites(module);
+  auto seeds = selectHITMSeeds(module, sites, hitmSeedPolicyFromOptions());
+  std::error_code error;
+  auto file = openFile(ReportPath, error);
+  if (error)
+    failConfig(Twine("cannot open companion report: ") + error.message());
+  raw_ostream &stream = file ? *file : outs();
+  stream << "seed_id,companion_id,relation,function,access,loop_depth\n";
+  for (const auto &candidate : discoverLoopCompanions(module, seeds)) {
+    stream << candidate.seed << ',' << candidate.companion
+           << ",same-worker-loop,";
+    writeCsvValue(stream, candidate.function);
+    stream << ',' << candidate.access << ',' << candidate.loopDepth << '\n';
+  }
   return PreservedAnalyses::all();
 }
 

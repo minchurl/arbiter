@@ -1,0 +1,29 @@
+screen-h16 1 original 49.477 Mops/s
+screen-h16 1 seed 57.407 Mops/s
+screen-h16 1 local 57.331 Mops/s
+REJECT concurrent load screen-h16 1 half
+screen-h16 1 half 67.483 Mops/s
+REJECT concurrent load screen-h16 1 cap1g
+REJECT concurrent load screen-h16 1 cap1g
+WAIT host busy: [('avahi-daemon', 0.59)]
+screen-h16 1 cap1g 56.38 Mops/s
+REJECT concurrent load screen-h16 1 cap4g
+WAIT host busy: [('codex', 0.23)]
+screen-h16 1 cap4g 66.831 Mops/s
+REJECT concurrent load screen-h16 1 full
+REJECT concurrent load screen-h16 1 full
+WAIT host busy: [('avahi-daemon', 0.4)]
+REJECT concurrent load screen-h16 1 full
+REJECT concurrent load screen-h16 1 full
+screen-h16 1 full 39.962 Mops/s
+REJECT concurrent load screen-h16 2 full
+REJECT concurrent load screen-h16 2 full
+screen-h16 2 full 39.942 Mops/s
+REJECT concurrent load screen-h16 2 cap4g
+screen-h16 2 cap4g 66.219 Mops/s
+screen-h16 2 cap1g 59.485 Mops/s
+screen-h16 2 half 66.28 Mops/s
+screen-h16 2 local 57.825 Mops/s
+screen-h16 2 seed 57.791 Mops/s
+REJECT concurrent load screen-h16 2 original
+screen-h16 2 original 51.776 Mops/s

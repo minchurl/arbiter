@@ -1,0 +1,12 @@
+screen-xindex-companions 1 original 47.598 Mops/s
+screen-xindex-companions 1 seed 49.697 Mops/s
+screen-xindex-companions 1 local 49.239 Mops/s
+screen-xindex-companions 1 half 49.61 Mops/s
+screen-xindex-companions 1 cap4g 48.565 Mops/s
+screen-xindex-companions 1 full 48.532 Mops/s
+screen-xindex-companions 2 full 47.928 Mops/s
+screen-xindex-companions 2 cap4g 47.704 Mops/s
+screen-xindex-companions 2 half 49.777 Mops/s
+screen-xindex-companions 2 local 48.168 Mops/s
+screen-xindex-companions 2 seed 50.068 Mops/s
+screen-xindex-companions 2 original 49.761 Mops/s

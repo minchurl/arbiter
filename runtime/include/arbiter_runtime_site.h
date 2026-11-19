@@ -7,6 +7,19 @@
 extern "C" {
 #endif
 
+// Opt-in heap placement plan, configured before this site's first allocation.
+// mmap placement is unchanged. Repeated/late configuration returns EBUSY.
+// target_percent is 0 (local), 50 (interleave), or 100 (target first).
+// max_target_bytes caps page-rounded backing mappings, including allocator
+// metadata, for this site over its lifetime. UINT64_MAX means unlimited.
+// Exhausting the cap deliberately places further backing in local_node;
+// allocation/binding errors still fail strictly. Returns -1 with errno on error.
+// If local_node equals ARBITER_TARGET_NODE, placement stays on that node and
+// consumes no target budget. Plans do not migrate existing pages or adapt online.
+int arbiter_set_site_placement(uint32_t site_id, int local_node,
+                               unsigned target_percent,
+                               uint64_t max_target_bytes);
+
 void *arbiter_alloc_site(uint64_t size, uint64_t align, uint32_t site_id,
                          uint32_t reserved);
 void *arbiter_new_site(uint64_t size, uint64_t align, uint32_t site_id,

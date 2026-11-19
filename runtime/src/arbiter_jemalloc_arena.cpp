@@ -33,7 +33,17 @@ void *fail(const char *stage, int code) {
   return nullptr;
 }
 
-struct Site {
+struct Placement {
+  unsigned percent;
+  uint64_t limit;
+  int localNode;
+  bitmask *local, *interleaved;
+};
+struct Arena;
+struct Site : extent_hooks_t {
+  Arena *owner;
+  const Placement *placement = nullptr;
+  std::atomic<uint64_t> targetAssigned{0};
   unsigned arena;
   uint64_t firstSize;
   std::atomic<bool> mixedSizes{false};
@@ -53,6 +63,8 @@ struct Arena : extent_hooks_t {
   bool reportEnabled;
   std::atomic<Site *> sites[kMaxSiteId + 1]{};
   std::mutex siteMutex, extentMutex;
+  std::mutex placementMutex;
+  std::map<uint32_t, Placement> placements;
   std::map<uintptr_t, Extent> extents;
 
   static Arena *create();
@@ -68,10 +80,41 @@ struct Arena : extent_hooks_t {
     return false;
   }
 
+  bool bindPlanned(Site &site, void *ptr, size_t size, uint64_t &charged) {
+    const Placement &plan = *site.placement;
+    auto apply = [&](size_t bytes, int mode, bitmask *nodes) {
+      if (!bytes || mbind(ptr, bytes, mode, nodes->maskp, nodes->size + 1, 0) == 0)
+        return true;
+      fail("mbind-placement-plan", errno);
+      return false;
+    };
+    charged = 0;
+    if (!apply(size, MPOL_BIND, plan.local))
+      return false;
+    if (!plan.percent || plan.localNode == node)
+      return true;
+    uint64_t used = site.targetAssigned.load(std::memory_order_relaxed);
+    uint64_t available = (plan.limit - used) / pageSize;
+    size_t pages = size / pageSize;
+    size_t targetPages = std::min<uint64_t>(available, pages);
+    if (!targetPages)
+      return true;
+    if (plan.percent == 50) {
+      // An odd-length interleaved range may put its extra page on either
+      // node. Charge the ceiling so the budget is always an upper bound.
+      size_t spread = targetPages >= (pages + 1) / 2 ? pages : 2 * targetPages;
+      charged = ((spread + 1) / 2) * pageSize;
+      return apply(spread * pageSize, MPOL_INTERLEAVE, plan.interleaved);
+    }
+    charged = targetPages * pageSize;
+    return apply(charged, MPOL_BIND, mask);
+  }
+
   static void *mapExtent(extent_hooks_t *hooks, void *newAddr, size_t size,
                          size_t align, bool *zero, bool *commit,
                          unsigned index) {
-    auto &arena = *static_cast<Arena *>(hooks);
+    auto &site = *static_cast<Site *>(hooks);
+    auto &arena = *site.owner;
     // Refuse fixed-address requests rather than overwriting an existing map.
     // jemalloc can retry with an unconstrained address.
     if (newAddr || size > std::numeric_limits<size_t>::max() - align)
@@ -89,8 +132,20 @@ struct Arena : extent_hooks_t {
     if (suffix)
       munmap(reinterpret_cast<void *>(start + size), suffix);
     void *ptr = reinterpret_cast<void *>(start);
-    if (!arena.bind(ptr, size))
+    std::unique_lock<std::mutex> placementLock(arena.placementMutex,
+                                              std::defer_lock);
+    uint64_t charged = 0;
+    if (site.placement) {
+      placementLock.lock();
+      if (!arena.bindPlanned(site, ptr, size, charged)) {
+        int error = errno;
+        munmap(ptr, size);
+        errno = error;
+        return nullptr;
+      }
+    } else if (!arena.bind(ptr, size)) {
       return nullptr;
+    }
     try {
       std::lock_guard<std::mutex> lock(arena.extentMutex);
       arena.extents.emplace(start, Extent{size, index});
@@ -98,6 +153,7 @@ struct Arena : extent_hooks_t {
       munmap(ptr, size);
       return fail("extent-registry", ENOMEM);
     }
+    site.targetAssigned.fetch_add(charged, std::memory_order_relaxed);
     *zero = *commit = true;
     return ptr;
   }
@@ -254,6 +310,14 @@ void Arena::report() {
                  " allocated_bytes=%zu assigned_bytes=%" PRIu64 "\n",
                  id, site->mixedSizes.load() ? 0 : site->firstSize, a, f, a - f,
                  liveBytes, bytes);
+    if (site->placement)
+      std::fprintf(stderr,
+                   "arbiter-placement-site site=%u local_node=%d target_node=%d"
+                   " target_percent=%u target_limit_bytes=%" PRIu64
+                   " target_assigned_bytes=%" PRIu64 "\n",
+                   id, site->placement->localNode, node,
+                   site->placement->percent, site->placement->limit,
+                   site->targetAssigned.load(std::memory_order_relaxed));
     allocations += a;
     frees += f;
     assigned += bytes;
@@ -327,6 +391,48 @@ void Arena::reportResidency(const std::map<uintptr_t, Extent> &ranges) {
 
 AllocationError arenaError() { return lastError; }
 
+int setSitePlacement(uint32_t id, int localNode, unsigned percent,
+                     uint64_t limit) {
+  if (id > kMaxSiteId || (percent != 0 && percent != 50 && percent != 100) ||
+      localNode < 0 || numa_available() < 0 || localNode > numa_max_node() ||
+      !numa_bitmask_isbitset(numa_all_nodes_ptr, localNode)) {
+    errno = EINVAL;
+    return -1;
+  }
+  Arena *arena = getArena();
+  if (!arena)
+    return -1;
+  std::lock_guard<std::mutex> lock(arena->siteMutex);
+  if (arena->sites[id].load(std::memory_order_acquire) ||
+      arena->placements.count(id)) {
+    errno = EBUSY;
+    return -1;
+  }
+  bitmask *local = numa_allocate_nodemask();
+  bitmask *interleaved = numa_allocate_nodemask();
+  if (!local || !interleaved) {
+    if (local) numa_free_nodemask(local);
+    if (interleaved) numa_free_nodemask(interleaved);
+    errno = ENOMEM;
+    return -1;
+  }
+  numa_bitmask_clearall(local);
+  numa_bitmask_setbit(local, localNode);
+  numa_bitmask_clearall(interleaved);
+  numa_bitmask_setbit(interleaved, localNode);
+  numa_bitmask_setbit(interleaved, arena->node);
+  try {
+    arena->placements.emplace(id, Placement{percent, limit, localNode,
+                                            local, interleaved});
+  } catch (const std::bad_alloc &) {
+    numa_free_nodemask(local);
+    numa_free_nodemask(interleaved);
+    errno = ENOMEM;
+    return -1;
+  }
+  return 0;
+}
+
 void *arenaAllocate(uint64_t size, uint64_t align, uint32_t siteId) {
   lastError = {nullptr, 0};
   if (size > static_cast<uint64_t>(std::numeric_limits<ptrdiff_t>::max()))
@@ -347,7 +453,12 @@ void *arenaAllocate(uint64_t size, uint64_t align, uint32_t siteId) {
       site = new (std::nothrow) Site{};
       if (!site)
         return fail("site-metadata", ENOMEM);
-      extent_hooks_t *hooks = arena;
+      *static_cast<extent_hooks_t *>(site) = *arena;
+      site->owner = arena;
+      auto policy = arena->placements.find(siteId);
+      if (policy != arena->placements.end())
+        site->placement = &policy->second;
+      extent_hooks_t *hooks = site;
       size_t len = sizeof(site->arena);
       int error =
           mallctl("arenas.create", &site->arena, &len, &hooks, sizeof(hooks));
@@ -422,3 +533,13 @@ bool arenaDeallocate(void *) { return false; }
 void *arenaMap(uint64_t, int, int) { return MAP_FAILED; }
 } // namespace arbiter::runtime
 #endif
+
+extern "C" int arbiter_set_site_placement(uint32_t id, int local_node,
+                                          unsigned percent, uint64_t limit) {
+#if ARBITER_HAS_NUMA_ARENA
+  return arbiter::runtime::setSitePlacement(id, local_node, percent, limit);
+#else
+  errno = ENOSYS;
+  return -1;
+#endif
+}

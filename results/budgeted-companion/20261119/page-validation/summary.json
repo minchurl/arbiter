@@ -1,0 +1,113 @@
+[
+  {
+    "strategy": "local",
+    "objects": {
+      "table": {
+        "address": "0x7fe150600000",
+        "bytes": 1024,
+        "pages": 1,
+        "nodes": {
+          "2": 1
+        },
+        "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+      },
+      "ballast": {
+        "address": "0x7fded0000500",
+        "bytes": 8589934592,
+        "pages": 2097153,
+        "nodes": {
+          "0": 2097153
+        },
+        "ordered_residency_sha256": "74eaa77d56cf8bdf33d7545d48ecd9fd361975c8fa23b9098eb21efd2e08cd31"
+      }
+    },
+    "target_limit_bytes": 0,
+    "target_assigned_bytes": 0,
+    "unchanged_before_after": true,
+    "note": "All 4 KiB pages intersecting each object, including partial boundary pages. Query-only diagnostics, excluded from performance results."
+  },
+  {
+    "strategy": "half",
+    "objects": {
+      "table": {
+        "address": "0x7f06ca200000",
+        "bytes": 1024,
+        "pages": 1,
+        "nodes": {
+          "2": 1
+        },
+        "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+      },
+      "ballast": {
+        "address": "0x7f0449c00d00",
+        "bytes": 8589934592,
+        "pages": 2097153,
+        "nodes": {
+          "0": 1048577,
+          "2": 1048576
+        },
+        "ordered_residency_sha256": "51a04e7d0e8858fb09944c686f662f503ad0bd9ad24aa4ae920e8e7ea98afc74"
+      }
+    },
+    "target_limit_bytes": 18446744073709551615,
+    "target_assigned_bytes": 5369757696,
+    "unchanged_before_after": true,
+    "note": "All 4 KiB pages intersecting each object, including partial boundary pages. Query-only diagnostics, excluded from performance results."
+  },
+  {
+    "strategy": "cap1g",
+    "objects": {
+      "table": {
+        "address": "0x7fdc1f200000",
+        "bytes": 1024,
+        "pages": 1,
+        "nodes": {
+          "2": 1
+        },
+        "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+      },
+      "ballast": {
+        "address": "0x7fd99ec00c00",
+        "bytes": 8589934592,
+        "pages": 2097153,
+        "nodes": {
+          "2": 261632,
+          "0": 1835521
+        },
+        "ordered_residency_sha256": "b219c14d6524f02868f0248a638f65517df808e1fc426345b5ae156df0e710e9"
+      }
+    },
+    "target_limit_bytes": 1073741824,
+    "target_assigned_bytes": 1073741824,
+    "unchanged_before_after": true,
+    "note": "All 4 KiB pages intersecting each object, including partial boundary pages. Query-only diagnostics, excluded from performance results."
+  },
+  {
+    "strategy": "cap4g",
+    "objects": {
+      "table": {
+        "address": "0x7f1c89a00000",
+        "bytes": 1024,
+        "pages": 1,
+        "nodes": {
+          "2": 1
+        },
+        "ordered_residency_sha256": "26b25d457597a7b0463f9620f666dd10aa2c4373a505967c7c8d70922a2d6ece"
+      },
+      "ballast": {
+        "address": "0x7f1a09400e80",
+        "bytes": 8589934592,
+        "pages": 2097153,
+        "nodes": {
+          "2": 1048064,
+          "0": 1049089
+        },
+        "ordered_residency_sha256": "1652defb3ca82ea26dedf7cbd50c16b8292d67fed36071c9ca23d4bba8535d1e"
+      }
+    },
+    "target_limit_bytes": 4294967296,
+    "target_assigned_bytes": 4294967296,
+    "unchanged_before_after": true,
+    "note": "All 4 KiB pages intersecting each object, including partial boundary pages. Query-only diagnostics, excluded from performance results."
+  }
+]

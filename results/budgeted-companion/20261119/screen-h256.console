@@ -1,0 +1,14 @@
+screen-h256 1 original 536.06 Mops/s
+screen-h256 1 seed 536.005 Mops/s
+screen-h256 1 local 532.85 Mops/s
+screen-h256 1 half 128.379 Mops/s
+screen-h256 1 cap1g 351.438 Mops/s
+screen-h256 1 cap4g 128.037 Mops/s
+screen-h256 1 full 53.931 Mops/s
+screen-h256 2 full 53.922 Mops/s
+screen-h256 2 cap4g 128.174 Mops/s
+screen-h256 2 cap1g 350.087 Mops/s
+screen-h256 2 half 127.97 Mops/s
+screen-h256 2 local 529.742 Mops/s
+screen-h256 2 seed 527.445 Mops/s
+screen-h256 2 original 529.996 Mops/s

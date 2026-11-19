@@ -1,0 +1,6 @@
+regression-h256 1 original 541.835 Mops/s
+regression-h256 1 seed 524.874 Mops/s
+regression-h256 2 seed 526.005 Mops/s
+regression-h256 2 original 539.907 Mops/s
+regression-h256 3 original 526.906 Mops/s
+regression-h256 3 seed 541.423 Mops/s

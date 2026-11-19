@@ -9,6 +9,7 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [budgeted-companion/20261119](budgeted-companion/20261119/) | Historical companion replay, common-loop candidates, runtime first-touch interleave/caps, fresh micro confirmations and full XIndex regression. `summary.csv`, `decisions.json`, `accepted-plans/`, `budget-checks.csv`, `audit.json`, `final-selection-checks.json`, `performance.png`. |
 | [companion-placement/20261119](companion-placement/20261119/) | Frozen-code libcuckoo lock/bucket ablations, micro partial-ballast placement and refinement, fresh confirmations and full XIndex A regression. `summary.csv`, `placement-validation.csv`, `mechanism-summary.json`, `audit.json`, `checks.json`, `performance.png`, `placement-window.png`. |
 | [placement-causality/20261119](placement-causality/20261119/) | Unchanged XIndex binaries: reversible cold-buffer and hot-page placement in the same process, phase-aligned retry/latency profiles, and libcuckoo cache controls. `phases.csv`, `mechanism-summary.json`, `cache-summary.csv`, `checks.json`, `placement-crossover.png`. |
 | [write-heavy-20261119](libcuckoo/write-heavy-20261119/) | Unchanged libcuckoo binaries: successful 100% updates, insert/erase and insertion with/without growth; paired placement comparisons, separate lock diagnostics and runner validation. `runs.csv`, `summary.csv`, `checks.json`, `raw-runs.jsonl.gz`. |
@@ -21,7 +22,49 @@ of today's runtime. Directory names below link to the retained data directly.
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
 
-For companion placement, each case retains its workload/binary manifest and
+For budgeted companion placement, 92 accepted processes cover eight cases:
+14 each for the 16/256-entry screens, 25 fresh 16-entry confirmations, six
+default-micro regressions, nine full XIndex regressions, 12 historical XIndex
+companion screens, and six each for the 8/32-entry exploratory screens.
+Every XIndex process replays 400M timed transactions with a validated digest.
+Twelve CPU-guard-rejected attempts and a six-run initial pilot affected by
+another benchmark are retained but excluded. The first screen used a stricter
+foreign-CPU threshold than subsequent cases; per-attempt manifests preserve
+that protocol difference. This was a monitored shared host, not an exclusive
+reservation, and brief background-service bursts can remain.
+
+`summary.csv` separates screens from confirmations and includes paired intervals
+and whole-launcher amortized throughput. `accepted-plans/` contains the
+confirmed 50% plan and the independently confirmed 4 GiB bounded alternative.
+The profile launcher validates exact arguments and artifact hashes, and selects
+the seed-only binary for an unmatched input. It is an offline profile policy,
+not online workload detection or throughput feedback. The budget is per-site
+lifetime target backing, not total-process CXL RSS.
+
+`final-selection-checks.json`, `reproduction.json`, `audit.json` and
+`micro/worker-equivalence.json` establish unchanged seed reports, identical
+rebuilt binaries, frozen benchmark/input files, and unchanged timed worker
+instructions. `checks.json` and `launcher-checks.json` record LLVM, runtime,
+concurrent-cap/failure-path and profile-launch tests. The four diagnostic
+placement runs in `page-validation/summary.json` query every object page before
+and after timing, with zero errors and stable residency hashes; they are not
+performance rows. No new PMU evidence is claimed for the speedup's mechanism.
+
+Restore original command records, logs, CPU-guard records, placement checks,
+compiler reports and source extracts from the lossless `raw-files.jsonl.gz`:
+
+```sh
+python3 results/budgeted-companion/20261119/scripts/extract-raw.py confirm-h16 /tmp/arbiter-confirm-h16
+python3 results/budgeted-companion/20261119/scripts/summarize.py --base results/budgeted-companion/20261119
+python3 results/budgeted-companion/20261119/scripts/plot.py --base results/budgeted-companion/20261119
+```
+
+The extraction destination must not exist. Summarization and plotting use the
+archived rows; plotting requires Matplotlib and NumPy. Build/runner scripts
+retain this host's tool paths and frozen build inputs, and require fresh output
+directories for a new experiment. `artifacts.sha256` covers the archived files.
+
+For the earlier companion placement experiment, each case retains its workload/binary manifest and
 per-process CSV: 134 screen rows, 125 fresh confirmation rows, 9 PMU rows and
 6 full XIndex runs, plus the separate nine-phase crossover. `raw-files.jsonl.gz` stores the original command records,
 logs, GDB command files, NUMA snapshots, page-validation JSON and perf output
