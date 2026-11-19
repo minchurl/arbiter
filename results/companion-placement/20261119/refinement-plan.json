@@ -1,0 +1,79 @@
+{
+  "rule": "Expand only if the fresh five-pair interval is positive and at least four pairs improve. Choose the strongest confirmed table placement; test 0/10/20/30/50%. Confirm a new peak only if both wide-screen rounds beat 10% and the average advantage is at least 1%.",
+  "eligible": [
+    {
+      "case": "confirm-micro-best",
+      "treatment": "table0-ballast10",
+      "n": "5",
+      "control_mops": "52.02949969559442",
+      "treatment_mops": "52.95954150789299",
+      "paired_percent": "1.788857789022602",
+      "median_paired_percent": "2.0972454926122763",
+      "positive_pairs": "5",
+      "min_paired_percent": "0.24526700719529337",
+      "max_paired_percent": "3.3043289819654875",
+      "bootstrap_low_percent": "0.7442343272661356",
+      "bootstrap_high_percent": "2.8334812507790685",
+      "workload": "{\"binary\": null, \"fractions\": [0, 10], \"name\": \"confirm-micro-best\", \"profile\": false, \"reads\": 50, \"rounds\": 5, \"seconds\": 30, \"table\": 16, \"table_nodes\": [0, 2], \"threads\": 32}"
+    },
+    {
+      "case": "confirm-micro-best",
+      "treatment": "table2-ballast10",
+      "n": "5",
+      "control_mops": "52.1208130457143",
+      "treatment_mops": "53.232179546955365",
+      "paired_percent": "2.133330505891018",
+      "median_paired_percent": "2.685903807213186",
+      "positive_pairs": "5",
+      "min_paired_percent": "0.3138030710725159",
+      "max_paired_percent": "3.9499284602355633",
+      "bootstrap_low_percent": "1.032280079958947",
+      "bootstrap_high_percent": "3.2343809318230887",
+      "workload": "{\"binary\": null, \"fractions\": [0, 10], \"name\": \"confirm-micro-best\", \"profile\": false, \"reads\": 50, \"rounds\": 5, \"seconds\": 30, \"table\": 16, \"table_nodes\": [0, 2], \"threads\": 32}"
+    }
+  ],
+  "executed": true,
+  "chosen": {
+    "case": "confirm-micro-best",
+    "treatment": "table2-ballast10",
+    "n": "5",
+    "control_mops": "52.1208130457143",
+    "treatment_mops": "53.232179546955365",
+    "paired_percent": "2.133330505891018",
+    "median_paired_percent": "2.685903807213186",
+    "positive_pairs": "5",
+    "min_paired_percent": "0.3138030710725159",
+    "max_paired_percent": "3.9499284602355633",
+    "bootstrap_low_percent": "1.032280079958947",
+    "bootstrap_high_percent": "3.2343809318230887",
+    "workload": "{\"binary\": null, \"fractions\": [0, 10], \"name\": \"confirm-micro-best\", \"profile\": false, \"reads\": 50, \"rounds\": 5, \"seconds\": 30, \"table\": 16, \"table_nodes\": [0, 2], \"threads\": 32}"
+  },
+  "table_node": 2,
+  "new_peaks": [
+    {
+      "fraction": 20,
+      "ratios_vs_10": [
+        1.0609240967075941,
+        1.0247380747065524
+      ],
+      "mean_ratio": 1.0428310857070733
+    },
+    {
+      "fraction": 30,
+      "ratios_vs_10": [
+        1.0818537709996827,
+        1.039182758736649
+      ],
+      "mean_ratio": 1.0605182648681657
+    },
+    {
+      "fraction": 50,
+      "ratios_vs_10": [
+        1.1151389441996724,
+        1.1031598207054825
+      ],
+      "mean_ratio": 1.1091493824525775
+    }
+  ],
+  "confirmed_fraction": 50
+}

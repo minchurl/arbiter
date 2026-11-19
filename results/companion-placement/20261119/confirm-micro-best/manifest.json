@@ -1,0 +1,23 @@
+{
+  "args": {
+    "name": "confirm-micro-best",
+    "rounds": 5,
+    "seconds": 30,
+    "table": 16,
+    "threads": 32,
+    "reads": 50,
+    "table_nodes": [
+      0,
+      2
+    ],
+    "fractions": [
+      0,
+      10
+    ],
+    "profile": false,
+    "binary": null
+  },
+  "binary": "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-placed",
+  "sha256": "85f73753e7c5497a605129e827648c8b5a9531b055e3ad7485b6d250054e397e",
+  "method": "Random nested subsets of ballast 4KiB pages, moved before worker creation; full object residency verified before and after timer. All treatments within this run use the same binary and GDB protocol."
+}

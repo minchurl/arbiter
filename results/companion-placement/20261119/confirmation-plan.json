@@ -1,0 +1,16 @@
+{
+  "micro_best_screen": {
+    "case": "screen-micro-hot16",
+    "treatment": "table2-ballast10",
+    "n": "2",
+    "control_mops": "52.296272203907556",
+    "treatment_mops": "53.704429021799235",
+    "paired_percent": "2.692671712311623",
+    "min_paired_percent": "2.1137197359216486",
+    "max_paired_percent": "3.271623688701597",
+    "bootstrap_low_percent": "",
+    "bootstrap_high_percent": "",
+    "workload": "{\"fractions\": [0, 1, 5, 10], \"name\": \"screen-micro-hot16\", \"profile\": false, \"reads\": 50, \"rounds\": 2, \"seconds\": 20, \"table\": 16, \"table_nodes\": [2], \"threads\": 32}"
+  },
+  "rule": "Confirm the strongest observed non-default micro condition on fresh processes, with all-local and table-only controls; also confirm all default ballast fractions and apparent libcuckoo gains. Screen and confirmation samples are not pooled."
+}

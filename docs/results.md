@@ -6,6 +6,184 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## Companion allocations and partial CXL placement (November 19)
+
+This experiment tests libcuckoo's initial bucket array and lock storage
+separately and together, and places 1%, 5% or 10% of the microbenchmark's
+8 GiB ballast pages in CXL, expanding the fraction search after a positive
+confirmation. Benchmark/library sources, original input IR,
+production runtime and automatic selection policy remain unchanged. Results
+are timed-workload throughput, excluding initialization and page migration.
+
+Libcuckoo uses the existing allocation-site override: site 26 is the 4 MiB
+lock vector; site 13 is the initial bucket array (36 MiB for 1,048,576 keys).
+The unused one-bucket `old_buckets_` allocation is not selected. Every timed
+operation is a successful increment of an existing key; the final value sum,
+key count and unchanged hashpower are checked. CPU and ordinary memory stay
+on node 0, while selected objects use node 0 or CXL node 2. Each placement
+variant has its own matching Local control. The lock-only control's complete
+machine-code section matches the existing automatic-selection executable;
+the worker's 201 instructions and three lookup/lock helpers also match across
+the three variants after normalizing addresses.
+
+Micro uses the corrected 64-byte entries and epoch stores, 32 workers and
+no noise threads. All allocations initially reside on node 0. An external
+GDB controller moves the table to its chosen node and a seeded random subset
+of 4 KiB ballast pages to CXL before worker creation and timing. The runtime's
+configured target remains node 0; the complete page queries describe actual
+placement after this diagnostic intervention. Subsets are nested
+within each round; all object pages are queried before and after the timed
+region. The controller never writes benchmark data; source and timed worker
+instructions are unchanged.
+Screens use the retained table+ballast allocation variant. Fresh confirmations
+use the original automatic-selection binary, where only the table is rewritten
+and ballast retains its ordinary jemalloc allocation. Both workers contain
+the same 149 instructions. This checks whether a candidate survives the
+original allocation layout. The two stages are not pooled.
+
+Micro breakpoints are outside the timed region. Libcuckoo screens use a GDB
+snapshot after timing and before deallocation; its fresh confirmations run
+without a debugger and take an external NUMA snapshot after all workers exist.
+The 5-pair confirmations reverse treatment order every other round. Reported
+changes average paired throughput ratios; bootstrap intervals resample pairs
+and are exploratory, not a guarantee across workloads or machines.
+
+The default micro workload (256 entries, 50% reads) regresses at all three
+fractions on the original automatic-selection binary. The table is in CXL in
+every row; the control has all ballast in DRAM. Each row has five 20-second
+runs, with correctness and full-page placement checks:
+
+| Ballast pages in CXL | Mops/s | Paired change versus 0% | Bootstrap 95% interval |
+|---|---:|---:|---:|
+| 0% | 543.908 | reference | — |
+| 1% | 515.549 | −5.21% | −5.77% to −4.55% |
+| 5% | 435.715 | −19.89% | −20.66% to −19.16% |
+| 10% | 375.660 | −30.93% | −31.28% to −30.58% |
+
+The 100%-write default-size screen also regresses (−3.24%, −16.70%, −27.82%,
+two pairs each). Increasing the write percentage alone does not produce a gain.
+
+A narrower input does improve: **16 entries, 50% reads, table in CXL and 10%
+of ballast pages in CXL**. On the original automatic-selection binary, five
+fresh 30-second pairs improve **52.121 → 53.232 Mops/s, +2.13%**, with a paired
+bootstrap interval of **+1.03% to +3.23%**; all five pairs improve. With the
+table kept in DRAM, 10% ballast placement improves **52.030 → 52.959 Mops/s,
++1.79%** (interval +0.74% to +2.83%, again five positive pairs). Table placement
+alone changes throughput by only +0.18%, with an interval spanning zero.
+Thus a small ballast fraction can help in this input regime, and moving the
+hot table itself is not required. This is a different hot-set size, not a
+speedup of the default 256-entry workload.
+
+After that positive confirmation, a separate 20%/30%/50% screen selected
+50% for a fresh five-pair, 30-second confirmation. With 16 entries, 50% reads
+and the table in CXL, it improves **51.863 → 58.275 Mops/s, +12.37%**
+(paired bootstrap **+10.70% to +13.63%**, five positive pairs). Relative to
+10% ballast placement in those same rounds, the improvement is **+10.22%**
+(+8.53% to +12.77%). The repeated 10% comparison is smaller and less stable:
++1.99%, four positive pairs, interval −0.05% to +3.98%. The two five-pair
+confirmation batches remain separate rather than pooling away this variation.
+
+An untraced crossover then moves only ballast pages in one process, preserving
+the table's virtual and physical mapping in CXL. Read-only snapshots of the
+existing per-worker epoch counters count completed operations around each
+15-second PMU window. Migration and three subsequent seconds are excluded;
+all 32 workers advance in every retained interval. Kernel automatic NUMA
+balancing is disabled. Every requested page move is verified, and the process
+finishes with ballast restored to DRAM and its original correctness check
+passing.
+
+| Consecutive ballast CXL fractions | Steady Mops/s |
+|---|---|
+| 0% → 50% → 0% | 52.239 → 59.334 → 52.265 |
+| 0% → 75% → 0% | 52.265 → 53.938 → 52.282 |
+| 0% → 100% → 0% | 52.282 → 40.109 → 52.229 |
+| 0% → 50% → 0% | 52.229 → 58.725 → 52.245 |
+
+Adjacent rows share the same intervening 0% phase. The two 50% interventions
+give **+13.55% and +12.42%** against their adjacent controls; 75% gives only
+**+3.18%**, and 100% gives **−23.25%**. This confirms a reversible placement
+effect in the same process and bounds the useful range in this workload.
+The 75%/100% observations are diagnostics, not five-pair confirmations or a
+proof that exactly 50% is the global optimum.
+
+![Micro fraction refinement and reversible placement](../results/companion-placement/20261119/placement-window.png)
+
+Separate 20-second PMU diagnostics attach to all workers and use the existing
+benchmark perf-control window. At 16 entries, changing ballast from 0% to 50%
+CXL reduces cycles/op from **2,178.6 to 1,906.4** and instructions/op from
+**83.92 to 78.84**. However, locked-load estimates of CAS attempts/write remain
+**1.20375 versus 1.20401**. Selected RFO-HITM events/op increase from
+**0.1766 to 0.2163**, and demand-read HITM events/op increase from
+**0.6321 to 0.7363**. These are one diagnostic process per condition, separate
+from throughput confirmations. They do not establish a reduction in coherence
+traffic or a longer Shared-state lifetime. Reader retries and all coherence
+transactions are not measured by these counters.
+
+In the default 256-entry diagnostic, estimated failed CAS/op decreases from
+0.01649 to 0.00986 at 10% ballast CXL, yet cycles/op rises from 203.94 to 297.02.
+Reducing one retry source is therefore not sufficient to offset placement cost.
+
+Libcuckoo's five-pair untraced confirmations give these changes against each
+variant's own Local control:
+
+| Uniform hot-key range | Lock only | Bucket only | Lock + bucket |
+|---|---:|---:|---:|
+| 64 | +0.61% | +3.40% | −0.07% |
+| 65,536 | −0.11% | +0.93% | −0.41% |
+
+For 64 hot keys, bucket-only is **23.905 → 24.702 Mops/s** with a paired
+bootstrap interval of **+0.85% to +6.01%**. However, relative to the existing
+lock-only CXL policy the change is only **+1.16%**, with an interval of
+**−1.39% to +3.23%**. This is evidence of a small placement effect within one
+allocation variant, not a confirmed improvement over the existing CXL policy.
+The initial lock+bucket screen gain of +3.20% does not survive confirmation.
+At 1,048,576 hot keys, lock-only's +2.72% mean has a +0.09% median and an
+interval spanning −0.20% to +7.83%; one slow Local run drives much of the mean.
+
+Large bucket arrays make co-placement harmful in the two-pair screens:
+
+| Keys / hot keys | Bucket only, Local → CXL Mops/s | Lock + bucket, Local → CXL Mops/s |
+|---|---:|---:|
+| 8,388,608 | 423.208 → 34.569 (−91.83%) | 422.539 → 34.064 (−91.94%) |
+| 33,554,432 | 377.938 → 27.710 (−92.67%) | 359.830 → 27.362 (−92.36%) |
+
+These are unchanged existing-key workloads, with successful writes and no
+resizing. In `update_fn`, bucket lookup and the value increment occur while
+the bucket locks are held. The results do not support automatically moving
+every bucket array alongside its locks.
+
+The unchanged XIndex automatic policy passed three fresh full YCSB-A pairs:
+**27.094 Mops/s Local versus 47.069 Mops/s CXL, +73.72%**. All six runs executed
+400,000,000 operations and matched digest `0x7474b8e9d3962859`; allocator
+fallbacks and reported swaps were zero. This verifies the retained policy's
+gain; it is not a regression test of a newly promoted companion policy.
+
+![Placement comparisons and unchanged XIndex regression](../results/companion-placement/20261119/performance.png)
+
+The existing score threshold cannot express this placement experiment. At
+`MIN_SCORE=5`, micro selects table site 4; reducing it to 4 changes nothing,
+and reducing it to 3 adds the **entire** ballast allocation at site 5. The
+runtime binds whole selected extents to one node, so a score cannot request
+10% or 50% of one allocation. The same static scores apply to the profitable
+16-entry input and the regressing 256-entry input.
+
+Libcuckoo's initial bucket site 13 fails the separate synchronization gate;
+lowering only the score does not select it. XIndex's threshold 5 selects eight
+sites; lowering it to 4 or 3 adds sites 69, 72, 75 and 91 within the 12-site
+cap. Its retained performance therefore cannot be assumed to survive a global
+threshold change. These selection effects are recorded in `audit.json`.
+
+There is evidence that placing a companion allocation can help a highly
+contended workload, but **no validated global static rule** that improves
+these workloads while retaining XIndex's gain. Tracking co-accesses could
+identify candidates without another public parameter; deciding which pages
+to move and when the latency cost is worthwhile would still need runtime
+feedback or another validated decision rule. No benchmark-specific fraction,
+allocation ID, new parameter or production policy change is promoted here.
+
+Evidence is retained in
+[`results/companion-placement/20261119`](../results/companion-placement/20261119/).
+
 ## XIndex: changing cold-buffer placement changes contention (November 19)
 
 Moving XIndex's hot leaf locks to CXL is **not necessary** for a large gain.

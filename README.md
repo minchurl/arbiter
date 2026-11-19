@@ -60,8 +60,9 @@ There is no large reserved pool or allocation fallback; allocation failures
 preserve the supported C/C++ API contracts and report their cause.
 
 XIndex A/F have shown CXL placement gains on the measured host. The corrected
-microbenchmark improves through layout and epoch-store changes, with no useful
-CXL gain. B-tree's automatic policy selects no objects. See the
+microbenchmark's default workload gains nothing from CXL placement, but partial
+ballast placement helps a smaller, more contended hot set. B-tree's automatic
+policy selects no objects. See the
 [results](docs/results.md) for versions, negative findings and measurement limits.
 
 Libcuckoo's lock storage is now discovered through `std::thread` and object-field

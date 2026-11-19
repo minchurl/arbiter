@@ -1,0 +1,14 @@
+[
+  {
+    "case": "probe",
+    "reason": "External helper lacked parent ptrace permission; rerun in the GDB parent. No valid throughput."
+  },
+  {
+    "case": "probe-cuckoo",
+    "reason": "Short setup/validation probe; excluded from performance conclusions."
+  },
+  {
+    "case": "probe2",
+    "reason": "Short setup/validation probe; excluded from performance conclusions."
+  }
+]

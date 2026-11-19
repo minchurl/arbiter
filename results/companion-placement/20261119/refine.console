@@ -1,0 +1,35 @@
+START screen-micro-fractions-wide
+screen-micro-fractions-wide 1 2 0 51.922
+screen-micro-fractions-wide 1 2 10 52.285
+screen-micro-fractions-wide 1 2 20 55.471
+screen-micro-fractions-wide 1 2 30 56.565
+screen-micro-fractions-wide 1 2 50 58.305
+screen-micro-fractions-wide 2 2 50 59.013
+screen-micro-fractions-wide 2 2 30 55.591
+screen-micro-fractions-wide 2 2 20 54.818
+screen-micro-fractions-wide 2 2 10 53.495
+screen-micro-fractions-wide 2 2 0 49.834
+
+START confirm-micro-refined
+confirm-micro-refined 1 2 0 51.839
+confirm-micro-refined 1 2 10 50.997
+confirm-micro-refined 1 2 50 58.686
+confirm-micro-refined 2 2 50 58.648
+confirm-micro-refined 2 2 10 53.938
+confirm-micro-refined 2 2 0 52.022
+confirm-micro-refined 3 2 0 52.349
+confirm-micro-refined 3 2 10 53.293
+confirm-micro-refined 3 2 50 58.788
+confirm-micro-refined 4 2 50 58.569
+confirm-micro-refined 4 2 10 53.902
+confirm-micro-refined 4 2 0 51.257
+confirm-micro-refined 5 2 0 51.851
+confirm-micro-refined 5 2 10 52.336
+confirm-micro-refined 5 2 50 56.685
+
+START profile-micro-refined
+profile-micro-refined 1 2 0 51.233
+profile-micro-refined 1 2 10 53.806
+profile-micro-refined 1 2 50 58.482
+
+REFINEMENT COMPLETE

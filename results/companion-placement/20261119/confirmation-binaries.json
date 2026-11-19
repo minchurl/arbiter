@@ -1,0 +1,12 @@
+{
+  "micro_screen": {
+    "path": "/home/shin/arbiter/build/placement-diagnosis/placements/micro-both/binary",
+    "sha256": "888bfd6a48a54586174a4d7c9126be8c52412a01921379a81d5f5c728e513c39"
+  },
+  "micro_confirmation": {
+    "path": "/home/shin/arbiter/build/libcuckoo-rmw/micro/micro-placed",
+    "sha256": "85f73753e7c5497a605129e827648c8b5a9531b055e3ad7485b6d250054e397e"
+  },
+  "rationale": "Confirm on the unchanged production automatic-selection binary (table selected, ballast ordinary jemalloc). This checks whether gains survive the original allocation layout. Only physical page placement changes. Worker instructions are identical to the screen binary. Confirmations and screens are not pooled.",
+  "chosen_before_confirmation": "All micro confirmations had not started; libcuckoo confirmations were running."
+}

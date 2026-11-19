@@ -1,0 +1,332 @@
+{
+  "production_parameters_added": 0,
+  "production_files_changed": 0,
+  "allocation_sites": {
+    "micro_table": 4,
+    "micro_ballast": 5,
+    "cuckoo_initial_buckets": 13,
+    "cuckoo_old_empty_buckets_not_used": 14,
+    "cuckoo_lock_vector": 26
+  },
+  "policy_facts": {
+    "new-micro64": {
+      "5": {
+        "eligible": [
+          4
+        ],
+        "selected": [
+          4
+        ]
+      },
+      "4": {
+        "eligible": [
+          4
+        ],
+        "selected": [
+          4
+        ]
+      },
+      "3": {
+        "eligible": [
+          4,
+          5
+        ],
+        "selected": [
+          4,
+          5
+        ]
+      },
+      "2": {
+        "eligible": [
+          4,
+          5,
+          6
+        ],
+        "selected": [
+          4,
+          5,
+          6
+        ]
+      },
+      "1": {
+        "eligible": [
+          4,
+          5,
+          6
+        ],
+        "selected": [
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    "contention": {
+      "5": {
+        "eligible": [
+          26
+        ],
+        "selected": [
+          26
+        ]
+      },
+      "4": {
+        "eligible": [
+          26
+        ],
+        "selected": [
+          26
+        ]
+      },
+      "3": {
+        "eligible": [
+          26,
+          29
+        ],
+        "selected": [
+          26,
+          29
+        ]
+      },
+      "2": {
+        "eligible": [
+          26,
+          29,
+          6,
+          7,
+          32
+        ],
+        "selected": [
+          26,
+          29,
+          6,
+          7,
+          32
+        ]
+      },
+      "1": {
+        "eligible": [
+          26,
+          29,
+          6,
+          7,
+          32
+        ],
+        "selected": [
+          26,
+          29,
+          6,
+          7,
+          32
+        ]
+      }
+    },
+    "new-xindex": {
+      "5": {
+        "eligible": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74
+        ],
+        "selected": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74
+        ]
+      },
+      "4": {
+        "eligible": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91,
+          92,
+          94
+        ],
+        "selected": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91
+        ]
+      },
+      "3": {
+        "eligible": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91,
+          92,
+          94,
+          21,
+          81,
+          82
+        ],
+        "selected": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91
+        ]
+      },
+      "2": {
+        "eligible": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91,
+          92,
+          94,
+          21,
+          81,
+          82,
+          2,
+          25,
+          26,
+          27,
+          29,
+          31,
+          32,
+          33,
+          35,
+          37,
+          38,
+          43,
+          45,
+          47,
+          48,
+          50,
+          52,
+          54,
+          55
+        ],
+        "selected": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91
+        ]
+      },
+      "1": {
+        "eligible": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91,
+          92,
+          94,
+          21,
+          81,
+          82,
+          2,
+          25,
+          26,
+          27,
+          29,
+          31,
+          32,
+          33,
+          35,
+          37,
+          38,
+          43,
+          45,
+          47,
+          48,
+          50,
+          52,
+          54,
+          55
+        ],
+        "selected": [
+          90,
+          97,
+          99,
+          98,
+          100,
+          68,
+          71,
+          74,
+          69,
+          72,
+          75,
+          91
+        ]
+      }
+    }
+  },
+  "config_only_partial_object_placement_supported": false,
+  "interpretation": [
+    "The score and gate decisions do not depend on the benchmark runtime hot-set size.",
+    "Changing a seed threshold selects whole allocation sites, not a fraction of one allocation.",
+    "The initial libcuckoo bucket array fails the separate synchronization gate.",
+    "New score evidence could identify companions without adding a public knob, but it would not establish profitable placement or an appropriate page fraction.",
+    "A global companion-placement rule needs validation against both positive and negative workloads, including XIndex."
+  ]
+}

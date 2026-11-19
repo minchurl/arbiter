@@ -10,6 +10,10 @@ results/placement-diagnosis/**/*.asm -whitespace
 results/placement-causality/**/*.maps -whitespace
 results/placement-causality/**/*.console -whitespace
 results/placement-causality/**/perf-report.txt -whitespace
+results/companion-placement/**/*.csv whitespace=cr-at-eol
+results/companion-placement/**/*.asm -whitespace
+results/companion-placement/**/*.console -whitespace
+results/companion-placement/**/*.svg -whitespace
 
 # Unified diffs retain the supplied sources' indentation on context lines.
 benchmark/btree-coherence/*.patch -whitespace

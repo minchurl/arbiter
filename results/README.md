@@ -9,6 +9,7 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [companion-placement/20261119](companion-placement/20261119/) | Frozen-code libcuckoo lock/bucket ablations, micro partial-ballast placement and refinement, fresh confirmations and full XIndex A regression. `summary.csv`, `placement-validation.csv`, `mechanism-summary.json`, `audit.json`, `checks.json`, `performance.png`, `placement-window.png`. |
 | [placement-causality/20261119](placement-causality/20261119/) | Unchanged XIndex binaries: reversible cold-buffer and hot-page placement in the same process, phase-aligned retry/latency profiles, and libcuckoo cache controls. `phases.csv`, `mechanism-summary.json`, `cache-summary.csv`, `checks.json`, `placement-crossover.png`. |
 | [write-heavy-20261119](libcuckoo/write-heavy-20261119/) | Unchanged libcuckoo binaries: successful 100% updates, insert/erase and insertion with/without growth; paired placement comparisons, separate lock diagnostics and runner validation. `runs.csv`, `summary.csv`, `checks.json`, `raw-runs.jsonl.gz`. |
 | [placement-diagnosis/20261119](placement-diagnosis/20261119/) | Frozen-code XIndex/micro bottleneck comparison, precise retry/address samples, allocation and isolated extent-placement ablations. `runs.csv`, `mechanism-summary.json`, `checks.json`, `manifest.json`, `performance.png`. |
@@ -19,6 +20,41 @@ of today's runtime. Directory names below link to the retained data directly.
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+For companion placement, each case retains its workload/binary manifest and
+per-process CSV: 134 screen rows, 125 fresh confirmation rows, 9 PMU rows and
+6 full XIndex runs, plus the separate nine-phase crossover. `raw-files.jsonl.gz` stores the original command records,
+logs, GDB command files, NUMA snapshots, page-validation JSON and perf output
+as `{case, file, text}` records. Restore a case with
+`python3 results/companion-placement/20261119/scripts/extract-raw.py CASE OUTPUT`.
+The output directory must not already exist. Micro's complete before/after
+page checks are summarized in `placement-validation.csv`; the recorded seed,
+page count and index hash reproduce each random subset without storing millions
+of addresses. In per-process comparisons, migration changes physical placement
+before timing. `crossover-micro/phases.csv` is a separate same-process diagnostic:
+only ballast pages migrate between phases; the table stays in CXL. Existing
+per-worker epoch counters supply operation counts through read-only snapshots.
+Migration and three subsequent seconds are excluded. Fifteen-second PMU windows
+use the enclosing snapshot interval as an approximate operation denominator.
+These phases are not independent process confirmations.
+
+Do not pool screens with confirmations. Micro confirmations use the original
+automatic-selection binary; libcuckoo confirmations are untraced. The initial
+screens use allocation-only variants and GDB; all timed worker instructions
+are verified equivalent. `confirmation-plan.json` records candidate selection,
+`confirmation-binaries.json` explains the original-layout control, and
+`refinement-plan.json` records the wider fraction search after the first positive
+confirmation. `generalization.json` records the existing policy's limits. Probes and PMU
+diagnostics are excluded from confirmed throughput comparisons.
+
+Regenerate tables with `scripts/summarize.py --base results/companion-placement/20261119`
+and diagnostic interpretations with `scripts/summarize-mechanism.py --base results/companion-placement/20261119`.
+Regenerate figures with `scripts/plot.py --base results/companion-placement/20261119`,
+using the scripts inside that archive. Matplotlib and NumPy are needed for the
+figure. The build/runners preserve this host's LLVM, GDB and retained build
+paths; prepare matching frozen inputs before replaying them into fresh result
+directories. The stage controllers record the original sequential scheduling
+and should not be run blindly with historical process IDs.
 
 For placement causality, every XIndex case retains its exact `driver.py`,
 command/environment manifest, original output, resolved hot objects, migration

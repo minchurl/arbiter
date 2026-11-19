@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "phase_count": 9,
+  "source_and_binary_unchanged": true,
+  "all_workers_active": true,
+  "all_page_moves_verified": true,
+  "final_ballast_node": 0,
+  "benchmark_operations": 18281242048,
+  "max_rss_kib": 8394496,
+  "reported_swaps": 0
+}

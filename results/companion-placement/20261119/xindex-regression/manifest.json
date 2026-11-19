@@ -1,0 +1,28 @@
+{
+  "args": {
+    "workload": "xindex",
+    "name": "companion-xindex-regression",
+    "binary": null,
+    "nodes": [
+      0,
+      2
+    ],
+    "rounds": 3,
+    "seconds": 20,
+    "victims": 32,
+    "fg": 31,
+    "bg": 1,
+    "table": 256,
+    "ballast": 8192,
+    "reads": 50,
+    "objects": "table",
+    "alignment": 64,
+    "malloc_conf": "",
+    "membind": "0",
+    "noise": 0,
+    "noise_mode": "none",
+    "interleaved": false
+  },
+  "binary_sha256": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+  "start": 1795065447.0944579
+}

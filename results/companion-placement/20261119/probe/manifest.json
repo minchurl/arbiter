@@ -1,0 +1,19 @@
+{
+  "args": {
+    "name": "probe",
+    "rounds": 1,
+    "seconds": 2,
+    "table": 256,
+    "threads": 32,
+    "reads": 50,
+    "table_nodes": [
+      2
+    ],
+    "fractions": [
+      1
+    ]
+  },
+  "binary": "/home/shin/arbiter/build/placement-diagnosis/placements/micro-both/binary",
+  "sha256": "888bfd6a48a54586174a4d7c9126be8c52412a01921379a81d5f5c728e513c39",
+  "method": "Random nested subsets of ballast 4KiB pages, moved before worker creation; full object residency verified before and after timer. All cases use the same binary and GDB protocol."
+}

@@ -1,0 +1,39 @@
+START screen-micro-hot1
+screen-micro-hot1 1 2 0 6.422
+screen-micro-hot1 1 2 1 6.091
+screen-micro-hot1 1 2 5 5.899
+screen-micro-hot1 1 2 10 5.836
+screen-micro-hot1 2 2 10 5.907
+screen-micro-hot1 2 2 5 5.963
+screen-micro-hot1 2 2 1 6.222
+screen-micro-hot1 2 2 0 6.507
+
+START screen-micro-write100
+screen-micro-write100 1 2 0 490.929
+screen-micro-write100 1 2 1 479.326
+screen-micro-write100 1 2 5 411.263
+screen-micro-write100 1 2 10 356.561
+screen-micro-write100 2 2 10 355.54
+screen-micro-write100 2 2 5 410.551
+screen-micro-write100 2 2 1 475.211
+screen-micro-write100 2 2 0 495.645
+
+START screen-micro-write100-hot4
+screen-micro-write100-hot4 1 2 0 8.94
+screen-micro-write100-hot4 1 2 1 8.692
+screen-micro-write100-hot4 1 2 5 8.999
+screen-micro-write100-hot4 1 2 10 9.072
+screen-micro-write100-hot4 2 2 10 8.865
+screen-micro-write100-hot4 2 2 5 9.001
+screen-micro-write100-hot4 2 2 1 8.735
+screen-micro-write100-hot4 2 2 0 8.85
+
+START full XIndex YCSB-A regression
+companion-xindex-regression 1 0 27.364
+companion-xindex-regression 1 2 48.94
+companion-xindex-regression 2 2 47.43
+companion-xindex-regression 2 0 26.802
+companion-xindex-regression 3 0 27.116
+companion-xindex-regression 3 2 44.837
+
+FOLLOWUP COMPLETE

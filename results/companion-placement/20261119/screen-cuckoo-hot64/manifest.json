@@ -1,0 +1,26 @@
+{
+  "args": {
+    "name": "screen-cuckoo-hot64",
+    "rounds": 2,
+    "keys": 1048576,
+    "hot": 64,
+    "threads": 32,
+    "reads": 0,
+    "operations": 8000000,
+    "variants": [
+      "lock",
+      "bucket",
+      "both"
+    ],
+    "nodes": [
+      0,
+      2
+    ]
+  },
+  "binaries": {
+    "lock": "ec350309d757b7bd606634f57f8b6b2806598375ebbe352a893aa0e3814cfa0f",
+    "bucket": "7d20ab08c06e2a6886fa526abf917c631f5bc41a87b2a41f09c790835d623684",
+    "both": "3572bf5fa4e8c967df87b9ee98f8d6896779b094bb9aeb6df58b104dc73c2a4e"
+  },
+  "method": "Existing site overrides: lock 26, initial bucket 13. GDB snapshot after timer and worker join, before validation/deallocation. No timed breakpoints; strict NUMA binding applies for the full allocation lifetime."
+}

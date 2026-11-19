@@ -1,0 +1,23 @@
+{
+  "args": {
+    "name": "screen-micro-hot4",
+    "rounds": 2,
+    "seconds": 20,
+    "table": 4,
+    "threads": 32,
+    "reads": 50,
+    "table_nodes": [
+      2
+    ],
+    "fractions": [
+      0,
+      1,
+      5,
+      10
+    ],
+    "profile": false
+  },
+  "binary": "/home/shin/arbiter/build/placement-diagnosis/placements/micro-both/binary",
+  "sha256": "888bfd6a48a54586174a4d7c9126be8c52412a01921379a81d5f5c728e513c39",
+  "method": "Random nested subsets of ballast 4KiB pages, moved before worker creation; full object residency verified before and after timer. All cases use the same binary and GDB protocol."
+}

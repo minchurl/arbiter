@@ -1,0 +1,21 @@
+{
+  "args": {
+    "name": "probe-cuckoo",
+    "rounds": 1,
+    "keys": 1048576,
+    "hot": 65536,
+    "threads": 32,
+    "reads": 0,
+    "operations": 100000,
+    "variants": [
+      "bucket"
+    ],
+    "nodes": [
+      2
+    ]
+  },
+  "binaries": {
+    "bucket": "7d20ab08c06e2a6886fa526abf917c631f5bc41a87b2a41f09c790835d623684"
+  },
+  "method": "Existing site overrides: lock 26, initial bucket 13. GDB snapshot after timer and worker join, before validation/deallocation. No timed breakpoints; strict NUMA binding applies for the full allocation lifetime."
+}

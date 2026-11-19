@@ -1,0 +1,248 @@
+{
+  "profiles": [
+    {
+      "case": "profile-micro-best",
+      "ballast_percent": 0,
+      "cycles_per_op": 2145.3452415035126,
+      "instructions_per_op": 83.20020856502467,
+      "locked_loads_per_op": 0.6038135976000808,
+      "cas_attempts_per_write": 1.2076215991363977,
+      "estimated_failed_cas_per_op": 0.10381128062273959,
+      "demand_rfo_hitm_per_op": 0.1784928605295864,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-best",
+      "ballast_percent": 10,
+      "cycles_per_op": 2120.225954496482,
+      "instructions_per_op": 82.27891831054288,
+      "locked_loads_per_op": 0.6003853972211015,
+      "cas_attempts_per_write": 1.2007559949302038,
+      "estimated_failed_cas_per_op": 0.1003792346401684,
+      "demand_rfo_hitm_per_op": 0.18685047213075545,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-default",
+      "ballast_percent": 0,
+      "cycles_per_op": 203.93701174433812,
+      "instructions_per_op": 67.35699279447022,
+      "locked_loads_per_op": 0.5164968653778794,
+      "cas_attempts_per_write": 1.0329827977239077,
+      "estimated_failed_cas_per_op": 0.016491573405992166,
+      "demand_rfo_hitm_per_op": 0.15102434994259437,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-default",
+      "ballast_percent": 1,
+      "cycles_per_op": 213.12192660814023,
+      "instructions_per_op": 67.36744910199921,
+      "locked_loads_per_op": 0.5154389770302688,
+      "cas_attempts_per_write": 1.0308702621057557,
+      "estimated_failed_cas_per_op": 0.015435246223849841,
+      "demand_rfo_hitm_per_op": 0.1469084395328086,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-default",
+      "ballast_percent": 5,
+      "cycles_per_op": 259.9314926643279,
+      "instructions_per_op": 67.78025233776626,
+      "locked_loads_per_op": 0.5121201380416359,
+      "cas_attempts_per_write": 1.024235912831199,
+      "estimated_failed_cas_per_op": 0.012118008038177641,
+      "demand_rfo_hitm_per_op": 0.14512579235287948,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-default",
+      "ballast_percent": 10,
+      "cycles_per_op": 297.01759861937296,
+      "instructions_per_op": 67.34660488337529,
+      "locked_loads_per_op": 0.5098694979938946,
+      "cas_attempts_per_write": 1.01972739636691,
+      "estimated_failed_cas_per_op": 0.009863810385166705,
+      "demand_rfo_hitm_per_op": 0.1423710747408619,
+      "demand_read_hitm_per_op": null
+    },
+    {
+      "case": "profile-micro-refined",
+      "ballast_percent": 0,
+      "cycles_per_op": 2178.6343787015835,
+      "instructions_per_op": 83.92403387348571,
+      "locked_loads_per_op": 0.6018836600150541,
+      "cas_attempts_per_write": 1.2037506680988364,
+      "estimated_failed_cas_per_op": 0.10187674332885277,
+      "demand_rfo_hitm_per_op": 0.17660775107057697,
+      "demand_read_hitm_per_op": 0.632072643864263
+    },
+    {
+      "case": "profile-micro-refined",
+      "ballast_percent": 10,
+      "cycles_per_op": 2075.594069380858,
+      "instructions_per_op": 81.58229973533221,
+      "locked_loads_per_op": 0.6022312065456868,
+      "cas_attempts_per_write": 1.2044531510731842,
+      "estimated_failed_cas_per_op": 0.10222736163973045,
+      "demand_rfo_hitm_per_op": 0.18971335477184012,
+      "demand_read_hitm_per_op": 0.6729215289519598
+    },
+    {
+      "case": "profile-micro-refined",
+      "ballast_percent": 50,
+      "cycles_per_op": 1906.4304095599337,
+      "instructions_per_op": 78.84485640166046,
+      "locked_loads_per_op": 0.6020123411196885,
+      "cas_attempts_per_write": 1.2040075009652167,
+      "estimated_failed_cas_per_op": 0.1020052060835086,
+      "demand_rfo_hitm_per_op": 0.21625230817480023,
+      "demand_read_hitm_per_op": 0.7362606602877722
+    }
+  ],
+  "crossover_interventions": [
+    {
+      "phase": 1,
+      "ballast_percent": 50,
+      "adjacent_control_mops": 52.251696959501785,
+      "treatment_mops": 59.3338672474106,
+      "throughput_change_percent": 13.55395269439368,
+      "counters": {
+        "cycles:u": {
+          "adjacent_control_per_op": 2138.325115951534,
+          "treatment_per_op": 1868.2605705705755,
+          "change_percent": -12.629723299152396
+        },
+        "instructions:u": {
+          "adjacent_control_per_op": 83.12630549791785,
+          "treatment_per_op": 79.6205056572962,
+          "change_percent": -4.217437331807627
+        },
+        "mem_inst_retired.lock_loads:u": {
+          "adjacent_control_per_op": 0.603378485725389,
+          "treatment_per_op": 0.6018639234392477,
+          "change_percent": -0.2510136377037897
+        },
+        "ocr.demand_rfo.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.17877309599652583,
+          "treatment_per_op": 0.2189069051724077,
+          "change_percent": 22.449579984150315
+        },
+        "ocr.demand_data_rd.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.6372010534382089,
+          "treatment_per_op": 0.7398245455324316,
+          "change_percent": 16.105355058734915
+        }
+      }
+    },
+    {
+      "phase": 3,
+      "ballast_percent": 75,
+      "adjacent_control_mops": 52.27330771852007,
+      "treatment_mops": 53.937826693273244,
+      "throughput_change_percent": 3.184261810475486,
+      "counters": {
+        "cycles:u": {
+          "adjacent_control_per_op": 2137.9868512595413,
+          "treatment_per_op": 2072.500262548884,
+          "change_percent": -3.063002406777071
+        },
+        "instructions:u": {
+          "adjacent_control_per_op": 83.07501119688501,
+          "treatment_per_op": 67.45173377870745,
+          "change_percent": -18.806229686988452
+        },
+        "mem_inst_retired.lock_loads:u": {
+          "adjacent_control_per_op": 0.6035084174188905,
+          "treatment_per_op": 0.5229957999011997,
+          "change_percent": -13.3407613206176
+        },
+        "ocr.demand_rfo.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.17885054827530655,
+          "treatment_per_op": 0.21917737686034613,
+          "change_percent": 22.547780241055815
+        },
+        "ocr.demand_data_rd.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.6374986293880234,
+          "treatment_per_op": 0.7729969007829355,
+          "change_percent": 21.254676504165303
+        }
+      }
+    },
+    {
+      "phase": 5,
+      "ballast_percent": 100,
+      "adjacent_control_mops": 52.25545348251656,
+      "treatment_mops": 40.108599807921664,
+      "throughput_change_percent": -23.245140679257414,
+      "counters": {
+        "cycles:u": {
+          "adjacent_control_per_op": 2138.9605600916198,
+          "treatment_per_op": 2786.7096724048292,
+          "change_percent": 30.283359328769667
+        },
+        "instructions:u": {
+          "adjacent_control_per_op": 83.17243673981739,
+          "treatment_per_op": 67.30801537067703,
+          "change_percent": -19.07413319964153
+        },
+        "mem_inst_retired.lock_loads:u": {
+          "adjacent_control_per_op": 0.603507998437282,
+          "treatment_per_op": 0.5154997433991727,
+          "change_percent": -14.582781879610051
+        },
+        "ocr.demand_rfo.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.17871185630241632,
+          "treatment_per_op": 0.23565903877350675,
+          "change_percent": 31.86536341199677
+        },
+        "ocr.demand_data_rd.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.637678596183801,
+          "treatment_per_op": 0.8482982554240717,
+          "change_percent": 33.029124781783146
+        }
+      }
+    },
+    {
+      "phase": 7,
+      "ballast_percent": 50,
+      "adjacent_control_mops": 52.237255404564955,
+      "treatment_mops": 58.725378310159456,
+      "throughput_change_percent": 12.420489658856603,
+      "counters": {
+        "cycles:u": {
+          "adjacent_control_per_op": 2139.9282433147637,
+          "treatment_per_op": 1903.6937701824918,
+          "change_percent": -11.03936423430456
+        },
+        "instructions:u": {
+          "adjacent_control_per_op": 83.18138071157392,
+          "treatment_per_op": 78.3870554684607,
+          "change_percent": -5.763700003654948
+        },
+        "mem_inst_retired.lock_loads:u": {
+          "adjacent_control_per_op": 0.6033495401275377,
+          "treatment_per_op": 0.6016131644971072,
+          "change_percent": -0.2877893351942329
+        },
+        "ocr.demand_rfo.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.17875568440160133,
+          "treatment_per_op": 0.21613731324441565,
+          "change_percent": 20.912134329015753
+        },
+        "ocr.demand_data_rd.l3_hit.snoop_hitm:u": {
+          "adjacent_control_per_op": 0.6373474976687181,
+          "treatment_per_op": 0.7368736759568599,
+          "change_percent": 15.61568510933007
+        }
+      }
+    }
+  ],
+  "limits": [
+    "One process per profile condition; crossover phases are repeated interventions within one process, not independent replicates.",
+    "Locked loads approximate table CAS attempts in this frozen epoch-store worker; failed CAS is estimated by subtracting successful writes.",
+    "Reader retries are not measured by the locked-load counter.",
+    "Selected RFO/read HITM events are not all coherence traffic and do not measure Shared-state residence time.",
+    "Crossover counter/op denominators enclose perf attachment and detachment and are approximate; whole-process profile counters use the benchmark ROI."
+  ]
+}

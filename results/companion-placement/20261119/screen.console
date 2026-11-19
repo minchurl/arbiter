@@ -1,0 +1,118 @@
+START screen-micro-default
+screen-micro-default 1 0 0 529.449
+screen-micro-default 1 0 1 521.585
+screen-micro-default 1 0 5 434.994
+screen-micro-default 1 0 10 367.73
+screen-micro-default 1 2 0 538.737
+screen-micro-default 1 2 1 515.431
+screen-micro-default 1 2 5 431.153
+screen-micro-default 1 2 10 376.407
+screen-micro-default 2 2 10 373.908
+screen-micro-default 2 2 5 431.091
+screen-micro-default 2 2 1 517.852
+screen-micro-default 2 2 0 544.809
+screen-micro-default 2 0 10 374.727
+screen-micro-default 2 0 5 433.451
+screen-micro-default 2 0 1 513.475
+screen-micro-default 2 0 0 545.682
+
+START screen-cuckoo-hot64
+screen-cuckoo-hot64 1 lock 0 24.866
+screen-cuckoo-hot64 1 lock 2 24.397
+screen-cuckoo-hot64 1 bucket 0 24.205
+screen-cuckoo-hot64 1 bucket 2 23.494
+screen-cuckoo-hot64 1 both 0 23.464
+screen-cuckoo-hot64 1 both 2 24.622
+screen-cuckoo-hot64 2 both 2 24.359
+screen-cuckoo-hot64 2 both 0 24.006
+screen-cuckoo-hot64 2 bucket 2 23.901
+screen-cuckoo-hot64 2 bucket 0 22.334
+screen-cuckoo-hot64 2 lock 2 23.194
+screen-cuckoo-hot64 2 lock 0 24.653
+
+START screen-cuckoo-hot65536
+screen-cuckoo-hot65536 1 lock 0 524.142
+screen-cuckoo-hot65536 1 lock 2 528.216
+screen-cuckoo-hot65536 1 bucket 0 523.633
+screen-cuckoo-hot65536 1 bucket 2 531.26
+screen-cuckoo-hot65536 1 both 0 525.558
+screen-cuckoo-hot65536 1 both 2 530.964
+screen-cuckoo-hot65536 2 both 2 529.689
+screen-cuckoo-hot65536 2 both 0 528.655
+screen-cuckoo-hot65536 2 bucket 2 530.726
+screen-cuckoo-hot65536 2 bucket 0 524.306
+screen-cuckoo-hot65536 2 lock 2 525.654
+screen-cuckoo-hot65536 2 lock 0 523.412
+
+START screen-cuckoo-hot1m
+screen-cuckoo-hot1m 1 lock 0 545.697
+screen-cuckoo-hot1m 1 lock 2 552.151
+screen-cuckoo-hot1m 1 bucket 0 553.102
+screen-cuckoo-hot1m 1 bucket 2 554.35
+screen-cuckoo-hot1m 1 both 0 546.279
+screen-cuckoo-hot1m 1 both 2 554.667
+screen-cuckoo-hot1m 2 both 2 547.496
+screen-cuckoo-hot1m 2 both 0 553.7
+screen-cuckoo-hot1m 2 bucket 2 554.199
+screen-cuckoo-hot1m 2 bucket 0 546.682
+screen-cuckoo-hot1m 2 lock 2 546.169
+screen-cuckoo-hot1m 2 lock 0 522.451
+
+START screen-cuckoo-hot8m
+screen-cuckoo-hot8m 1 lock 0 416.878
+screen-cuckoo-hot8m 1 lock 2 383.781
+screen-cuckoo-hot8m 1 bucket 0 423.824
+screen-cuckoo-hot8m 1 bucket 2 34.622
+screen-cuckoo-hot8m 1 both 0 414.904
+screen-cuckoo-hot8m 1 both 2 33.869
+screen-cuckoo-hot8m 2 both 2 34.259
+screen-cuckoo-hot8m 2 both 0 430.174
+screen-cuckoo-hot8m 2 bucket 2 34.516
+screen-cuckoo-hot8m 2 bucket 0 422.592
+screen-cuckoo-hot8m 2 lock 2 380.978
+screen-cuckoo-hot8m 2 lock 0 424.4
+
+START screen-cuckoo-hot32m
+screen-cuckoo-hot32m 1 lock 0 367.628
+screen-cuckoo-hot32m 1 lock 2 339.931
+screen-cuckoo-hot32m 1 bucket 0 377.207
+screen-cuckoo-hot32m 1 bucket 2 27.74
+screen-cuckoo-hot32m 1 both 0 334.314
+screen-cuckoo-hot32m 1 both 2 27.288
+screen-cuckoo-hot32m 2 both 2 27.436
+screen-cuckoo-hot32m 2 both 0 385.345
+screen-cuckoo-hot32m 2 bucket 2 27.68
+screen-cuckoo-hot32m 2 bucket 0 378.668
+screen-cuckoo-hot32m 2 lock 2 378.184
+screen-cuckoo-hot32m 2 lock 0 374.068
+
+START screen-micro-hot4
+screen-micro-hot4 1 2 0 14.204
+screen-micro-hot4 1 2 1 14.191
+screen-micro-hot4 1 2 5 14.204
+screen-micro-hot4 1 2 10 14.226
+screen-micro-hot4 2 2 10 14.591
+screen-micro-hot4 2 2 5 14.43
+screen-micro-hot4 2 2 1 14.231
+screen-micro-hot4 2 2 0 14.34
+
+START screen-micro-hot16
+screen-micro-hot16 1 2 0 52.298
+screen-micro-hot16 1 2 1 52.118
+screen-micro-hot16 1 2 5 52.67
+screen-micro-hot16 1 2 10 53.403
+screen-micro-hot16 2 2 10 54.005
+screen-micro-hot16 2 2 5 53.118
+screen-micro-hot16 2 2 1 52.565
+screen-micro-hot16 2 2 0 52.295
+
+START screen-micro-hot64
+screen-micro-hot64 1 2 0 255.464
+screen-micro-hot64 1 2 1 253.933
+screen-micro-hot64 1 2 5 247.291
+screen-micro-hot64 1 2 10 238.568
+screen-micro-hot64 2 2 10 239.022
+screen-micro-hot64 2 2 5 247.158
+screen-micro-hot64 2 2 1 253.167
+screen-micro-hot64 2 2 0 255.429
+

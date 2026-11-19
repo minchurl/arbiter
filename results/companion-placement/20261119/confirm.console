@@ -1,0 +1,174 @@
+screen-cuckoo-hot1m both n=2 549.990 -> 551.082 +0.21%
+screen-cuckoo-hot1m bucket n=2 549.892 -> 554.274 +0.80%
+screen-cuckoo-hot1m lock n=2 534.074 -> 549.160 +2.86%
+screen-cuckoo-hot32m both n=2 359.830 -> 27.362 -92.36%
+screen-cuckoo-hot32m bucket n=2 377.938 -> 27.710 -92.67%
+screen-cuckoo-hot32m lock n=2 370.848 -> 359.058 -3.22%
+screen-cuckoo-hot64 both n=2 23.735 -> 24.491 +3.20%
+screen-cuckoo-hot64 bucket n=2 23.270 -> 23.697 +2.04%
+screen-cuckoo-hot64 lock n=2 24.759 -> 23.795 -3.90%
+screen-cuckoo-hot65536 both n=2 527.106 -> 530.327 +0.61%
+screen-cuckoo-hot65536 bucket n=2 523.970 -> 530.993 +1.34%
+screen-cuckoo-hot65536 lock n=2 523.777 -> 526.935 +0.60%
+screen-cuckoo-hot8m both n=2 422.539 -> 34.064 -91.94%
+screen-cuckoo-hot8m bucket n=2 423.208 -> 34.569 -91.83%
+screen-cuckoo-hot8m lock n=2 420.639 -> 382.380 -9.09%
+screen-micro-default table0-ballast1 n=2 537.565 -> 517.530 -3.69%
+screen-micro-default table0-ballast5 n=2 537.565 -> 434.222 -19.20%
+screen-micro-default table0-ballast10 n=2 537.565 -> 371.228 -30.94%
+screen-micro-default table2-ballast1 n=2 541.773 -> 516.641 -4.64%
+screen-micro-default table2-ballast1-vs-all-local n=2 537.565 -> 516.641 -3.87%
+screen-micro-default table2-ballast5 n=2 541.773 -> 431.122 -20.42%
+screen-micro-default table2-ballast5-vs-all-local n=2 537.565 -> 431.122 -19.78%
+screen-micro-default table2-ballast10 n=2 541.773 -> 375.157 -30.75%
+screen-micro-default table2-ballast10-vs-all-local n=2 537.565 -> 375.157 -30.19%
+screen-micro-default table2-ballast0-vs-all-local n=2 537.565 -> 541.773 +0.80%
+screen-micro-hot1 table2-ballast1 n=2 6.465 -> 6.156 -4.77%
+screen-micro-hot1 table2-ballast5 n=2 6.465 -> 5.931 -8.26%
+screen-micro-hot1 table2-ballast10 n=2 6.465 -> 5.871 -9.18%
+screen-micro-hot16 table2-ballast1 n=2 52.296 -> 52.341 +0.09%
+screen-micro-hot16 table2-ballast5 n=2 52.296 -> 52.894 +1.14%
+screen-micro-hot16 table2-ballast10 n=2 52.296 -> 53.704 +2.69%
+screen-micro-hot4 table2-ballast1 n=2 14.272 -> 14.211 -0.42%
+screen-micro-hot4 table2-ballast5 n=2 14.272 -> 14.317 +0.31%
+screen-micro-hot4 table2-ballast10 n=2 14.272 -> 14.409 +0.95%
+screen-micro-hot64 table2-ballast1 n=2 255.447 -> 253.550 -0.74%
+screen-micro-hot64 table2-ballast5 n=2 255.447 -> 247.225 -3.22%
+screen-micro-hot64 table2-ballast10 n=2 255.447 -> 238.795 -6.52%
+screen-micro-write100 table2-ballast1 n=2 493.287 -> 477.268 -3.24%
+screen-micro-write100 table2-ballast5 n=2 493.287 -> 410.907 -16.70%
+screen-micro-write100 table2-ballast10 n=2 493.287 -> 356.050 -27.82%
+screen-micro-write100-hot4 table2-ballast1 n=2 8.895 -> 8.714 -2.04%
+screen-micro-write100-hot4 table2-ballast5 n=2 8.895 -> 9.000 +1.19%
+screen-micro-write100-hot4 table2-ballast10 n=2 8.895 -> 8.969 +0.82%
+START confirm-cuckoo-hot64
+confirm-cuckoo-hot64 1 lock 0 24.85
+confirm-cuckoo-hot64 1 lock 2 24.472
+confirm-cuckoo-hot64 1 bucket 0 24.579
+confirm-cuckoo-hot64 1 bucket 2 24.588
+confirm-cuckoo-hot64 1 both 0 24.148
+confirm-cuckoo-hot64 1 both 2 22.769
+confirm-cuckoo-hot64 2 both 2 25.178
+confirm-cuckoo-hot64 2 both 0 23.991
+confirm-cuckoo-hot64 2 bucket 2 24.652
+confirm-cuckoo-hot64 2 bucket 0 24.296
+confirm-cuckoo-hot64 2 lock 2 23.619
+confirm-cuckoo-hot64 2 lock 0 23.865
+confirm-cuckoo-hot64 3 lock 0 24.227
+confirm-cuckoo-hot64 3 lock 2 24.45
+confirm-cuckoo-hot64 3 bucket 0 23.34
+confirm-cuckoo-hot64 3 bucket 2 25.036
+confirm-cuckoo-hot64 3 both 0 24.468
+confirm-cuckoo-hot64 3 both 2 24.745
+confirm-cuckoo-hot64 4 both 2 24.058
+confirm-cuckoo-hot64 4 both 0 23.978
+confirm-cuckoo-hot64 4 bucket 2 24.94
+confirm-cuckoo-hot64 4 bucket 0 23.336
+confirm-cuckoo-hot64 4 lock 2 24.333
+confirm-cuckoo-hot64 4 lock 0 24.175
+confirm-cuckoo-hot64 5 lock 0 24.311
+confirm-cuckoo-hot64 5 lock 2 25.288
+confirm-cuckoo-hot64 5 bucket 0 23.973
+confirm-cuckoo-hot64 5 bucket 2 24.297
+confirm-cuckoo-hot64 5 both 0 24.609
+confirm-cuckoo-hot64 5 both 2 24.347
+
+START confirm-cuckoo-hot65536
+confirm-cuckoo-hot65536 1 lock 0 530.179
+confirm-cuckoo-hot65536 1 lock 2 528.778
+confirm-cuckoo-hot65536 1 bucket 0 502.842
+confirm-cuckoo-hot65536 1 bucket 2 526.674
+confirm-cuckoo-hot65536 1 both 0 531.227
+confirm-cuckoo-hot65536 1 both 2 526.243
+confirm-cuckoo-hot65536 2 both 2 531.214
+confirm-cuckoo-hot65536 2 both 0 531.271
+confirm-cuckoo-hot65536 2 bucket 2 525.503
+confirm-cuckoo-hot65536 2 bucket 0 530.91
+confirm-cuckoo-hot65536 2 lock 2 530.403
+confirm-cuckoo-hot65536 2 lock 0 530.187
+confirm-cuckoo-hot65536 3 lock 0 524.094
+confirm-cuckoo-hot65536 3 lock 2 523.27
+confirm-cuckoo-hot65536 3 bucket 0 522.988
+confirm-cuckoo-hot65536 3 bucket 2 524.499
+confirm-cuckoo-hot65536 3 both 0 531.205
+confirm-cuckoo-hot65536 3 both 2 531.264
+confirm-cuckoo-hot65536 4 both 2 530.955
+confirm-cuckoo-hot65536 4 both 0 529.852
+confirm-cuckoo-hot65536 4 bucket 2 530.897
+confirm-cuckoo-hot65536 4 bucket 0 527.664
+confirm-cuckoo-hot65536 4 lock 2 524.753
+confirm-cuckoo-hot65536 4 lock 0 530.359
+confirm-cuckoo-hot65536 5 lock 0 525.225
+confirm-cuckoo-hot65536 5 lock 2 530.016
+confirm-cuckoo-hot65536 5 bucket 0 531.087
+confirm-cuckoo-hot65536 5 bucket 2 531.238
+confirm-cuckoo-hot65536 5 both 0 530.839
+confirm-cuckoo-hot65536 5 both 2 523.95
+
+START confirm-cuckoo-hot1m-lock
+confirm-cuckoo-hot1m-lock 1 lock 0 556.008
+confirm-cuckoo-hot1m-lock 1 lock 2 556.483
+confirm-cuckoo-hot1m-lock 2 lock 2 555.717
+confirm-cuckoo-hot1m-lock 2 lock 0 492.907
+confirm-cuckoo-hot1m-lock 3 lock 0 553.064
+confirm-cuckoo-hot1m-lock 3 lock 2 550.825
+confirm-cuckoo-hot1m-lock 4 lock 2 548.774
+confirm-cuckoo-hot1m-lock 4 lock 0 549.546
+confirm-cuckoo-hot1m-lock 5 lock 0 548.87
+confirm-cuckoo-hot1m-lock 5 lock 2 556.119
+
+START confirm-micro-default
+confirm-micro-default 1 2 0 545.297
+confirm-micro-default 1 2 1 513.586
+confirm-micro-default 1 2 5 438.898
+confirm-micro-default 1 2 10 376.822
+confirm-micro-default 2 2 10 374.975
+confirm-micro-default 2 2 5 439.362
+confirm-micro-default 2 2 1 515.563
+confirm-micro-default 2 2 0 546.766
+confirm-micro-default 3 2 0 546.199
+confirm-micro-default 3 2 1 514.82
+confirm-micro-default 3 2 5 431.363
+confirm-micro-default 3 2 10 375.081
+confirm-micro-default 4 2 10 375.461
+confirm-micro-default 4 2 5 439.487
+confirm-micro-default 4 2 1 514.33
+confirm-micro-default 4 2 0 539.764
+confirm-micro-default 5 2 0 541.512
+confirm-micro-default 5 2 1 519.444
+confirm-micro-default 5 2 5 429.465
+confirm-micro-default 5 2 10 375.96
+
+START confirm-micro-best
+confirm-micro-best 1 0 0 51.899
+confirm-micro-best 1 0 10 53.316
+confirm-micro-best 1 2 0 52.3
+confirm-micro-best 1 2 10 52.464
+confirm-micro-best 2 2 10 53.908
+confirm-micro-best 2 2 0 51.86
+confirm-micro-best 2 0 10 52.386
+confirm-micro-best 2 0 0 52.091
+confirm-micro-best 3 0 0 52.253
+confirm-micro-best 3 0 10 53.98
+confirm-micro-best 3 2 0 52.045
+confirm-micro-best 3 2 10 53.443
+confirm-micro-best 4 2 10 53.995
+confirm-micro-best 4 2 0 52.527
+confirm-micro-best 4 0 10 52.722
+confirm-micro-best 4 0 0 51.639
+confirm-micro-best 5 0 0 52.267
+confirm-micro-best 5 0 10 52.395
+confirm-micro-best 5 2 0 51.872
+confirm-micro-best 5 2 10 52.351
+
+START profile-micro-default
+profile-micro-default 1 2 0 547.647
+profile-micro-default 1 2 1 523.95
+profile-micro-default 1 2 5 428.214
+profile-micro-default 1 2 10 376.088
+
+START profile-micro-best
+profile-micro-best 1 2 0 52.066
+profile-micro-best 1 2 10 52.683
+
+CONFIRM COMPLETE
