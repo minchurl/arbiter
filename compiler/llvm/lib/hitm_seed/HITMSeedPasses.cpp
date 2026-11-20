@@ -35,7 +35,6 @@ HITMSeedPolicy hitmSeedPolicyFromOptions() {
   policy.scoring.weightSyncStore = HITMWeightSyncStore;
   policy.scoring.weightSyncInlineAsm = HITMWeightSyncInlineAsm;
   policy.scoring.weightSyncFile = HITMWeightSyncFile;
-  policy.scoring.weightPublishedRMW = HITMWeightPublishedRMW;
   policy.scoring.weightWorkerEntry = HITMWeightWorkerEntry;
   policy.scoring.weightWorkerReachable = HITMWeightWorkerReachable;
   policy.scoring.weightSize = HITMWeightSize;

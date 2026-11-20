@@ -24,7 +24,7 @@ if [[ "${ARBITER_BENCH_SELECTION:-policy}" != policy ]]; then
   echo "Manual placement is archived at a2151db; this build uses automatic selection" >&2
   exit 1
 fi
-ARBITER_HITM_SEED_CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config}"
+ARBITER_HITM_SEED_CONFIG="${ARBITER_HITM_SEED_CONFIG:-${ROOT_DIR}/configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config}"
 # shellcheck source=xindex-experiments/hitm-seed.sh
 source "${ROOT_DIR}/scripts/xindex-experiments/hitm-seed.sh"
 

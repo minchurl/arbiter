@@ -7,19 +7,18 @@ All paths below are relative to this directory.
 |---|---|
 | `candidates/raw-046.config` | Default XIndex replay; historical broad-sweep winner with a smaller footprint than larger finalists |
 | `policy-candidates/evidence-balanced-size-tiebreaker.config` | A/F convenience runners; same XIndex sites with size reduced from +6 to +1 |
-| `policy-candidates/published-rmw-size-tiebreaker.config` | B-tree/micro default; selects the shared micro table, excludes ballast, preserves XIndex selection |
 | Other `policy-candidates/` | Automatic hypotheses for sensitivity/generalization, not additional proven winners |
 | `xindex-site68-buffer-ablation.config`, `xindex-site71-leaf-ablation.config`, `xindex-site68-71-ablation.config` | Explicitly pinned causal ablations, not general policies |
 | `candidates/` | 12 historically measured policies: 003, 009, 013, 021, 030, 036, 039, 043, 046, 047, 081, 082 (all `raw-*.config`) |
 | `search-spaces/xindex-broad-100/` | Frozen 100-input search space, not 100 validated policies |
 
 Automatic policies leave `ARBITER_HITM_SEED_SITE_IDS` empty. The retained
-raw-046/evidence-balanced/published-RMW XIndex selection is
+raw-046/evidence-balanced XIndex selection is
 `68,71,74,90,97,98,99,100`; only `68,71,74` allocate in full A. IDs are specific
 to the measured build. Other benchmarks can select different sites or none.
 
 ```sh
-ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config \
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config \
   ./scripts/build-xindex-llvm.sh
 ./scripts/run-xindex-site-ablation.sh --check
 ```
@@ -36,7 +35,6 @@ Each `ARBITER_HITM_WEIGHT_*` signal contributes at most once per allocation.
 |---|---|
 | `ESCAPE_RETURN`, `ESCAPE_STORE`, `ESCAPE_CALL` | Derived pointer returned, stored or passed to a non-ignored call |
 | `SYNC_ATOMIC`, `SYNC_STORE`, `SYNC_INLINE_ASM`, `SYNC_FILE` | RMW/CAS, atomic/volatile store, lock-like assembly, or source-file mutation |
-| `PUBLISHED_RMW` | Globally published pointer's loaded pointee feeds RMW/CAS; default weight 0 |
 | `WORKER_ENTRY`, `WORKER_REACHABLE` | In/reachable from a pthread entry |
 | `SIZE` | Crosses `ARBITER_HITM_LARGE_ALLOCATION_THRESHOLD` |
 
@@ -53,6 +51,12 @@ weight policy admitted helper allocations and crashed during training; it has
 not been revalidated on this runtime. Existing features also cannot distinguish
 sites 71 and 74, which share a feature vector. Static RMW evidence does not
 establish multiple runtime writers or predict a placement gain by itself.
+
+The micro-specific `PUBLISHED_RMW` weight and analysis were retired when active
+validation was narrowed to XIndex/YCSB-A. XIndex's evidence-balanced policy did
+not enable that weight. The old policy is retained only as
+[historical evidence](../../results/allocation-policy/published-rmw-20261118/retired-policy.config);
+reproduce its micro table-only selection with revision `21498d9`.
 
 The frozen broad search contains duplicates, empty selections and candidates
 rejected by the old fixed-slot runtime. Legacy expansion/member keys remain

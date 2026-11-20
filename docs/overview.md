@@ -32,16 +32,12 @@ oversized selection at compile time; it does not bound actual runtime memory.
 Report and rewrite repeat the same deterministic decision. Site IDs depend on
 source/compiler/optimization settings; automatic policies do not pin them.
 
-The published-RMW signal follows a globally published allocation pointer to
-RMW/CAS on its pointee. It selects the microbenchmark table while excluding
-read-only ballast. It is static evidence: it cannot prove runtime frequency,
-multiple writers, or a CXL speedup. B-tree uses unsupported `posix_memalign`,
-so its current automatic rewrite selects nothing.
-
-For the retained XIndex build, raw-046/evidence-balanced/published-RMW select
+For the retained XIndex build, raw-046/evidence-balanced select
 `68,71,74,90,97,98,99,100`; only `68,71,74` allocate during full YCSB-A.
 The [config guide](../configs/hitm-seed/README.md) explains policy choices,
 parameters and analysis limits. Hardware measurements are separate from selection.
+The micro-only published-RMW extension is retired; libcuckoo object tracking,
+companion selection and adaptive placement were never merged into this path.
 
 ## Why jemalloc still needs NUMA hooks
 

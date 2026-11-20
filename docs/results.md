@@ -6,6 +6,67 @@ node 2, LLVM 18 and jemalloc 5.2.1. Original rows, hashes and manifests are in
 the [evidence index](../results/README.md). Current run instructions are in the
 [benchmark guide](benchmarks.md).
 
+## XIndex + YCSB-A wrap-up (November 20)
+
+최신 main `21498d9`를 기준으로 XIndex/YCSB-A만 다시 확인했다.
+Libcuckoo의 객체/멤버 추적, std::thread 확장, companion과 자동 튜닝은 main에
+들어오지 않았다. 남아 있던 micro 전용 `ARBITER_HITM_WEIGHT_PUBLISHED_RMW`
+옵션과 전용 분석을 제거했다. 일반적인 RMW/CAS 탐지는 유지하며, compiler 코드는
+**3줄 추가 / 59줄 삭제, 순수 56줄 감소**했다. Runtime과 benchmark 소스는 그대로다.
+
+XIndex의 evidence-balanced 설정은 해당 가중치를 0으로 사용했다. 정리 전후의
+**전체 seed 보고서, 원본/재작성 LLVM IR, Native/Arbiter 실행파일이 모두
+byte-identical**이다. 선택은 `68,71,74,90,97,98,99,100`, 실제 할당은 68/71/74이며
+매 Arbiter 실행의 선택된 할당 수는 52,791,182개였다. 이전 micro 정책은 역사
+자료로 보존했고, 그 table-only 선택을 재현하려면 이전 revision을 사용해야 한다.
+
+100M load + 400M transaction 전체를 매번 실행했다. YCSB-A는 읽기 199,993,860건과
+update 200,006,140건이며, 31 foreground + 1 background worker를 사용했다.
+CPU/일반 메모리는 node 0, CXL은 node 2, 프로세스 그룹 제한은 64 GiB/no-swap이다.
+같은 입력으로 세 모드를 순환 순서로 **3회씩, 총 9회** 실행했다.
+
+| 모드 | 평균 처리량 M tx/s (최소–최대) | 평균 최대 RSS GiB | Replay 후 RSS GiB¹ |
+|---|---:|---:|---:|
+| Native | 26.988 (26.188–27.976) | 31.130 | 28.895 |
+| Arbiter DRAM | 26.838 (26.532–27.194) | 31.993 | 29.758 |
+| Arbiter CXL | 46.282 (44.279–47.495) | 31.993 | 29.758 |
+
+반복별 비율의 평균으로 CXL/DRAM은 **+72.46%**(각 +65.29~+79.01%),
+CXL/Native는 **+71.75%**(각 +58.28~+79.75%)였다. DRAM/Native는 −0.47%이며
+세 반복에서 방향이 섞였다. 한 공유 host에서의 세 번 비교이므로 작은 차이를
+성능 동등성이나 보편적인 향상으로 해석하지 않는다.
+
+¹ RSS 진단은 모드별 **별도의 프로세스 1회**에서 수행했다. 모든 thread를 멈추고
+replay 직전과 직후의 `smaps_rollup`, `numa_maps`, `VmHWM`을 읽었으며, 진단
+실행의 처리량은 위 성능 표에 포함하지 않았다. 직전/직후 RSS는 소수점 셋째 자리까지
+같았다. 최대 RSS는 성능 실행의 GNU time `%M`(KiB)을 GiB로 환산한 값으로,
+초기화·검증·종료를 포함한다. 진단에서도 replay 시작 전에 높은 VmHWM이 이미
+기록돼 있었다. **최대 RSS와 실제 replay 시점 RSS를 섞어 비교하면 안 된다.**
+
+CXL 진단의 replay 후 실제 상주량은 **node 0에 10.681 GiB, node 2에
+19.076 GiB**였다. Node 1의 소량 페이지도 원본에 기록했다. 모든 Arbiter 성능
+실행에서 선택된 private page 5,000,778개가 요청한 노드에 있었고 query error는
+0이었다. 선택된 메모리는 전체 RSS의 일부이며, mapped `assigned_bytes`도 RSS가
+아니다. CXL 배치는 전체 RSS를 줄이지 않았고, Arbiter의 최대 RSS는 Native보다
+약 **0.863 GiB(+2.77%)** 컸다. 여섯 snapshot의 Swap은 모두 0이었으며 cgroup의
+실제 `memory.max=64 GiB`, `memory.swap.max=0`도 확인했다.
+
+전체 launcher 시간 평균은 Native 74.00초, DRAM 75.35초, CXL 77.26초였다.
+여기에는 load/구축, 검증과 Arbiter의 종료 시 전체 페이지 조회가 포함된다.
+따라서 위 향상률은 **transaction replay 구간의 향상**이며, 전체 프로세스가
+그만큼 빨리 끝났다는 뜻이 아니다.
+
+모든 실행이 400M 완료 건수와 4,096-key digest `0x7474b8e9d3962859`를 확인했다.
+기존 LLVM fixture 명령 14개의 baseline 대조, compiler/runtime smoke, 제거된
+옵션의 거부 검증도 통과했다. 초기 감시의 시각/CPU tick 정밀도를 보정하기 전
+예비 실행 8회는 전부 제외하고 최종 9회만 집계했다. 원본 로그와 감시 기준,
+빌드 명령, 해시, RSS snapshot을 보존했다. 과거 실행과 수치를 합치지 않았다.
+
+[성능 원본](../results/xindex/ycsb-a/wrapup-20261120/runs.csv)
+· [RSS snapshot](../results/xindex/ycsb-a/wrapup-20261120/rss-snapshots.csv)
+· [조건과 검증](../results/xindex/ycsb-a/wrapup-20261120/manifest.json)
+· [전체 자료](../results/xindex/ycsb-a/wrapup-20261120/)
+
 ## Current runtime: strict on-demand jemalloc
 
 The runtime merged in #22 (`783706f`) removes the large pool, direct backend

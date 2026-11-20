@@ -9,12 +9,24 @@ of today's runtime. Directory names below link to the retained data directly.
 
 | Directory | Scope / principal files |
 |---|---|
+| [wrapup-20261120](xindex/ycsb-a/wrapup-20261120/) | XIndex/YCSB-A only: three Native/Local/CXL full runs each, kernel-reported peak RSS and separate before/after replay memory snapshots. `runs.csv`, `summary.csv`, `comparisons.csv`, `rss-snapshots.csv`, `manifest.json`, `selected-sites.csv`, `raw.tar.gz`. |
 | [jemalloc-strict-20261119](xindex/ycsb-a/jemalloc-strict-20261119/) | Final 650-line runtime: one full A Local/CXL pair, no fresh controls. `runs.csv`, `manifest.json`, `validation.txt`, `checks.txt`, `code-size.csv`, `selected-sites.csv`. |
 | [jemalloc-demand-20261118](xindex/ycsb-a/jemalloc-demand-20261118/) | Bounded vs initial 1,002-line demand runtime: four runs per allocator/placement, 16 total. `runs.csv`, `lifecycle.csv`, hashes/environment, code counts. Intermediate strict-only checks are not performance rows. |
 | [jemalloc-20261117](xindex/ycsb-a/jemalloc-20261117/) | Custom slab vs bounded jemalloc: eight full A rows in `runs.csv`; five processes per cell in `arena-smoke.csv`. |
 | [coherence-tuning/20261118](coherence-tuning/20261118/) | Corrected microbenchmark: layout/epoch improvements, counter evidence and negative screens; see file map below. |
 | [published-rmw-20261118](allocation-policy/published-rmw-20261118/) | `decisions.csv`, `screen.csv`, `benchmark-runs.csv`, `xindex-runs.csv`, hashes. Automatic table selection and four A pairs per policy; original, not corrected, micro synchronization. |
 | [btree-coherence/20261118](btree-coherence/20261118/) | Historical explicit-placement experiment: three native/Local/CXL runs per benchmark (`runs.csv`), separate supplied binaries (`supplied.csv`), reports/hashes. Original micro synchronization. |
+
+The wrap-up archive includes all build/run drivers, commands, source and input
+hashes, full logs, `smaps_rollup`/`numa_maps` snapshots and cleanup checks.
+The eight preliminary processes are retained but excluded from final summaries.
+Check `checksums.sha256` inside its directory. Extract `raw.tar.gz` into an empty
+directory to inspect the evidence; original binaries/traces stay in ignored
+`build/xindex-ycsb-a-wrapup/` and the existing trace directory. The baseline was
+built from `21498d9` before cleanup; recorded drivers expect the retained host's
+toolchain paths. Recompute the final tables with `python3 summarize.py --base .`
+from the archive directory. `final-runs/` contains the accepted suite; `runs/`
+inside the raw archive is preliminary. RSS diagnostic throughput is excluded.
 
 For allocator reproduction, build baseline `9d90964` and freeze matching
 rewritten XIndex bitcode, libraries and binaries. The retained `compare.py`

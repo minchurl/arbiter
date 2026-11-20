@@ -63,7 +63,7 @@ Choose another [policy](../configs/hitm-seed/README.md) and build or replay it:
 ```sh
 ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/candidates/raw-082.config \
   ./scripts/build-xindex-llvm.sh
-ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/published-rmw-size-tiebreaker.config \
+ARBITER_HITM_SEED_CONFIG=configs/hitm-seed/policy-candidates/evidence-balanced-size-tiebreaker.config \
   XINDEX_VALIDATE=1 ./scripts/run-xindex-hitm-seed-replay.sh --quick
 ```
 
@@ -84,6 +84,11 @@ do not reinterpret flattened Java BasicDB F output containing both READ/UPDATE.
 
 ## B-tree and coherence microbenchmark
 
+These adapters are retained for historical work; active wrap-up validation is
+XIndex/YCSB-A only. Revision `21498d9` retains the published-RMW policy used by
+the historical micro results. Today's builder uses evidence-balanced selection,
+which does not preserve micro's former table-only placement or performance.
+
 Also install `libomp-18-dev`, `patch`, GNU time and Python 3.9+.
 The builder reads `~/vmitosis-workloads` and `~/microbench`; override with
 `VMITOSIS_DIR`/`MICROBENCH_DIR`. Adapters patch build copies only. Native and
@@ -94,7 +99,7 @@ selected binaries receive identical workload/correctness changes.
 ./scripts/run-btree-coherence.py
 ```
 
-Defaults: published-RMW policy, 32 victims, 256 table entries, 50% reads,
+Defaults: evidence-balanced policy, 32 victims, 256 table entries, 50% reads,
 8 GiB ballast, no noise, three native/Local/CXL rounds, 120 seconds per micro
 row. B-tree completes its fixed 600M lookups; it has **no write-heavy option**.
 Automatic selection currently moves no B-tree objects.
@@ -146,6 +151,18 @@ index construction and exit-time reporting. Local and CXL share the same binary.
 Use Local/native for rewrite/allocator overhead, CXL/Local for placement, and
 CXL/native for end-to-end effect. State whether percentages are ratios of means
 or means of paired ratios; they are not interchangeable.
+
+For memory, report GNU time's **maximum process RSS** (`%M`, KiB) separately
+from the runtime's **selected private resident bytes**. RSS includes unselected
+data, stacks and libraries; selected residency covers only the explicit arenas.
+Mapped `assigned_bytes`, virtual size and cgroup usage are not process RSS.
+Use separate diagnostic runs stopped before/after replay to read
+`/proc/PID/smaps_rollup` (RSS/PSS/swap) and `numa_maps` (actual node residency),
+so page-table walks and debugger stops do not enter performance measurements.
+`MemorySwapMax=0` and snapshot `Swap=0` establish the swap constraint; GNU time's
+swap counter alone is insufficient because Linux does not maintain `ru_nswap`.
+See the [kernel proc documentation](https://docs.kernel.org/filesystems/proc.html)
+and [getrusage field definitions](https://man7.org/linux/man-pages/man2/getrusage.2.html).
 
 Validation checks exit status, transaction counts, sampled state, selection,
 zero fallback/query errors and all located private pages on the target node.

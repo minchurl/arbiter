@@ -23,7 +23,7 @@ C++ -> LLVM IR -> score allocation sites -> rewrite selected calls
 ## Setup
 
 Linux, CMake 3.20+, Ninja, C++17, LLVM 18, libnuma, jemalloc 5 and Intel MKL
-are required for XIndex. Full A/F traces need about 26 GB of uncompressed disk
+are required for XIndex. The full A trace needs about 26 GB of uncompressed disk
 space plus the compressed package; protected runs use systemd user scopes.
 
 ```sh
@@ -42,10 +42,9 @@ short checks. MKL defaults to `/opt/intel/oneapi/mkl/latest`; see the
 
 ```sh
 ./scripts/run-xindex-a-demo.sh   # A: 50% read / 50% update
-./scripts/run-xindex-f-demo.sh   # F: 50% read / 50% read-modify-write
 ```
 
-Each command builds and runs Local once, then CXL once: 100M load records and
+This command builds and runs Local once, then CXL once: 100M load records and
 one complete 400M-transaction pass per process. These are full runs, not smokes.
 Defaults use CPU/ordinary memory node 0 and CXL node 2.
 [B-tree and microbenchmark commands](docs/benchmarks.md#b-tree-and-coherence-microbenchmark)
@@ -57,9 +56,10 @@ The runtime uses strict jemalloc arenas with mappings acquired on demand.
 There is no large reserved pool or allocation fallback; allocation failures
 preserve the supported C/C++ API contracts and report their cause.
 
-XIndex A/F have shown CXL placement gains on the measured host. The corrected
-microbenchmark improves through layout and epoch-store changes, with no useful
-CXL gain. B-tree's automatic policy selects no objects. See the
+Active wrap-up validation covers **XIndex + YCSB-A**, including Native/Local/CXL
+throughput, peak process RSS and actual NUMA residency. The micro-only
+published-RMW weight is retired. A/F and other benchmark results remain
+historical evidence with their original revisions and policies. See the
 [results](docs/results.md) for versions, negative findings and measurement limits.
 
 Keep current behavior in the architecture guide, commands in the benchmark

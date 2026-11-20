@@ -1,0 +1,50 @@
+{
+  "orders": [
+    [
+      "native",
+      "local",
+      "cxl"
+    ],
+    [
+      "local",
+      "cxl",
+      "native"
+    ],
+    [
+      "cxl",
+      "native",
+      "local"
+    ]
+  ],
+  "hashes": {
+    "native": "988fefb51e5ab4839ca90e0011373267cdb3f4b843f787675987fe41aa7d5e8a",
+    "local": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193",
+    "cxl": "5867802739603ca2931f635e410720e550cc69d3e051dd8f8df5e78e5dbd0193"
+  },
+  "guard": "Five quiet seconds before each run; reject overlap with a foreign process consuming more than one CPU core in a sampled interval after allowing two scheduler ticks of accounting precision. Per-process timestamps avoid proc-scan timing skew. Small background-service bursts remain ordinary host noise.",
+  "workload": "Unchanged YCSB-A: 100M load, complete 400M transactions, 31 foreground + 1 background",
+  "policy": "evidence-balanced-size-tiebreaker.config; automatic seed selection; no companion/adaptive/partial placement",
+  "memory": "GNU time %M: whole-process peak RSS in KiB. Runtime residency: selected private heap pages, not whole-process RSS. No smaps walk or debugger in throughput runs.",
+  "main_base": "21498d914c5f302cb1e80d8a03315421c2c52714",
+  "selected_site_ids": [
+    68,
+    71,
+    74,
+    90,
+    97,
+    98,
+    99,
+    100
+  ],
+  "checks": "Native IR, rewritten IR, complete seed report, native executable and Arbiter executable are byte-identical before/after cleanup. 14 retained fixture commands match baseline; existing compiler/runtime smoke passed; removed option rejected.",
+  "completed_runs": 9,
+  "retained_attempts": 9,
+  "preliminary_attempts": 8,
+  "preliminary_results_in_summary": false,
+  "guard_correction": "Initial whole-scan timestamps and zero tick tolerance rejected one-core accounting jitter. Final suite uses per-process sample times plus two ticks of accounting tolerance; all earlier processes excluded.",
+  "rss_diagnostics": 3,
+  "rss_diagnostics_in_throughput": false,
+  "source_edits": "Removed one micro-specific published-RMW scoring parameter and analysis; no benchmark or runtime source edits.",
+  "swap_evidence": "All processes run with MemorySwapMax=0; all six smaps snapshots show Swap=0. GNU time %W is recorded but is not independent swap evidence on Linux.",
+  "limitations": "Three full runs per mode on one monitored shared host. Whole-process peak RSS includes setup/validation, not only timed replay. Diagnostic snapshots are separate processes, not peak-RSS measurements. No historical throughput pooling."
+}
